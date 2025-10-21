@@ -88,11 +88,10 @@ export const MssqlTools = {
 				};
 			}
 
-			// Only log if not in STDIO mode
+			// PERFORMANCE: Only compute log message if logging is enabled
 			if (consola.level >= 0) {
-				logger.info(
-					`Executing READ-ONLY SQL query: ${query.substring(0, 100)}${query.length > 100 ? '...' : ''}`,
-				);
+				const truncatedQuery = query.length > 100 ? query.substring(0, 100) + '...' : query;
+				logger.info(`Executing READ-ONLY SQL query: ${truncatedQuery}`);
 			}
 
 			try {
@@ -146,20 +145,22 @@ export const MssqlTools = {
 					],
 				};
 			} catch (error) {
+				// PERFORMANCE: Only log error details if logging is enabled
 				if (consola.level >= 0) {
-					logger.error(`Error executing READ-ONLY SQL '${query}':`, error);
+					logger.error('Error executing READ-ONLY SQL:', query, error);
 				}
 
 				const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-				// Check if this was a write operation that bypassed validation
+				// PERFORMANCE: Compute lowercase once for multiple checks
+				const lowerErrorMsg = errorMessage.toLowerCase();
 				const isWriteAttempt =
-					errorMessage.toLowerCase().includes('read only')
-					|| errorMessage.toLowerCase().includes('cannot execute')
-					|| errorMessage.toLowerCase().includes('not allowed')
-					|| errorMessage.toLowerCase().includes('insert')
-					|| errorMessage.toLowerCase().includes('update')
-					|| errorMessage.toLowerCase().includes('delete');
+					lowerErrorMsg.includes('read only')
+					|| lowerErrorMsg.includes('cannot execute')
+					|| lowerErrorMsg.includes('not allowed')
+					|| lowerErrorMsg.includes('insert')
+					|| lowerErrorMsg.includes('update')
+					|| lowerErrorMsg.includes('delete');
 
 				if (isWriteAttempt) {
 					return {

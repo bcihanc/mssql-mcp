@@ -20,7 +20,7 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 		port: config.port,
 		pool: {
 			max: 10,
-			min: 0,
+			min: 2, // PERFORMANCE: Keep minimum 2 connections warm to avoid reconnection overhead
 			idleTimeoutMillis: 30000,
 		},
 		options: {

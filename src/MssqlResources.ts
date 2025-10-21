@@ -19,8 +19,10 @@ export const MssqlResources = {
 		// PERFORMANCE: Check cache first
 		const now = Date.now();
 		if (resourceCache && now - resourceCache.timestamp < CACHE_TTL_MS) {
+			// PERFORMANCE: Only compute cache age if logging is enabled
 			if (consola.level >= 0) {
-				logger.debug(`Returning cached resources (age: ${Math.round((now - resourceCache.timestamp) / 1000)}s)`);
+				const cacheAgeSeconds = Math.round((now - resourceCache.timestamp) / 1000);
+				logger.debug(`Returning cached resources (age: ${cacheAgeSeconds}s)`);
 			}
 			return resourceCache.resources;
 		}
@@ -61,7 +63,9 @@ export const MssqlResources = {
 			}
 			// Return cached data even if expired, better than nothing
 			if (resourceCache) {
-				logger.warn('Returning stale cache due to error');
+				if (consola.level >= 0) {
+					logger.warn('Returning stale cache due to error');
+				}
 				return resourceCache.resources;
 			}
 			return [];
@@ -112,8 +116,9 @@ export const MssqlResources = {
 				text: resultText,
 			};
 		} catch (error) {
+			// PERFORMANCE: Avoid string interpolation in error logging
 			if (consola.level >= 0) {
-				logger.error(`Database error reading resource ${uri}:`, error);
+				logger.error('Database error reading resource:', uri, error);
 			}
 			throw new Error(`Database error: ${error instanceof Error ? error.message : 'Unknown error'}`);
 		}

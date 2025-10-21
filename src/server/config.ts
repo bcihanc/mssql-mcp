@@ -107,6 +107,7 @@ export function getMssqlConfig(): MssqlConfig {
 
 /**
  * Check if a SQL query is a read-only operation with enhanced security validation
+ * PERFORMANCE: Uses combined regex patterns instead of multiple individual tests
  */
 export function isReadOnlyQuery(query: string): boolean {
 	// Remove SQL comments (line and block) and whitespace
@@ -121,42 +122,26 @@ export function isReadOnlyQuery(query: string): boolean {
 		return false;
 	}
 
-	// Blacklist: Dangerous operations that should NEVER be allowed
-	const dangerousPatterns = [
-		/\b(DROP|TRUNCATE|ALTER|CREATE)\b/i,
-		/\b(INSERT|UPDATE|DELETE|MERGE)\b/i,
-		/\b(GRANT|REVOKE|DENY)\b/i,
-		/\b(EXEC|EXECUTE|SP_EXECUTESQL)\b/i,
-		/\bXP_CMDSHELL\b/i,
-		/\bOPENROWSET\b/i,
-		/\bOPENQUERY\b/i,
-		/\bOPENDATASOURCE\b/i,
-		/;\s*(DROP|TRUNCATE|ALTER|INSERT|UPDATE|DELETE)/i, // Multiple statements check
-	];
+	// PERFORMANCE: Combined regex for all dangerous patterns (single test instead of 9)
+	// Matches: DDL, DML, DCL, system commands, and multi-statement attacks
+	const dangerousPattern =
+		/\b(DROP|TRUNCATE|ALTER|CREATE|INSERT|UPDATE|DELETE|MERGE|GRANT|REVOKE|DENY|EXEC|EXECUTE|SP_EXECUTESQL|XP_CMDSHELL|OPENROWSET|OPENQUERY|OPENDATASOURCE)\b|;\s*(DROP|TRUNCATE|ALTER|INSERT|UPDATE|DELETE)/i;
 
-	// Check for dangerous patterns
-	for (const pattern of dangerousPatterns) {
-		if (pattern.test(cleanQuery)) {
-			logger.warn(`Dangerous pattern detected in query: ${pattern}`);
-			return false;
+	if (dangerousPattern.test(cleanQuery)) {
+		if (consola.level >= 0) {
+			logger.warn('Dangerous pattern detected in query');
 		}
+		return false;
 	}
 
-	// Whitelist: Only allow safe read-only operations
-	const readOnlyOperations = [
-		'SELECT',
-		'WITH', // CTEs that start with WITH
-		'SHOW',
-		'DESCRIBE',
-		'EXPLAIN',
-		'DESC',
-	];
+	// PERFORMANCE: Combined regex for whitelist check (single test instead of array iteration)
+	// Only allow queries starting with: SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, DESC
+	const readOnlyPattern = /^(SELECT|WITH|SHOW|DESCRIBE|EXPLAIN|DESC)\b/;
 
-	// Check if query starts with any read-only operation
-	const startsWithReadOnly = readOnlyOperations.some((op) => cleanQuery.startsWith(op));
-
-	if (!startsWithReadOnly) {
-		logger.warn(`Query does not start with allowed read-only operation: ${cleanQuery.substring(0, 50)}`);
+	if (!readOnlyPattern.test(cleanQuery)) {
+		if (consola.level >= 0) {
+			logger.warn(`Query does not start with allowed read-only operation: ${cleanQuery.substring(0, 50)}`);
+		}
 		return false;
 	}
 
