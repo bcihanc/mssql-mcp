@@ -2,6 +2,7 @@ import type { Resource, TextResourceContents } from '@modelcontextprotocol/sdk/t
 import consola from 'consola';
 import { validateTableName } from './server/config';
 import type { ConnectionPool } from './server/connection';
+import { formatCSV } from './utils/csv';
 
 const logger = consola.withTag('mssql-resources');
 
@@ -108,19 +109,13 @@ export const MssqlResources = {
 				};
 			}
 
-			// PERFORMANCE: Memory-efficient CSV building
-			const columns = Object.keys(results[0]);
-			let resultText = columns.join(',');
-
-			for (const row of results) {
-				resultText += '\n';
-				resultText += columns.map((col) => String(row[col] ?? '')).join(',');
-			}
-
-			// Add pagination info if at limit
+			// PERFORMANCE: Memory-efficient CSV formatting with proper escaping
+			let paginationWarning = '';
 			if (results.length === RESOURCE_DATA_LIMIT) {
-				resultText += `\n\n⚠️ Note: Showing first ${RESOURCE_DATA_LIMIT} rows only. Set MSSQL_RESOURCE_LIMIT environment variable to adjust.`;
+				paginationWarning = `\n\n⚠️ Note: Showing first ${RESOURCE_DATA_LIMIT} rows only. Set MSSQL_RESOURCE_LIMIT environment variable to adjust.`;
 			}
+
+			const resultText = formatCSV(results, paginationWarning);
 
 			return {
 				uri,

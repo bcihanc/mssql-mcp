@@ -58,10 +58,23 @@ if (result.errors.length === 0) {
 	fs.chmodSync(outfile, 0o755);
 
 	const stats = fs.statSync(outfile);
-	const sizeMB = (stats.size / 1024 / 1024).toFixed(1);
+	const sizeBytes = stats.size;
+	const sizeKB = (sizeBytes / 1024).toFixed(1);
+	const sizeMB = (sizeBytes / 1024 / 1024).toFixed(2);
 
 	console.log(`✅ Build successful!`);
-	console.log(`📦 Output: ${outfile} (${sizeMB}MB)`);
+	console.log(`📦 Output: ${outfile}`);
+	console.log(`📏 Bundle size: ${sizeMB} MB (${sizeKB} KB, ${sizeBytes.toLocaleString()} bytes)`);
+
+	// Size warnings
+	if (sizeBytes > 10 * 1024 * 1024) {
+		console.log(`⚠️  Warning: Bundle size exceeds 10 MB. Consider reviewing dependencies.`);
+	} else if (sizeBytes > 5 * 1024 * 1024) {
+		console.log(`ℹ️  Info: Bundle size is relatively large (>5 MB). Monitor for growth.`);
+	} else {
+		console.log(`✨ Bundle size is optimal (<5 MB)`);
+	}
+
 	console.log(`🚀 Ready for npm publish and npx usage`);
 } else {
 	console.error('❌ Build failed:', result.errors);

@@ -3,6 +3,7 @@ import consola from 'consola';
 import { z } from 'zod/v4';
 import { isReadOnlyQuery } from './server/config';
 import type { ConnectionPool } from './server/connection';
+import { formatCSV } from './utils/csv';
 
 const logger = consola.withTag('mssql-tools');
 
@@ -10,10 +11,11 @@ const logger = consola.withTag('mssql-tools');
 const MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || '10000', 10);
 const WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || '5000', 10);
 
-// PERFORMANCE: Query result caching with TTL
+// PERFORMANCE: Query result caching with TTL and true LRU
 interface QueryCacheEntry {
 	result: string;
 	timestamp: number;
+	lastAccessed: number; // For true LRU tracking
 }
 
 const QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || '60000', 10); // Default 60 seconds
@@ -25,26 +27,32 @@ function getCacheKey(query: string): string {
 	return query.trim().toUpperCase().replace(/\s+/g, ' ');
 }
 
-// Helper to clean expired cache entries
-function cleanExpiredCache(): void {
-	const now = Date.now();
-	for (const [key, entry] of queryCache.entries()) {
-		if (now - entry.timestamp > QUERY_CACHE_TTL_MS) {
-			queryCache.delete(key);
-		}
+// PERFORMANCE: Lazy cleanup - only remove expired entry when accessed
+// This is O(1) instead of O(cache_size)
+function cleanExpiredEntry(key: string): boolean {
+	const entry = queryCache.get(key);
+	if (entry && Date.now() - entry.timestamp > QUERY_CACHE_TTL_MS) {
+		queryCache.delete(key);
+		return true; // Entry was expired and removed
 	}
+	return false; // Entry is still valid or doesn't exist
 }
 
-// Helper to enforce cache size limit (LRU-like eviction)
+// PERFORMANCE: True LRU eviction - removes least recently accessed entries
 function enforceCacheSizeLimit(): void {
 	if (queryCache.size > QUERY_CACHE_MAX_SIZE) {
-		// Delete oldest entries
+		// Sort entries by lastAccessed time and remove oldest ones
+		const entries = Array.from(queryCache.entries()).sort(
+			(a, b) => a[1].lastAccessed - b[1].lastAccessed,
+		);
+
 		const entriesToDelete = queryCache.size - QUERY_CACHE_MAX_SIZE;
-		let deleted = 0;
-		for (const key of queryCache.keys()) {
-			queryCache.delete(key);
-			deleted++;
-			if (deleted >= entriesToDelete) break;
+		for (let i = 0; i < entriesToDelete; i++) {
+			queryCache.delete(entries[i][0]);
+		}
+
+		if (consola.level >= 0) {
+			logger.debug(`LRU eviction: removed ${entriesToDelete} least recently used entries`);
 		}
 	}
 }
@@ -131,25 +139,32 @@ export const MssqlTools = {
 				};
 			}
 
-			// PERFORMANCE: Check query cache first
+			// PERFORMANCE: Check query cache first with lazy cleanup
 			const cacheKey = getCacheKey(query);
 			const now = Date.now();
-			const cachedEntry = queryCache.get(cacheKey);
 
-			if (cachedEntry && now - cachedEntry.timestamp < QUERY_CACHE_TTL_MS) {
-				if (consola.level >= 0) {
-					const cacheAgeSeconds = Math.round((now - cachedEntry.timestamp) / 1000);
-					logger.debug(`Returning cached query result (age: ${cacheAgeSeconds}s)`);
+			// Lazy cleanup: check if cached entry is expired
+			if (!cleanExpiredEntry(cacheKey)) {
+				// Entry exists and is not expired
+				const cachedEntry = queryCache.get(cacheKey);
+				if (cachedEntry) {
+					// Update lastAccessed for true LRU
+					cachedEntry.lastAccessed = now;
+
+					if (consola.level >= 0) {
+						const cacheAgeSeconds = Math.round((now - cachedEntry.timestamp) / 1000);
+						logger.debug(`Returning cached query result (age: ${cacheAgeSeconds}s)`);
+					}
+
+					return {
+						content: [
+							{
+								type: 'text',
+								text: cachedEntry.result + '\n\n📋 (Cached result)',
+							},
+						],
+					};
 				}
-
-				return {
-					content: [
-						{
-							type: 'text',
-							text: cachedEntry.result + '\n\n📋 (Cached result)',
-						},
-					],
-				};
 			}
 
 			// PERFORMANCE: Only compute log message if logging is enabled
@@ -199,39 +214,16 @@ export const MssqlTools = {
 					}
 				}
 
-				// PERFORMANCE: Memory-efficient CSV formatting with streaming approach
-				const columns = Object.keys(results[0]);
-				const needsQuotingRegex = /[,"\n\r]/;
+				// PERFORMANCE: Memory-efficient CSV formatting using array join (O(n) instead of O(n²))
+				const resultText = formatCSV(results, warningMessage);
 
-				// Build CSV string efficiently (avoid intermediate array)
-				let resultText = columns.join(',');
-
-				for (const row of results) {
-					resultText += '\n';
-					resultText += columns
-						.map((col) => {
-							const value = row[col];
-							if (value === null || value === undefined) return '';
-
-							// PERFORMANCE: Single regex test instead of 3 includes() calls
-							const strValue = String(value);
-							if (needsQuotingRegex.test(strValue)) {
-								return `"${strValue.replace(/"/g, '""')}"`;
-							}
-							return strValue;
-						})
-						.join(',');
-				}
-
-				resultText += warningMessage;
-
-				// PERFORMANCE: Cache the query result
-				cleanExpiredCache(); // Clean up expired entries first
+				// PERFORMANCE: Cache the query result with LRU tracking
 				queryCache.set(cacheKey, {
 					result: resultText,
 					timestamp: now,
+					lastAccessed: now,
 				});
-				enforceCacheSizeLimit(); // Ensure we don't exceed cache size
+				enforceCacheSizeLimit(); // Ensure we don't exceed cache size with LRU eviction
 
 				if (consola.level >= 0) {
 					logger.debug(`Query result cached (cache size: ${queryCache.size}/${QUERY_CACHE_MAX_SIZE})`);
