@@ -1,10 +1,53 @@
 import type { TextContent, Tool } from '@modelcontextprotocol/sdk/types.js';
 import consola from 'consola';
 import { z } from 'zod/v4';
-import { getMssqlConfig, isReadOnlyQuery } from './server/config';
+import { isReadOnlyQuery } from './server/config';
 import type { ConnectionPool } from './server/connection';
 
 const logger = consola.withTag('mssql-tools');
+
+// PERFORMANCE: Configurable result size limits from environment
+const MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || '10000', 10);
+const WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || '5000', 10);
+
+// PERFORMANCE: Query result caching with TTL
+interface QueryCacheEntry {
+	result: string;
+	timestamp: number;
+}
+
+const QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || '60000', 10); // Default 60 seconds
+const QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || '100', 10); // Max 100 queries
+const queryCache = new Map<string, QueryCacheEntry>();
+
+// Helper to generate cache key (normalized query)
+function getCacheKey(query: string): string {
+	return query.trim().toUpperCase().replace(/\s+/g, ' ');
+}
+
+// Helper to clean expired cache entries
+function cleanExpiredCache(): void {
+	const now = Date.now();
+	for (const [key, entry] of queryCache.entries()) {
+		if (now - entry.timestamp > QUERY_CACHE_TTL_MS) {
+			queryCache.delete(key);
+		}
+	}
+}
+
+// Helper to enforce cache size limit (LRU-like eviction)
+function enforceCacheSizeLimit(): void {
+	if (queryCache.size > QUERY_CACHE_MAX_SIZE) {
+		// Delete oldest entries
+		const entriesToDelete = queryCache.size - QUERY_CACHE_MAX_SIZE;
+		let deleted = 0;
+		for (const key of queryCache.keys()) {
+			queryCache.delete(key);
+			deleted++;
+			if (deleted >= entriesToDelete) break;
+		}
+	}
+}
 
 // Zod schema for SQL query execution
 const ExecuteSqlInputSchema = z.object({
@@ -88,6 +131,27 @@ export const MssqlTools = {
 				};
 			}
 
+			// PERFORMANCE: Check query cache first
+			const cacheKey = getCacheKey(query);
+			const now = Date.now();
+			const cachedEntry = queryCache.get(cacheKey);
+
+			if (cachedEntry && now - cachedEntry.timestamp < QUERY_CACHE_TTL_MS) {
+				if (consola.level >= 0) {
+					const cacheAgeSeconds = Math.round((now - cachedEntry.timestamp) / 1000);
+					logger.debug(`Returning cached query result (age: ${cacheAgeSeconds}s)`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedEntry.result + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
+
 			// PERFORMANCE: Only compute log message if logging is enabled
 			if (consola.level >= 0) {
 				const truncatedQuery = query.length > 100 ? query.substring(0, 100) + '...' : query;
@@ -96,7 +160,7 @@ export const MssqlTools = {
 
 			try {
 				// Execute read-only query
-				const results = await pool.query(query);
+				let results = await pool.query(query);
 
 				// Handle empty results
 				if (!results || results.length === 0) {
@@ -114,13 +178,37 @@ export const MssqlTools = {
 					};
 				}
 
-				// Format results as CSV
+				// PERFORMANCE: Check result size and apply limits
+				const resultCount = results.length;
+				let warningMessage = '';
+
+				if (resultCount > MAX_RESULT_ROWS) {
+					// Truncate results to MAX_RESULT_ROWS
+					results = results.slice(0, MAX_RESULT_ROWS);
+					warningMessage = `\n\n⚠️ WARNING: Result set truncated from ${resultCount} to ${MAX_RESULT_ROWS} rows. Consider adding LIMIT/TOP clause to your query for better performance.`;
+
+					if (consola.level >= 0) {
+						logger.warn(`Large result set truncated: ${resultCount} rows -> ${MAX_RESULT_ROWS} rows`);
+					}
+				} else if (resultCount > WARN_RESULT_ROWS) {
+					// Just warn, don't truncate
+					warningMessage = `\n\n⚠️ Note: Large result set (${resultCount} rows). Consider using LIMIT/TOP for better performance.`;
+
+					if (consola.level >= 0) {
+						logger.warn(`Large result set: ${resultCount} rows`);
+					}
+				}
+
+				// PERFORMANCE: Memory-efficient CSV formatting with streaming approach
 				const columns = Object.keys(results[0]);
-				// PERFORMANCE: Compile regex once outside the loop
 				const needsQuotingRegex = /[,"\n\r]/;
 
-				const csvRows = results.map((row: any) =>
-					columns
+				// Build CSV string efficiently (avoid intermediate array)
+				let resultText = columns.join(',');
+
+				for (const row of results) {
+					resultText += '\n';
+					resultText += columns
 						.map((col) => {
 							const value = row[col];
 							if (value === null || value === undefined) return '';
@@ -132,9 +220,22 @@ export const MssqlTools = {
 							}
 							return strValue;
 						})
-						.join(','),
-				);
-				const resultText = [columns.join(','), ...csvRows].join('\n');
+						.join(',');
+				}
+
+				resultText += warningMessage;
+
+				// PERFORMANCE: Cache the query result
+				cleanExpiredCache(); // Clean up expired entries first
+				queryCache.set(cacheKey, {
+					result: resultText,
+					timestamp: now,
+				});
+				enforceCacheSizeLimit(); // Ensure we don't exceed cache size
+
+				if (consola.level >= 0) {
+					logger.debug(`Query result cached (cache size: ${queryCache.size}/${QUERY_CACHE_MAX_SIZE})`);
+				}
 
 				return {
 					content: [

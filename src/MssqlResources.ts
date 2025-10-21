@@ -14,6 +14,9 @@ interface ResourceCache {
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 let resourceCache: ResourceCache | null = null;
 
+// PERFORMANCE: Configurable resource data limit from environment
+const RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || '100', 10);
+
 export const MssqlResources = {
 	async getResourceDefinitions(pool: ConnectionPool): Promise<Resource[]> {
 		// PERFORMANCE: Check cache first
@@ -94,8 +97,8 @@ export const MssqlResources = {
 			// Validate table name to prevent SQL injection
 			const safeTableName = validateTableName(tableName);
 
-			// Use TOP 100 for MSSQL (equivalent to LIMIT in other databases)
-			const results = await pool.query(`SELECT TOP 100 * FROM ${safeTableName}`);
+			// PERFORMANCE: Use configurable limit for resource data
+			const results = await pool.query(`SELECT TOP ${RESOURCE_DATA_LIMIT} * FROM ${safeTableName}`);
 
 			if (results.length === 0) {
 				return {
@@ -105,10 +108,19 @@ export const MssqlResources = {
 				};
 			}
 
-			// Get column names from first row
+			// PERFORMANCE: Memory-efficient CSV building
 			const columns = Object.keys(results[0]);
-			const csvRows = results.map((row: any) => columns.map((col) => String(row[col] ?? '')).join(','));
-			const resultText = [columns.join(','), ...csvRows].join('\n');
+			let resultText = columns.join(',');
+
+			for (const row of results) {
+				resultText += '\n';
+				resultText += columns.map((col) => String(row[col] ?? '')).join(',');
+			}
+
+			// Add pagination info if at limit
+			if (results.length === RESOURCE_DATA_LIMIT) {
+				resultText += `\n\n⚠️ Note: Showing first ${RESOURCE_DATA_LIMIT} rows only. Set MSSQL_RESOURCE_LIMIT environment variable to adjust.`;
+			}
 
 			return {
 				uri,
