@@ -2,7 +2,7 @@ import type { TextContent, Tool } from '@modelcontextprotocol/sdk/types.js';
 import consola from 'consola';
 import crypto from 'node:crypto';
 import { z } from 'zod/v4';
-import { isReadOnlyQuery, validateTableName } from './server/config';
+import { isReadOnlyQuery } from './server/config';
 import type { ConnectionPool } from './server/connection';
 import { formatCSV } from './utils/csv';
 
@@ -71,12 +71,6 @@ const ExecuteSqlInputSchema = z.object({
 // Zod schema for version check
 const GetVersionInputSchema = z.object({});
 
-// Zod schema for table schema introspection
-const GetTableSchemaInputSchema = z.object({
-	tableName: z.string().min(1).describe('The name of the table to get schema information for (supports schema.table format)'),
-	includeIndexes: z.boolean().optional().describe('Include index information (default: false)'),
-});
-
 export const MssqlTools = {
 	getToolDefinitions(): Tool[] {
 		return [
@@ -84,11 +78,6 @@ export const MssqlTools = {
 				name: 'exec_sql_csv',
 				description: 'Execute a READ-ONLY SQL query on the SQL Server and return results in CSV format. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are allowed. Write operations (INSERT, UPDATE, DELETE, DROP, etc.) are strictly prohibited.',
 				inputSchema: z.toJSONSchema(ExecuteSqlInputSchema) as any,
-			},
-			{
-				name: 'get_table_schema',
-				description: 'Get detailed schema information for a table including column names, data types, nullability, and optionally indexes. This helps you understand table structure before writing queries. Use this tool BEFORE writing SELECT queries to avoid column name errors.',
-				inputSchema: z.toJSONSchema(GetTableSchemaInputSchema) as any,
 			},
 			{
 				name: 'get_version',
@@ -101,10 +90,6 @@ export const MssqlTools = {
 	async handleTool(name: string, args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
 		if (name === 'get_version') {
 			return this.handleGetVersion(pool);
-		}
-
-		if (name === 'get_table_schema') {
-			return this.handleGetTableSchema(args, pool);
 		}
 
 		if (name === 'exec_sql_csv') {
@@ -136,95 +121,6 @@ export const MssqlTools = {
 					{
 						type: 'text',
 						text: `Error getting version: ${error instanceof Error ? error.message : 'Unknown error'}`,
-					},
-				],
-			};
-		}
-	},
-
-	async handleGetTableSchema(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
-		try {
-			const validatedArgs = GetTableSchemaInputSchema.parse(args);
-			const { tableName, includeIndexes = false } = validatedArgs;
-
-			// Validate and escape table name to prevent SQL injection
-			const safeTableName = validateTableName(tableName);
-
-			// Parse schema and table parts for INFORMATION_SCHEMA query
-			const parts = tableName.split('.');
-			const schemaName = parts.length === 2 ? parts[0] : 'dbo';
-			const actualTableName = parts.length === 2 ? parts[1] : tableName;
-
-			if (consola.level >= 0) {
-				logger.info(`Getting schema for table: ${safeTableName}`);
-			}
-
-			try {
-				// Get column information from INFORMATION_SCHEMA
-				const columnQuery = `SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT, ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaName}' AND TABLE_NAME = '${actualTableName}' ORDER BY ORDINAL_POSITION`;
-
-				const columns = await pool.query(columnQuery);
-
-				if (!columns || columns.length === 0) {
-					return {
-						content: [
-							{
-								type: 'text',
-								text: `Table not found: ${tableName}\n\nPlease verify the table name and schema. Use format: schema.table or just table for dbo schema.`,
-							},
-						],
-					};
-				}
-
-				// Build schema information text
-				let schemaText = `📋 Table Schema: ${safeTableName}\n\n`;
-				schemaText += `Total Columns: ${columns.length}\n\n`;
-				schemaText += formatCSV(columns);
-
-				// Get index information if requested
-				if (includeIndexes) {
-					const indexQuery = `SELECT i.name AS INDEX_NAME, i.type_desc AS INDEX_TYPE, i.is_unique AS IS_UNIQUE, i.is_primary_key AS IS_PRIMARY_KEY, COL_NAME(ic.object_id, ic.column_id) AS COLUMN_NAME FROM sys.indexes i INNER JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id WHERE i.object_id = OBJECT_ID('${safeTableName}') ORDER BY i.name, ic.key_ordinal`;
-
-					const indexes = await pool.query(indexQuery);
-
-					if (indexes && indexes.length > 0) {
-						schemaText += '\n\n📊 Indexes:\n\n';
-						schemaText += formatCSV(indexes);
-					} else {
-						schemaText += '\n\nℹ️ No indexes found for this table.';
-					}
-				}
-
-				return {
-					content: [
-						{
-							type: 'text',
-							text: schemaText,
-						},
-					],
-				};
-			} catch (error) {
-				if (consola.level >= 0) {
-					logger.error('Error getting table schema:', error);
-				}
-				return {
-					content: [
-						{
-							type: 'text',
-							text: `Error getting table schema: ${error instanceof Error ? error.message : 'Unknown error'}`,
-						},
-					],
-				};
-			}
-		} catch (validationError) {
-			if (consola.level >= 0) {
-				logger.error('Invalid input arguments for get_table_schema:', validationError);
-			}
-			return {
-				content: [
-					{
-						type: 'text',
-						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
 					},
 				],
 			};
