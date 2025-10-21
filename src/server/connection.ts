@@ -11,8 +11,9 @@ export interface ConnectionPool {
 
 /**
  * Create a connection pool using the mssql package
+ * PERFORMANCE: Eagerly connects to database to avoid cold start on first query
  */
-export function createConnectionPool(config: LocalMssqlConfig): ConnectionPool {
+export async function createConnectionPool(config: LocalMssqlConfig): Promise<ConnectionPool> {
 	const mssqlConfig: sql.config = {
 		server: config.server,
 		database: config.database,
@@ -44,19 +45,17 @@ export function createConnectionPool(config: LocalMssqlConfig): ConnectionPool {
 	}
 
 	const pool = new sql.ConnectionPool(mssqlConfig);
-	let isConnected = false;
 
 	// This MCP server is READ-ONLY by design
 	logger.info('Connection configured for READ-ONLY access mode (write operations are disabled)');
 
+	// PERFORMANCE: Eagerly connect to avoid cold start on first query
+	await pool.connect();
+	logger.debug('Connection pool connected eagerly (READ-ONLY mode)');
+
 	return {
 		async query<T = any>(sqlQuery: string): Promise<T[]> {
-			if (!isConnected) {
-				await pool.connect();
-				isConnected = true;
-				logger.debug('Connection pool connected (READ-ONLY mode)');
-			}
-
+			// PERFORMANCE: No need to check isConnected anymore, already connected
 			try {
 				const result = await pool.request().query(sqlQuery);
 				logger.debug('Read-only query executed successfully');
@@ -84,11 +83,8 @@ export function createConnectionPool(config: LocalMssqlConfig): ConnectionPool {
 		},
 
 		async close(): Promise<void> {
-			if (isConnected) {
-				await pool.close();
-				isConnected = false;
-				logger.info('Connection pool closed');
-			}
+			await pool.close();
+			logger.info('Connection pool closed');
 		},
 	};
 }

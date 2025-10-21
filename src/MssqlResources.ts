@@ -5,8 +5,26 @@ import type { ConnectionPool } from './server/connection';
 
 const logger = consola.withTag('mssql-resources');
 
+// PERFORMANCE: TTL-based cache for resource listing (5 minutes)
+interface ResourceCache {
+	resources: Resource[];
+	timestamp: number;
+}
+
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+let resourceCache: ResourceCache | null = null;
+
 export const MssqlResources = {
 	async getResourceDefinitions(pool: ConnectionPool): Promise<Resource[]> {
+		// PERFORMANCE: Check cache first
+		const now = Date.now();
+		if (resourceCache && now - resourceCache.timestamp < CACHE_TTL_MS) {
+			if (consola.level >= 0) {
+				logger.debug(`Returning cached resources (age: ${Math.round((now - resourceCache.timestamp) / 1000)}s)`);
+			}
+			return resourceCache.resources;
+		}
+
 		try {
 			const results = await pool.query(`
         SELECT TABLE_NAME
@@ -16,7 +34,7 @@ export const MssqlResources = {
 
 			// Only log if not in STDIO mode
 			if (consola.level >= 0) {
-				logger.info(`Found ${results.length} tables`);
+				logger.info(`Found ${results.length} tables (cache updated)`);
 			}
 
 			const resources: Resource[] = [];
@@ -30,10 +48,21 @@ export const MssqlResources = {
 				});
 			}
 
+			// PERFORMANCE: Update cache
+			resourceCache = {
+				resources,
+				timestamp: now,
+			};
+
 			return resources;
 		} catch (error) {
 			if (consola.level >= 0) {
 				logger.error('Failed to list resources:', error);
+			}
+			// Return cached data even if expired, better than nothing
+			if (resourceCache) {
+				logger.warn('Returning stale cache due to error');
+				return resourceCache.resources;
 			}
 			return [];
 		}

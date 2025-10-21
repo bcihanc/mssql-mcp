@@ -117,15 +117,21 @@ export const MssqlTools = {
 
 				// Format results as CSV
 				const columns = Object.keys(results[0]);
+				// PERFORMANCE: Compile regex once outside the loop
+				const needsQuotingRegex = /[,"\n\r]/;
+
 				const csvRows = results.map((row: any) =>
 					columns
 						.map((col) => {
 							const value = row[col];
 							if (value === null || value === undefined) return '';
-							if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
-								return `"${value.replace(/"/g, '""')}"`;
+
+							// PERFORMANCE: Single regex test instead of 3 includes() calls
+							const strValue = String(value);
+							if (needsQuotingRegex.test(strValue)) {
+								return `"${strValue.replace(/"/g, '""')}"`;
 							}
-							return String(value);
+							return strValue;
 						})
 						.join(','),
 				);

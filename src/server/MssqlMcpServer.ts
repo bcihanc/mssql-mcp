@@ -31,6 +31,7 @@ export class MssqlMcpServer {
 	private httpServer?: any;
 	private pool?: ConnectionPool;
 	private config: Required<MssqlMcpServerConfig>;
+	private httpTransport?: StreamableHTTPTransport;
 
 	constructor(config: MssqlMcpServerConfig = {}) {
 		this.config = {
@@ -97,11 +98,9 @@ export class MssqlMcpServer {
 		// Initialize database configuration and connection pool
 		const dbConfig = getMssqlConfig();
 
-		this.pool = createConnectionPool(dbConfig);
-
-		// Test the connection
+		// PERFORMANCE: Eagerly create and connect pool (createConnectionPool is now async)
 		try {
-			await this.pool.query('SELECT 1 AS test');
+			this.pool = await createConnectionPool(dbConfig);
 			if (!this.config.stdio) {
 				serverLogger.success('Database connection established successfully');
 			}
@@ -144,10 +143,13 @@ export class MssqlMcpServer {
 				});
 			});
 
+			// PERFORMANCE FIX: Create transport once and reuse for all requests
+			this.httpTransport = new StreamableHTTPTransport();
+			await this.server.connect(this.httpTransport);
+
 			this.app.all('/mcp', async (c) => {
-				const transport = new StreamableHTTPTransport();
-				await this.server.connect(transport);
-				return transport.handleRequest(c);
+				// Reuse the same transport instance instead of creating new one each time
+				return this.httpTransport!.handleRequest(c);
 			});
 
 			// Start HTTP server
