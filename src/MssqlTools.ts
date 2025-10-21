@@ -19,12 +19,7 @@ export const MssqlTools = {
 		return [
 			{
 				name: 'exec_sql_csv',
-				description: 'Execute an SQL query on the SQL Server and return results in CSV format',
-				inputSchema: z.toJSONSchema(ExecuteSqlInputSchema) as any,
-			},
-			{
-				name: 'exec_sql_json',
-				description: 'Execute an SQL query on the SQL Server and return results in JSON format',
+				description: 'Execute a READ-ONLY SQL query on the SQL Server and return results in CSV format. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are allowed. Write operations (INSERT, UPDATE, DELETE, DROP, etc.) are strictly prohibited.',
 				inputSchema: z.toJSONSchema(ExecuteSqlInputSchema) as any,
 			},
 			{
@@ -40,9 +35,8 @@ export const MssqlTools = {
 			return this.handleGetVersion(pool);
 		}
 
-		if (name === 'exec_sql_csv' || name === 'exec_sql_json') {
-			const format = name === 'exec_sql_csv' ? 'csv' : 'json';
-			return this.handleExecuteSql(args, pool, format);
+		if (name === 'exec_sql_csv') {
+			return this.handleExecuteSql(args, pool);
 		}
 
 		throw new Error(`Unknown tool: ${name}`);
@@ -76,23 +70,19 @@ export const MssqlTools = {
 		}
 	},
 
-	async handleExecuteSql(args: any, pool: ConnectionPool, format: 'csv' | 'json'): Promise<{ content: TextContent[] }> {
+	async handleExecuteSql(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
 		// Validate input using Zod schema
 		try {
 			const validatedArgs = ExecuteSqlInputSchema.parse(args);
 			const query = validatedArgs.query;
 
-			// Get config to check access mode
-			const config = getMssqlConfig();
-			const useReadOnlyTransaction = config.accessMode === 'readonly';
-
-			// In readonly mode, also validate query type as additional safety (pre-check before database execution)
-			if (useReadOnlyTransaction && !isReadOnlyQuery(query)) {
+			// CRITICAL: Validate that query is read-only (this MCP server is READ-ONLY by design)
+			if (!isReadOnlyQuery(query)) {
 				return {
 					content: [
 						{
 							type: 'text',
-							text: 'Error: Write operations are not allowed in read-only mode. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are permitted. This query was blocked before execution.',
+							text: 'Error: This MCP server is READ-ONLY. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are permitted. Write operations (INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, etc.) are strictly prohibited and blocked before execution.',
 						},
 					],
 				};
@@ -100,17 +90,14 @@ export const MssqlTools = {
 
 			// Only log if not in STDIO mode
 			if (consola.level >= 0) {
-				const mode = useReadOnlyTransaction ? 'readonly' : 'transactional';
 				logger.info(
-					`Executing SQL query (${format}, ${mode}): ${query.substring(0, 100)}${query.length > 100 ? '...' : ''}`,
+					`Executing READ-ONLY SQL query: ${query.substring(0, 100)}${query.length > 100 ? '...' : ''}`,
 				);
 			}
 
 			try {
-				// Use different execution paths based on access mode
-				const results = useReadOnlyTransaction
-					? await pool.query(query) // Simple query execution for read-only
-					: await pool.queryWithTransaction(query, false); // Transaction for write operations
+				// Execute read-only query
+				const results = await pool.query(query);
 
 				// Handle empty results
 				if (!results || results.length === 0) {
@@ -128,60 +115,52 @@ export const MssqlTools = {
 					};
 				}
 
-				// Format results based on requested format
-				if (format === 'json') {
-					return {
-						content: [
-							{
-								type: 'text',
-								text: JSON.stringify(results, null, 2),
-							},
-						],
-					};
-				} else {
-					// CSV format
-					const columns = Object.keys(results[0]);
-					const csvRows = results.map((row: any) =>
-						columns
-							.map((col) => {
-								const value = row[col];
-								if (value === null || value === undefined) return '';
-								if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
-									return `"${value.replace(/"/g, '""')}"`;
-								}
-								return String(value);
-							})
-							.join(','),
-					);
-					const resultText = [columns.join(','), ...csvRows].join('\n');
+				// Format results as CSV
+				const columns = Object.keys(results[0]);
+				const csvRows = results.map((row: any) =>
+					columns
+						.map((col) => {
+							const value = row[col];
+							if (value === null || value === undefined) return '';
+							if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+								return `"${value.replace(/"/g, '""')}"`;
+							}
+							return String(value);
+						})
+						.join(','),
+				);
+				const resultText = [columns.join(','), ...csvRows].join('\n');
 
-					return {
-						content: [
-							{
-								type: 'text',
-								text: resultText,
-							},
-						],
-					};
-				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: resultText,
+						},
+					],
+				};
 			} catch (error) {
 				if (consola.level >= 0) {
-					logger.error(`Error executing SQL '${query}':`, error);
+					logger.error(`Error executing READ-ONLY SQL '${query}':`, error);
 				}
 
-				// Provide more specific error messages for read-only violations
 				const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-				const isReadOnlyError =
+
+				// Check if this was a write operation that bypassed validation
+				const isWriteAttempt =
 					errorMessage.toLowerCase().includes('read only')
 					|| errorMessage.toLowerCase().includes('cannot execute')
-					|| errorMessage.toLowerCase().includes('not allowed');
+					|| errorMessage.toLowerCase().includes('not allowed')
+					|| errorMessage.toLowerCase().includes('insert')
+					|| errorMessage.toLowerCase().includes('update')
+					|| errorMessage.toLowerCase().includes('delete');
 
-				if (useReadOnlyTransaction && isReadOnlyError) {
+				if (isWriteAttempt) {
 					return {
 						content: [
 							{
 								type: 'text',
-								text: `Error: Write operation blocked by read-only transaction. This query attempted to modify data, which is not allowed in read-only mode. Original error: ${errorMessage}`,
+								text: `Error: Write operation blocked. This MCP server is READ-ONLY and does not allow data modifications. Original error: ${errorMessage}`,
 							},
 						],
 					};

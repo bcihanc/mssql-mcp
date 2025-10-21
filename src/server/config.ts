@@ -9,7 +9,6 @@ export interface MssqlConfig {
 	encrypt: boolean;
 	command: string;
 	windowsAuth: boolean;
-	accessMode: 'readonly' | 'readwrite';
 }
 
 const logger = consola.withTag('mssql-config');
@@ -43,7 +42,6 @@ export function getMssqlConfig(): MssqlConfig {
 		encrypt: false,
 		command: process.env.MSSQL_COMMAND || 'execute_sql',
 		windowsAuth: false,
-		accessMode: process.env.MSSQL_ACCESS_MODE?.toLowerCase() === 'readonly' ? 'readonly' : 'readwrite',
 	};
 
 	// Port support (matching Python reference)
@@ -96,11 +94,11 @@ export function getMssqlConfig(): MssqlConfig {
 
 	if (useWindowsAuth) {
 		logger.info(
-			`Database config: ${config.server}:${config.port}/${config.database} using Windows Authentication (${config.accessMode} mode)`,
+			`Database config: ${config.server}:${config.port}/${config.database} using Windows Authentication (READ-ONLY mode)`,
 		);
 	} else {
 		logger.info(
-			`Database config: ${config.server}:${config.port}/${config.database} as ${config.user} (${config.accessMode} mode)`,
+			`Database config: ${config.server}:${config.port}/${config.database} as ${config.user} (READ-ONLY mode)`,
 		);
 	}
 
@@ -108,12 +106,13 @@ export function getMssqlConfig(): MssqlConfig {
 }
 
 /**
- * Check if a SQL query is a read-only operation
+ * Check if a SQL query is a read-only operation with enhanced security validation
  */
 export function isReadOnlyQuery(query: string): boolean {
-	// Remove SQL line comments (--) and whitespace
+	// Remove SQL comments (line and block) and whitespace
 	const cleanQuery = query
 		.replace(/--.*$/gm, '') // Remove line comments
+		.replace(/\/\*[\s\S]*?\*\//g, '') // Remove block comments
 		.trim()
 		.toUpperCase();
 
@@ -122,7 +121,28 @@ export function isReadOnlyQuery(query: string): boolean {
 		return false;
 	}
 
-	// Allow SELECT statements and information queries
+	// Blacklist: Dangerous operations that should NEVER be allowed
+	const dangerousPatterns = [
+		/\b(DROP|TRUNCATE|ALTER|CREATE)\b/i,
+		/\b(INSERT|UPDATE|DELETE|MERGE)\b/i,
+		/\b(GRANT|REVOKE|DENY)\b/i,
+		/\b(EXEC|EXECUTE|SP_EXECUTESQL)\b/i,
+		/\bXP_CMDSHELL\b/i,
+		/\bOPENROWSET\b/i,
+		/\bOPENQUERY\b/i,
+		/\bOPENDATASOURCE\b/i,
+		/;\s*(DROP|TRUNCATE|ALTER|INSERT|UPDATE|DELETE)/i, // Multiple statements check
+	];
+
+	// Check for dangerous patterns
+	for (const pattern of dangerousPatterns) {
+		if (pattern.test(cleanQuery)) {
+			logger.warn(`Dangerous pattern detected in query: ${pattern}`);
+			return false;
+		}
+	}
+
+	// Whitelist: Only allow safe read-only operations
 	const readOnlyOperations = [
 		'SELECT',
 		'WITH', // CTEs that start with WITH
@@ -133,7 +153,14 @@ export function isReadOnlyQuery(query: string): boolean {
 	];
 
 	// Check if query starts with any read-only operation
-	return readOnlyOperations.some((op) => cleanQuery.startsWith(op));
+	const startsWithReadOnly = readOnlyOperations.some((op) => cleanQuery.startsWith(op));
+
+	if (!startsWithReadOnly) {
+		logger.warn(`Query does not start with allowed read-only operation: ${cleanQuery.substring(0, 50)}`);
+		return false;
+	}
+
+	return true;
 }
 
 /**

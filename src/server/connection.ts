@@ -6,7 +6,6 @@ const logger = consola.withTag('mssql-connection');
 
 export interface ConnectionPool {
 	query<T = any>(sqlQuery: string): Promise<T[]>;
-	queryWithTransaction<T = any>(sqlQuery: string, readOnly?: boolean): Promise<T[]>;
 	close(): Promise<void>;
 }
 
@@ -47,103 +46,39 @@ export function createConnectionPool(config: LocalMssqlConfig): ConnectionPool {
 	const pool = new sql.ConnectionPool(mssqlConfig);
 	let isConnected = false;
 
-	// Log read-only mode configuration
-	if (config.accessMode === 'readonly') {
-		logger.info('Connection configured for read-only access mode');
-	}
+	// This MCP server is READ-ONLY by design
+	logger.info('Connection configured for READ-ONLY access mode (write operations are disabled)');
 
 	return {
 		async query<T = any>(sqlQuery: string): Promise<T[]> {
 			if (!isConnected) {
 				await pool.connect();
 				isConnected = true;
-				logger.debug('Connection pool connected');
+				logger.debug('Connection pool connected (READ-ONLY mode)');
 			}
 
 			try {
 				const result = await pool.request().query(sqlQuery);
+				logger.debug('Read-only query executed successfully');
 				return result.recordset as T[];
 			} catch (error) {
 				logger.error('Query execution failed:', error);
-				throw error;
-			}
-		},
 
-		async queryWithTransaction<T = any>(sqlQuery: string, readOnly: boolean = false): Promise<T[]> {
-			if (!isConnected) {
-				await pool.connect();
-				isConnected = true;
-				logger.debug('Connection pool connected');
-			}
-
-			// For SQL Server 2008 compatibility, we need to handle transaction nesting carefully
-			if (readOnly) {
-				// For read-only operations, we can execute directly without wrapping in transaction
-				// This avoids transaction nesting issues and is safe for read operations
-				try {
-					const request = pool.request();
-					const result = await request.query(sqlQuery);
-
-					if (consola.level >= 0) {
-						logger.debug('Executed read-only query (no explicit transaction to avoid nesting)');
-					}
-
-					return result.recordset as T[];
-				} catch (error) {
-					logger.error('Read-only query execution failed:', error);
-
-					// Check if this looks like a write operation that was blocked
-					const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-					const lower = errorMessage.toLowerCase();
-					if (
-						lower.includes('insert')
-						|| lower.includes('update')
-						|| lower.includes('delete')
-						|| lower.includes('create')
-						|| lower.includes('drop')
-						|| lower.includes('alter')
-					) {
-						// This suggests a write operation was attempted in read-only mode
-						throw new Error(`Read-only mode violation: Attempted write operation detected. ${errorMessage}`);
-					}
-
-					throw error;
-				}
-			}
-
-			// For write operations, check if we're already in a transaction
-			try {
-				const request = pool.request();
-
-				// First, check current transaction count to avoid nesting
-				const transactionCheckResult = await request.query('SELECT @@TRANCOUNT as trancount');
-				const currentTranCount = transactionCheckResult.recordset[0]?.trancount || 0;
-
-				let result;
-
-				if (currentTranCount > 0) {
-					// Already in a transaction, execute directly
-					result = await request.query(sqlQuery);
-					if (consola.level >= 0) {
-						logger.debug('Executed write query within existing transaction');
-					}
-				} else {
-					// Not in a transaction, create our own
-					const transactionQuery = `
-						BEGIN TRANSACTION;
-						${sqlQuery};
-						COMMIT TRANSACTION;
-					`;
-
-					result = await request.query(transactionQuery);
-					if (consola.level >= 0) {
-						logger.debug('Executed write query with new transaction');
-					}
+				// Check if this looks like a write operation that was blocked
+				const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+				const lower = errorMessage.toLowerCase();
+				if (
+					lower.includes('insert')
+					|| lower.includes('update')
+					|| lower.includes('delete')
+					|| lower.includes('create')
+					|| lower.includes('drop')
+					|| lower.includes('alter')
+				) {
+					// This suggests a write operation was attempted
+					throw new Error(`READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`);
 				}
 
-				return result.recordset as T[];
-			} catch (error) {
-				logger.error('Write transaction query execution failed:', error);
 				throw error;
 			}
 		},
