@@ -71,6 +71,35 @@ const ExecuteSqlInputSchema = z.object({
 // Zod schema for version check
 const GetVersionInputSchema = z.object({});
 
+// Zod schema for list tables
+const ListTablesInputSchema = z.object({
+	schema_name: z.string().optional().describe('Optional schema name to filter tables (e.g., "dbo", "sys")'),
+});
+
+// Zod schema for get table schema
+const GetTableSchemaInputSchema = z.object({
+	table_name: z.string().min(1).describe('The name of the table to get schema information for'),
+	schema_name: z.string().optional().describe('Optional schema name (default: "dbo")'),
+});
+
+// Zod schema for get foreign keys
+const GetForeignKeysInputSchema = z.object({
+	table_name: z.string().optional().describe('Optional table name to filter foreign keys for a specific table'),
+	schema_name: z.string().optional().describe('Optional schema name to filter foreign keys (default: all schemas)'),
+});
+
+// Zod schema for search columns
+const SearchColumnsInputSchema = z.object({
+	column_name: z.string().min(1).describe('The column name to search for (supports partial matching with LIKE pattern)'),
+	schema_name: z.string().optional().describe('Optional schema name to limit search scope'),
+});
+
+// Zod schema for get table relationships
+const GetTableRelationshipsInputSchema = z.object({
+	table_name: z.string().min(1).describe('The name of the table to get relationships for'),
+	schema_name: z.string().optional().describe('Optional schema name (default: "dbo")'),
+});
+
 export const MssqlTools = {
 	getToolDefinitions(): Tool[] {
 		return [
@@ -84,12 +113,57 @@ export const MssqlTools = {
 				description: 'Get the SQL Server version information',
 				inputSchema: z.toJSONSchema(GetVersionInputSchema) as any,
 			},
+			{
+				name: 'list_tables',
+				description: 'List all tables in the database with their schema, row count, and size information. Optionally filter by schema name.',
+				inputSchema: z.toJSONSchema(ListTablesInputSchema) as any,
+			},
+			{
+				name: 'get_table_schema',
+				description: 'Get detailed schema information for a specific table including column names, data types, nullability, default values, and constraints.',
+				inputSchema: z.toJSONSchema(GetTableSchemaInputSchema) as any,
+			},
+			{
+				name: 'get_foreign_keys',
+				description: 'Get all foreign key relationships in the database with detailed constraint information. Optionally filter by table or schema.',
+				inputSchema: z.toJSONSchema(GetForeignKeysInputSchema) as any,
+			},
+			{
+				name: 'search_columns',
+				description: 'Search for columns by name across all tables in the database. Supports partial matching with LIKE patterns (use % as wildcard).',
+				inputSchema: z.toJSONSchema(SearchColumnsInputSchema) as any,
+			},
+			{
+				name: 'get_table_relationships',
+				description: 'Get all parent and child table relationships for a specific table, showing foreign key connections.',
+				inputSchema: z.toJSONSchema(GetTableRelationshipsInputSchema) as any,
+			},
 		];
 	},
 
 	async handleTool(name: string, args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
 		if (name === 'get_version') {
 			return this.handleGetVersion(pool);
+		}
+
+		if (name === 'list_tables') {
+			return this.handleListTables(args, pool);
+		}
+
+		if (name === 'get_table_schema') {
+			return this.handleGetTableSchema(args, pool);
+		}
+
+		if (name === 'get_foreign_keys') {
+			return this.handleGetForeignKeys(args, pool);
+		}
+
+		if (name === 'search_columns') {
+			return this.handleSearchColumns(args, pool);
+		}
+
+		if (name === 'get_table_relationships') {
+			return this.handleGetTableRelationships(args, pool);
 		}
 
 		if (name === 'exec_sql_csv') {
@@ -121,6 +195,371 @@ export const MssqlTools = {
 					{
 						type: 'text',
 						text: `Error getting version: ${error instanceof Error ? error.message : 'Unknown error'}`,
+					},
+				],
+			};
+		}
+	},
+
+	async handleListTables(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const validatedArgs = ListTablesInputSchema.parse(args);
+			const schemaFilter = validatedArgs.schema_name;
+
+			if (consola.level >= 0) {
+				logger.info(`Listing tables${schemaFilter ? ` for schema: ${schemaFilter}` : ' (all schemas)'}`);
+			}
+
+			let query = 'SELECT t.TABLE_SCHEMA AS [Schema], t.TABLE_NAME AS [Table], p.rows AS [RowCount], CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS DECIMAL(18,2)) AS [SizeMB] FROM INFORMATION_SCHEMA.TABLES t INNER JOIN sys.tables st ON t.TABLE_NAME = st.name INNER JOIN sys.indexes i ON st.object_id = i.object_id INNER JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id INNER JOIN sys.allocation_units a ON p.partition_id = a.container_id WHERE t.TABLE_TYPE = \'BASE TABLE\' AND i.index_id <= 1';
+
+			if (schemaFilter) {
+				query += ` AND t.TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`;
+			}
+
+			query += ' GROUP BY t.TABLE_SCHEMA, t.TABLE_NAME, p.rows ORDER BY t.TABLE_SCHEMA, t.TABLE_NAME';
+
+			try {
+				const results = await pool.query(query);
+
+				if (!results || results.length === 0) {
+					return {
+						content: [
+							{
+								type: 'text',
+								text: schemaFilter
+									? `No tables found in schema: ${schemaFilter}`
+									: 'No tables found in database',
+							},
+						],
+					};
+				}
+
+				const csvText = formatCSV(results);
+
+				if (consola.level >= 0) {
+					logger.info(`Found ${results.length} table(s)`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: csvText,
+						},
+					],
+				};
+			} catch (error) {
+				if (consola.level >= 0) {
+					logger.error('Error executing query:', error);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Error listing tables: ${error instanceof Error ? error.message : 'Unknown error'}`,
+						},
+					],
+				};
+			}
+		} catch (validationError) {
+			if (consola.level >= 0) {
+				logger.error('Invalid input arguments:', validationError);
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
+					},
+				],
+			};
+		}
+	},
+
+	async handleGetTableSchema(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const validatedArgs = GetTableSchemaInputSchema.parse(args);
+			const tableName = validatedArgs.table_name;
+			const schemaName = validatedArgs.schema_name || 'dbo';
+
+			if (consola.level >= 0) {
+				logger.info(`Getting schema for table: ${schemaName}.${tableName}`);
+			}
+
+			const query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], c.ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
+
+			try {
+				const results = await pool.query(query);
+
+				if (!results || results.length === 0) {
+					return {
+						content: [
+							{
+								type: 'text',
+								text: `Table not found: ${schemaName}.${tableName}`,
+							},
+						],
+					};
+				}
+
+				const csvText = formatCSV(results);
+
+				if (consola.level >= 0) {
+					logger.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName}`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: csvText,
+						},
+					],
+				};
+			} catch (error) {
+				if (consola.level >= 0) {
+					logger.error('Error executing query:', error);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Error getting table schema: ${error instanceof Error ? error.message : 'Unknown error'}`,
+						},
+					],
+				};
+			}
+		} catch (validationError) {
+			if (consola.level >= 0) {
+				logger.error('Invalid input arguments:', validationError);
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
+					},
+				],
+			};
+		}
+	},
+
+	async handleGetForeignKeys(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const validatedArgs = GetForeignKeysInputSchema.parse(args);
+			const tableFilter = validatedArgs.table_name;
+			const schemaFilter = validatedArgs.schema_name;
+
+			if (consola.level >= 0) {
+				logger.info(`Getting foreign keys${tableFilter ? ` for table: ${tableFilter}` : ' (all tables)'}${schemaFilter ? ` in schema: ${schemaFilter}` : ''}`);
+			}
+
+			let query = 'SELECT fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.parent_object_id) AS [ParentSchema], OBJECT_NAME(fk.parent_object_id) AS [ParentTable], COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS [ParentColumn], OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS [ReferencedSchema], OBJECT_NAME(fk.referenced_object_id) AS [ReferencedTable], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [ReferencedColumn], CASE fk.delete_referential_action WHEN 0 THEN \'NO ACTION\' WHEN 1 THEN \'CASCADE\' WHEN 2 THEN \'SET NULL\' WHEN 3 THEN \'SET DEFAULT\' END AS [OnDelete], CASE fk.update_referential_action WHEN 0 THEN \'NO ACTION\' WHEN 1 THEN \'CASCADE\' WHEN 2 THEN \'SET NULL\' WHEN 3 THEN \'SET DEFAULT\' END AS [OnUpdate] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE 1=1';
+
+			if (schemaFilter) {
+				query += ` AND OBJECT_SCHEMA_NAME(fk.parent_object_id) = '${schemaFilter.replace(/'/g, "''")}'`;
+			}
+
+			if (tableFilter) {
+				query += ` AND OBJECT_NAME(fk.parent_object_id) = '${tableFilter.replace(/'/g, "''")}'`;
+			}
+
+			query += ' ORDER BY [ParentSchema], [ParentTable], [ConstraintName]';
+
+			try {
+				const results = await pool.query(query);
+
+				if (!results || results.length === 0) {
+					return {
+						content: [
+							{
+								type: 'text',
+								text: tableFilter
+									? `No foreign keys found for table: ${tableFilter}`
+									: 'No foreign keys found in database',
+							},
+						],
+					};
+				}
+
+				const csvText = formatCSV(results);
+
+				if (consola.level >= 0) {
+					logger.info(`Found ${results.length} foreign key(s)`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: csvText,
+						},
+					],
+				};
+			} catch (error) {
+				if (consola.level >= 0) {
+					logger.error('Error executing query:', error);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Error getting foreign keys: ${error instanceof Error ? error.message : 'Unknown error'}`,
+						},
+					],
+				};
+			}
+		} catch (validationError) {
+			if (consola.level >= 0) {
+				logger.error('Invalid input arguments:', validationError);
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
+					},
+				],
+			};
+		}
+	},
+
+	async handleSearchColumns(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const validatedArgs = SearchColumnsInputSchema.parse(args);
+			const columnName = validatedArgs.column_name;
+			const schemaFilter = validatedArgs.schema_name;
+
+			if (consola.level >= 0) {
+				logger.info(`Searching for column: ${columnName}${schemaFilter ? ` in schema: ${schemaFilter}` : ''}`);
+			}
+
+			let query = 'SELECT TABLE_SCHEMA AS [Schema], TABLE_NAME AS [Table], COLUMN_NAME AS [Column], DATA_TYPE AS [DataType], CHARACTER_MAXIMUM_LENGTH AS [MaxLength], IS_NULLABLE AS [Nullable], ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE \'%' + columnName.replace(/'/g, "''") + '%\'';
+
+			if (schemaFilter) {
+				query += ` AND TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`;
+			}
+
+			query += ' ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION';
+
+			try {
+				const results = await pool.query(query);
+
+				if (!results || results.length === 0) {
+					return {
+						content: [
+							{
+								type: 'text',
+								text: `No columns found matching: ${columnName}`,
+							},
+						],
+					};
+				}
+
+				const csvText = formatCSV(results);
+
+				if (consola.level >= 0) {
+					logger.info(`Found ${results.length} column(s) matching: ${columnName}`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: csvText,
+						},
+					],
+				};
+			} catch (error) {
+				if (consola.level >= 0) {
+					logger.error('Error executing query:', error);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Error searching columns: ${error instanceof Error ? error.message : 'Unknown error'}`,
+						},
+					],
+				};
+			}
+		} catch (validationError) {
+			if (consola.level >= 0) {
+				logger.error('Invalid input arguments:', validationError);
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
+					},
+				],
+			};
+		}
+	},
+
+	async handleGetTableRelationships(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const validatedArgs = GetTableRelationshipsInputSchema.parse(args);
+			const tableName = validatedArgs.table_name;
+			const schemaName = validatedArgs.schema_name || 'dbo';
+
+			if (consola.level >= 0) {
+				logger.info(`Getting relationships for table: ${schemaName}.${tableName}`);
+			}
+
+			const query = `SELECT \'PARENT\' AS [RelationType], fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS [RelatedSchema], OBJECT_NAME(fk.referenced_object_id) AS [RelatedTable], COL_NAME(fkc.parent_column_id, fkc.parent_column_id) AS [ThisColumn], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [RelatedColumn] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE OBJECT_SCHEMA_NAME(fk.parent_object_id) = '${schemaName.replace(/'/g, "''")}' AND OBJECT_NAME(fk.parent_object_id) = '${tableName.replace(/'/g, "''")}' UNION ALL SELECT \'CHILD\' AS [RelationType], fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.parent_object_id) AS [RelatedSchema], OBJECT_NAME(fk.parent_object_id) AS [RelatedTable], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [ThisColumn], COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS [RelatedColumn] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE OBJECT_SCHEMA_NAME(fk.referenced_object_id) = '${schemaName.replace(/'/g, "''")}' AND OBJECT_NAME(fk.referenced_object_id) = '${tableName.replace(/'/g, "''")}' ORDER BY [RelationType], [RelatedSchema], [RelatedTable]`;
+
+			try {
+				const results = await pool.query(query);
+
+				if (!results || results.length === 0) {
+					return {
+						content: [
+							{
+								type: 'text',
+								text: `No relationships found for table: ${schemaName}.${tableName}`,
+							},
+						],
+					};
+				}
+
+				const csvText = formatCSV(results);
+
+				if (consola.level >= 0) {
+					logger.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName}`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: csvText,
+						},
+					],
+				};
+			} catch (error) {
+				if (consola.level >= 0) {
+					logger.error('Error executing query:', error);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Error getting table relationships: ${error instanceof Error ? error.message : 'Unknown error'}`,
+						},
+					],
+				};
+			}
+		} catch (validationError) {
+			if (consola.level >= 0) {
+				logger.error('Invalid input arguments:', validationError);
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
 					},
 				],
 			};
