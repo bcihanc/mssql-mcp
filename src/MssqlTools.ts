@@ -23,6 +23,37 @@ const QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || '60000', 10);
 const QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || '100', 10); // Max 100 queries
 const queryCache = new Map<string, QueryCacheEntry>();
 
+// PERFORMANCE: Tool-specific caching configurations
+interface ToolCacheEntry {
+	result: string;
+	timestamp: number;
+	lastAccessed: number; // For true LRU tracking
+}
+
+// Cache TTL configurations (milliseconds)
+// Database schema rarely changes, so we use longer TTLs for better performance
+const TABLES_CACHE_TTL_MS = parseInt(process.env.MSSQL_TABLES_CACHE_TTL || '1800000', 10); // 30 minutes
+const SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || '7200000', 10); // 2 hours
+const FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || '14400000', 10); // 4 hours
+const RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || '14400000', 10); // 4 hours
+const COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || '7200000', 10); // 2 hours
+
+// Cache size limits
+const SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || '200', 10);
+const FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || '100', 10);
+const RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || '100', 10);
+const COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || '100', 10);
+
+// Cache instances for each tool
+const listTablesCache = new Map<string, ToolCacheEntry>();
+const tableSchemaCache = new Map<string, ToolCacheEntry>();
+const foreignKeysCache = new Map<string, ToolCacheEntry>();
+const relationshipsCache = new Map<string, ToolCacheEntry>();
+const columnsCache = new Map<string, ToolCacheEntry>();
+
+// Static cache for SQL Server version (never changes during runtime)
+let versionCache: string | null = null;
+
 // SECURITY: Generate cache key using SHA256 hash to prevent cache poisoning
 // This ensures different queries always produce different cache keys
 // and prevents attackers from crafting queries that collide with legitimate ones
@@ -61,6 +92,65 @@ function enforceCacheSizeLimit(): void {
 			logger.debug(`LRU eviction: removed ${entriesToDelete} least recently used entries`);
 		}
 	}
+}
+
+// PERFORMANCE: Generic cache helpers for tool-specific caches
+function cleanExpiredToolEntry(cache: Map<string, ToolCacheEntry>, key: string, ttlMs: number): boolean {
+	const entry = cache.get(key);
+	if (entry && Date.now() - entry.timestamp > ttlMs) {
+		cache.delete(key);
+		return true; // Entry was expired and removed
+	}
+	return false; // Entry is still valid or doesn't exist
+}
+
+function enforceToolCacheSizeLimit(cache: Map<string, ToolCacheEntry>, maxSize: number, cacheName: string): void {
+	if (cache.size > maxSize) {
+		// Sort entries by lastAccessed time and remove oldest ones
+		const entries = Array.from(cache.entries()).sort(
+			(a, b) => a[1].lastAccessed - b[1].lastAccessed,
+		);
+
+		const entriesToDelete = cache.size - maxSize;
+		for (let i = 0; i < entriesToDelete; i++) {
+			cache.delete(entries[i][0]);
+		}
+
+		if (consola.level >= 0) {
+			logger.debug(`${cacheName} LRU eviction: removed ${entriesToDelete} least recently used entries`);
+		}
+	}
+}
+
+// PERFORMANCE: Get from cache with automatic expiry check and LRU update
+function getFromToolCache(cache: Map<string, ToolCacheEntry>, key: string, ttlMs: number): string | null {
+	// Lazy cleanup: check if cached entry is expired
+	if (!cleanExpiredToolEntry(cache, key, ttlMs)) {
+		const entry = cache.get(key);
+		if (entry) {
+			// Update lastAccessed for true LRU
+			entry.lastAccessed = Date.now();
+			return entry.result;
+		}
+	}
+	return null;
+}
+
+// PERFORMANCE: Set in cache with automatic LRU enforcement
+function setInToolCache(
+	cache: Map<string, ToolCacheEntry>,
+	key: string,
+	result: string,
+	maxSize: number,
+	cacheName: string,
+): void {
+	const now = Date.now();
+	cache.set(key, {
+		result,
+		timestamp: now,
+		lastAccessed: now,
+	});
+	enforceToolCacheSizeLimit(cache, maxSize, cacheName);
 }
 
 // Zod schema for SQL query execution
@@ -174,9 +264,31 @@ export const MssqlTools = {
 	},
 
 	async handleGetVersion(pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		// PERFORMANCE: Static cache - version never changes during runtime
+		if (versionCache !== null) {
+			if (consola.level >= 0) {
+				logger.debug('Returning cached SQL Server version');
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: versionCache + '\n\n📋 (Cached result)',
+					},
+				],
+			};
+		}
+
 		try {
 			const results = await pool.query('SELECT @@VERSION AS version');
 			const version = results[0]?.version || 'Unknown';
+
+			// Cache the version permanently (static cache)
+			versionCache = version;
+
+			if (consola.level >= 0) {
+				logger.info('SQL Server version cached');
+			}
 
 			return {
 				content: [
@@ -205,6 +317,25 @@ export const MssqlTools = {
 		try {
 			const validatedArgs = ListTablesInputSchema.parse(args);
 			const schemaFilter = validatedArgs.schema_name;
+
+			// PERFORMANCE: Generate cache key based on schema filter
+			const cacheKey = schemaFilter || '_all_schemas_';
+
+			// Check cache first
+			const cachedResult = getFromToolCache(listTablesCache, cacheKey, TABLES_CACHE_TTL_MS);
+			if (cachedResult !== null) {
+				if (consola.level >= 0) {
+					logger.debug(`Returning cached list_tables result for key: ${cacheKey}`);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedResult + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
 
 			if (consola.level >= 0) {
 				logger.info(`Listing tables${schemaFilter ? ` for schema: ${schemaFilter}` : ' (all schemas)'}`);
@@ -236,8 +367,17 @@ export const MssqlTools = {
 
 				const csvText = formatCSV(results);
 
+				// PERFORMANCE: Cache the result
+				// Note: list_tables doesn't have a max size limit as we expect only a few different schema filters
+				const now = Date.now();
+				listTablesCache.set(cacheKey, {
+					result: csvText,
+					timestamp: now,
+					lastAccessed: now,
+				});
+
 				if (consola.level >= 0) {
-					logger.info(`Found ${results.length} table(s)`);
+					logger.info(`Found ${results.length} table(s) - result cached`);
 				}
 
 				return {
@@ -282,6 +422,25 @@ export const MssqlTools = {
 			const tableName = validatedArgs.table_name;
 			const schemaName = validatedArgs.schema_name || 'dbo';
 
+			// PERFORMANCE: Generate cache key based on schema and table name
+			const cacheKey = `${schemaName}:${tableName}`;
+
+			// Check cache first
+			const cachedResult = getFromToolCache(tableSchemaCache, cacheKey, SCHEMA_CACHE_TTL_MS);
+			if (cachedResult !== null) {
+				if (consola.level >= 0) {
+					logger.debug(`Returning cached table schema for: ${schemaName}.${tableName}`);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedResult + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
+
 			if (consola.level >= 0) {
 				logger.info(`Getting schema for table: ${schemaName}.${tableName}`);
 			}
@@ -304,8 +463,11 @@ export const MssqlTools = {
 
 				const csvText = formatCSV(results);
 
+				// PERFORMANCE: Cache the result with LRU eviction
+				setInToolCache(tableSchemaCache, cacheKey, csvText, SCHEMA_CACHE_MAX_SIZE, 'table_schema');
+
 				if (consola.level >= 0) {
-					logger.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName}`);
+					logger.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`);
 				}
 
 				return {
@@ -350,6 +512,25 @@ export const MssqlTools = {
 			const tableFilter = validatedArgs.table_name;
 			const schemaFilter = validatedArgs.schema_name;
 
+			// PERFORMANCE: Generate cache key based on filters
+			const cacheKey = `${schemaFilter || '_all_'}:${tableFilter || '_all_'}`;
+
+			// Check cache first
+			const cachedResult = getFromToolCache(foreignKeysCache, cacheKey, FK_CACHE_TTL_MS);
+			if (cachedResult !== null) {
+				if (consola.level >= 0) {
+					logger.debug(`Returning cached foreign keys for: ${cacheKey}`);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedResult + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
+
 			if (consola.level >= 0) {
 				logger.info(`Getting foreign keys${tableFilter ? ` for table: ${tableFilter}` : ' (all tables)'}${schemaFilter ? ` in schema: ${schemaFilter}` : ''}`);
 			}
@@ -384,8 +565,11 @@ export const MssqlTools = {
 
 				const csvText = formatCSV(results);
 
+				// PERFORMANCE: Cache the result with LRU eviction
+				setInToolCache(foreignKeysCache, cacheKey, csvText, FK_CACHE_MAX_SIZE, 'foreign_keys');
+
 				if (consola.level >= 0) {
-					logger.info(`Found ${results.length} foreign key(s)`);
+					logger.info(`Found ${results.length} foreign key(s) - result cached`);
 				}
 
 				return {
@@ -430,6 +614,27 @@ export const MssqlTools = {
 			const columnName = validatedArgs.column_name;
 			const schemaFilter = validatedArgs.schema_name;
 
+			// PERFORMANCE: Generate cache key based on normalized search term
+			// Normalize to lowercase for better cache hit rate
+			const normalizedColumn = columnName.toLowerCase().trim();
+			const cacheKey = `${schemaFilter || '_all_'}:${normalizedColumn}`;
+
+			// Check cache first
+			const cachedResult = getFromToolCache(columnsCache, cacheKey, COLUMNS_CACHE_TTL_MS);
+			if (cachedResult !== null) {
+				if (consola.level >= 0) {
+					logger.debug(`Returning cached column search for: ${cacheKey}`);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedResult + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
+
 			if (consola.level >= 0) {
 				logger.info(`Searching for column: ${columnName}${schemaFilter ? ` in schema: ${schemaFilter}` : ''}`);
 			}
@@ -458,8 +663,11 @@ export const MssqlTools = {
 
 				const csvText = formatCSV(results);
 
+				// PERFORMANCE: Cache the result with LRU eviction
+				setInToolCache(columnsCache, cacheKey, csvText, COLUMNS_CACHE_MAX_SIZE, 'search_columns');
+
 				if (consola.level >= 0) {
-					logger.info(`Found ${results.length} column(s) matching: ${columnName}`);
+					logger.info(`Found ${results.length} column(s) matching: ${columnName} - result cached`);
 				}
 
 				return {
@@ -504,6 +712,25 @@ export const MssqlTools = {
 			const tableName = validatedArgs.table_name;
 			const schemaName = validatedArgs.schema_name || 'dbo';
 
+			// PERFORMANCE: Generate cache key based on schema and table name
+			const cacheKey = `${schemaName}:${tableName}`;
+
+			// Check cache first
+			const cachedResult = getFromToolCache(relationshipsCache, cacheKey, RELATIONSHIPS_CACHE_TTL_MS);
+			if (cachedResult !== null) {
+				if (consola.level >= 0) {
+					logger.debug(`Returning cached table relationships for: ${schemaName}.${tableName}`);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedResult + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
+
 			if (consola.level >= 0) {
 				logger.info(`Getting relationships for table: ${schemaName}.${tableName}`);
 			}
@@ -526,8 +753,11 @@ export const MssqlTools = {
 
 				const csvText = formatCSV(results);
 
+				// PERFORMANCE: Cache the result with LRU eviction
+				setInToolCache(relationshipsCache, cacheKey, csvText, RELATIONSHIPS_CACHE_MAX_SIZE, 'table_relationships');
+
 				if (consola.level >= 0) {
-					logger.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName}`);
+					logger.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName} - result cached`);
 				}
 
 				return {
