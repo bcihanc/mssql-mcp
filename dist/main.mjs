@@ -765,7 +765,7 @@ var require_suggestSimilar = __commonJS({
 // node_modules/commander/lib/command.js
 var require_command = __commonJS({
   "node_modules/commander/lib/command.js"(exports) {
-    var EventEmitter = __require("node:events").EventEmitter, childProcess2 = __require("node:child_process"), path2 = __require("node:path"), fs6 = __require("node:fs"), process9 = __require("node:process"), { Argument: Argument2, humanReadableArgName } = require_argument(), { CommanderError: CommanderError2 } = require_error(), { Help: Help2 } = require_help(), { Option: Option2, DualOptions } = require_option(), { suggestSimilar } = require_suggestSimilar(), Command2 = class _Command extends EventEmitter {
+    var EventEmitter = __require("node:events").EventEmitter, childProcess2 = __require("node:child_process"), path3 = __require("node:path"), fs7 = __require("node:fs"), process9 = __require("node:process"), { Argument: Argument2, humanReadableArgName } = require_argument(), { CommanderError: CommanderError2 } = require_error(), { Help: Help2 } = require_help(), { Option: Option2, DualOptions } = require_option(), { suggestSimilar } = require_suggestSimilar(), Command2 = class _Command extends EventEmitter {
       static {
         __name(this, "Command");
       }
@@ -1480,11 +1480,11 @@ Expecting one of '${allowedValues.join("', '")}'`);
         args = args.slice();
         let launchWithNode = !1, sourceExt = [".js", ".ts", ".tsx", ".mjs", ".cjs"];
         function findFile(baseDir, baseName) {
-          let localBin = path2.resolve(baseDir, baseName);
-          if (fs6.existsSync(localBin)) return localBin;
-          if (sourceExt.includes(path2.extname(baseName))) return;
+          let localBin = path3.resolve(baseDir, baseName);
+          if (fs7.existsSync(localBin)) return localBin;
+          if (sourceExt.includes(path3.extname(baseName))) return;
           let foundExt = sourceExt.find(
-            (ext) => fs6.existsSync(`${localBin}${ext}`)
+            (ext) => fs7.existsSync(`${localBin}${ext}`)
           );
           if (foundExt) return `${localBin}${foundExt}`;
         }
@@ -1493,21 +1493,21 @@ Expecting one of '${allowedValues.join("', '")}'`);
         if (this._scriptPath) {
           let resolvedScriptPath;
           try {
-            resolvedScriptPath = fs6.realpathSync(this._scriptPath);
+            resolvedScriptPath = fs7.realpathSync(this._scriptPath);
           } catch {
             resolvedScriptPath = this._scriptPath;
           }
-          executableDir = path2.resolve(
-            path2.dirname(resolvedScriptPath),
+          executableDir = path3.resolve(
+            path3.dirname(resolvedScriptPath),
             executableDir
           );
         }
         if (executableDir) {
           let localFile = findFile(executableDir, executableFile);
           if (!localFile && !subcommand._executableFile && this._scriptPath) {
-            let legacyName = path2.basename(
+            let legacyName = path3.basename(
               this._scriptPath,
-              path2.extname(this._scriptPath)
+              path3.extname(this._scriptPath)
             );
             legacyName !== this._name && (localFile = findFile(
               executableDir,
@@ -1516,7 +1516,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
           }
           executableFile = localFile || executableFile;
         }
-        launchWithNode = sourceExt.includes(path2.extname(executableFile));
+        launchWithNode = sourceExt.includes(path3.extname(executableFile));
         let proc;
         process9.platform !== "win32" ? launchWithNode ? (args.unshift(executableFile), args = incrementNodeInspectorPort(process9.execArgv).concat(args), proc = childProcess2.spawn(process9.argv[0], args, { stdio: "inherit" })) : proc = childProcess2.spawn(executableFile, args, { stdio: "inherit" }) : (args.unshift(executableFile), args = incrementNodeInspectorPort(process9.execArgv).concat(args), proc = childProcess2.spawn(process9.execPath, args, { stdio: "inherit" })), proc.killed || ["SIGUSR1", "SIGUSR2", "SIGTERM", "SIGINT", "SIGHUP"].forEach((signal) => {
           process9.on(signal, () => {
@@ -2145,7 +2145,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
        * @return {Command}
        */
       nameFromFilename(filename) {
-        return this._name = path2.basename(filename, path2.extname(filename)), this;
+        return this._name = path3.basename(filename, path3.extname(filename)), this;
       }
       /**
        * Get or set the directory for searching for executable subcommands of this command.
@@ -2158,8 +2158,8 @@ Expecting one of '${allowedValues.join("', '")}'`);
        * @param {string} [path]
        * @return {(string|null|Command)}
        */
-      executableDir(path3) {
-        return path3 === void 0 ? this._executableDir : (this._executableDir = path3, this);
+      executableDir(path4) {
+        return path4 === void 0 ? this._executableDir : (this._executableDir = path4, this);
       }
       /**
        * Return program help documentation.
@@ -3068,7 +3068,7 @@ var require_package = __commonJS({
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports, module) {
-    var fs6 = __require("fs"), path2 = __require("path"), os2 = __require("os"), crypto7 = __require("crypto"), packageJson = require_package(), version3 = packageJson.version, LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
+    var fs7 = __require("fs"), path3 = __require("path"), os3 = __require("os"), crypto7 = __require("crypto"), packageJson = require_package(), version3 = packageJson.version, LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
     function parse4(src2) {
       let obj = {}, lines = src2.toString();
       lines = lines.replace(/\r\n?/mg, `
@@ -3156,16 +3156,16 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0)
         if (Array.isArray(options.path))
           for (let filepath of options.path)
-            fs6.existsSync(filepath) && (possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`);
+            fs7.existsSync(filepath) && (possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`);
         else
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
       else
-        possibleVaultPath = path2.resolve(process.cwd(), ".env.vault");
-      return fs6.existsSync(possibleVaultPath) ? possibleVaultPath : null;
+        possibleVaultPath = path3.resolve(process.cwd(), ".env.vault");
+      return fs7.existsSync(possibleVaultPath) ? possibleVaultPath : null;
     }
     __name(_vaultPath, "_vaultPath");
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path2.join(os2.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path3.join(os3.homedir(), envPath.slice(1)) : envPath;
     }
     __name(_resolveHome, "_resolveHome");
     function _configVault(options) {
@@ -3176,7 +3176,7 @@ var require_main = __commonJS({
     }
     __name(_configVault, "_configVault");
     function configDotenv(options) {
-      let dotenvPath = path2.resolve(process.cwd(), ".env"), encoding = "utf8", debug = !!(options && options.debug), quiet = options && "quiet" in options ? options.quiet : !0;
+      let dotenvPath = path3.resolve(process.cwd(), ".env"), encoding = "utf8", debug = !!(options && options.debug), quiet = options && "quiet" in options ? options.quiet : !0;
       options && options.encoding ? encoding = options.encoding : debug && _debug("No encoding is specified. UTF-8 is used by default");
       let optionPaths = [dotenvPath];
       if (options && options.path)
@@ -3188,19 +3188,19 @@ var require_main = __commonJS({
             optionPaths.push(_resolveHome(filepath));
         }
       let lastError, parsedAll = {};
-      for (let path3 of optionPaths)
+      for (let path4 of optionPaths)
         try {
-          let parsed = DotenvModule.parse(fs6.readFileSync(path3, { encoding }));
+          let parsed = DotenvModule.parse(fs7.readFileSync(path4, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e2) {
-          debug && _debug(`Failed to load ${path3} ${e2.message}`), lastError = e2;
+          debug && _debug(`Failed to load ${path4} ${e2.message}`), lastError = e2;
         }
       let processEnv = process.env;
       if (options && options.processEnv != null && (processEnv = options.processEnv), DotenvModule.populate(processEnv, parsedAll, options), debug || !quiet) {
         let keysCount = Object.keys(parsedAll).length, shortPaths = [];
         for (let filePath of optionPaths)
           try {
-            let relative = path2.relative(process.cwd(), filePath);
+            let relative = path3.relative(process.cwd(), filePath);
             shortPaths.push(relative);
           } catch (e2) {
             debug && _debug(`Failed to load ${filePath} ${e2.message}`), lastError = e2;
@@ -3736,8 +3736,8 @@ var require_uri_all = __commonJS({
         }, "parse"),
         serialize: /* @__PURE__ */ __name(function(wsComponents, options) {
           if ((wsComponents.port === (isSecure(wsComponents) ? 443 : 80) || wsComponents.port === "") && (wsComponents.port = void 0), typeof wsComponents.secure == "boolean" && (wsComponents.scheme = wsComponents.secure ? "wss" : "ws", wsComponents.secure = void 0), wsComponents.resourceName) {
-            var _wsComponents$resourc = wsComponents.resourceName.split("?"), _wsComponents$resourc2 = slicedToArray(_wsComponents$resourc, 2), path2 = _wsComponents$resourc2[0], query = _wsComponents$resourc2[1];
-            wsComponents.path = path2 && path2 !== "/" ? path2 : void 0, wsComponents.query = query, wsComponents.resourceName = void 0;
+            var _wsComponents$resourc = wsComponents.resourceName.split("?"), _wsComponents$resourc2 = slicedToArray(_wsComponents$resourc, 2), path3 = _wsComponents$resourc2[0], query = _wsComponents$resourc2[1];
+            wsComponents.path = path3 && path3 !== "/" ? path3 : void 0, wsComponents.query = query, wsComponents.resourceName = void 0;
           }
           return wsComponents.fragment = void 0, wsComponents;
         }, "serialize")
@@ -4016,13 +4016,13 @@ var require_util = __commonJS({
     }
     __name(toQuotedString, "toQuotedString");
     function getPathExpr(currentPath, expr, jsonPointers, isNumber) {
-      var path2 = jsonPointers ? "'/' + " + expr + (isNumber ? "" : ".replace(/~/g, '~0').replace(/\\//g, '~1')") : isNumber ? "'[' + " + expr + " + ']'" : "'[\\'' + " + expr + " + '\\']'";
-      return joinPaths(currentPath, path2);
+      var path3 = jsonPointers ? "'/' + " + expr + (isNumber ? "" : ".replace(/~/g, '~0').replace(/\\//g, '~1')") : isNumber ? "'[' + " + expr + " + ']'" : "'[\\'' + " + expr + " + '\\']'";
+      return joinPaths(currentPath, path3);
     }
     __name(getPathExpr, "getPathExpr");
     function getPath2(currentPath, prop, jsonPointers) {
-      var path2 = toQuotedString(jsonPointers ? "/" + escapeJsonPointer(prop) : getProperty(prop));
-      return joinPaths(currentPath, path2);
+      var path3 = toQuotedString(jsonPointers ? "/" + escapeJsonPointer(prop) : getProperty(prop));
+      return joinPaths(currentPath, path3);
     }
     __name(getPath2, "getPath");
     var JSON_POINTER = /^\/(?:[^~]|~0|~1)*$/, RELATIVE_JSON_POINTER = /^([0-9]+)(#|\/(?:[^~]|~0|~1)*)?$/;
@@ -8250,7 +8250,7 @@ var require_table = __commonJS({
       return t2;
     }, "fromRecordset");
     Table.parseName = /* @__PURE__ */ __name(function(name) {
-      let length = name.length, cursor = -1, buffer = "", escaped = !1, path2 = [];
+      let length = name.length, cursor = -1, buffer = "", escaped = !1, path3 = [];
       for (; ++cursor < length; ) {
         let char = name.charAt(cursor);
         if (char === "[")
@@ -8260,26 +8260,26 @@ var require_table = __commonJS({
             escaped = !1;
           else
             throw new Error("Invalid table name.");
-        else char === "." ? escaped ? buffer += char : (path2.push(buffer), buffer = "") : buffer += char;
+        else char === "." ? escaped ? buffer += char : (path3.push(buffer), buffer = "") : buffer += char;
       }
-      switch (buffer && path2.push(buffer), path2.length) {
+      switch (buffer && path3.push(buffer), path3.length) {
         case 1:
           return {
-            name: path2[0],
+            name: path3[0],
             schema: null,
             database: null
           };
         case 2:
           return {
-            name: path2[1],
-            schema: path2[0],
+            name: path3[1],
+            schema: path3[0],
             database: null
           };
         case 3:
           return {
-            name: path2[2],
-            schema: path2[1],
-            database: path2[0]
+            name: path3[2],
+            schema: path3[1],
+            database: path3[0]
           };
         default:
           throw new Error("Invalid table name.");
@@ -10994,10 +10994,10 @@ function __disposeResources(env2) {
   }
   return __name(next, "next"), next();
 }
-function __rewriteRelativeImportExtension(path2, preserveJsx) {
-  return typeof path2 == "string" && /^\.\.?\//.test(path2) ? path2.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m2, tsx, d2, ext, cm) {
+function __rewriteRelativeImportExtension(path3, preserveJsx) {
+  return typeof path3 == "string" && /^\.\.?\//.test(path3) ? path3.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m2, tsx, d2, ext, cm) {
     return tsx ? preserveJsx ? ".jsx" : ".js" : d2 && (!ext || !cm) ? m2 : d2 + ext + "." + cm.toLowerCase() + "js";
-  }) : path2;
+  }) : path3;
 }
 var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _SuppressedError, tslib_es6_default, init_tslib_es6 = __esm({
   "node_modules/tslib/tslib.es6.mjs"() {
@@ -11164,8 +11164,8 @@ var require_msalPlugins = __commonJS({
       }
     };
     exports.msalNodeFlowVSCodeCredentialControl = {
-      setVSCodeAuthRecordPath(path2) {
-        exports.vsCodeAuthRecordPath = path2;
+      setVSCodeAuthRecordPath(path3) {
+        exports.vsCodeAuthRecordPath = path3;
       },
       setVSCodeBroker(broker) {
         exports.vsCodeBrokerInfo = {
@@ -20796,7 +20796,7 @@ var require_jsonwebtoken = __commonJS({
 var require_msal_node = __commonJS({
   "node_modules/@azure/msal-node/lib/msal-node.cjs"(exports) {
     "use strict";
-    var http = __require("http"), https = __require("https"), uuid3 = (init_esm_node(), __toCommonJS(esm_node_exports)), crypto7 = __require("crypto"), msalCommon = require_lib2(), jwt2 = require_jsonwebtoken(), fs6 = __require("fs"), path2 = __require("path"), Serializer = class {
+    var http = __require("http"), https = __require("https"), uuid3 = (init_esm_node(), __toCommonJS(esm_node_exports)), crypto7 = __require("crypto"), msalCommon = require_lib2(), jwt2 = require_jsonwebtoken(), fs7 = __require("fs"), path3 = __require("path"), Serializer = class {
       static {
         __name(this, "Serializer");
       }
@@ -28319,7 +28319,7 @@ Headers: ${JSON.stringify(headers)}`
         if (!identityEndpoint || !imdsEndpoint) {
           let fileDetectionPath = AZURE_ARC_FILE_DETECTION[process.platform];
           try {
-            fs6.accessSync(fileDetectionPath, fs6.constants.F_OK | fs6.constants.R_OK), identityEndpoint = DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT, imdsEndpoint = HIMDS_EXECUTABLE_HELPER_STRING;
+            fs7.accessSync(fileDetectionPath, fs7.constants.F_OK | fs7.constants.R_OK), identityEndpoint = DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT, imdsEndpoint = HIMDS_EXECUTABLE_HELPER_STRING;
           } catch {
           }
         }
@@ -28354,14 +28354,14 @@ Headers: ${JSON.stringify(headers)}`
           let secretFilePath = wwwAuthHeader.split("Basic realm=")[1];
           if (!SUPPORTED_AZURE_ARC_PLATFORMS.hasOwnProperty(process.platform))
             throw createManagedIdentityError(platformNotSupported);
-          let expectedSecretFilePath = SUPPORTED_AZURE_ARC_PLATFORMS[process.platform], fileName = path2.basename(secretFilePath);
+          let expectedSecretFilePath = SUPPORTED_AZURE_ARC_PLATFORMS[process.platform], fileName = path3.basename(secretFilePath);
           if (!fileName.endsWith(".key"))
             throw createManagedIdentityError(invalidFileExtension);
           if (expectedSecretFilePath + fileName !== secretFilePath)
             throw createManagedIdentityError(invalidFilePath);
           let secretFileSize;
           try {
-            secretFileSize = await fs6.statSync(secretFilePath).size;
+            secretFileSize = await fs7.statSync(secretFilePath).size;
           } catch {
             throw createManagedIdentityError(unableToReadSecretFile);
           }
@@ -28369,7 +28369,7 @@ Headers: ${JSON.stringify(headers)}`
             throw createManagedIdentityError(invalidSecret);
           let secret;
           try {
-            secret = fs6.readFileSync(secretFilePath, EncodingTypes.UTF8);
+            secret = fs7.readFileSync(secretFilePath, EncodingTypes.UTF8);
           } catch {
             throw createManagedIdentityError(unableToReadSecretFile);
           }
@@ -32391,8 +32391,8 @@ var require_getClient = __commonJS({
             afterPhase
           });
         }
-      let { allowInsecureConnection, httpClient } = clientOptions, endpointUrl = clientOptions.endpoint ?? endpoint, client = /* @__PURE__ */ __name((path2, ...args) => {
-        let getUrl = /* @__PURE__ */ __name((requestOptions) => (0, urlHelpers_js_1.buildRequestUrl)(endpointUrl, path2, args, { allowInsecureConnection, ...requestOptions }), "getUrl");
+      let { allowInsecureConnection, httpClient } = clientOptions, endpointUrl = clientOptions.endpoint ?? endpoint, client = /* @__PURE__ */ __name((path3, ...args) => {
+        let getUrl = /* @__PURE__ */ __name((requestOptions) => (0, urlHelpers_js_1.buildRequestUrl)(endpointUrl, path3, args, { allowInsecureConnection, ...requestOptions }), "getUrl");
         return {
           get: /* @__PURE__ */ __name((requestOptions = {}) => buildOperation("GET", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection, httpClient), "get"),
           post: /* @__PURE__ */ __name((requestOptions = {}) => buildOperation("POST", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection, httpClient), "post"),
@@ -34254,8 +34254,8 @@ var require_urlHelpers2 = __commonJS({
     function getRequestUrl(baseUri, operationSpec, operationArguments, fallbackObject) {
       let urlReplacements = calculateUrlReplacements(operationSpec, operationArguments, fallbackObject), isAbsolutePath = !1, requestUrl = replaceAll(baseUri, urlReplacements);
       if (operationSpec.path) {
-        let path2 = replaceAll(operationSpec.path, urlReplacements);
-        operationSpec.path === "/{nextLink}" && path2.startsWith("/") && (path2 = path2.substring(1)), isAbsoluteUrl(path2) ? (requestUrl = path2, isAbsolutePath = !0) : requestUrl = appendPath(requestUrl, path2);
+        let path3 = replaceAll(operationSpec.path, urlReplacements);
+        operationSpec.path === "/{nextLink}" && path3.startsWith("/") && (path3 = path3.substring(1)), isAbsoluteUrl(path3) ? (requestUrl = path3, isAbsolutePath = !0) : requestUrl = appendPath(requestUrl, path3);
       }
       let { queryParams, sequenceParams } = calculateQueryParameters(operationSpec, operationArguments, fallbackObject);
       return requestUrl = appendQueryParams(requestUrl, queryParams, sequenceParams, isAbsolutePath), requestUrl;
@@ -34289,8 +34289,8 @@ var require_urlHelpers2 = __commonJS({
       newPath.endsWith("/") || (newPath = `${newPath}/`), pathToAppend.startsWith("/") && (pathToAppend = pathToAppend.substring(1));
       let searchStart = pathToAppend.indexOf("?");
       if (searchStart !== -1) {
-        let path2 = pathToAppend.substring(0, searchStart), search = pathToAppend.substring(searchStart + 1);
-        newPath = newPath + path2, search && (parsedUrl.search = parsedUrl.search ? `${parsedUrl.search}&${search}` : search);
+        let path3 = pathToAppend.substring(0, searchStart), search = pathToAppend.substring(searchStart + 1);
+        newPath = newPath + path3, search && (parsedUrl.search = parsedUrl.search ? `${parsedUrl.search}&${search}` : search);
       } else
         newPath = newPath + pathToAppend;
       return parsedUrl.pathname = newPath, parsedUrl.toString();
@@ -34971,17 +34971,17 @@ var require_tenantIdUtils = __commonJS({
 });
 
 // node_modules/is-docker/index.js
-import fs from "node:fs";
+import fs2 from "node:fs";
 function hasDockerEnv() {
   try {
-    return fs.statSync("/.dockerenv"), !0;
+    return fs2.statSync("/.dockerenv"), !0;
   } catch {
     return !1;
   }
 }
 function hasDockerCGroup() {
   try {
-    return fs.readFileSync("/proc/self/cgroup", "utf8").includes("docker");
+    return fs2.readFileSync("/proc/self/cgroup", "utf8").includes("docker");
   } catch {
     return !1;
   }
@@ -34998,7 +34998,7 @@ var isDockerCached, init_is_docker = __esm({
 });
 
 // node_modules/is-inside-container/index.js
-import fs2 from "node:fs";
+import fs3 from "node:fs";
 function isInsideContainer() {
   return cachedResult === void 0 && (cachedResult = hasContainerEnv() || isDocker()), cachedResult;
 }
@@ -35007,7 +35007,7 @@ var cachedResult, hasContainerEnv, init_is_inside_container = __esm({
     init_is_docker();
     hasContainerEnv = /* @__PURE__ */ __name(() => {
       try {
-        return fs2.statSync("/run/.containerenv"), !0;
+        return fs3.statSync("/run/.containerenv"), !0;
       } catch {
         return !1;
       }
@@ -35018,18 +35018,18 @@ var cachedResult, hasContainerEnv, init_is_inside_container = __esm({
 
 // node_modules/is-wsl/index.js
 import process3 from "node:process";
-import os from "node:os";
-import fs3 from "node:fs";
+import os2 from "node:os";
+import fs4 from "node:fs";
 var isWsl, is_wsl_default, init_is_wsl = __esm({
   "node_modules/is-wsl/index.js"() {
     init_is_inside_container();
     isWsl = /* @__PURE__ */ __name(() => {
       if (process3.platform !== "linux")
         return !1;
-      if (os.release().toLowerCase().includes("microsoft"))
+      if (os2.release().toLowerCase().includes("microsoft"))
         return !isInsideContainer();
       try {
-        return fs3.readFileSync("/proc/version", "utf8").toLowerCase().includes("microsoft") ? !isInsideContainer() : !1;
+        return fs4.readFileSync("/proc/version", "utf8").toLowerCase().includes("microsoft") ? !isInsideContainer() : !1;
       } catch {
         return !1;
       }
@@ -35039,7 +35039,7 @@ var isWsl, is_wsl_default, init_is_wsl = __esm({
 
 // node_modules/wsl-utils/index.js
 import process4 from "node:process";
-import fs4, { constants as fsConstants } from "node:fs/promises";
+import fs5, { constants as fsConstants } from "node:fs/promises";
 var wslDrivesMountPoint, powerShellPathFromWsl, powerShellPath, init_wsl_utils = __esm({
   "node_modules/wsl-utils/index.js"() {
     init_is_wsl();
@@ -35051,12 +35051,12 @@ var wslDrivesMountPoint, powerShellPathFromWsl, powerShellPath, init_wsl_utils =
           return mountPoint;
         let configFilePath = "/etc/wsl.conf", isConfigFileExists = !1;
         try {
-          await fs4.access(configFilePath, fsConstants.F_OK), isConfigFileExists = !0;
+          await fs5.access(configFilePath, fsConstants.F_OK), isConfigFileExists = !0;
         } catch {
         }
         if (!isConfigFileExists)
           return defaultMountPoint;
-        let configContent = await fs4.readFile(configFilePath, { encoding: "utf8" }), configMountPoint = /(?<!#.*)root\s*=\s*(?<mountPoint>.*)/g.exec(configContent);
+        let configContent = await fs5.readFile(configFilePath, { encoding: "utf8" }), configMountPoint = /(?<!#.*)root\s*=\s*(?<mountPoint>.*)/g.exec(configContent);
         return configMountPoint ? (mountPoint = configMountPoint.groups.mountPoint.trim(), mountPoint = mountPoint.endsWith("/") ? mountPoint : `${mountPoint}/`, mountPoint) : defaultMountPoint;
       };
     })(), powerShellPathFromWsl = /* @__PURE__ */ __name(async () => `${await wslDrivesMountPoint()}c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe`, "powerShellPathFromWsl"), powerShellPath = /* @__PURE__ */ __name(async () => is_wsl_default ? powerShellPathFromWsl() : `${process4.env.SYSTEMROOT || process4.env.windir || String.raw`C:\Windows`}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`, "powerShellPath");
@@ -35208,11 +35208,11 @@ __export(open_exports, {
 });
 import process8 from "node:process";
 import { Buffer as Buffer2 } from "node:buffer";
-import path from "node:path";
+import path2 from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify as promisify5 } from "node:util";
 import childProcess from "node:child_process";
-import fs5, { constants as fsConstants2 } from "node:fs/promises";
+import fs6, { constants as fsConstants2 } from "node:fs/promises";
 async function getWindowsDefaultBrowserFromWsl() {
   let powershellPath = await powerShellPath(), rawCommand = String.raw`(Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice").ProgId`, encodedCommand = Buffer2.from(rawCommand, "utf16le").toString("base64"), { stdout: stdout2 } = await execFile5(
     powershellPath,
@@ -35254,7 +35254,7 @@ var execFile5, __dirname, localXdgOpenPath, platform2, arch, pTryEach, baseOpen,
     init_define_lazy_prop();
     init_default_browser();
     init_is_inside_container();
-    execFile5 = promisify5(childProcess.execFile), __dirname = path.dirname(fileURLToPath(import.meta.url)), localXdgOpenPath = path.join(__dirname, "xdg-open"), { platform: platform2, arch } = process8;
+    execFile5 = promisify5(childProcess.execFile), __dirname = path2.dirname(fileURLToPath(import.meta.url)), localXdgOpenPath = path2.join(__dirname, "xdg-open"), { platform: platform2, arch } = process8;
     __name(getWindowsDefaultBrowserFromWsl, "getWindowsDefaultBrowserFromWsl");
     pTryEach = /* @__PURE__ */ __name(async (array2, mapper) => {
       let latestError;
@@ -35334,7 +35334,7 @@ var execFile5, __dirname, localXdgOpenPath, platform2, arch, pTryEach, baseOpen,
         else {
           let isBundled = !__dirname || __dirname === "/", exeLocalXdgOpen = !1;
           try {
-            await fs5.access(localXdgOpenPath, fsConstants2.X_OK), exeLocalXdgOpen = !0;
+            await fs6.access(localXdgOpenPath, fsConstants2.X_OK), exeLocalXdgOpen = !0;
           } catch {
           }
           command = process8.versions.electron ?? (platform2 === "android" || isBundled || !exeLocalXdgOpen) ? "xdg-open" : localXdgOpenPath;
@@ -63694,7 +63694,7 @@ __name(getErrorMap, "getErrorMap");
 
 // node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = /* @__PURE__ */ __name((params) => {
-  let { data, path: path2, errorMaps, issueData } = params, fullPath = [...path2, ...issueData.path || []], fullIssue = {
+  let { data, path: path3, errorMaps, issueData } = params, fullPath = [...path3, ...issueData.path || []], fullIssue = {
     ...issueData,
     path: fullPath
   };
@@ -63790,8 +63790,8 @@ var ParseInputLazyPath = class {
   static {
     __name(this, "ParseInputLazyPath");
   }
-  constructor(parent, value, path2, key) {
-    this._cachedPath = [], this.parent = parent, this.data = value, this._path = path2, this._key = key;
+  constructor(parent, value, path3, key) {
+    this._cachedPath = [], this.parent = parent, this.data = value, this._path = path3, this._key = key;
   }
   get path() {
     return this._cachedPath.length || (Array.isArray(this._key) ? this._cachedPath.push(...this._path, ...this._key) : this._cachedPath.push(...this._path, this._key)), this._cachedPath;
@@ -67406,18 +67406,18 @@ var handleParsingAllValues = /* @__PURE__ */ __name((form, key, value) => {
 }, "handleParsingNestedValues");
 
 // node_modules/hono/dist/utils/url.js
-var splitPath = /* @__PURE__ */ __name((path2) => {
-  let paths = path2.split("/");
+var splitPath = /* @__PURE__ */ __name((path3) => {
+  let paths = path3.split("/");
   return paths[0] === "" && paths.shift(), paths;
 }, "splitPath"), splitRoutingPath = /* @__PURE__ */ __name((routePath) => {
-  let { groups, path: path2 } = extractGroupsFromPath(routePath), paths = splitPath(path2);
+  let { groups, path: path3 } = extractGroupsFromPath(routePath), paths = splitPath(path3);
   return replaceGroupMarks(paths, groups);
-}, "splitRoutingPath"), extractGroupsFromPath = /* @__PURE__ */ __name((path2) => {
+}, "splitRoutingPath"), extractGroupsFromPath = /* @__PURE__ */ __name((path3) => {
   let groups = [];
-  return path2 = path2.replace(/\{[^}]+\}/g, (match2, index) => {
+  return path3 = path3.replace(/\{[^}]+\}/g, (match2, index) => {
     let mark = `@${index}`;
     return groups.push([mark, match2]), mark;
-  }), { groups, path: path2 };
+  }), { groups, path: path3 };
 }, "extractGroupsFromPath"), replaceGroupMarks = /* @__PURE__ */ __name((paths, groups) => {
   for (let i2 = groups.length - 1; i2 >= 0; i2--) {
     let [mark] = groups[i2];
@@ -67454,8 +67454,8 @@ var splitPath = /* @__PURE__ */ __name((path2) => {
   for (; i2 < url2.length; i2++) {
     let charCode = url2.charCodeAt(i2);
     if (charCode === 37) {
-      let queryIndex = url2.indexOf("?", i2), path2 = url2.slice(start, queryIndex === -1 ? void 0 : queryIndex);
-      return tryDecodeURI(path2.includes("%25") ? path2.replace(/%25/g, "%2525") : path2);
+      let queryIndex = url2.indexOf("?", i2), path3 = url2.slice(start, queryIndex === -1 ? void 0 : queryIndex);
+      return tryDecodeURI(path3.includes("%25") ? path3.replace(/%25/g, "%2525") : path3);
     } else if (charCode === 63)
       break;
   }
@@ -67464,10 +67464,10 @@ var splitPath = /* @__PURE__ */ __name((path2) => {
 var getPathNoStrict = /* @__PURE__ */ __name((request) => {
   let result = getPath(request);
   return result.length > 1 && result.at(-1) === "/" ? result.slice(0, -1) : result;
-}, "getPathNoStrict"), mergePath = /* @__PURE__ */ __name((base, sub, ...rest) => (rest.length && (sub = mergePath(sub, ...rest)), `${base?.[0] === "/" ? "" : "/"}${base}${sub === "/" ? "" : `${base?.at(-1) === "/" ? "" : "/"}${sub?.[0] === "/" ? sub.slice(1) : sub}`}`), "mergePath"), checkOptionalParameter = /* @__PURE__ */ __name((path2) => {
-  if (path2.charCodeAt(path2.length - 1) !== 63 || !path2.includes(":"))
+}, "getPathNoStrict"), mergePath = /* @__PURE__ */ __name((base, sub, ...rest) => (rest.length && (sub = mergePath(sub, ...rest)), `${base?.[0] === "/" ? "" : "/"}${base}${sub === "/" ? "" : `${base?.at(-1) === "/" ? "" : "/"}${sub?.[0] === "/" ? sub.slice(1) : sub}`}`), "mergePath"), checkOptionalParameter = /* @__PURE__ */ __name((path3) => {
+  if (path3.charCodeAt(path3.length - 1) !== 63 || !path3.includes(":"))
     return null;
-  let segments = path2.split("/"), results = [], basePath = "";
+  let segments = path3.split("/"), results = [], basePath = "";
   return segments.forEach((segment) => {
     if (segment !== "" && !/\:/.test(segment))
       basePath += "/" + segment;
@@ -67524,8 +67524,8 @@ var tryDecodeURIComponent = /* @__PURE__ */ __name((str) => tryDecode(str, decod
   routeIndex = 0;
   path;
   bodyCache = {};
-  constructor(request, path2 = "/", matchResult = [[]]) {
-    this.raw = request, this.path = path2, this.#matchResult = matchResult, this.#validatedData = {};
+  constructor(request, path3 = "/", matchResult = [[]]) {
+    this.raw = request, this.path = path3, this.#matchResult = matchResult, this.#validatedData = {};
   }
   param(key) {
     return key ? this.#getDecodedParam(key) : this.#getAllDecodedParams();
@@ -69114,8 +69114,8 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
       this[method] = (args1, ...args) => (typeof args1 == "string" ? this.#path = args1 : this.#addRoute(method, this.#path, args1), args.forEach((handler) => {
         this.#addRoute(method, this.#path, handler);
       }), this);
-    }), this.on = (method, path2, ...handlers) => {
-      for (let p of [path2].flat()) {
+    }), this.on = (method, path3, ...handlers) => {
+      for (let p of [path3].flat()) {
         this.#path = p;
         for (let m2 of [method].flat())
           handlers.map((handler) => {
@@ -69138,20 +69138,20 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
   }
   #notFoundHandler = notFoundHandler;
   errorHandler = errorHandler;
-  route(path2, app) {
-    let subApp = this.basePath(path2);
+  route(path3, app) {
+    let subApp = this.basePath(path3);
     return app.routes.map((r3) => {
       let handler;
       app.errorHandler === errorHandler ? handler = r3.handler : (handler = /* @__PURE__ */ __name(async (c3, next) => (await compose([], app.errorHandler)(c3, () => r3.handler(c3, next))).res, "handler"), handler[COMPOSED_HANDLER] = r3.handler), subApp.#addRoute(r3.method, r3.path, handler);
     }), this;
   }
-  basePath(path2) {
+  basePath(path3) {
     let subApp = this.#clone();
-    return subApp._basePath = mergePath(this._basePath, path2), subApp;
+    return subApp._basePath = mergePath(this._basePath, path3), subApp;
   }
   onError = /* @__PURE__ */ __name((handler) => (this.errorHandler = handler, this), "onError");
   notFound = /* @__PURE__ */ __name((handler) => (this.#notFoundHandler = handler, this), "notFound");
-  mount(path2, applicationHandler, options) {
+  mount(path3, applicationHandler, options) {
     let replaceRequest, optionHandler;
     options && (typeof options == "function" ? optionHandler = options : (optionHandler = options.optionHandler, options.replaceRequest === !1 ? replaceRequest = /* @__PURE__ */ __name((request) => request, "replaceRequest") : replaceRequest = options.replaceRequest));
     let getOptions = optionHandler ? (c3) => {
@@ -69166,7 +69166,7 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
       return [c3.env, executionContext];
     };
     replaceRequest ||= (() => {
-      let mergedPath = mergePath(this._basePath, path2), pathPrefixLength = mergedPath === "/" ? 0 : mergedPath.length;
+      let mergedPath = mergePath(this._basePath, path3), pathPrefixLength = mergedPath === "/" ? 0 : mergedPath.length;
       return (request) => {
         let url2 = new URL(request.url);
         return url2.pathname = url2.pathname.slice(pathPrefixLength) || "/", new Request(url2, request);
@@ -69178,12 +69178,12 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
         return res;
       await next();
     }, "handler");
-    return this.#addRoute(METHOD_NAME_ALL, mergePath(path2, "*"), handler), this;
+    return this.#addRoute(METHOD_NAME_ALL, mergePath(path3, "*"), handler), this;
   }
-  #addRoute(method, path2, handler) {
-    method = method.toUpperCase(), path2 = mergePath(this._basePath, path2);
-    let r3 = { basePath: this._basePath, path: path2, method, handler };
-    this.router.add(method, path2, [handler, r3]), this.routes.push(r3);
+  #addRoute(method, path3, handler) {
+    method = method.toUpperCase(), path3 = mergePath(this._basePath, path3);
+    let r3 = { basePath: this._basePath, path: path3, method, handler };
+    this.router.add(method, path3, [handler, r3]), this.routes.push(r3);
   }
   #handleError(err, c3) {
     if (err instanceof Error)
@@ -69193,8 +69193,8 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
   #dispatch(request, executionCtx, env2, method) {
     if (method === "HEAD")
       return (async () => new Response(null, await this.#dispatch(request, executionCtx, env2, "GET")))();
-    let path2 = this.getPath(request, { env: env2 }), matchResult = this.router.match(method, path2), c3 = new Context(request, {
-      path: path2,
+    let path3 = this.getPath(request, { env: env2 }), matchResult = this.router.match(method, path3), c3 = new Context(request, {
+      path: path3,
       matchResult,
       env: env2,
       executionCtx,
@@ -69245,7 +69245,7 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
 
 // node_modules/hono/dist/router/reg-exp-router/matcher.js
 var emptyParam = [];
-function match(method, path2) {
+function match(method, path3) {
   let matchers = this.buildAllMatchers(), match2 = /* @__PURE__ */ __name((method2, path22) => {
     let matcher = matchers[method2] || matchers[METHOD_NAME_ALL], staticMatch = matcher[2][path22];
     if (staticMatch)
@@ -69256,7 +69256,7 @@ function match(method, path2) {
     let index = match3.indexOf("", 1);
     return [matcher[1][index], match3];
   }, "match2");
-  return this.match = match2, match2(method, path2);
+  return this.match = match2, match2(method, path3);
 }
 __name(match, "match");
 
@@ -69324,17 +69324,17 @@ var Trie = class {
   }
   #context = { varIndex: 0 };
   #root = new Node();
-  insert(path2, index, pathErrorCheckOnly) {
+  insert(path3, index, pathErrorCheckOnly) {
     let paramAssoc = [], groups = [];
     for (let i2 = 0; ; ) {
       let replaced = !1;
-      if (path2 = path2.replace(/\{[^}]+\}/g, (m2) => {
+      if (path3 = path3.replace(/\{[^}]+\}/g, (m2) => {
         let mark = `@\\${i2}`;
         return groups[i2] = [mark, m2], i2++, replaced = !0, mark;
       }), !replaced)
         break;
     }
-    let tokens = path2.match(/(?::[^\/]+)|(?:\/\*$)|./g) || [];
+    let tokens = path3.match(/(?::[^\/]+)|(?:\/\*$)|./g) || [];
     for (let i2 = groups.length - 1; i2 >= 0; i2--) {
       let [mark] = groups[i2];
       for (let j = tokens.length - 1; j >= 0; j--)
@@ -69356,9 +69356,9 @@ var Trie = class {
 
 // node_modules/hono/dist/router/reg-exp-router/router.js
 var nullMatcher = [/^$/, [], /* @__PURE__ */ Object.create(null)], wildcardRegExpCache = /* @__PURE__ */ Object.create(null);
-function buildWildcardRegExp(path2) {
-  return wildcardRegExpCache[path2] ??= new RegExp(
-    path2 === "*" ? "" : `^${path2.replace(
+function buildWildcardRegExp(path3) {
+  return wildcardRegExpCache[path3] ??= new RegExp(
+    path3 === "*" ? "" : `^${path3.replace(
       /\/\*$|([.\\+*[^\]$()])/g,
       (_3, metaChar) => metaChar ? `\\${metaChar}` : "(?:|/.*)"
     )}$`
@@ -69379,13 +69379,13 @@ function buildMatcherFromPreprocessedRoutes(routes) {
     ([isStaticA, pathA], [isStaticB, pathB]) => isStaticA ? 1 : isStaticB ? -1 : pathA.length - pathB.length
   ), staticMap = /* @__PURE__ */ Object.create(null);
   for (let i2 = 0, j = -1, len = routesWithStaticPathFlag.length; i2 < len; i2++) {
-    let [pathErrorCheckOnly, path2, handlers] = routesWithStaticPathFlag[i2];
-    pathErrorCheckOnly ? staticMap[path2] = [handlers.map(([h2]) => [h2, /* @__PURE__ */ Object.create(null)]), emptyParam] : j++;
+    let [pathErrorCheckOnly, path3, handlers] = routesWithStaticPathFlag[i2];
+    pathErrorCheckOnly ? staticMap[path3] = [handlers.map(([h2]) => [h2, /* @__PURE__ */ Object.create(null)]), emptyParam] : j++;
     let paramAssoc;
     try {
-      paramAssoc = trie.insert(path2, j, pathErrorCheckOnly);
+      paramAssoc = trie.insert(path3, j, pathErrorCheckOnly);
     } catch (e2) {
-      throw e2 === PATH_ERROR ? new UnsupportedPathError(path2) : e2;
+      throw e2 === PATH_ERROR ? new UnsupportedPathError(path3) : e2;
     }
     pathErrorCheckOnly || (handlerData[j] = handlers.map(([h2, paramCount]) => {
       let paramIndexMap = /* @__PURE__ */ Object.create(null);
@@ -69412,10 +69412,10 @@ function buildMatcherFromPreprocessedRoutes(routes) {
   return [regexp, handlerMap, staticMap];
 }
 __name(buildMatcherFromPreprocessedRoutes, "buildMatcherFromPreprocessedRoutes");
-function findMiddleware(middleware, path2) {
+function findMiddleware(middleware, path3) {
   if (middleware) {
     for (let k2 of Object.keys(middleware).sort((a2, b2) => b2.length - a2.length))
-      if (buildWildcardRegExp(k2).test(path2))
+      if (buildWildcardRegExp(k2).test(path3))
         return [...middleware[k2]];
   }
 }
@@ -69430,7 +69430,7 @@ var RegExpRouter = class {
   constructor() {
     this.#middleware = { [METHOD_NAME_ALL]: /* @__PURE__ */ Object.create(null) }, this.#routes = { [METHOD_NAME_ALL]: /* @__PURE__ */ Object.create(null) };
   }
-  add(method, path2, handler) {
+  add(method, path3, handler) {
     let middleware = this.#middleware, routes = this.#routes;
     if (!middleware || !routes)
       throw new Error(MESSAGE_MATCHER_IS_ALREADY_BUILT);
@@ -69438,13 +69438,13 @@ var RegExpRouter = class {
       handlerMap[method] = /* @__PURE__ */ Object.create(null), Object.keys(handlerMap[METHOD_NAME_ALL]).forEach((p) => {
         handlerMap[method][p] = [...handlerMap[METHOD_NAME_ALL][p]];
       });
-    }), path2 === "/*" && (path2 = "*");
-    let paramCount = (path2.match(/\/:/g) || []).length;
-    if (/\*$/.test(path2)) {
-      let re = buildWildcardRegExp(path2);
+    }), path3 === "/*" && (path3 = "*");
+    let paramCount = (path3.match(/\/:/g) || []).length;
+    if (/\*$/.test(path3)) {
+      let re = buildWildcardRegExp(path3);
       method === METHOD_NAME_ALL ? Object.keys(middleware).forEach((m2) => {
-        middleware[m2][path2] ||= findMiddleware(middleware[m2], path2) || findMiddleware(middleware[METHOD_NAME_ALL], path2) || [];
-      }) : middleware[method][path2] ||= findMiddleware(middleware[method], path2) || findMiddleware(middleware[METHOD_NAME_ALL], path2) || [], Object.keys(middleware).forEach((m2) => {
+        middleware[m2][path3] ||= findMiddleware(middleware[m2], path3) || findMiddleware(middleware[METHOD_NAME_ALL], path3) || [];
+      }) : middleware[method][path3] ||= findMiddleware(middleware[method], path3) || findMiddleware(middleware[METHOD_NAME_ALL], path3) || [], Object.keys(middleware).forEach((m2) => {
         (method === METHOD_NAME_ALL || method === m2) && Object.keys(middleware[m2]).forEach((p) => {
           re.test(p) && middleware[m2][p].push([handler, paramCount]);
         });
@@ -69455,7 +69455,7 @@ var RegExpRouter = class {
       });
       return;
     }
-    let paths = checkOptionalParameter(path2) || [path2];
+    let paths = checkOptionalParameter(path3) || [path3];
     for (let i2 = 0, len = paths.length; i2 < len; i2++) {
       let path22 = paths[i2];
       Object.keys(routes).forEach((m2) => {
@@ -69475,9 +69475,9 @@ var RegExpRouter = class {
   #buildMatcher(method) {
     let routes = [], hasOwnRoute = method === METHOD_NAME_ALL;
     return [this.#middleware, this.#routes].forEach((r3) => {
-      let ownRoute = r3[method] ? Object.keys(r3[method]).map((path2) => [path2, r3[method][path2]]) : [];
+      let ownRoute = r3[method] ? Object.keys(r3[method]).map((path3) => [path3, r3[method][path3]]) : [];
       ownRoute.length !== 0 ? (hasOwnRoute ||= !0, routes.push(...ownRoute)) : method !== METHOD_NAME_ALL && routes.push(
-        ...Object.keys(r3[METHOD_NAME_ALL]).map((path2) => [path2, r3[METHOD_NAME_ALL][path2]])
+        ...Object.keys(r3[METHOD_NAME_ALL]).map((path3) => [path3, r3[METHOD_NAME_ALL][path3]])
       );
     }), hasOwnRoute ? buildMatcherFromPreprocessedRoutes(routes) : null;
   }
@@ -69494,12 +69494,12 @@ var SmartRouter = class {
   constructor(init2) {
     this.#routers = init2.routers;
   }
-  add(method, path2, handler) {
+  add(method, path3, handler) {
     if (!this.#routes)
       throw new Error(MESSAGE_MATCHER_IS_ALREADY_BUILT);
-    this.#routes.push([method, path2, handler]);
+    this.#routes.push([method, path3, handler]);
   }
-  match(method, path2) {
+  match(method, path3) {
     if (!this.#routes)
       throw new Error("Fatal error");
     let routers = this.#routers, routes = this.#routes, len = routers.length, i2 = 0, res;
@@ -69508,7 +69508,7 @@ var SmartRouter = class {
       try {
         for (let i22 = 0, len2 = routes.length; i22 < len2; i22++)
           router.add(...routes[i22]);
-        res = router.match(method, path2);
+        res = router.match(method, path3);
       } catch (e2) {
         if (e2 instanceof UnsupportedPathError)
           continue;
@@ -69545,9 +69545,9 @@ var emptyParams = /* @__PURE__ */ Object.create(null), Node2 = class {
     }
     this.#patterns = [];
   }
-  insert(method, path2, handler) {
+  insert(method, path3, handler) {
     this.#order = ++this.#order;
-    let curNode = this, parts = splitRoutingPath(path2), possibleKeys = [];
+    let curNode = this, parts = splitRoutingPath(path3), possibleKeys = [];
     for (let i2 = 0, len = parts.length; i2 < len; i2++) {
       let p = parts[i2], nextP = parts[i2 + 1], pattern = getPattern(p, nextP), key = Array.isArray(pattern) ? pattern[0] : p;
       if (key in curNode.#children) {
@@ -69576,10 +69576,10 @@ var emptyParams = /* @__PURE__ */ Object.create(null), Node2 = class {
     }
     return handlerSets;
   }
-  search(method, path2) {
+  search(method, path3) {
     let handlerSets = [];
     this.#params = emptyParams;
-    let curNodes = [this], parts = splitPath(path2), curNodesQueue = [];
+    let curNodes = [this], parts = splitPath(path3), curNodesQueue = [];
     for (let i2 = 0, len = parts.length; i2 < len; i2++) {
       let part = parts[i2], isLast = i2 === len - 1, tempNodes = [];
       for (let j = 0, len2 = curNodes.length; j < len2; j++) {
@@ -69630,17 +69630,17 @@ var TrieRouter = class {
   constructor() {
     this.#node = new Node2();
   }
-  add(method, path2, handler) {
-    let results = checkOptionalParameter(path2);
+  add(method, path3, handler) {
+    let results = checkOptionalParameter(path3);
     if (results) {
       for (let i2 = 0, len = results.length; i2 < len; i2++)
         this.#node.insert(method, results[i2], handler);
       return;
     }
-    this.#node.insert(method, path2, handler);
+    this.#node.insert(method, path3, handler);
   }
-  match(method, path2) {
-    return this.#node.search(method, path2);
+  match(method, path3) {
+    return this.#node.search(method, path3);
   }
 };
 
@@ -69735,23 +69735,23 @@ var humanize = /* @__PURE__ */ __name((times) => {
     }
   return `${status}`;
 }, "colorStatus");
-async function log(fn, prefix, method, path2, status = 0, elapsed) {
-  let out = prefix === "<--" ? `${prefix} ${method} ${path2}` : `${prefix} ${method} ${path2} ${await colorStatus(status)} ${elapsed}`;
+async function log(fn, prefix, method, path3, status = 0, elapsed) {
+  let out = prefix === "<--" ? `${prefix} ${method} ${path3}` : `${prefix} ${method} ${path3} ${await colorStatus(status)} ${elapsed}`;
   fn(out);
 }
 __name(log, "log");
 var logger = /* @__PURE__ */ __name((fn = console.log) => /* @__PURE__ */ __name(async function(c3, next) {
-  let { method, url: url2 } = c3.req, path2 = url2.slice(url2.indexOf("/", 8));
-  await log(fn, "<--", method, path2);
+  let { method, url: url2 } = c3.req, path3 = url2.slice(url2.indexOf("/", 8));
+  await log(fn, "<--", method, path3);
   let start = Date.now();
-  await next(), await log(fn, "-->", method, path2, c3.res.status, time(start));
+  await next(), await log(fn, "-->", method, path3, c3.res.status, time(start));
 }, "logger2"), "logger");
 
 // src/server/config.ts
 var logger2 = consola.withTag("mssql-config");
 function getMssqlConfig() {
   let server = process.env.MSSQL_SERVER || "localhost";
-  logger2.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || "NOT SET"}`), logger2.info(`Using server: ${server}`), server.toLowerCase().includes("(localdb)") && (server = `.\\${server.replace(/\(localdb\)\\{1,2}/i, "")}`, logger2.info(`Detected LocalDB connection, converted to: ${server}`));
+  consola.level >= 0 && (logger2.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || "NOT SET"}`), logger2.info(`Using server: ${server}`)), server.toLowerCase().includes("(localdb)") && (server = `.\\${server.replace(/\(localdb\)\\{1,2}/i, "")}`, consola.level >= 0 && logger2.info(`Detected LocalDB connection, converted to: ${server}`));
   let config2 = {
     server,
     user: process.env.MSSQL_USER,
@@ -69766,21 +69766,21 @@ function getMssqlConfig() {
     try {
       config2.port = parseInt(port, 10);
     } catch {
-      logger2.warn(`Invalid MSSQL_PORT value: ${port}. Using default port 1433.`);
+      consola.level >= 0 && logger2.warn(`Invalid MSSQL_PORT value: ${port}. Using default port 1433.`);
     }
-  config2.server && config2.server.includes(".database.windows.net") ? (config2.encrypt = !0, logger2.info("Detected Azure SQL, enabling encryption")) : process.env.MSSQL_ENCRYPT?.toLowerCase() === "true" && (config2.encrypt = !0, logger2.info("Encryption enabled via MSSQL_ENCRYPT setting"));
+  config2.server && config2.server.includes(".database.windows.net") ? (config2.encrypt = !0, consola.level >= 0 && logger2.info("Detected Azure SQL, enabling encryption")) : process.env.MSSQL_ENCRYPT?.toLowerCase() === "true" && (config2.encrypt = !0, consola.level >= 0 && logger2.info("Encryption enabled via MSSQL_ENCRYPT setting"));
   let useWindowsAuth = process.env.MSSQL_WINDOWS_AUTH?.toLowerCase() === "true";
   if (useWindowsAuth) {
     if (config2.windowsAuth = !0, !config2.database)
-      throw logger2.error("MSSQL_DATABASE is required"), new Error("Missing required database configuration");
-    config2.user = void 0, config2.password = void 0, logger2.info("Using Windows Authentication");
+      throw consola.level >= 0 && logger2.error("MSSQL_DATABASE is required"), new Error("Missing required database configuration");
+    config2.user = void 0, config2.password = void 0, consola.level >= 0 && logger2.info("Using Windows Authentication");
   } else if (!config2.user || !config2.password || !config2.database)
-    throw logger2.error("Missing required database configuration. Please check environment variables:"), logger2.error("MSSQL_USER, MSSQL_PASSWORD, and MSSQL_DATABASE are required"), new Error("Missing required database configuration");
-  return useWindowsAuth ? logger2.info(
+    throw consola.level >= 0 && (logger2.error("Missing required database configuration. Please check environment variables:"), logger2.error("MSSQL_USER, MSSQL_PASSWORD, and MSSQL_DATABASE are required")), new Error("Missing required database configuration");
+  return consola.level >= 0 && (useWindowsAuth ? logger2.info(
     `Database config: ${config2.server}:${config2.port}/${config2.database} using Windows Authentication (READ-ONLY mode)`
   ) : logger2.info(
     `Database config: ${config2.server}:${config2.port}/${config2.database} as ${config2.user} (READ-ONLY mode)`
-  ), config2;
+  )), config2;
 }
 __name(getMssqlConfig, "getMssqlConfig");
 function isReadOnlyQuery(query) {
@@ -70612,8 +70612,8 @@ function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
 __name(cloneDef, "cloneDef");
-function getElementAtPath(obj, path2) {
-  return path2 ? path2.reduce((acc, key) => acc?.[key], obj) : obj;
+function getElementAtPath(obj, path3) {
+  return path3 ? path3.reduce((acc, key) => acc?.[key], obj) : obj;
 }
 __name(getElementAtPath, "getElementAtPath");
 function promiseAllObject(promisesObj) {
@@ -70903,10 +70903,10 @@ function aborted(x2, startIndex = 0) {
   return !1;
 }
 __name(aborted, "aborted");
-function prefixIssues(path2, issues) {
+function prefixIssues(path3, issues) {
   return issues.map((iss) => {
     var _a;
-    return (_a = iss).path ?? (_a.path = []), iss.path.unshift(path2), iss;
+    return (_a = iss).path ?? (_a.path = []), iss.path.unshift(path3), iss;
   });
 }
 __name(prefixIssues, "prefixIssues");
@@ -71033,7 +71033,7 @@ function formatError(error46, mapper = (issue2) => issue2.message) {
 }
 __name(formatError, "formatError");
 function treeifyError(error46, mapper = (issue2) => issue2.message) {
-  let result = { errors: [] }, processError = /* @__PURE__ */ __name((error47, path2 = []) => {
+  let result = { errors: [] }, processError = /* @__PURE__ */ __name((error47, path3 = []) => {
     var _a, _b;
     for (let issue2 of error47.issues)
       if (issue2.code === "invalid_union" && issue2.errors.length)
@@ -71043,7 +71043,7 @@ function treeifyError(error46, mapper = (issue2) => issue2.message) {
       else if (issue2.code === "invalid_element")
         processError({ issues: issue2.issues }, issue2.path);
       else {
-        let fullpath = [...path2, ...issue2.path];
+        let fullpath = [...path3, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -71059,8 +71059,8 @@ function treeifyError(error46, mapper = (issue2) => issue2.message) {
 }
 __name(treeifyError, "treeifyError");
 function toDotPath(_path) {
-  let segs = [], path2 = _path.map((seg) => typeof seg == "object" ? seg.key : seg);
-  for (let seg of path2)
+  let segs = [], path3 = _path.map((seg) => typeof seg == "object" ? seg.key : seg);
+  for (let seg of path3)
     typeof seg == "number" ? segs.push(`[${seg}]`) : typeof seg == "symbol" ? segs.push(`[${JSON.stringify(String(seg))}]`) : /[^\w$]/.test(seg) ? segs.push(`[${JSON.stringify(seg)}]`) : (segs.length && segs.push("."), segs.push(seg));
   return segs.join("");
 }
@@ -80539,10 +80539,94 @@ var ExecuteSqlInputSchema = external_exports2.object({
   }
 };
 
+// src/utils/fileLogger.ts
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
+var FileLogger = class {
+  static {
+    __name(this, "FileLogger");
+  }
+  logFilePath;
+  isEnabled;
+  logStream = null;
+  constructor() {
+    this.isEnabled = process.env.MSSQL_MCP_FILE_LOG !== "false";
+    let logDir;
+    if (process.env.MSSQL_MCP_LOG_DIR)
+      logDir = process.env.MSSQL_MCP_LOG_DIR;
+    else
+      try {
+        let currentDir = process.cwd();
+        logDir = path.join(currentDir, "logs");
+      } catch {
+        logDir = os.tmpdir();
+      }
+    let logFileName = `mssql-mcp-${(/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-")}.log`;
+    if (this.logFilePath = path.join(logDir, logFileName), this.isEnabled)
+      try {
+        let logDirPath = path.dirname(this.logFilePath);
+        fs.existsSync(logDirPath) || fs.mkdirSync(logDirPath, { recursive: !0 }), this.logStream = fs.createWriteStream(this.logFilePath, {
+          flags: "a",
+          encoding: "utf8"
+        }), this.log("info", "=== MSSQL MCP Server File Logger Initialized ==="), this.log("info", `Log file: ${this.logFilePath}`), this.log("info", `Platform: ${process.platform}`), this.log("info", `Node version: ${process.version}`), this.log("info", `Working directory: ${process.cwd()}`), this.log("info", "Logging enabled by default. To disable: Set MSSQL_MCP_FILE_LOG=false");
+      } catch (error46) {
+        this.isEnabled = !1, console.error(`Failed to initialize file logger: ${error46}`);
+      }
+  }
+  formatMessage(level, message, data) {
+    let timestamp = (/* @__PURE__ */ new Date()).toISOString(), dataStr = data !== void 0 ? ` | ${JSON.stringify(data, null, 2)}` : "";
+    return `[${timestamp}] [${level.toUpperCase()}] ${message}${dataStr}
+`;
+  }
+  log(level, message, data) {
+    if (!(!this.isEnabled || !this.logStream))
+      try {
+        let formattedMessage = this.formatMessage(level, message, data);
+        this.logStream.write(formattedMessage);
+      } catch {
+      }
+  }
+  info(message, data) {
+    this.log("info", message, data);
+  }
+  warn(message, data) {
+    this.log("warn", message, data);
+  }
+  error(message, data) {
+    this.log("error", message, data);
+  }
+  debug(message, data) {
+    this.log("debug", message, data);
+  }
+  getLogFilePath() {
+    return this.isEnabled ? this.logFilePath : null;
+  }
+  close() {
+    this.logStream && (this.log("info", "=== MSSQL MCP Server File Logger Closing ==="), this.logStream.end(), this.logStream = null);
+  }
+}, fileLoggerInstance = null;
+function getFileLogger() {
+  return fileLoggerInstance || (fileLoggerInstance = new FileLogger()), fileLoggerInstance;
+}
+__name(getFileLogger, "getFileLogger");
+function closeFileLogger() {
+  fileLoggerInstance && (fileLoggerInstance.close(), fileLoggerInstance = null);
+}
+__name(closeFileLogger, "closeFileLogger");
+
 // src/server/connection.ts
 var import_mssql = __toESM(require_mssql(), 1);
 var logger5 = consola.withTag("mssql-connection");
 async function createConnectionPool(config2) {
+  let fileLogger = getFileLogger();
+  fileLogger.info("createConnectionPool() called", {
+    server: config2.server,
+    database: config2.database,
+    port: config2.port,
+    windowsAuth: config2.windowsAuth,
+    encrypt: config2.encrypt
+  });
   let mssqlConfig = {
     server: config2.server,
     database: config2.database,
@@ -80560,53 +80644,73 @@ async function createConnectionPool(config2) {
     }
   };
   if (config2.windowsAuth)
-    mssqlConfig.options.trustedConnection = !0, logger5.info("Configured for Windows Authentication");
+    mssqlConfig.options.trustedConnection = !0, consola.level >= 0 && logger5.info("Configured for Windows Authentication"), fileLogger.info("Configured for Windows Authentication");
   else {
     if (!config2.user || !config2.password)
-      throw new Error("Username and password are required for SQL authentication");
-    mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, logger5.info(`Configured for SQL Authentication as user: ${config2.user}`);
+      throw fileLogger.error("Username and password are required for SQL authentication"), new Error("Username and password are required for SQL authentication");
+    mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, consola.level >= 0 && logger5.info(`Configured for SQL Authentication as user: ${config2.user}`), fileLogger.info(`Configured for SQL Authentication as user: ${config2.user}`);
   }
   let pool = new import_mssql.default.ConnectionPool(mssqlConfig);
-  logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)");
+  consola.level >= 0 && logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), fileLogger.info("Connection configured for READ-ONLY mode"), fileLogger.info("Attempting to connect to database...");
   try {
-    await pool.connect(), logger5.debug("Connection pool connected eagerly (READ-ONLY mode)");
+    await pool.connect(), logger5.debug("Connection pool connected eagerly (READ-ONLY mode)"), fileLogger.info("Connection pool connected successfully (READ-ONLY mode)");
   } catch (error46) {
-    let errorMessage = error46 instanceof Error ? error46.message : String(error46);
-    if (process.platform === "win32") {
-      if (errorMessage.includes("Login failed"))
-        throw config2.windowsAuth ? new Error(
-          `Windows Authentication failed. Ensure your Windows user account has SQL Server access permissions. Original error: ${errorMessage}`
-        ) : new Error(
-          `SQL Authentication failed. Check your username and password. Original error: ${errorMessage}`
-        );
-      if (errorMessage.toLowerCase().includes("localdb") || config2.server.includes("localdb"))
-        throw new Error(
-          `LocalDB connection failed. Verify LocalDB is installed and started. Run 'sqllocaldb info' to check. Original error: ${errorMessage}`
-        );
-      if (errorMessage.includes("certificate") || errorMessage.includes("SSL") || errorMessage.includes("TLS"))
-        throw new Error(
-          `Certificate validation failed. For testing, try setting MSSQL_ENCRYPT=false (not for production). For Azure SQL, ensure proper certificate chain. Original error: ${errorMessage}`
-        );
-      if (errorMessage.includes("ECONNREFUSED") || errorMessage.includes("ETIMEDOUT"))
-        throw new Error(
-          `Cannot connect to SQL Server at ${config2.server}:${config2.port}. Verify SQL Server is running and accessible. Check Windows Firewall settings. Original error: ${errorMessage}`
-        );
+    let errorMessage = error46 instanceof Error ? error46.message : String(error46), errorStack = error46 instanceof Error ? error46.stack : void 0, isWindows2 = process.platform === "win32";
+    if (fileLogger.error("Database connection failed", {
+      errorMessage,
+      errorStack,
+      platform: process.platform,
+      config: {
+        server: config2.server,
+        database: config2.database,
+        port: config2.port,
+        windowsAuth: config2.windowsAuth,
+        encrypt: config2.encrypt
+      }
+    }), isWindows2) {
+      if (errorMessage.includes("Login failed")) {
+        let enhancedError = config2.windowsAuth ? `Windows Authentication failed. Ensure your Windows user account has SQL Server access permissions. Original error: ${errorMessage}` : `SQL Authentication failed. Check your username and password. Original error: ${errorMessage}`;
+        throw fileLogger.error(enhancedError), new Error(enhancedError);
+      }
+      if (errorMessage.toLowerCase().includes("localdb") || config2.server.toLowerCase().includes("localdb")) {
+        let enhancedError = `LocalDB connection failed. Verify LocalDB is installed and started. Run 'sqllocaldb info' to check. Original error: ${errorMessage}`;
+        throw fileLogger.error(enhancedError), new Error(enhancedError);
+      }
+      if (errorMessage.includes("certificate") || errorMessage.includes("SSL") || errorMessage.includes("TLS")) {
+        let enhancedError = `Certificate validation failed. For testing, try setting MSSQL_ENCRYPT=false (not for production). For Azure SQL, ensure proper certificate chain. Original error: ${errorMessage}`;
+        throw fileLogger.error(enhancedError), new Error(enhancedError);
+      }
+      if (errorMessage.includes("ECONNREFUSED") || errorMessage.includes("ETIMEDOUT")) {
+        let enhancedError = `Cannot connect to SQL Server at ${config2.server}:${config2.port}. Verify SQL Server is running and accessible. Check Windows Firewall settings. Original error: ${errorMessage}`;
+        throw fileLogger.error(enhancedError), new Error(enhancedError);
+      }
     }
-    throw new Error(`Failed to connect to SQL Server: ${errorMessage}`);
+    let genericError = `Failed to connect to SQL Server: ${errorMessage}`;
+    throw fileLogger.error(genericError), new Error(genericError);
   }
   return {
     async query(sqlQuery) {
+      fileLogger.debug("Executing query", { query: sqlQuery.substring(0, 200) });
       try {
         let result = await pool.request().query(sqlQuery);
-        return logger5.debug("Read-only query executed successfully"), result.recordset;
+        return consola.level >= 0 && logger5.debug("Read-only query executed successfully"), fileLogger.debug("Query executed successfully", {
+          rowCount: result.recordset?.length || 0
+        }), result.recordset;
       } catch (error46) {
-        logger5.error("Query execution failed:", error46);
+        consola.level >= 0 && logger5.error("Query execution failed:", error46);
         let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lower = errorMessage.toLowerCase();
-        throw lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter") ? new Error(`READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`) : error46;
+        if (fileLogger.error("Query execution failed", {
+          errorMessage,
+          query: sqlQuery.substring(0, 200)
+        }), lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter")) {
+          let writeError = `READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`;
+          throw fileLogger.error(writeError), new Error(writeError);
+        }
+        throw error46;
       }
     },
     async close() {
-      await pool.close(), logger5.info("Connection pool closed");
+      await pool.close(), consola.level >= 0 && logger5.info("Connection pool closed");
     }
   };
 }
@@ -80659,15 +80763,43 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
     });
   }
   async start() {
-    let dbConfig = getMssqlConfig();
+    let fileLogger = getFileLogger();
+    fileLogger.info("MssqlMcpServer.start() called"), fileLogger.info("Getting database configuration...");
+    let dbConfig;
     try {
-      this.pool = await createConnectionPool(dbConfig), this.config.stdio || serverLogger.success("Database connection established successfully");
+      dbConfig = getMssqlConfig(), fileLogger.info("Database configuration retrieved", {
+        server: dbConfig.server,
+        database: dbConfig.database,
+        port: dbConfig.port,
+        encrypt: dbConfig.encrypt,
+        windowsAuth: dbConfig.windowsAuth,
+        hasUser: !!dbConfig.user,
+        hasPassword: !!dbConfig.password
+      });
     } catch (error46) {
-      throw this.config.stdio || serverLogger.error("Failed to connect to database:", error46), new Error(`Database connection failed: ${error46 instanceof Error ? error46.message : "Unknown error"}`);
+      throw fileLogger.error("Failed to get database configuration", error46), error46;
+    }
+    fileLogger.info("Creating connection pool...");
+    try {
+      this.pool = await createConnectionPool(dbConfig), fileLogger.info("Database connection pool created and connected successfully"), this.config.stdio || serverLogger.success("Database connection established successfully");
+    } catch (error46) {
+      throw fileLogger.error("Failed to connect to database", {
+        error: error46 instanceof Error ? error46.message : String(error46),
+        stack: error46 instanceof Error ? error46.stack : void 0,
+        server: dbConfig.server,
+        database: dbConfig.database,
+        port: dbConfig.port,
+        windowsAuth: dbConfig.windowsAuth
+      }), this.config.stdio || serverLogger.error("Failed to connect to database:", error46), new Error(`Database connection failed: ${error46 instanceof Error ? error46.message : "Unknown error"}`);
     }
     if (this.config.stdio) {
-      let transport = new StdioServerTransport();
-      await this.server.connect(transport);
+      fileLogger.info("Setting up STDIO transport...");
+      try {
+        let transport = new StdioServerTransport();
+        await this.server.connect(transport), fileLogger.info("STDIO transport connected successfully");
+      } catch (error46) {
+        throw fileLogger.error("Failed to setup STDIO transport", error46), error46;
+      }
     } else
       this.app = new Hono2(), this.app.use(logger()), this.app.use(
         "*",
@@ -80695,36 +80827,45 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
 // src/main.ts
 var program2 = new Command();
 program2.name("mssql-mcp").description("Microsoft SQL Server MCP Server").version("1.0.0").option("-v, --verbose", "enable verbose logging").option("--env-file <path>", "load environment variables from file").option("-p, --port <port>", "HTTP server port", "3003").option("-h, --host <host>", "HTTP server host", "localhost").option("--stdio", "use STDIO transport instead of HTTP").action(async (options) => {
+  let fileLogger = getFileLogger();
   try {
-    if (options.verbose && (consola.level = 4), options.stdio && (consola.level = -1, process.platform === "win32"))
-      try {
-        process.stdin.setEncoding("utf8"), process.stdout.setDefaultEncoding("utf8");
-      } catch {
-      }
-    if (options.envFile) {
+    if (options.verbose && (consola.level = 4), options.stdio && (consola.level = -1, fileLogger.info("STDIO mode enabled, console logging disabled"), fileLogger.info("Environment variables:", {
+      MSSQL_SERVER: process.env.MSSQL_SERVER || "NOT SET",
+      MSSQL_DATABASE: process.env.MSSQL_DATABASE || "NOT SET",
+      MSSQL_USER: process.env.MSSQL_USER ? "***SET***" : "NOT SET",
+      MSSQL_PASSWORD: process.env.MSSQL_PASSWORD ? "***SET***" : "NOT SET",
+      MSSQL_WINDOWS_AUTH: process.env.MSSQL_WINDOWS_AUTH || "NOT SET",
+      MSSQL_PORT: process.env.MSSQL_PORT || "NOT SET",
+      MSSQL_ENCRYPT: process.env.MSSQL_ENCRYPT || "NOT SET"
+    }), fileLogger.info("Letting MCP SDK handle STDIO configuration")), options.envFile) {
+      fileLogger.info(`Loading environment file: ${options.envFile}`);
       let result = (0, import_dotenv.config)({ path: options.envFile });
-      result.error && (consola.error(`Failed to load environment file: ${options.envFile}`, result.error), process.exit(1)), options.stdio || consola.success(`Loaded environment variables from: ${options.envFile}`);
+      result.error && (fileLogger.error("Failed to load environment file", result.error), consola.error(`Failed to load environment file: ${options.envFile}`, result.error), process.exit(1)), fileLogger.info("Environment file loaded successfully"), options.stdio || consola.success(`Loaded environment variables from: ${options.envFile}`);
     }
-    options.stdio || consola.info("Starting MSSQL MCP server...");
+    options.stdio || consola.info("Starting MSSQL MCP server..."), fileLogger.info("Creating MssqlMcpServer instance", {
+      port: parseInt(options.port),
+      host: options.host,
+      stdio: options.stdio
+    });
     let server = new MssqlMcpServer({
       port: parseInt(options.port),
       host: options.host,
       stdio: options.stdio
     });
-    await server.start(), options.stdio || consola.success(`MSSQL MCP server started on http://${options.host}:${options.port}`), process.on("SIGINT", async () => {
-      options.stdio || consola.info("Shutting down MSSQL MCP server..."), await server.stop(), process.exit(0);
+    fileLogger.info("Starting MssqlMcpServer..."), await server.start(), fileLogger.info("MssqlMcpServer started successfully"), options.stdio || consola.success(`MSSQL MCP server started on http://${options.host}:${options.port}`), process.on("SIGINT", async () => {
+      fileLogger.info("Received SIGINT, shutting down..."), options.stdio || consola.info("Shutting down MSSQL MCP server..."), await server.stop(), closeFileLogger(), process.exit(0);
     }), process.on("SIGTERM", async () => {
-      options.stdio || consola.info("Shutting down MSSQL MCP server..."), await server.stop(), process.exit(0);
+      fileLogger.info("Received SIGTERM, shutting down..."), options.stdio || consola.info("Shutting down MSSQL MCP server..."), await server.stop(), closeFileLogger(), process.exit(0);
     });
   } catch (error46) {
-    consola.error("Failed to start MSSQL MCP server:", error46), process.exit(1);
+    fileLogger.error("Failed to start MSSQL MCP server", error46), consola.error("Failed to start MSSQL MCP server:", error46), closeFileLogger(), process.exit(1);
   }
 });
 process.on("unhandledRejection", (error46) => {
-  consola.error("Unhandled promise rejection:", error46), process.exit(1);
+  getFileLogger().error("Unhandled promise rejection", error46), consola.error("Unhandled promise rejection:", error46), closeFileLogger(), process.exit(1);
 });
 process.on("uncaughtException", (error46) => {
-  consola.error("Uncaught exception:", error46), process.exit(1);
+  getFileLogger().error("Uncaught exception", error46), consola.error("Uncaught exception:", error46), closeFileLogger(), process.exit(1);
 });
 program2.parse();
 process.argv.slice(2).length || program2.outputHelp();

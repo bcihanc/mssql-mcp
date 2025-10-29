@@ -20,8 +20,10 @@ const logger = consola.withTag('mssql-config');
 export function getMssqlConfig(): MssqlConfig {
 	// Basic configuration
 	let server = process.env.MSSQL_SERVER || 'localhost';
-	logger.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || 'NOT SET'}`);
-	logger.info(`Using server: ${server}`);
+	if (consola.level >= 0) {
+		logger.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || 'NOT SET'}`);
+		logger.info(`Using server: ${server}`);
+	}
 
 	// Handle LocalDB connections (matching Python reference behavior)
 	// LocalDB format: (localdb)\instancename or (localdb)\\instancename
@@ -32,7 +34,9 @@ export function getMssqlConfig(): MssqlConfig {
 		// Regex: Match single or double backslash after (localdb), case-insensitive
 		const instanceName = server.replace(/\(localdb\)\\{1,2}/i, '');
 		server = `.\\${instanceName}`;
-		logger.info(`Detected LocalDB connection, converted to: ${server}`);
+		if (consola.level >= 0) {
+			logger.info(`Detected LocalDB connection, converted to: ${server}`);
+		}
 	}
 
 	const config: MssqlConfig = {
@@ -52,7 +56,9 @@ export function getMssqlConfig(): MssqlConfig {
 		try {
 			config.port = parseInt(port, 10);
 		} catch (error) {
-			logger.warn(`Invalid MSSQL_PORT value: ${port}. Using default port 1433.`);
+			if (consola.level >= 0) {
+				logger.warn(`Invalid MSSQL_PORT value: ${port}. Using default port 1433.`);
+			}
 		}
 	}
 
@@ -60,12 +66,16 @@ export function getMssqlConfig(): MssqlConfig {
 	// Check if we're connecting to Azure SQL
 	if (config.server && config.server.includes('.database.windows.net')) {
 		config.encrypt = true; // Azure SQL requires encryption
-		logger.info('Detected Azure SQL, enabling encryption');
+		if (consola.level >= 0) {
+			logger.info('Detected Azure SQL, enabling encryption');
+		}
 	} else {
 		// For non-Azure connections, check MSSQL_ENCRYPT setting
 		if (process.env.MSSQL_ENCRYPT?.toLowerCase() === 'true') {
 			config.encrypt = true;
-			logger.info('Encryption enabled via MSSQL_ENCRYPT setting');
+			if (consola.level >= 0) {
+				logger.info('Encryption enabled via MSSQL_ENCRYPT setting');
+			}
 		}
 	}
 
@@ -77,31 +87,39 @@ export function getMssqlConfig(): MssqlConfig {
 
 		// For Windows authentication, user and password are not required
 		if (!config.database) {
-			logger.error('MSSQL_DATABASE is required');
+			if (consola.level >= 0) {
+				logger.error('MSSQL_DATABASE is required');
+			}
 			throw new Error('Missing required database configuration');
 		}
 
 		// Remove user and password for Windows auth (matching Python behavior)
 		config.user = undefined;
 		config.password = undefined;
-		logger.info('Using Windows Authentication');
+		if (consola.level >= 0) {
+			logger.info('Using Windows Authentication');
+		}
 	} else {
 		// SQL Authentication - user and password are required
 		if (!config.user || !config.password || !config.database) {
-			logger.error('Missing required database configuration. Please check environment variables:');
-			logger.error('MSSQL_USER, MSSQL_PASSWORD, and MSSQL_DATABASE are required');
+			if (consola.level >= 0) {
+				logger.error('Missing required database configuration. Please check environment variables:');
+				logger.error('MSSQL_USER, MSSQL_PASSWORD, and MSSQL_DATABASE are required');
+			}
 			throw new Error('Missing required database configuration');
 		}
 	}
 
-	if (useWindowsAuth) {
-		logger.info(
-			`Database config: ${config.server}:${config.port}/${config.database} using Windows Authentication (READ-ONLY mode)`,
-		);
-	} else {
-		logger.info(
-			`Database config: ${config.server}:${config.port}/${config.database} as ${config.user} (READ-ONLY mode)`,
-		);
+	if (consola.level >= 0) {
+		if (useWindowsAuth) {
+			logger.info(
+				`Database config: ${config.server}:${config.port}/${config.database} using Windows Authentication (READ-ONLY mode)`,
+			);
+		} else {
+			logger.info(
+				`Database config: ${config.server}:${config.port}/${config.database} as ${config.user} (READ-ONLY mode)`,
+			);
+		}
 	}
 
 	return config;

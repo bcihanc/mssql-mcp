@@ -14,6 +14,7 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { MssqlResources } from '../MssqlResources';
 import { MssqlTools } from '../MssqlTools';
+import { getFileLogger } from '../utils/fileLogger';
 import { getMssqlConfig } from './config';
 import { createConnectionPool, type ConnectionPool } from './connection';
 
@@ -95,16 +96,45 @@ export class MssqlMcpServer {
 	}
 
 	async start() {
+		const fileLogger = getFileLogger();
+		fileLogger.info('MssqlMcpServer.start() called');
+
 		// Initialize database configuration and connection pool
-		const dbConfig = getMssqlConfig();
+		fileLogger.info('Getting database configuration...');
+		let dbConfig;
+		try {
+			dbConfig = getMssqlConfig();
+			fileLogger.info('Database configuration retrieved', {
+				server: dbConfig.server,
+				database: dbConfig.database,
+				port: dbConfig.port,
+				encrypt: dbConfig.encrypt,
+				windowsAuth: dbConfig.windowsAuth,
+				hasUser: !!dbConfig.user,
+				hasPassword: !!dbConfig.password,
+			});
+		} catch (error) {
+			fileLogger.error('Failed to get database configuration', error);
+			throw error;
+		}
 
 		// PERFORMANCE: Eagerly create and connect pool (createConnectionPool is now async)
+		fileLogger.info('Creating connection pool...');
 		try {
 			this.pool = await createConnectionPool(dbConfig);
+			fileLogger.info('Database connection pool created and connected successfully');
 			if (!this.config.stdio) {
 				serverLogger.success('Database connection established successfully');
 			}
 		} catch (error) {
+			fileLogger.error('Failed to connect to database', {
+				error: error instanceof Error ? error.message : String(error),
+				stack: error instanceof Error ? error.stack : undefined,
+				server: dbConfig.server,
+				database: dbConfig.database,
+				port: dbConfig.port,
+				windowsAuth: dbConfig.windowsAuth,
+			});
 			if (!this.config.stdio) {
 				serverLogger.error('Failed to connect to database:', error);
 			}
@@ -113,8 +143,15 @@ export class MssqlMcpServer {
 
 		if (this.config.stdio) {
 			// STDIO transport for CLI usage
-			const transport = new StdioServerTransport();
-			await this.server.connect(transport);
+			fileLogger.info('Setting up STDIO transport...');
+			try {
+				const transport = new StdioServerTransport();
+				await this.server.connect(transport);
+				fileLogger.info('STDIO transport connected successfully');
+			} catch (error) {
+				fileLogger.error('Failed to setup STDIO transport', error);
+				throw error;
+			}
 		} else {
 			// HTTP transport with Hono following the reference pattern
 			this.app = new Hono<{

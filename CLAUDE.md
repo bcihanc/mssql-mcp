@@ -99,6 +99,102 @@ If the MCP server doesn't work with Claude Desktop on Windows:
    - Test with SQL Server Management Studio first
    - Alternative: Use SQL Authentication instead
 
+### Debug Logging
+
+**File-Based Debug Logging (ENABLED BY DEFAULT)**
+
+File logging is **automatically enabled** to help diagnose issues without interfering with STDIO communication. This is especially useful for Windows troubleshooting.
+
+**Default Behavior:**
+- ✅ Logging is **ENABLED by default**
+- ✅ Log files are written to the **`logs/` directory** in project root
+- ✅ The `logs/` directory is automatically created if it doesn't exist
+- ✅ Each run creates a new timestamped log file: `logs/mssql-mcp-YYYY-MM-DDTHH-MM-SS-sssZ.log`
+- ✅ Works in STDIO mode without interfering with Claude Desktop communication
+
+**Disable Logging (Optional):**
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "node",
+      "args": [
+        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@wener/mssql-mcp/dist/main.mjs",
+        "--stdio",
+        "--env-file",
+        "C:/path/to/your/.env"
+      ],
+      "env": {
+        "MSSQL_MCP_FILE_LOG": "false"
+      }
+    }
+  }
+}
+```
+
+**Custom Log Directory (Optional):**
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "node",
+      "args": [...],
+      "env": {
+        "MSSQL_MCP_LOG_DIR": "C:/logs/mssql-mcp"
+      }
+    }
+  }
+}
+```
+
+**Environment Variables:**
+- `MSSQL_MCP_FILE_LOG`: Set to `"false"` to disable file logging (enabled by default)
+- `MSSQL_MCP_LOG_DIR`: Optional custom directory for log files (defaults to project root)
+
+**What Gets Logged:**
+- Server startup and initialization
+- Environment variable configuration (passwords masked)
+- Database connection attempts with detailed error information
+- STDIO transport setup on Windows
+- Query execution (first 200 characters only)
+- Windows-specific error diagnostics (LocalDB, Windows Auth, certificates, firewall)
+
+**Log File Location:**
+- **Default**: `logs/` subdirectory in project root
+  - Global install: `%APPDATA%\npm\node_modules\@wener\mssql-mcp\logs\mssql-mcp-*.log`
+  - Local/dev: Your project directory (e.g., `C:\mcp\mssql-mcp\logs\mssql-mcp-*.log`)
+- **Custom**: Specified via `MSSQL_MCP_LOG_DIR`
+- **Filename format**: `logs/mssql-mcp-YYYY-MM-DDTHH-MM-SS-sssZ.log`
+
+**Finding Your Logs:**
+
+If using local installation or development:
+```bash
+# Windows (PowerShell) - in project directory
+Get-ChildItem logs\mssql-mcp-*.log | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+# Windows (cmd) - in project directory
+dir logs\mssql-mcp-*.log /O-D /B
+
+# macOS/Linux - in project directory
+ls -lt logs/mssql-mcp-*.log | head -1
+```
+
+If using global npm installation:
+```bash
+# Windows (PowerShell)
+cd $env:APPDATA\npm\node_modules\@wener\mssql-mcp
+Get-ChildItem logs\mssql-mcp-*.log | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+# macOS/Linux
+cd $(npm root -g)/@wener/mssql-mcp
+ls -lt logs/mssql-mcp-*.log | head -1
+```
+
+**TIP:** Log files are organized in the `logs/` directory, keeping your project root clean and logs easy to find.
+
+**IMPORTANT:** File logging works even when console logging is disabled (STDIO mode), making it perfect for diagnosing Claude Desktop integration issues.
+
 4. **Certificate/TLS Issues**:
    - For testing: Set `MSSQL_ENCRYPT=false` in `.env` (not for production)
    - For Azure SQL: Ensure proper certificate chain is installed

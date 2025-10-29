@@ -40,6 +40,7 @@ mssql-mcp --help
 - 📊 **Data Access**: Browse database tables and their contents automatically
 - 🚀 **Zero Config**: Single executable with all dependencies bundled
 - 🔒 **Advanced Security**: Multi-layer protection with SHA256 cache, Unicode normalization, encoding bypass prevention, and comprehensive validation
+- 📝 **Auto-Logging**: File-based debug logging enabled by default for easy troubleshooting (especially useful on Windows)
 
 ## 🏗️ Setup for Claude Desktop
 
@@ -124,7 +125,8 @@ Add to your `claude_desktop_config.json`:
 - Find your npm global path: `npm config get prefix`
 - LocalDB not working: Run `sqllocaldb info` and `sqllocaldb start MSSQLLocalDB`
 - Windows Auth failed: Ensure your Windows user has SQL Server access
-- For more details, see [CLAUDE.md](CLAUDE.md#windows-support)
+- **Debug logs**: Automatically enabled! Check `logs/mssql-mcp-*.log` files
+- For more details, see [CLAUDE.md](CLAUDE.md#windows-support) and [Debug Logging](CLAUDE.md#debug-logging)
 
 ### 3. Restart Claude Desktop
 
