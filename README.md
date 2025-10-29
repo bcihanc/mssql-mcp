@@ -62,6 +62,8 @@ MSSQL_ENCRYPT=false         # Set 'true' for Azure SQL (auto-enabled for *.datab
 
 ### 2. Configure Claude Desktop
 
+#### macOS/Linux
+
 Add to your `claude_desktop_config.json`:
 
 ```json
@@ -74,6 +76,55 @@ Add to your `claude_desktop_config.json`:
   }
 }
 ```
+
+#### Windows (Recommended Configuration)
+
+**RECOMMENDED:** Use Node.js directly for better STDIO compatibility:
+
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "node",
+      "args": [
+        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@wener/mssql-mcp/dist/main.mjs",
+        "--stdio",
+        "--env-file",
+        "C:/path/to/your/.env"
+      ]
+    }
+  }
+}
+```
+
+**Alternative (using npx - may have STDIO issues on some systems):**
+
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "npx",
+      "args": ["@wener/mssql-mcp", "--env-file", "C:/path/to/your/.env", "--stdio"]
+    }
+  }
+}
+```
+
+**Windows Tips:**
+- Use forward slashes (`/`) or double backslashes (`\\`) in paths
+- Example: `C:/Users/YourName/.env` or `C:\\Users\\YourName\\.env`
+- LocalDB connection string formats (all supported):
+  - `MSSQL_SERVER=(localdb)\MSSQLLocalDB` (single backslash)
+  - `MSSQL_SERVER=(localdb)\\MSSQLLocalDB` (double backslash)
+  - Case-insensitive: `(LocalDB)\MSSQLLocalDB` works too
+- Windows Authentication: Set `MSSQL_WINDOWS_AUTH=true` in .env file
+
+**Windows Troubleshooting:**
+- If MCP server doesn't connect: Try using `node` command directly (see recommended config above)
+- Find your npm global path: `npm config get prefix`
+- LocalDB not working: Run `sqllocaldb info` and `sqllocaldb start MSSQLLocalDB`
+- Windows Auth failed: Ensure your Windows user has SQL Server access
+- For more details, see [CLAUDE.md](CLAUDE.md#windows-support)
 
 ### 3. Restart Claude Desktop
 

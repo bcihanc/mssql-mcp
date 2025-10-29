@@ -26,7 +26,94 @@ Runs the server directly with TypeScript support using ts-node loader.
 ```bash
 npm run clean
 ```
-Removes the `dist` directory.
+Removes the `dist` directory (cross-platform compatible).
+
+## Platform Compatibility
+
+### Windows Support
+
+The MCP server is fully compatible with Windows. Recent changes ensure cross-platform compatibility:
+
+**Fixed Issues:**
+- ✅ `npm run clean` now uses Node.js API instead of Unix `rm -rf` command
+- ✅ `chmod` errors are gracefully ignored on Windows (file permissions handled differently)
+- ✅ Shebang (`#!/usr/bin/env node`) is automatically ignored by Node.js on Windows
+- ✅ LocalDB connection string handling now supports both single and double backslash formats
+- ✅ STDIO mode properly configured for Windows encoding (UTF-8)
+- ✅ Enhanced error messages for Windows-specific issues (LocalDB, Windows Auth, certificates)
+
+**Windows-Specific Configuration:**
+- Use forward slashes (`/`) or double backslashes (`\\`) in file paths
+- Example: `C:/Users/YourName/.env` or `C:\\Users\\YourName\\.env`
+- LocalDB connection string formats (all supported):
+  - `MSSQL_SERVER=(localdb)\MSSQLLocalDB` (single backslash)
+  - `MSSQL_SERVER=(localdb)\\MSSQLLocalDB` (double backslash)
+  - `MSSQL_SERVER=(LocalDB)\MSSQLLocalDB` (case-insensitive)
+- Windows Authentication: Set `MSSQL_WINDOWS_AUTH=true` in environment variables
+
+**Claude Desktop Config (Windows) - RECOMMENDED:**
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "node",
+      "args": [
+        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@wener/mssql-mcp/dist/main.mjs",
+        "--stdio",
+        "--env-file",
+        "C:/path/to/your/.env"
+      ]
+    }
+  }
+}
+```
+
+**Alternative Config (Using npx - may have STDIO issues on some systems):**
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "npx",
+      "args": ["@wener/mssql-mcp", "--env-file", "C:/path/to/your/.env", "--stdio"]
+    }
+  }
+}
+```
+
+**Windows Troubleshooting:**
+
+If the MCP server doesn't work with Claude Desktop on Windows:
+
+1. **STDIO Issue (Most Common)**: npx wrapper scripts may not inherit STDIO correctly
+   - Solution: Use `node` command directly (see recommended config above)
+   - Find your global npm path: `npm config get prefix`
+   - Use absolute path to `dist/main.mjs`
+
+2. **LocalDB Connection Failed**:
+   - Verify LocalDB is installed: `sqllocaldb info`
+   - Start LocalDB instance: `sqllocaldb start MSSQLLocalDB`
+   - Check connection string format supports both `\` and `\\`
+
+3. **Windows Authentication Failed**:
+   - Ensure your Windows user has SQL Server access
+   - Test with SQL Server Management Studio first
+   - Alternative: Use SQL Authentication instead
+
+4. **Certificate/TLS Issues**:
+   - For testing: Set `MSSQL_ENCRYPT=false` in `.env` (not for production)
+   - For Azure SQL: Ensure proper certificate chain is installed
+
+5. **Connection Refused/Timeout**:
+   - Verify SQL Server is running
+   - Check Windows Firewall settings
+   - Test connection with `sqlcmd -S yourserver -U sa -P password`
+
+**Enhanced Error Messages:**
+The server now provides detailed, context-aware error messages for Windows-specific issues:
+- LocalDB installation and startup problems
+- Windows Authentication permission issues
+- Certificate validation failures
+- Network connectivity and firewall issues
 
 ### Testing Connection
 ```bash

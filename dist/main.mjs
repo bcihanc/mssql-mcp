@@ -69751,7 +69751,7 @@ var logger = /* @__PURE__ */ __name((fn = console.log) => /* @__PURE__ */ __name
 var logger2 = consola.withTag("mssql-config");
 function getMssqlConfig() {
   let server = process.env.MSSQL_SERVER || "localhost";
-  logger2.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || "NOT SET"}`), logger2.info(`Using server: ${server}`), server.startsWith("(localdb)\\") && (server = `.\\${server.replace("(localdb)\\", "")}`, logger2.info(`Detected LocalDB connection, converted to: ${server}`));
+  logger2.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || "NOT SET"}`), logger2.info(`Using server: ${server}`), server.toLowerCase().includes("(localdb)") && (server = `.\\${server.replace(/\(localdb\)\\{1,2}/i, "")}`, logger2.info(`Detected LocalDB connection, converted to: ${server}`));
   let config2 = {
     server,
     user: process.env.MSSQL_USER,
@@ -80567,7 +80567,34 @@ async function createConnectionPool(config2) {
     mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, logger5.info(`Configured for SQL Authentication as user: ${config2.user}`);
   }
   let pool = new import_mssql.default.ConnectionPool(mssqlConfig);
-  return logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), await pool.connect(), logger5.debug("Connection pool connected eagerly (READ-ONLY mode)"), {
+  logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)");
+  try {
+    await pool.connect(), logger5.debug("Connection pool connected eagerly (READ-ONLY mode)");
+  } catch (error46) {
+    let errorMessage = error46 instanceof Error ? error46.message : String(error46);
+    if (process.platform === "win32") {
+      if (errorMessage.includes("Login failed"))
+        throw config2.windowsAuth ? new Error(
+          `Windows Authentication failed. Ensure your Windows user account has SQL Server access permissions. Original error: ${errorMessage}`
+        ) : new Error(
+          `SQL Authentication failed. Check your username and password. Original error: ${errorMessage}`
+        );
+      if (errorMessage.toLowerCase().includes("localdb") || config2.server.includes("localdb"))
+        throw new Error(
+          `LocalDB connection failed. Verify LocalDB is installed and started. Run 'sqllocaldb info' to check. Original error: ${errorMessage}`
+        );
+      if (errorMessage.includes("certificate") || errorMessage.includes("SSL") || errorMessage.includes("TLS"))
+        throw new Error(
+          `Certificate validation failed. For testing, try setting MSSQL_ENCRYPT=false (not for production). For Azure SQL, ensure proper certificate chain. Original error: ${errorMessage}`
+        );
+      if (errorMessage.includes("ECONNREFUSED") || errorMessage.includes("ETIMEDOUT"))
+        throw new Error(
+          `Cannot connect to SQL Server at ${config2.server}:${config2.port}. Verify SQL Server is running and accessible. Check Windows Firewall settings. Original error: ${errorMessage}`
+        );
+    }
+    throw new Error(`Failed to connect to SQL Server: ${errorMessage}`);
+  }
+  return {
     async query(sqlQuery) {
       try {
         let result = await pool.request().query(sqlQuery);
@@ -80669,7 +80696,12 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
 var program2 = new Command();
 program2.name("mssql-mcp").description("Microsoft SQL Server MCP Server").version("1.0.0").option("-v, --verbose", "enable verbose logging").option("--env-file <path>", "load environment variables from file").option("-p, --port <port>", "HTTP server port", "3003").option("-h, --host <host>", "HTTP server host", "localhost").option("--stdio", "use STDIO transport instead of HTTP").action(async (options) => {
   try {
-    if (options.verbose && (consola.level = 4), options.stdio && (consola.level = -1), options.envFile) {
+    if (options.verbose && (consola.level = 4), options.stdio && (consola.level = -1, process.platform === "win32"))
+      try {
+        process.stdin.setEncoding("utf8"), process.stdout.setDefaultEncoding("utf8");
+      } catch {
+      }
+    if (options.envFile) {
       let result = (0, import_dotenv.config)({ path: options.envFile });
       result.error && (consola.error(`Failed to load environment file: ${options.envFile}`, result.error), process.exit(1)), options.stdio || consola.success(`Loaded environment variables from: ${options.envFile}`);
     }

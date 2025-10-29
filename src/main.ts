@@ -25,6 +25,20 @@ program
 			// When using STDIO, disable logging to avoid interfering with MCP communication
 			if (options.stdio) {
 				consola.level = -1; // Disable all logging
+
+				// CROSS-PLATFORM: Configure STDIO streams for proper binary/text mode handling
+				// This ensures JSON-RPC communication works correctly on both Windows and Unix
+				if (process.platform === 'win32') {
+					// Windows: Set proper encoding for STDIO streams
+					// stdin should handle binary data correctly, stdout should use UTF-8
+					try {
+						process.stdin.setEncoding('utf8');
+						process.stdout.setDefaultEncoding('utf8');
+					} catch (error) {
+						// Ignore errors if setEncoding is not available
+						// Some Node.js versions or environments might not support this
+					}
+				}
 			}
 
 			// Load environment file if specified using dotenv - AFTER stdio check

@@ -54,8 +54,12 @@ console.log('Building MSSQL MCP server...');
 const result = await esbuild.build(options);
 
 if (result.errors.length === 0) {
-	// Make the output file executable
-	fs.chmodSync(outfile, 0o755);
+	// Make the output file executable (Unix/macOS only, Windows ignores)
+	try {
+		fs.chmodSync(outfile, 0o755);
+	} catch (error) {
+		// Ignore chmod errors on Windows
+	}
 
 	const stats = fs.statSync(outfile);
 	const sizeBytes = stats.size;

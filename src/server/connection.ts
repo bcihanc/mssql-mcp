@@ -50,8 +50,50 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 	logger.info('Connection configured for READ-ONLY access mode (write operations are disabled)');
 
 	// PERFORMANCE: Eagerly connect to avoid cold start on first query
-	await pool.connect();
-	logger.debug('Connection pool connected eagerly (READ-ONLY mode)');
+	try {
+		await pool.connect();
+		logger.debug('Connection pool connected eagerly (READ-ONLY mode)');
+	} catch (error) {
+		// CROSS-PLATFORM: Enhanced error messages for common connection issues
+		const errorMessage = error instanceof Error ? error.message : String(error);
+		const isWindows = process.platform === 'win32';
+
+		// Windows-specific error handling
+		if (isWindows) {
+			if (errorMessage.includes('Login failed')) {
+				if (config.windowsAuth) {
+					throw new Error(
+						`Windows Authentication failed. Ensure your Windows user account has SQL Server access permissions. Original error: ${errorMessage}`,
+					);
+				} else {
+					throw new Error(
+						`SQL Authentication failed. Check your username and password. Original error: ${errorMessage}`,
+					);
+				}
+			}
+
+			if (errorMessage.toLowerCase().includes('localdb') || config.server.includes('localdb')) {
+				throw new Error(
+					`LocalDB connection failed. Verify LocalDB is installed and started. Run 'sqllocaldb info' to check. Original error: ${errorMessage}`,
+				);
+			}
+
+			if (errorMessage.includes('certificate') || errorMessage.includes('SSL') || errorMessage.includes('TLS')) {
+				throw new Error(
+					`Certificate validation failed. For testing, try setting MSSQL_ENCRYPT=false (not for production). For Azure SQL, ensure proper certificate chain. Original error: ${errorMessage}`,
+				);
+			}
+
+			if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('ETIMEDOUT')) {
+				throw new Error(
+					`Cannot connect to SQL Server at ${config.server}:${config.port}. Verify SQL Server is running and accessible. Check Windows Firewall settings. Original error: ${errorMessage}`,
+				);
+			}
+		}
+
+		// Generic error for non-Windows or unmatched cases
+		throw new Error(`Failed to connect to SQL Server: ${errorMessage}`);
+	}
 
 	return {
 		async query<T = any>(sqlQuery: string): Promise<T[]> {

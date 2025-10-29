@@ -24,11 +24,13 @@ export function getMssqlConfig(): MssqlConfig {
 	logger.info(`Using server: ${server}`);
 
 	// Handle LocalDB connections (matching Python reference behavior)
-	// LocalDB format: (localdb)\instancename
-	if (server.startsWith('(localdb)\\')) {
+	// LocalDB format: (localdb)\instancename or (localdb)\\instancename
+	// CROSS-PLATFORM: Handles both single and double backslash, case-insensitive
+	if (server.toLowerCase().includes('(localdb)')) {
 		// For LocalDB, convert to proper format for tedious
-		// Convert (localdb)\MSSQLLocalDB to .\\MSSQLLocalDB
-		const instanceName = server.replace('(localdb)\\', '');
+		// Convert (localdb)\MSSQLLocalDB or (localdb)\\MSSQLLocalDB to .\\MSSQLLocalDB
+		// Regex: Match single or double backslash after (localdb), case-insensitive
+		const instanceName = server.replace(/\(localdb\)\\{1,2}/i, '');
 		server = `.\\${instanceName}`;
 		logger.info(`Detected LocalDB connection, converted to: ${server}`);
 	}
