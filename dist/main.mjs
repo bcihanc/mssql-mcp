@@ -49,9 +49,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 )), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/error.js
+// node_modules/commander/lib/error.js
 var require_error = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/error.js"(exports) {
+  "node_modules/commander/lib/error.js"(exports) {
     var CommanderError2 = class extends Error {
       static {
         __name(this, "CommanderError");
@@ -82,9 +82,9 @@ var require_error = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/argument.js
+// node_modules/commander/lib/argument.js
 var require_argument = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/argument.js"(exports) {
+  "node_modules/commander/lib/argument.js"(exports) {
     var { InvalidArgumentError: InvalidArgumentError2 } = require_error(), Argument2 = class {
       static {
         __name(this, "Argument");
@@ -186,9 +186,9 @@ var require_argument = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/help.js
+// node_modules/commander/lib/help.js
 var require_help = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/help.js"(exports) {
+  "node_modules/commander/lib/help.js"(exports) {
     var { humanReadableArgName } = require_argument(), Help2 = class {
       static {
         __name(this, "Help");
@@ -504,9 +504,9 @@ var require_help = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/option.js
+// node_modules/commander/lib/option.js
 var require_option = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/option.js"(exports) {
+  "node_modules/commander/lib/option.js"(exports) {
     var { InvalidArgumentError: InvalidArgumentError2 } = require_error(), Option2 = class {
       static {
         __name(this, "Option");
@@ -717,9 +717,9 @@ var require_option = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/suggestSimilar.js
+// node_modules/commander/lib/suggestSimilar.js
 var require_suggestSimilar = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/suggestSimilar.js"(exports) {
+  "node_modules/commander/lib/suggestSimilar.js"(exports) {
     function editDistance(a2, b2) {
       if (Math.abs(a2.length - b2.length) > 3)
         return Math.max(a2.length, b2.length);
@@ -762,9 +762,9 @@ var require_suggestSimilar = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/command.js
+// node_modules/commander/lib/command.js
 var require_command = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/lib/command.js"(exports) {
+  "node_modules/commander/lib/command.js"(exports) {
     var EventEmitter = __require("node:events").EventEmitter, childProcess2 = __require("node:child_process"), path2 = __require("node:path"), fs6 = __require("node:fs"), process9 = __require("node:process"), { Argument: Argument2, humanReadableArgName } = require_argument(), { CommanderError: CommanderError2 } = require_error(), { Help: Help2 } = require_help(), { Option: Option2, DualOptions } = require_option(), { suggestSimilar } = require_suggestSimilar(), Command2 = class _Command extends EventEmitter {
       static {
         __name(this, "Command");
@@ -2282,8 +2282,8 @@ Expecting one of '${allowedValues.join("', '")}'`);
       return args.map((arg) => {
         if (!arg.startsWith("--inspect"))
           return arg;
-        let debugOption, debugHost = "127.0.0.1", debugPort = "9229", match;
-        return (match = arg.match(/^(--inspect(-brk)?)$/)) !== null ? debugOption = match[1] : (match = arg.match(/^(--inspect(-brk|-port)?)=([^:]+)$/)) !== null ? (debugOption = match[1], /^\d+$/.test(match[3]) ? debugPort = match[3] : debugHost = match[3]) : (match = arg.match(/^(--inspect(-brk|-port)?)=([^:]+):(\d+)$/)) !== null && (debugOption = match[1], debugHost = match[3], debugPort = match[4]), debugOption && debugPort !== "0" ? `${debugOption}=${debugHost}:${parseInt(debugPort) + 1}` : arg;
+        let debugOption, debugHost = "127.0.0.1", debugPort = "9229", match2;
+        return (match2 = arg.match(/^(--inspect(-brk)?)$/)) !== null ? debugOption = match2[1] : (match2 = arg.match(/^(--inspect(-brk|-port)?)=([^:]+)$/)) !== null ? (debugOption = match2[1], /^\d+$/.test(match2[3]) ? debugPort = match2[3] : debugHost = match2[3]) : (match2 = arg.match(/^(--inspect(-brk|-port)?)=([^:]+):(\d+)$/)) !== null && (debugOption = match2[1], debugHost = match2[3], debugPort = match2[4]), debugOption && debugPort !== "0" ? `${debugOption}=${debugHost}:${parseInt(debugPort) + 1}` : arg;
       });
     }
     __name(incrementNodeInspectorPort, "incrementNodeInspectorPort");
@@ -2291,9 +2291,9 @@ Expecting one of '${allowedValues.join("', '")}'`);
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/index.js
+// node_modules/commander/index.js
 var require_commander = __commonJS({
-  "../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/index.js"(exports) {
+  "node_modules/commander/index.js"(exports) {
     var { Argument: Argument2 } = require_argument(), { Command: Command2 } = require_command(), { CommanderError: CommanderError2, InvalidArgumentError: InvalidArgumentError2 } = require_error(), { Help: Help2 } = require_help(), { Option: Option2 } = require_option();
     exports.program = new Command2();
     exports.createCommand = (name) => new Command2(name);
@@ -2309,7 +2309,7 @@ var require_commander = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/chunks/prompt.mjs
+// node_modules/consola/dist/chunks/prompt.mjs
 var prompt_exports = {};
 __export(prompt_exports, {
   kCancel: () => kCancel,
@@ -2516,8 +2516,8 @@ async function prompt(message, opts = {}) {
       return value;
     switch (opts.cancel) {
       case "reject": {
-        let error45 = new Error("Prompt cancelled.");
-        throw error45.name = "ConsolaPromptCancelledError", Error.captureStackTrace && Error.captureStackTrace(error45, prompt), error45;
+        let error46 = new Error("Prompt cancelled.");
+        throw error46.name = "ConsolaPromptCancelledError", Error.captureStackTrace && Error.captureStackTrace(error46, prompt), error46;
       }
       case "undefined":
         return;
@@ -2562,7 +2562,7 @@ async function prompt(message, opts = {}) {
   throw new Error(`Unknown prompt type: ${opts.type}`);
 }
 var src, hasRequiredSrc, srcExports, picocolors, hasRequiredPicocolors, picocolorsExports, e, Q, P$1, X, DD, uD, FD, m, L$1, N, I, r, tD, eD, iD, v, CD, w$1, W$1, rD, R, y, V$1, z, ED, _, nD, oD, aD, c, S, AD, pD, h, x, fD, bD, mD, Y, wD, SD, $D, q, jD, PD, V, u, le, L, W, C, o, d, k, P, A, T, F, w, B, he, ye, ve, fe, kCancel, init_prompt = __esm({
-  "../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/chunks/prompt.mjs"() {
+  "node_modules/consola/dist/chunks/prompt.mjs"() {
     __name(getDefaultExportFromCjs, "getDefaultExportFromCjs");
     __name(requireSrc, "requireSrc");
     srcExports = requireSrc(), picocolors = { exports: {} };
@@ -2997,12 +2997,12 @@ ${e.cyan(d)}
   }
 });
 
-// ../../node_modules/.pnpm/dotenv@16.4.7/node_modules/dotenv/package.json
+// node_modules/dotenv/package.json
 var require_package = __commonJS({
-  "../../node_modules/.pnpm/dotenv@16.4.7/node_modules/dotenv/package.json"(exports, module) {
+  "node_modules/dotenv/package.json"(exports, module) {
     module.exports = {
       name: "dotenv",
-      version: "16.4.7",
+      version: "16.6.1",
       description: "Loads environment variables from .env file",
       main: "lib/main.js",
       types: "lib/main.d.ts",
@@ -3025,7 +3025,7 @@ var require_package = __commonJS({
         lint: "standard",
         pretest: "npm run lint && npm run dts-check",
         test: "tap run --allow-empty-coverage --disable-coverage --timeout=60000",
-        "test:coverage": "tap run --show-full-coverage --timeout=60000 --coverage-report=lcov",
+        "test:coverage": "tap run --show-full-coverage --timeout=60000 --coverage-report=text --coverage-report=lcov",
         prerelease: "npm test",
         release: "standard-version"
       },
@@ -3033,6 +3033,7 @@ var require_package = __commonJS({
         type: "git",
         url: "git://github.com/motdotla/dotenv.git"
       },
+      homepage: "https://github.com/motdotla/dotenv#readme",
       funding: "https://dotenvx.com",
       keywords: [
         "dotenv",
@@ -3064,17 +3065,17 @@ var require_package = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/dotenv@16.4.7/node_modules/dotenv/lib/main.js
+// node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
-  "../../node_modules/.pnpm/dotenv@16.4.7/node_modules/dotenv/lib/main.js"(exports, module) {
-    var fs6 = __require("fs"), path2 = __require("path"), os2 = __require("os"), crypto6 = __require("crypto"), packageJson = require_package(), version3 = packageJson.version, LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
+  "node_modules/dotenv/lib/main.js"(exports, module) {
+    var fs6 = __require("fs"), path2 = __require("path"), os2 = __require("os"), crypto7 = __require("crypto"), packageJson = require_package(), version3 = packageJson.version, LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
     function parse4(src2) {
       let obj = {}, lines = src2.toString();
       lines = lines.replace(/\r\n?/mg, `
 `);
-      let match;
-      for (; (match = LINE.exec(lines)) != null; ) {
-        let key = match[1], value = match[2] || "";
+      let match2;
+      for (; (match2 = LINE.exec(lines)) != null; ) {
+        let key = match2[1], value = match2[2] || "";
         value = value.trim();
         let maybeQuote = value[0];
         value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2"), maybeQuote === '"' && (value = value.replace(/\\n/g, `
@@ -3084,7 +3085,10 @@ var require_main = __commonJS({
     }
     __name(parse4, "parse");
     function _parseVault(options) {
-      let vaultPath = _vaultPath(options), result = DotenvModule.configDotenv({ path: vaultPath });
+      options = options || {};
+      let vaultPath = _vaultPath(options);
+      options.path = vaultPath;
+      let result = DotenvModule.configDotenv(options);
       if (!result.parsed) {
         let err = new Error(`MISSING_DATA: Cannot parse ${vaultPath} for an unknown reason`);
         throw err.code = "MISSING_DATA", err;
@@ -3095,17 +3099,13 @@ var require_main = __commonJS({
           let key = keys[i2].trim(), attrs = _instructions(result, key);
           decrypted = DotenvModule.decrypt(attrs.ciphertext, attrs.key);
           break;
-        } catch (error45) {
+        } catch (error46) {
           if (i2 + 1 >= length)
-            throw error45;
+            throw error46;
         }
       return DotenvModule.parse(decrypted);
     }
     __name(_parseVault, "_parseVault");
-    function _log(message) {
-      console.log(`[dotenv@${version3}][INFO] ${message}`);
-    }
-    __name(_log, "_log");
     function _warn(message) {
       console.log(`[dotenv@${version3}][WARN] ${message}`);
     }
@@ -3114,6 +3114,10 @@ var require_main = __commonJS({
       console.log(`[dotenv@${version3}][DEBUG] ${message}`);
     }
     __name(_debug, "_debug");
+    function _log(message) {
+      console.log(`[dotenv@${version3}] ${message}`);
+    }
+    __name(_log, "_log");
     function _dotenvKey(options) {
       return options && options.DOTENV_KEY && options.DOTENV_KEY.length > 0 ? options.DOTENV_KEY : process.env.DOTENV_KEY && process.env.DOTENV_KEY.length > 0 ? process.env.DOTENV_KEY : "";
     }
@@ -3122,12 +3126,12 @@ var require_main = __commonJS({
       let uri;
       try {
         uri = new URL(dotenvKey);
-      } catch (error45) {
-        if (error45.code === "ERR_INVALID_URL") {
+      } catch (error46) {
+        if (error46.code === "ERR_INVALID_URL") {
           let err = new Error("INVALID_DOTENV_KEY: Wrong format. Must be in valid uri format like dotenv://:key_1234@dotenvx.com/vault/.env.vault?environment=development");
           throw err.code = "INVALID_DOTENV_KEY", err;
         }
-        throw error45;
+        throw error46;
       }
       let key = uri.password;
       if (!key) {
@@ -3165,13 +3169,14 @@ var require_main = __commonJS({
     }
     __name(_resolveHome, "_resolveHome");
     function _configVault(options) {
-      _log("Loading env from encrypted .env.vault");
+      let debug = !!(options && options.debug), quiet = options && "quiet" in options ? options.quiet : !0;
+      (debug || !quiet) && _log("Loading env from encrypted .env.vault");
       let parsed = DotenvModule._parseVault(options), processEnv = process.env;
       return options && options.processEnv != null && (processEnv = options.processEnv), DotenvModule.populate(processEnv, parsed, options), { parsed };
     }
     __name(_configVault, "_configVault");
     function configDotenv(options) {
-      let dotenvPath = path2.resolve(process.cwd(), ".env"), encoding = "utf8", debug = !!(options && options.debug);
+      let dotenvPath = path2.resolve(process.cwd(), ".env"), encoding = "utf8", debug = !!(options && options.debug), quiet = options && "quiet" in options ? options.quiet : !0;
       options && options.encoding ? encoding = options.encoding : debug && _debug("No encoding is specified. UTF-8 is used by default");
       let optionPaths = [dotenvPath];
       if (options && options.path)
@@ -3191,7 +3196,18 @@ var require_main = __commonJS({
           debug && _debug(`Failed to load ${path3} ${e2.message}`), lastError = e2;
         }
       let processEnv = process.env;
-      return options && options.processEnv != null && (processEnv = options.processEnv), DotenvModule.populate(processEnv, parsedAll, options), lastError ? { parsed: parsedAll, error: lastError } : { parsed: parsedAll };
+      if (options && options.processEnv != null && (processEnv = options.processEnv), DotenvModule.populate(processEnv, parsedAll, options), debug || !quiet) {
+        let keysCount = Object.keys(parsedAll).length, shortPaths = [];
+        for (let filePath of optionPaths)
+          try {
+            let relative = path2.relative(process.cwd(), filePath);
+            shortPaths.push(relative);
+          } catch (e2) {
+            debug && _debug(`Failed to load ${filePath} ${e2.message}`), lastError = e2;
+          }
+        _log(`injecting env (${keysCount}) from ${shortPaths.join(",")}`);
+      }
+      return lastError ? { parsed: parsedAll, error: lastError } : { parsed: parsedAll };
     }
     __name(configDotenv, "configDotenv");
     function config2(options) {
@@ -3205,10 +3221,10 @@ var require_main = __commonJS({
       let key = Buffer.from(keyStr.slice(-64), "hex"), ciphertext = Buffer.from(encrypted, "base64"), nonce = ciphertext.subarray(0, 12), authTag = ciphertext.subarray(-16);
       ciphertext = ciphertext.subarray(12, -16);
       try {
-        let aesgcm = crypto6.createDecipheriv("aes-256-gcm", key, nonce);
+        let aesgcm = crypto7.createDecipheriv("aes-256-gcm", key, nonce);
         return aesgcm.setAuthTag(authTag), `${aesgcm.update(ciphertext)}${aesgcm.final()}`;
-      } catch (error45) {
-        let isRange = error45 instanceof RangeError, invalidKeyLength = error45.message === "Invalid key length", decryptionFailed = error45.message === "Unsupported state or unable to authenticate data";
+      } catch (error46) {
+        let isRange = error46 instanceof RangeError, invalidKeyLength = error46.message === "Invalid key length", decryptionFailed = error46.message === "Unsupported state or unable to authenticate data";
         if (isRange || invalidKeyLength) {
           let err = new Error("INVALID_DOTENV_KEY: It must be 64 characters long (or more)");
           throw err.code = "INVALID_DOTENV_KEY", err;
@@ -3216,7 +3232,7 @@ var require_main = __commonJS({
           let err = new Error("DECRYPTION_FAILED: Please check your DOTENV_KEY");
           throw err.code = "DECRYPTION_FAILED", err;
         } else
-          throw error45;
+          throw error46;
       }
     }
     __name(decrypt, "decrypt");
@@ -3250,9 +3266,9 @@ var require_main = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/uri-js@4.4.1/node_modules/uri-js/dist/es5/uri.all.js
+// node_modules/uri-js/dist/es5/uri.all.js
 var require_uri_all = __commonJS({
-  "../../node_modules/.pnpm/uri-js@4.4.1/node_modules/uri-js/dist/es5/uri.all.js"(exports, module) {
+  "node_modules/uri-js/dist/es5/uri.all.js"(exports, module) {
     (function(global2, factory) {
       typeof exports == "object" && typeof module < "u" ? factory(exports) : typeof define == "function" && define.amd ? define(["exports"], factory) : factory(global2.URI = global2.URI || {});
     })(exports, (function(exports2) {
@@ -3830,9 +3846,9 @@ var require_uri_all = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/fast-deep-equal@3.1.3/node_modules/fast-deep-equal/index.js
+// node_modules/fast-deep-equal/index.js
 var require_fast_deep_equal = __commonJS({
-  "../../node_modules/.pnpm/fast-deep-equal@3.1.3/node_modules/fast-deep-equal/index.js"(exports, module) {
+  "node_modules/fast-deep-equal/index.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function equal(a2, b2) {
       if (a2 === b2) return !0;
@@ -3862,9 +3878,9 @@ var require_fast_deep_equal = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/ucs2length.js
+// node_modules/ajv/lib/compile/ucs2length.js
 var require_ucs2length = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/ucs2length.js"(exports, module) {
+  "node_modules/ajv/lib/compile/ucs2length.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(str) {
       for (var length = 0, len = str.length, pos = 0, value; pos < len; )
@@ -3874,9 +3890,9 @@ var require_ucs2length = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/util.js
+// node_modules/ajv/lib/compile/util.js
 var require_util = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/util.js"(exports, module) {
+  "node_modules/ajv/lib/compile/util.js"(exports, module) {
     "use strict";
     module.exports = {
       copy,
@@ -4055,9 +4071,9 @@ var require_util = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/schema_obj.js
+// node_modules/ajv/lib/compile/schema_obj.js
 var require_schema_obj = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/schema_obj.js"(exports, module) {
+  "node_modules/ajv/lib/compile/schema_obj.js"(exports, module) {
     "use strict";
     var util2 = require_util();
     module.exports = SchemaObject;
@@ -4068,9 +4084,9 @@ var require_schema_obj = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/json-schema-traverse@0.4.1/node_modules/json-schema-traverse/index.js
+// node_modules/json-schema-traverse/index.js
 var require_json_schema_traverse = __commonJS({
-  "../../node_modules/.pnpm/json-schema-traverse@0.4.1/node_modules/json-schema-traverse/index.js"(exports, module) {
+  "node_modules/json-schema-traverse/index.js"(exports, module) {
     "use strict";
     var traverse = module.exports = function(schema, opts, cb) {
       typeof opts == "function" && (cb = opts, opts = {}), cb = opts.cb || cb;
@@ -4145,9 +4161,9 @@ var require_json_schema_traverse = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/resolve.js
+// node_modules/ajv/lib/compile/resolve.js
 var require_resolve = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/resolve.js"(exports, module) {
+  "node_modules/ajv/lib/compile/resolve.js"(exports, module) {
     "use strict";
     var URI = require_uri_all(), equal = require_fast_deep_equal(), util2 = require_util(), SchemaObject = require_schema_obj(), traverse = require_json_schema_traverse();
     module.exports = resolve;
@@ -4312,9 +4328,9 @@ var require_resolve = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/error_classes.js
+// node_modules/ajv/lib/compile/error_classes.js
 var require_error_classes = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/error_classes.js"(exports, module) {
+  "node_modules/ajv/lib/compile/error_classes.js"(exports, module) {
     "use strict";
     var resolve = require_resolve();
     module.exports = {
@@ -4339,9 +4355,9 @@ var require_error_classes = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/fast-json-stable-stringify@2.1.0/node_modules/fast-json-stable-stringify/index.js
+// node_modules/fast-json-stable-stringify/index.js
 var require_fast_json_stable_stringify = __commonJS({
-  "../../node_modules/.pnpm/fast-json-stable-stringify@2.1.0/node_modules/fast-json-stable-stringify/index.js"(exports, module) {
+  "node_modules/fast-json-stable-stringify/index.js"(exports, module) {
     "use strict";
     module.exports = function(data, opts) {
       opts || (opts = {}), typeof opts == "function" && (opts = { cmp: opts });
@@ -4380,9 +4396,9 @@ var require_fast_json_stable_stringify = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/validate.js
+// node_modules/ajv/lib/dotjs/validate.js
 var require_validate = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/validate.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/validate.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = "", $async = it.schema.$async === !0, $refKeywords = it.util.schemaHasRulesExcept(it.schema, it.RULES.all, "$ref"), $id = it.self._getId(it.schema);
@@ -4536,9 +4552,9 @@ var require_validate = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/index.js
+// node_modules/ajv/lib/compile/index.js
 var require_compile = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/index.js"(exports, module) {
+  "node_modules/ajv/lib/compile/index.js"(exports, module) {
     "use strict";
     var resolve = require_resolve(), util2 = require_util(), errorClasses = require_error_classes(), stableStringify = require_fast_json_stable_stringify(), validateGenerator = require_validate(), ucs2length = util2.ucs2length, equal = require_fast_deep_equal(), ValidationError = errorClasses.Validation;
     module.exports = compile;
@@ -4769,9 +4785,9 @@ var require_compile = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/cache.js
+// node_modules/ajv/lib/cache.js
 var require_cache = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/cache.js"(exports, module) {
+  "node_modules/ajv/lib/cache.js"(exports, module) {
     "use strict";
     var Cache = module.exports = /* @__PURE__ */ __name(function() {
       this._cache = {};
@@ -4791,9 +4807,9 @@ var require_cache = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/formats.js
+// node_modules/ajv/lib/compile/formats.js
 var require_formats = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/formats.js"(exports, module) {
+  "node_modules/ajv/lib/compile/formats.js"(exports, module) {
     "use strict";
     var util2 = require_util(), DATE = /^(\d\d\d\d)-(\d\d)-(\d\d)$/, DAYS = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], TIME = /^(\d\d):(\d\d):(\d\d)(\.\d+)?(z|[+-]\d\d(?::?\d\d)?)?$/i, HOSTNAME = /^(?=.{1,253}\.?$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[-0-9a-z]{0,61}[0-9a-z])?)*\.?$/i, URI = /^(?:[a-z][a-z0-9+\-.]*:)(?:\/?\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:]|%[0-9a-f]{2})*@)?(?:\[(?:(?:(?:(?:[0-9a-f]{1,4}:){6}|::(?:[0-9a-f]{1,4}:){5}|(?:[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){4}|(?:(?:[0-9a-f]{1,4}:){0,1}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){3}|(?:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){2}|(?:(?:[0-9a-f]{1,4}:){0,3}[0-9a-f]{1,4})?::[0-9a-f]{1,4}:|(?:(?:[0-9a-f]{1,4}:){0,4}[0-9a-f]{1,4})?::)(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?))|(?:(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4})?::[0-9a-f]{1,4}|(?:(?:[0-9a-f]{1,4}:){0,6}[0-9a-f]{1,4})?::)|[Vv][0-9a-f]+\.[a-z0-9\-._~!$&'()*+,;=:]+)\]|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:[a-z0-9\-._~!$&'()*+,;=]|%[0-9a-f]{2})*)(?::\d*)?(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*|\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*)?|(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*)(?:\?(?:[a-z0-9\-._~!$&'()*+,;=:@/?]|%[0-9a-f]{2})*)?(?:#(?:[a-z0-9\-._~!$&'()*+,;=:@/?]|%[0-9a-f]{2})*)?$/i, URIREF = /^(?:[a-z][a-z0-9+\-.]*:)?(?:\/?\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:]|%[0-9a-f]{2})*@)?(?:\[(?:(?:(?:(?:[0-9a-f]{1,4}:){6}|::(?:[0-9a-f]{1,4}:){5}|(?:[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){4}|(?:(?:[0-9a-f]{1,4}:){0,1}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){3}|(?:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){2}|(?:(?:[0-9a-f]{1,4}:){0,3}[0-9a-f]{1,4})?::[0-9a-f]{1,4}:|(?:(?:[0-9a-f]{1,4}:){0,4}[0-9a-f]{1,4})?::)(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?))|(?:(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4})?::[0-9a-f]{1,4}|(?:(?:[0-9a-f]{1,4}:){0,6}[0-9a-f]{1,4})?::)|[Vv][0-9a-f]+\.[a-z0-9\-._~!$&'()*+,;=:]+)\]|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:[a-z0-9\-._~!$&'"()*+,;=]|%[0-9a-f]{2})*)(?::\d*)?(?:\/(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})*)*|\/(?:(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})*)*)?|(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})*)*)?(?:\?(?:[a-z0-9\-._~!$&'"()*+,;=:@/?]|%[0-9a-f]{2})*)?(?:#(?:[a-z0-9\-._~!$&'"()*+,;=:@/?]|%[0-9a-f]{2})*)?$/i, URITEMPLATE = /^(?:(?:[^\x00-\x20"'<>%\\^`{|}]|%[0-9a-f]{2})|\{[+#./;?&=,!@|]?(?:[a-z0-9_]|%[0-9a-f]{2})+(?::[1-9][0-9]{0,3}|\*)?(?:,(?:[a-z0-9_]|%[0-9a-f]{2})+(?::[1-9][0-9]{0,3}|\*)?)*\})*$/i, URL3 = /^(?:(?:http[s\u017F]?|ftp):\/\/)(?:(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+(?::(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?@)?(?:(?!10(?:\.[0-9]{1,3}){3})(?!127(?:\.[0-9]{1,3}){3})(?!169\.254(?:\.[0-9]{1,3}){2})(?!192\.168(?:\.[0-9]{1,3}){2})(?!172\.(?:1[6-9]|2[0-9]|3[01])(?:\.[0-9]{1,3}){2})(?:[1-9][0-9]?|1[0-9][0-9]|2[01][0-9]|22[0-3])(?:\.(?:1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])){2}(?:\.(?:[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-4]))|(?:(?:(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-)*(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)(?:\.(?:(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-)*(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)*(?:\.(?:(?:[a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]){2,})))(?::[0-9]{2,5})?(?:\/(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?$/i, UUID = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i, JSON_POINTER = /^(?:\/(?:[^~/]|~0|~1)*)*$/, JSON_POINTER_URI_FRAGMENT = /^#(?:\/(?:[a-z0-9_\-.!$&'()*+,;:=@]|%[0-9a-f]{2}|~0|~1)*)*$/i, RELATIVE_JSON_POINTER = /^(?:0|[1-9][0-9]*)(?:#|(?:\/(?:[^~/]|~0|~1)*)*)$/;
     module.exports = formats;
@@ -4891,9 +4907,9 @@ var require_formats = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/ref.js
+// node_modules/ajv/lib/dotjs/ref.js
 var require_ref = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/ref.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/ref.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $async, $refCode;
@@ -4940,9 +4956,9 @@ var require_ref = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/allOf.js
+// node_modules/ajv/lib/dotjs/allOf.js
 var require_allOf = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/allOf.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/allOf.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $it = it.util.copy(it), $closingBraces = "";
@@ -4956,9 +4972,9 @@ var require_allOf = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/anyOf.js
+// node_modules/ajv/lib/dotjs/anyOf.js
 var require_anyOf = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/anyOf.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/anyOf.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -4983,9 +4999,9 @@ var require_anyOf = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/comment.js
+// node_modules/ajv/lib/dotjs/comment.js
 var require_comment = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/comment.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/comment.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $schema = it.schema[$keyword], $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $comment = it.util.toQuotedString($schema);
@@ -4994,9 +5010,9 @@ var require_comment = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/const.js
+// node_modules/ajv/lib/dotjs/const.js
 var require_const = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/const.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/const.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5009,9 +5025,9 @@ var require_const = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/contains.js
+// node_modules/ajv/lib/dotjs/contains.js
 var require_contains = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/contains.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/contains.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -5034,9 +5050,9 @@ var require_contains = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/dependencies.js
+// node_modules/ajv/lib/dotjs/dependencies.js
 var require_dependencies = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/dependencies.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/dependencies.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -5091,9 +5107,9 @@ var require_dependencies = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/enum.js
+// node_modules/ajv/lib/dotjs/enum.js
 var require_enum = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/enum.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/enum.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5108,9 +5124,9 @@ var require_enum = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/format.js
+// node_modules/ajv/lib/dotjs/format.js
 var require_format = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/format.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/format.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || "");
@@ -5156,9 +5172,9 @@ var require_format = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/if.js
+// node_modules/ajv/lib/dotjs/if.js
 var require_if = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/if.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/if.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $errs = "errs__" + $lvl, $it = it.util.copy(it);
@@ -5176,9 +5192,9 @@ var require_if = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/items.js
+// node_modules/ajv/lib/dotjs/items.js
 var require_items = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/items.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/items.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -5225,9 +5241,9 @@ var require_items = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limit.js
+// node_modules/ajv/lib/dotjs/_limit.js
 var require_limit = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limit.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/_limit.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $errorKeyword, $data = "data" + ($dataLvl || ""), $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5264,9 +5280,9 @@ var require_limit = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limitItems.js
+// node_modules/ajv/lib/dotjs/_limitItems.js
 var require_limitItems = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limitItems.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/_limitItems.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $errorKeyword, $data = "data" + ($dataLvl || ""), $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5282,9 +5298,9 @@ var require_limitItems = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limitLength.js
+// node_modules/ajv/lib/dotjs/_limitLength.js
 var require_limitLength = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limitLength.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/_limitLength.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $errorKeyword, $data = "data" + ($dataLvl || ""), $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5300,9 +5316,9 @@ var require_limitLength = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limitProperties.js
+// node_modules/ajv/lib/dotjs/_limitProperties.js
 var require_limitProperties = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/_limitProperties.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/_limitProperties.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $errorKeyword, $data = "data" + ($dataLvl || ""), $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5318,9 +5334,9 @@ var require_limitProperties = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/multipleOf.js
+// node_modules/ajv/lib/dotjs/multipleOf.js
 var require_multipleOf = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/multipleOf.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/multipleOf.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5335,9 +5351,9 @@ var require_multipleOf = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/not.js
+// node_modules/ajv/lib/dotjs/not.js
 var require_not = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/not.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/not.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $errs = "errs__" + $lvl, $it = it.util.copy(it);
@@ -5360,9 +5376,9 @@ var require_not = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/oneOf.js
+// node_modules/ajv/lib/dotjs/oneOf.js
 var require_oneOf = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/oneOf.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/oneOf.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -5380,9 +5396,9 @@ var require_oneOf = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/pattern.js
+// node_modules/ajv/lib/dotjs/pattern.js
 var require_pattern = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/pattern.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/pattern.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5397,9 +5413,9 @@ var require_pattern = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/properties.js
+// node_modules/ajv/lib/dotjs/properties.js
 var require_properties = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/properties.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/properties.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -5522,9 +5538,9 @@ var require_properties = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/propertyNames.js
+// node_modules/ajv/lib/dotjs/propertyNames.js
 var require_propertyNames = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/propertyNames.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/propertyNames.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $errs = "errs__" + $lvl, $it = it.util.copy(it), $closingBraces = "";
@@ -5544,9 +5560,9 @@ var require_propertyNames = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/required.js
+// node_modules/ajv/lib/dotjs/required.js
 var require_required = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/required.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/required.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5611,9 +5627,9 @@ var require_required = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/uniqueItems.js
+// node_modules/ajv/lib/dotjs/uniqueItems.js
 var require_uniqueItems = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/uniqueItems.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/uniqueItems.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5639,9 +5655,9 @@ var require_uniqueItems = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/index.js
+// node_modules/ajv/lib/dotjs/index.js
 var require_dotjs = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/index.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/index.js"(exports, module) {
     "use strict";
     module.exports = {
       $ref: require_ref(),
@@ -5676,9 +5692,9 @@ var require_dotjs = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/rules.js
+// node_modules/ajv/lib/compile/rules.js
 var require_rules = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/rules.js"(exports, module) {
+  "node_modules/ajv/lib/compile/rules.js"(exports, module) {
     "use strict";
     var ruleModules = require_dotjs(), toHash = require_util().toHash;
     module.exports = /* @__PURE__ */ __name(function() {
@@ -5756,9 +5772,9 @@ var require_rules = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/data.js
+// node_modules/ajv/lib/data.js
 var require_data = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/data.js"(exports, module) {
+  "node_modules/ajv/lib/data.js"(exports, module) {
     "use strict";
     var KEYWORDS = [
       "multipleOf",
@@ -5802,9 +5818,9 @@ var require_data = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/async.js
+// node_modules/ajv/lib/compile/async.js
 var require_async = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/compile/async.js"(exports, module) {
+  "node_modules/ajv/lib/compile/async.js"(exports, module) {
     "use strict";
     var MissingRefError = require_error_classes().MissingRef;
     module.exports = compileAsync;
@@ -5864,9 +5880,9 @@ var require_async = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/custom.js
+// node_modules/ajv/lib/dotjs/custom.js
 var require_custom = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/dotjs/custom.js"(exports, module) {
+  "node_modules/ajv/lib/dotjs/custom.js"(exports, module) {
     "use strict";
     module.exports = /* @__PURE__ */ __name(function(it, $keyword, $ruleType) {
       var out = " ", $lvl = it.level, $dataLvl = it.dataLevel, $schema = it.schema[$keyword], $schemaPath = it.schemaPath + it.util.getProperty($keyword), $errSchemaPath = it.errSchemaPath + "/" + $keyword, $breakOnError = !it.opts.allErrors, $errorKeyword, $data = "data" + ($dataLvl || ""), $valid = "valid" + $lvl, $errs = "errs__" + $lvl, $isData = it.opts.$data && $schema && $schema.$data, $schemaValue;
@@ -5919,9 +5935,9 @@ var require_custom = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/refs/json-schema-draft-07.json
+// node_modules/ajv/lib/refs/json-schema-draft-07.json
 var require_json_schema_draft_07 = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/refs/json-schema-draft-07.json"(exports, module) {
+  "node_modules/ajv/lib/refs/json-schema-draft-07.json"(exports, module) {
     module.exports = {
       $schema: "http://json-schema.org/draft-07/schema#",
       $id: "http://json-schema.org/draft-07/schema#",
@@ -6093,9 +6109,9 @@ var require_json_schema_draft_07 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/definition_schema.js
+// node_modules/ajv/lib/definition_schema.js
 var require_definition_schema = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/definition_schema.js"(exports, module) {
+  "node_modules/ajv/lib/definition_schema.js"(exports, module) {
     "use strict";
     var metaSchema = require_json_schema_draft_07();
     module.exports = {
@@ -6134,9 +6150,9 @@ var require_definition_schema = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/keyword.js
+// node_modules/ajv/lib/keyword.js
 var require_keyword = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/keyword.js"(exports, module) {
+  "node_modules/ajv/lib/keyword.js"(exports, module) {
     "use strict";
     var IDENTIFIER = /^[a-z_$][a-z0-9_$-]*$/i, customRuleCode = require_custom(), definitionSchema = require_definition_schema();
     module.exports = {
@@ -6218,9 +6234,9 @@ var require_keyword = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/refs/data.json
+// node_modules/ajv/lib/refs/data.json
 var require_data2 = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/refs/data.json"(exports, module) {
+  "node_modules/ajv/lib/refs/data.json"(exports, module) {
     module.exports = {
       $schema: "http://json-schema.org/draft-07/schema#",
       $id: "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
@@ -6241,9 +6257,9 @@ var require_data2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/ajv.js
+// node_modules/ajv/lib/ajv.js
 var require_ajv = __commonJS({
-  "../../node_modules/.pnpm/ajv@6.12.6/node_modules/ajv/lib/ajv.js"(exports, module) {
+  "node_modules/ajv/lib/ajv.js"(exports, module) {
     "use strict";
     var compileSchema = require_compile(), resolve = require_resolve(), Cache = require_cache(), SchemaObject = require_schema_obj(), stableStringify = require_fast_json_stable_stringify(), formats = require_formats(), rules = require_rules(), $dataMetaSchema = require_data(), util2 = require_util();
     module.exports = Ajv2;
@@ -6520,9 +6536,9 @@ var require_ajv = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ms@2.1.3/node_modules/ms/index.js
+// node_modules/ms/index.js
 var require_ms = __commonJS({
-  "../../node_modules/.pnpm/ms@2.1.3/node_modules/ms/index.js"(exports, module) {
+  "node_modules/ms/index.js"(exports, module) {
     var s2 = 1e3, m2 = s2 * 60, h2 = m2 * 60, d2 = h2 * 24, w2 = d2 * 7, y3 = d2 * 365.25;
     module.exports = function(val, options) {
       options = options || {};
@@ -6537,11 +6553,11 @@ var require_ms = __commonJS({
     };
     function parse4(str) {
       if (str = String(str), !(str.length > 100)) {
-        var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
+        var match2 = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
           str
         );
-        if (match) {
-          var n2 = parseFloat(match[1]), type = (match[2] || "ms").toLowerCase();
+        if (match2) {
+          var n2 = parseFloat(match2[1]), type = (match2[2] || "ms").toLowerCase();
           switch (type) {
             case "years":
             case "year":
@@ -6606,9 +6622,9 @@ var require_ms = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/common.js
+// node_modules/debug/src/common.js
 var require_common = __commonJS({
-  "../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/common.js"(exports, module) {
+  "node_modules/debug/src/common.js"(exports, module) {
     function setup(env2) {
       createDebug.debug = createDebug, createDebug.default = createDebug, createDebug.coerce = coerce2, createDebug.disable = disable, createDebug.enable = enable, createDebug.enabled = enabled, createDebug.humanize = require_ms(), createDebug.destroy = destroy, Object.keys(env2).forEach((key) => {
         createDebug[key] = env2[key];
@@ -6628,16 +6644,16 @@ var require_common = __commonJS({
           let self2 = debug, curr = Number(/* @__PURE__ */ new Date()), ms = curr - (prevTime || curr);
           self2.diff = ms, self2.prev = prevTime, self2.curr = curr, prevTime = curr, args[0] = createDebug.coerce(args[0]), typeof args[0] != "string" && args.unshift("%O");
           let index = 0;
-          args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
-            if (match === "%%")
+          args[0] = args[0].replace(/%([a-zA-Z%])/g, (match2, format) => {
+            if (match2 === "%%")
               return "%";
             index++;
             let formatter = createDebug.formatters[format];
             if (typeof formatter == "function") {
               let val = args[index];
-              match = formatter.call(self2, val), args.splice(index, 1), index--;
+              match2 = formatter.call(self2, val), args.splice(index, 1), index--;
             }
-            return match;
+            return match2;
           }), createDebug.formatArgs.call(self2, args), (self2.log || createDebug.log).apply(self2, args);
         }
         return __name(debug, "debug"), debug.namespace = namespace, debug.useColors = createDebug.useColors(), debug.color = createDebug.selectColor(namespace), debug.extend = extend2, debug.destroy = createDebug.destroy, Object.defineProperty(debug, "enabled", {
@@ -6708,9 +6724,9 @@ var require_common = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/browser.js
+// node_modules/debug/src/browser.js
 var require_browser = __commonJS({
-  "../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/browser.js"(exports, module) {
+  "node_modules/debug/src/browser.js"(exports, module) {
     exports.formatArgs = formatArgs;
     exports.save = save;
     exports.load = load;
@@ -6819,8 +6835,8 @@ var require_browser = __commonJS({
       let c3 = "color: " + this.color;
       args.splice(1, 0, c3, "color: inherit");
       let index = 0, lastC = 0;
-      args[0].replace(/%[a-zA-Z%]/g, (match) => {
-        match !== "%%" && (index++, match === "%c" && (lastC = index));
+      args[0].replace(/%[a-zA-Z%]/g, (match2) => {
+        match2 !== "%%" && (index++, match2 === "%c" && (lastC = index));
       }), args.splice(lastC, 0, c3);
     }
     __name(formatArgs, "formatArgs");
@@ -6854,90 +6870,16 @@ var require_browser = __commonJS({
     formatters.j = function(v2) {
       try {
         return JSON.stringify(v2);
-      } catch (error45) {
-        return "[UnexpectedJSONParseError]: " + error45.message;
+      } catch (error46) {
+        return "[UnexpectedJSONParseError]: " + error46.message;
       }
     };
   }
 });
 
-// ../../node_modules/.pnpm/has-flag@4.0.0/node_modules/has-flag/index.js
-var require_has_flag = __commonJS({
-  "../../node_modules/.pnpm/has-flag@4.0.0/node_modules/has-flag/index.js"(exports, module) {
-    "use strict";
-    module.exports = (flag, argv2 = process.argv) => {
-      let prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--", position = argv2.indexOf(prefix + flag), terminatorPosition = argv2.indexOf("--");
-      return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
-    };
-  }
-});
-
-// ../../node_modules/.pnpm/supports-color@7.2.0/node_modules/supports-color/index.js
-var require_supports_color = __commonJS({
-  "../../node_modules/.pnpm/supports-color@7.2.0/node_modules/supports-color/index.js"(exports, module) {
-    "use strict";
-    var os2 = __require("os"), tty2 = __require("tty"), hasFlag = require_has_flag(), { env: env2 } = process, forceColor;
-    hasFlag("no-color") || hasFlag("no-colors") || hasFlag("color=false") || hasFlag("color=never") ? forceColor = 0 : (hasFlag("color") || hasFlag("colors") || hasFlag("color=true") || hasFlag("color=always")) && (forceColor = 1);
-    "FORCE_COLOR" in env2 && (env2.FORCE_COLOR === "true" ? forceColor = 1 : env2.FORCE_COLOR === "false" ? forceColor = 0 : forceColor = env2.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env2.FORCE_COLOR, 10), 3));
-    function translateLevel(level) {
-      return level === 0 ? !1 : {
-        level,
-        hasBasic: !0,
-        has256: level >= 2,
-        has16m: level >= 3
-      };
-    }
-    __name(translateLevel, "translateLevel");
-    function supportsColor(haveStream, streamIsTTY) {
-      if (forceColor === 0)
-        return 0;
-      if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor"))
-        return 3;
-      if (hasFlag("color=256"))
-        return 2;
-      if (haveStream && !streamIsTTY && forceColor === void 0)
-        return 0;
-      let min = forceColor || 0;
-      if (env2.TERM === "dumb")
-        return min;
-      if (process.platform === "win32") {
-        let osRelease = os2.release().split(".");
-        return Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586 ? Number(osRelease[2]) >= 14931 ? 3 : 2 : 1;
-      }
-      if ("CI" in env2)
-        return ["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship" ? 1 : min;
-      if ("TEAMCITY_VERSION" in env2)
-        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
-      if (env2.COLORTERM === "truecolor")
-        return 3;
-      if ("TERM_PROGRAM" in env2) {
-        let version3 = parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-        switch (env2.TERM_PROGRAM) {
-          case "iTerm.app":
-            return version3 >= 3 ? 3 : 2;
-          case "Apple_Terminal":
-            return 2;
-        }
-      }
-      return /-256(color)?$/i.test(env2.TERM) ? 2 : /^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env2.TERM) || "COLORTERM" in env2 ? 1 : min;
-    }
-    __name(supportsColor, "supportsColor");
-    function getSupportLevel(stream2) {
-      let level = supportsColor(stream2, stream2 && stream2.isTTY);
-      return translateLevel(level);
-    }
-    __name(getSupportLevel, "getSupportLevel");
-    module.exports = {
-      supportsColor: getSupportLevel,
-      stdout: translateLevel(supportsColor(!0, tty2.isatty(1))),
-      stderr: translateLevel(supportsColor(!0, tty2.isatty(2)))
-    };
-  }
-});
-
-// ../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/node.js
+// node_modules/debug/src/node.js
 var require_node = __commonJS({
-  "../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/node.js"(exports, module) {
+  "node_modules/debug/src/node.js"(exports, module) {
     var tty2 = __require("tty"), util2 = __require("util");
     exports.init = init2;
     exports.log = log2;
@@ -6952,7 +6894,7 @@ var require_node = __commonJS({
     );
     exports.colors = [6, 2, 3, 4, 5, 1];
     try {
-      let supportsColor = require_supports_color();
+      let supportsColor = __require("supports-color");
       supportsColor && (supportsColor.stderr || supportsColor).level >= 2 && (exports.colors = [
         20,
         21,
@@ -7088,16 +7030,16 @@ var require_node = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/index.js
+// node_modules/debug/src/index.js
 var require_src = __commonJS({
-  "../../node_modules/.pnpm/debug@4.4.3/node_modules/debug/src/index.js"(exports, module) {
+  "node_modules/debug/src/index.js"(exports, module) {
     typeof process > "u" || process.type === "renderer" || process.browser === !0 || process.__nwjs ? module.exports = require_browser() : module.exports = require_node();
   }
 });
 
-// ../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/parser/connection-string.js
+// node_modules/@tediousjs/connection-string/lib/parser/connection-string.js
 var require_connection_string = __commonJS({
-  "../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/parser/connection-string.js"(exports) {
+  "node_modules/@tediousjs/connection-string/lib/parser/connection-string.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var CollectionMode;
@@ -7191,9 +7133,9 @@ var require_connection_string = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/parser/sql-connection-string.js
+// node_modules/@tediousjs/connection-string/lib/parser/sql-connection-string.js
 var require_sql_connection_string = __commonJS({
-  "../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/parser/sql-connection-string.js"(exports) {
+  "node_modules/@tediousjs/connection-string/lib/parser/sql-connection-string.js"(exports) {
     "use strict";
     var __importDefault2 = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { default: mod };
@@ -7467,9 +7409,9 @@ var require_sql_connection_string = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/builder/index.js
+// node_modules/@tediousjs/connection-string/lib/builder/index.js
 var require_builder = __commonJS({
-  "../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/builder/index.js"(exports) {
+  "node_modules/@tediousjs/connection-string/lib/builder/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.buildConnectionString = void 0;
@@ -7513,9 +7455,9 @@ var require_builder = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/index.js
+// node_modules/@tediousjs/connection-string/lib/index.js
 var require_lib = __commonJS({
-  "../../node_modules/.pnpm/@tediousjs+connection-string@0.6.0/node_modules/@tediousjs/connection-string/lib/index.js"(exports) {
+  "node_modules/@tediousjs/connection-string/lib/index.js"(exports) {
     "use strict";
     var __createBinding2 = exports && exports.__createBinding || (Object.create ? (function(o3, m2, k2, k22) {
       k22 === void 0 && (k22 = k2);
@@ -7540,9 +7482,9 @@ var require_lib = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/TimeoutError.js
+// node_modules/tarn/dist/TimeoutError.js
 var require_TimeoutError = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/TimeoutError.js"(exports) {
+  "node_modules/tarn/dist/TimeoutError.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var TimeoutError = class extends Error {
@@ -7554,9 +7496,9 @@ var require_TimeoutError = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/PromiseInspection.js
+// node_modules/tarn/dist/PromiseInspection.js
 var require_PromiseInspection = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/PromiseInspection.js"(exports) {
+  "node_modules/tarn/dist/PromiseInspection.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var PromiseInspection = class {
@@ -7583,9 +7525,9 @@ var require_PromiseInspection = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/utils.js
+// node_modules/tarn/dist/utils.js
 var require_utils = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/utils.js"(exports) {
+  "node_modules/tarn/dist/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var PromiseInspection_1 = require_PromiseInspection();
@@ -7627,7 +7569,7 @@ var require_utils = __commonJS({
     __name(delay, "delay");
     exports.delay = delay;
     function reflect(promise2) {
-      return promise2.then((value) => new PromiseInspection_1.PromiseInspection({ value })).catch((error45) => new PromiseInspection_1.PromiseInspection({ error: error45 }));
+      return promise2.then((value) => new PromiseInspection_1.PromiseInspection({ value })).catch((error46) => new PromiseInspection_1.PromiseInspection({ error: error46 }));
     }
     __name(reflect, "reflect");
     exports.reflect = reflect;
@@ -7644,9 +7586,9 @@ var require_utils = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/PendingOperation.js
+// node_modules/tarn/dist/PendingOperation.js
 var require_PendingOperation = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/PendingOperation.js"(exports) {
+  "node_modules/tarn/dist/PendingOperation.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var TimeoutError_1 = require_TimeoutError(), utils_1 = require_utils(), PendingOperation = class {
@@ -7681,9 +7623,9 @@ var require_PendingOperation = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/Resource.js
+// node_modules/tarn/dist/Resource.js
 var require_Resource = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/Resource.js"(exports) {
+  "node_modules/tarn/dist/Resource.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var utils_1 = require_utils(), Resource = class _Resource {
@@ -7704,9 +7646,9 @@ var require_Resource = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/Pool.js
+// node_modules/tarn/dist/Pool.js
 var require_Pool = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/Pool.js"(exports) {
+  "node_modules/tarn/dist/Pool.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var PendingOperation_1 = require_PendingOperation(), Resource_1 = require_Resource(), utils_1 = require_utils(), events_1 = __require("events"), timers_1 = __require("timers"), Pool = class {
@@ -7952,9 +7894,9 @@ var require_Pool = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/tarn.js
+// node_modules/tarn/dist/tarn.js
 var require_tarn = __commonJS({
-  "../../node_modules/.pnpm/tarn@3.0.2/node_modules/tarn/dist/tarn.js"(exports, module) {
+  "node_modules/tarn/dist/tarn.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var Pool_1 = require_Pool();
@@ -7968,9 +7910,9 @@ var require_tarn = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/utils.js
+// node_modules/mssql/lib/utils.js
 var require_utils2 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/utils.js"(exports, module) {
+  "node_modules/mssql/lib/utils.js"(exports, module) {
     "use strict";
     var IDS = /* @__PURE__ */ new WeakMap(), INCREMENT = {
       Connection: 1,
@@ -7993,9 +7935,9 @@ var require_utils2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/mssql-error.js
+// node_modules/mssql/lib/error/mssql-error.js
 var require_mssql_error = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/mssql-error.js"(exports, module) {
+  "node_modules/mssql/lib/error/mssql-error.js"(exports, module) {
     "use strict";
     var MSSQLError = class extends Error {
       static {
@@ -8015,9 +7957,9 @@ var require_mssql_error = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/connection-error.js
+// node_modules/mssql/lib/error/connection-error.js
 var require_connection_error = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/connection-error.js"(exports, module) {
+  "node_modules/mssql/lib/error/connection-error.js"(exports, module) {
     "use strict";
     var MSSQLError = require_mssql_error(), ConnectionError = class extends MSSQLError {
       static {
@@ -8037,9 +7979,9 @@ var require_connection_error = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/datatypes.js
+// node_modules/mssql/lib/datatypes.js
 var require_datatypes = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/datatypes.js"(exports, module) {
+  "node_modules/mssql/lib/datatypes.js"(exports, module) {
     "use strict";
     var objectHasProperty = require_utils2().objectHasProperty, inspect = Symbol.for("nodejs.util.inspect.custom"), TYPES = {
       VarChar(length) {
@@ -8208,9 +8150,9 @@ var require_datatypes = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/table.js
+// node_modules/mssql/lib/table.js
 var require_table = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/table.js"(exports, module) {
+  "node_modules/mssql/lib/table.js"(exports, module) {
     "use strict";
     var TYPES = require_datatypes().TYPES, declareType = require_datatypes().declare, objectHasProperty = require_utils2().objectHasProperty, MAX = 65535, JSON_COLUMN_ID = "JSON_F52E2B61-18A1-11d1-B105-00805F49916B";
     function Table(name) {
@@ -8347,9 +8289,9 @@ var require_table = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/shared.js
+// node_modules/mssql/lib/shared.js
 var require_shared = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/shared.js"(exports, module) {
+  "node_modules/mssql/lib/shared.js"(exports, module) {
     "use strict";
     var { TYPES } = require_datatypes(), Table = require_table(), PromiseLibrary = Promise, driver = {}, map2 = [];
     map2.register = function(jstype, sqltype) {
@@ -8416,9 +8358,9 @@ var require_shared = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/prepared-statement-error.js
+// node_modules/mssql/lib/error/prepared-statement-error.js
 var require_prepared_statement_error = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/prepared-statement-error.js"(exports, module) {
+  "node_modules/mssql/lib/error/prepared-statement-error.js"(exports, module) {
     "use strict";
     var MSSQLError = require_mssql_error(), PreparedStatementError = class extends MSSQLError {
       static {
@@ -8438,9 +8380,9 @@ var require_prepared_statement_error = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/request-error.js
+// node_modules/mssql/lib/error/request-error.js
 var require_request_error = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/request-error.js"(exports, module) {
+  "node_modules/mssql/lib/error/request-error.js"(exports, module) {
     "use strict";
     var MSSQLError = require_mssql_error(), RequestError2 = class extends MSSQLError {
       static {
@@ -8462,9 +8404,9 @@ var require_request_error = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/transaction-error.js
+// node_modules/mssql/lib/error/transaction-error.js
 var require_transaction_error = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/transaction-error.js"(exports, module) {
+  "node_modules/mssql/lib/error/transaction-error.js"(exports, module) {
     "use strict";
     var MSSQLError = require_mssql_error(), TransactionError = class extends MSSQLError {
       static {
@@ -8484,9 +8426,9 @@ var require_transaction_error = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/index.js
+// node_modules/mssql/lib/error/index.js
 var require_error2 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/error/index.js"(exports, module) {
+  "node_modules/mssql/lib/error/index.js"(exports, module) {
     "use strict";
     var ConnectionError = require_connection_error(), MSSQLError = require_mssql_error(), PreparedStatementError = require_prepared_statement_error(), RequestError2 = require_request_error(), TransactionError = require_transaction_error();
     module.exports = {
@@ -8499,9 +8441,9 @@ var require_error2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/connection-pool.js
+// node_modules/mssql/lib/base/connection-pool.js
 var require_connection_pool = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/connection-pool.js"(exports, module) {
+  "node_modules/mssql/lib/base/connection-pool.js"(exports, module) {
     "use strict";
     var { EventEmitter } = __require("node:events"), debug = require_src()("mssql:base"), { parseSqlConnectionString } = require_lib(), tarn = require_tarn(), { IDS } = require_utils2(), ConnectionError = require_connection_error(), shared = require_shared(), { MSSQLError } = require_error2(), ConnectionPool = class extends EventEmitter {
       static {
@@ -8944,9 +8886,9 @@ var require_connection_pool = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/global-connection.js
+// node_modules/mssql/lib/global-connection.js
 var require_global_connection = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/global-connection.js"(exports, module) {
+  "node_modules/mssql/lib/global-connection.js"(exports, module) {
     "use strict";
     var shared = require_shared(), globalConnection = null, globalConnectionHandlers = {};
     function connect(config2, callback) {
@@ -9023,9 +8965,9 @@ var require_global_connection = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/prepared-statement.js
+// node_modules/mssql/lib/base/prepared-statement.js
 var require_prepared_statement = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/prepared-statement.js"(exports, module) {
+  "node_modules/mssql/lib/base/prepared-statement.js"(exports, module) {
     "use strict";
     var debug = require_src()("mssql:base"), { EventEmitter } = __require("node:events"), { IDS, objectHasProperty } = require_utils2(), globalConnection = require_global_connection(), { TransactionError, PreparedStatementError } = require_error2(), shared = require_shared(), { TYPES, declare } = require_datatypes(), PreparedStatement = class extends EventEmitter {
       static {
@@ -9248,9 +9190,9 @@ var require_prepared_statement = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/request.js
+// node_modules/mssql/lib/base/request.js
 var require_request = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/request.js"(exports, module) {
+  "node_modules/mssql/lib/base/request.js"(exports, module) {
     "use strict";
     var debug = require_src()("mssql:base"), { EventEmitter } = __require("node:events"), { Readable: Readable2 } = __require("node:stream"), { IDS, objectHasProperty } = require_utils2(), globalConnection = require_global_connection(), { RequestError: RequestError2, ConnectionError } = require_error2(), { TYPES } = require_datatypes(), shared = require_shared(), Request3 = class extends EventEmitter {
       static {
@@ -9482,8 +9424,8 @@ var require_request = __commonJS({
         });
         return this.on("row", (row) => {
           readableStream.push(row) || this.pause();
-        }), this.on("error", (error45) => {
-          readableStream.emit("error", error45);
+        }), this.on("error", (error46) => {
+          readableStream.emit("error", error46);
         }), this.on("done", () => {
           readableStream.push(null);
         }), readableStream;
@@ -9638,9 +9580,9 @@ var require_request = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/isolationlevel.js
+// node_modules/mssql/lib/isolationlevel.js
 var require_isolationlevel = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/isolationlevel.js"(exports, module) {
+  "node_modules/mssql/lib/isolationlevel.js"(exports, module) {
     "use strict";
     module.exports = {
       READ_UNCOMMITTED: 1,
@@ -9652,9 +9594,9 @@ var require_isolationlevel = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/transaction.js
+// node_modules/mssql/lib/base/transaction.js
 var require_transaction = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/transaction.js"(exports, module) {
+  "node_modules/mssql/lib/base/transaction.js"(exports, module) {
     "use strict";
     var debug = require_src()("mssql:base"), { EventEmitter } = __require("node:events"), { IDS } = require_utils2(), globalConnection = require_global_connection(), { TransactionError } = require_error2(), shared = require_shared(), ISOLATION_LEVEL = require_isolationlevel(), Transaction = class _Transaction extends EventEmitter {
       static {
@@ -9798,9 +9740,9 @@ var require_transaction = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/index.js
+// node_modules/mssql/lib/base/index.js
 var require_base = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/base/index.js"(exports, module) {
+  "node_modules/mssql/lib/base/index.js"(exports, module) {
     "use strict";
     var ConnectionPool = require_connection_pool(), PreparedStatement = require_prepared_statement(), Request3 = require_request(), Transaction = require_transaction(), { ConnectionError, TransactionError, RequestError: RequestError2, PreparedStatementError, MSSQLError } = require_error2(), shared = require_shared(), Table = require_table(), ISOLATION_LEVEL = require_isolationlevel(), { TYPES } = require_datatypes(), { connect, close, on, off, removeListener, query, batch } = require_global_connection();
     module.exports = {
@@ -9856,9 +9798,9 @@ var require_base = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/tracking-buffer/writable-tracking-buffer.js
+// node_modules/tedious/lib/tracking-buffer/writable-tracking-buffer.js
 var require_writable_tracking_buffer = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/tracking-buffer/writable-tracking-buffer.js"(exports, module) {
+  "node_modules/tedious/lib/tracking-buffer/writable-tracking-buffer.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -9983,9 +9925,9 @@ var require_writable_tracking_buffer = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/token.js
+// node_modules/tedious/lib/token/token.js
 var require_token = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/token.js"(exports) {
+  "node_modules/tedious/lib/token/token.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -10309,9 +10251,9 @@ var require_token = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/bulk-load.js
+// node_modules/tedious/lib/bulk-load.js
 var require_bulk_load = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/bulk-load.js"(exports, module) {
+  "node_modules/tedious/lib/bulk-load.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -10411,8 +10353,8 @@ var require_bulk_load = __commonJS({
           if (!this.bulkLoad.firstRowWritten)
             try {
               value = c3.type.validate(value, c3.collation);
-            } catch (error45) {
-              return callback(error45);
+            } catch (error46) {
+              return callback(error46);
             }
           let parameter = {
             length: c3.length,
@@ -10431,8 +10373,8 @@ var require_bulk_load = __commonJS({
             this.push(c3.type.generateParameterLength(parameter, this.mainOptions));
             for (let chunk of c3.type.generateParameterData(parameter, this.mainOptions))
               this.push(chunk);
-          } catch (error45) {
-            return callback(error45);
+          } catch (error46) {
+            return callback(error46);
           }
         }
         process.nextTick(callback);
@@ -10667,7 +10609,7 @@ var require_bulk_load = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tslib@2.8.1/node_modules/tslib/tslib.es6.mjs
+// node_modules/tslib/tslib.es6.mjs
 var tslib_es6_exports = {};
 __export(tslib_es6_exports, {
   __addDisposableResource: () => __addDisposableResource,
@@ -10877,8 +10819,8 @@ function __read(o3, n2) {
   var i2 = m2.call(o3), r3, ar = [], e2;
   try {
     for (; (n2 === void 0 || n2-- > 0) && !(r3 = i2.next()).done; ) ar.push(r3.value);
-  } catch (error45) {
-    e2 = { error: error45 };
+  } catch (error46) {
+    e2 = { error: error46 };
   } finally {
     try {
       r3 && !r3.done && (m2 = i2.return) && m2.call(i2);
@@ -11058,7 +11000,7 @@ function __rewriteRelativeImportExtension(path2, preserveJsx) {
   }) : path2;
 }
 var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _SuppressedError, tslib_es6_default, init_tslib_es6 = __esm({
-  "../../node_modules/.pnpm/tslib@2.8.1/node_modules/tslib/tslib.es6.mjs"() {
+  "node_modules/tslib/tslib.es6.mjs"() {
     extendStatics = /* @__PURE__ */ __name(function(d2, b2) {
       return extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d3, b3) {
         d3.__proto__ = b3;
@@ -11123,9 +11065,9 @@ var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _Supp
     __name(__classPrivateFieldSet, "__classPrivateFieldSet");
     __name(__classPrivateFieldIn, "__classPrivateFieldIn");
     __name(__addDisposableResource, "__addDisposableResource");
-    _SuppressedError = typeof SuppressedError == "function" ? SuppressedError : function(error45, suppressed, message) {
+    _SuppressedError = typeof SuppressedError == "function" ? SuppressedError : function(error46, suppressed, message) {
       var e2 = new Error(message);
-      return e2.name = "SuppressedError", e2.error = error45, e2.suppressed = suppressed, e2;
+      return e2.name = "SuppressedError", e2.error = error46, e2.suppressed = suppressed, e2;
     };
     __name(__disposeResources, "__disposeResources");
     __name(__rewriteRelativeImportExtension, "__rewriteRelativeImportExtension");
@@ -11166,13 +11108,13 @@ var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _Supp
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/constants.js
+// node_modules/@azure/identity/dist/commonjs/constants.js
 var require_constants = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/constants.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/constants.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DEFAULT_TOKEN_CACHE_NAME = exports.CACHE_NON_CAE_SUFFIX = exports.CACHE_CAE_SUFFIX = exports.ALL_TENANTS = exports.DefaultAuthority = exports.DefaultAuthorityHost = exports.AzureAuthorityHosts = exports.DefaultTenantId = exports.DeveloperSignOnClientId = exports.SDK_VERSION = void 0;
-    exports.SDK_VERSION = "4.12.0";
+    exports.SDK_VERSION = "4.13.0";
     exports.DeveloperSignOnClientId = "04b07795-8ddb-461a-bbee-02f9e1bf7b46";
     exports.DefaultTenantId = "common";
     var AzureAuthorityHosts;
@@ -11188,9 +11130,9 @@ var require_constants = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalPlugins.js
+// node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalPlugins.js
 var require_msalPlugins = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalPlugins.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalPlugins.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.msalPlugins = exports.msalNodeFlowVSCodeCredentialControl = exports.msalNodeFlowNativeBrokerControl = exports.vsCodeBrokerInfo = exports.vsCodeAuthRecordPath = exports.nativeBrokerInfo = exports.msalNodeFlowCacheControl = exports.persistenceProvider = void 0;
@@ -11306,9 +11248,9 @@ var require_msalPlugins = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/plugins/consumer.js
+// node_modules/@azure/identity/dist/commonjs/plugins/consumer.js
 var require_consumer = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/plugins/consumer.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/plugins/consumer.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.useIdentityPlugin = useIdentityPlugin;
@@ -11324,9 +11266,9 @@ var require_consumer = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/errors.js
+// node_modules/@azure/identity/dist/commonjs/errors.js
 var require_errors = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/errors.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/errors.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AuthenticationRequiredError = exports.AggregateAuthenticationError = exports.AggregateAuthenticationErrorName = exports.AuthenticationError = exports.AuthenticationErrorName = exports.CredentialUnavailableError = exports.CredentialUnavailableErrorName = void 0;
@@ -11441,9 +11383,9 @@ ${errorDetail}`), this.errors = errors, this.name = exports.AggregateAuthenticat
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/log.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/log.js
 var require_log = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/log.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/log.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.log = log2;
@@ -11455,9 +11397,9 @@ var require_log = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/debug.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/debug.js
 var require_debug = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/debug.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/debug.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var log_js_1 = require_log(), debugEnvVariable = typeof process < "u" && process.env && process.env.DEBUG || void 0, enabledString, enabledNamespaces = [], skippedNamespaces = [], debuggers = [];
@@ -11558,9 +11500,9 @@ var require_debug = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/logger.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/logger.js
 var require_logger = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/logger.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/logger.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.TypeSpecRuntimeLogger = void 0;
@@ -11655,9 +11597,9 @@ var require_logger = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/internal.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/internal.js
 var require_internal = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/internal.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/internal.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createLoggerContext = void 0;
@@ -11668,9 +11610,9 @@ var require_internal = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+logger@1.3.0/node_modules/@azure/logger/dist/commonjs/index.js
+// node_modules/@azure/logger/dist/commonjs/index.js
 var require_commonjs = __commonJS({
-  "../../node_modules/.pnpm/@azure+logger@1.3.0/node_modules/@azure/logger/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/logger/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureLogger = void 0;
@@ -11697,9 +11639,9 @@ var require_commonjs = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/logging.js
+// node_modules/@azure/identity/dist/commonjs/util/logging.js
 var require_logging = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/logging.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/logging.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.logger = void 0;
@@ -11724,9 +11666,9 @@ var require_logging = __commonJS({
       return `SUCCESS. Scopes: ${Array.isArray(scope) ? scope.join(", ") : scope}.`;
     }
     __name(formatSuccess, "formatSuccess");
-    function formatError2(scope, error45) {
+    function formatError2(scope, error46) {
       let message = "ERROR.";
-      return scope?.length && (message += ` Scopes: ${Array.isArray(scope) ? scope.join(", ") : scope}.`), `${message} Error message: ${typeof error45 == "string" ? error45 : error45.message}.`;
+      return scope?.length && (message += ` Scopes: ${Array.isArray(scope) ? scope.join(", ") : scope}.`), `${message} Error message: ${typeof error46 == "string" ? error46 : error46.message}.`;
     }
     __name(formatError2, "formatError");
     function credentialLoggerInstance(title, parent, log2 = exports.logger) {
@@ -11743,16 +11685,16 @@ var require_logging = __commonJS({
         log2.verbose(`${fullTitle} =>`, message);
       }
       __name(verbose, "verbose");
-      function error45(message) {
+      function error46(message) {
         log2.error(`${fullTitle} =>`, message);
       }
-      return __name(error45, "error"), {
+      return __name(error46, "error"), {
         title,
         fullTitle,
         info,
         warning,
         verbose,
-        error: error45
+        error: error46
       };
     }
     __name(credentialLoggerInstance, "credentialLoggerInstance");
@@ -11768,9 +11710,9 @@ var require_logging = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/tracingContext.js
+// node_modules/@azure/core-tracing/dist/commonjs/tracingContext.js
 var require_tracingContext = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/tracingContext.js"(exports) {
+  "node_modules/@azure/core-tracing/dist/commonjs/tracingContext.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.TracingContextImpl = exports.knownContextKeys = void 0;
@@ -11808,9 +11750,9 @@ var require_tracingContext = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/state.js
+// node_modules/@azure/core-tracing/dist/commonjs/state.js
 var require_state = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/state.js"(exports) {
+  "node_modules/@azure/core-tracing/dist/commonjs/state.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.state = void 0;
@@ -11820,9 +11762,9 @@ var require_state = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/instrumenter.js
+// node_modules/@azure/core-tracing/dist/commonjs/instrumenter.js
 var require_instrumenter = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/instrumenter.js"(exports) {
+  "node_modules/@azure/core-tracing/dist/commonjs/instrumenter.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createDefaultTracingSpan = createDefaultTracingSpan;
@@ -11872,9 +11814,9 @@ var require_instrumenter = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/tracingClient.js
+// node_modules/@azure/core-tracing/dist/commonjs/tracingClient.js
 var require_tracingClient = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/tracingClient.js"(exports) {
+  "node_modules/@azure/core-tracing/dist/commonjs/tracingClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createTracingClient = createTracingClient;
@@ -11933,9 +11875,9 @@ var require_tracingClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/index.js
+// node_modules/@azure/core-tracing/dist/commonjs/index.js
 var require_commonjs2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-tracing@1.3.1/node_modules/@azure/core-tracing/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/core-tracing/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createTracingClient = exports.useInstrumenter = void 0;
@@ -11950,9 +11892,9 @@ var require_commonjs2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/tracing.js
+// node_modules/@azure/identity/dist/commonjs/util/tracing.js
 var require_tracing = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/tracing.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/tracing.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.tracingClient = void 0;
@@ -11965,9 +11907,9 @@ var require_tracing = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/chainedTokenCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/chainedTokenCredential.js
 var require_chainedTokenCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/chainedTokenCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/chainedTokenCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ChainedTokenCredential = exports.logger = void 0;
@@ -12045,38 +11987,38 @@ var require_chainedTokenCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/rng.js
-import crypto3 from "crypto";
+// node_modules/uuid/dist/esm-node/rng.js
+import crypto4 from "crypto";
 function rng() {
-  return poolPtr > rnds8Pool.length - 16 && (crypto3.randomFillSync(rnds8Pool), poolPtr = 0), rnds8Pool.slice(poolPtr, poolPtr += 16);
+  return poolPtr > rnds8Pool.length - 16 && (crypto4.randomFillSync(rnds8Pool), poolPtr = 0), rnds8Pool.slice(poolPtr, poolPtr += 16);
 }
 var rnds8Pool, poolPtr, init_rng = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/rng.js"() {
+  "node_modules/uuid/dist/esm-node/rng.js"() {
     rnds8Pool = new Uint8Array(256), poolPtr = rnds8Pool.length;
     __name(rng, "rng");
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/regex.js
+// node_modules/uuid/dist/esm-node/regex.js
 var regex_default, init_regex = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/regex.js"() {
+  "node_modules/uuid/dist/esm-node/regex.js"() {
     regex_default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/validate.js
+// node_modules/uuid/dist/esm-node/validate.js
 function validate2(uuid3) {
   return typeof uuid3 == "string" && regex_default.test(uuid3);
 }
 var validate_default, init_validate = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/validate.js"() {
+  "node_modules/uuid/dist/esm-node/validate.js"() {
     init_regex();
     __name(validate2, "validate");
     validate_default = validate2;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/stringify.js
+// node_modules/uuid/dist/esm-node/stringify.js
 function stringify(arr, offset = 0) {
   let uuid3 = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
   if (!validate_default(uuid3))
@@ -12084,7 +12026,7 @@ function stringify(arr, offset = 0) {
   return uuid3;
 }
 var byteToHex, stringify_default, init_stringify = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/stringify.js"() {
+  "node_modules/uuid/dist/esm-node/stringify.js"() {
     init_validate();
     byteToHex = [];
     for (let i2 = 0; i2 < 256; ++i2)
@@ -12094,7 +12036,7 @@ var byteToHex, stringify_default, init_stringify = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v1.js
+// node_modules/uuid/dist/esm-node/v1.js
 function v1(options, buf, offset) {
   let i2 = buf && offset || 0, b2 = buf || new Array(16);
   options = options || {};
@@ -12116,7 +12058,7 @@ function v1(options, buf, offset) {
   return buf || stringify_default(b2);
 }
 var _nodeId, _clockseq, _lastMSecs, _lastNSecs, v1_default, init_v1 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v1.js"() {
+  "node_modules/uuid/dist/esm-node/v1.js"() {
     init_rng();
     init_stringify();
     _lastMSecs = 0, _lastNSecs = 0;
@@ -12125,7 +12067,7 @@ var _nodeId, _clockseq, _lastMSecs, _lastNSecs, v1_default, init_v1 = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/parse.js
+// node_modules/uuid/dist/esm-node/parse.js
 function parse3(uuid3) {
   if (!validate_default(uuid3))
     throw TypeError("Invalid UUID");
@@ -12133,14 +12075,14 @@ function parse3(uuid3) {
   return arr[0] = (v2 = parseInt(uuid3.slice(0, 8), 16)) >>> 24, arr[1] = v2 >>> 16 & 255, arr[2] = v2 >>> 8 & 255, arr[3] = v2 & 255, arr[4] = (v2 = parseInt(uuid3.slice(9, 13), 16)) >>> 8, arr[5] = v2 & 255, arr[6] = (v2 = parseInt(uuid3.slice(14, 18), 16)) >>> 8, arr[7] = v2 & 255, arr[8] = (v2 = parseInt(uuid3.slice(19, 23), 16)) >>> 8, arr[9] = v2 & 255, arr[10] = (v2 = parseInt(uuid3.slice(24, 36), 16)) / 1099511627776 & 255, arr[11] = v2 / 4294967296 & 255, arr[12] = v2 >>> 24 & 255, arr[13] = v2 >>> 16 & 255, arr[14] = v2 >>> 8 & 255, arr[15] = v2 & 255, arr;
 }
 var parse_default, init_parse = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/parse.js"() {
+  "node_modules/uuid/dist/esm-node/parse.js"() {
     init_validate();
     __name(parse3, "parse");
     parse_default = parse3;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v35.js
+// node_modules/uuid/dist/esm-node/v35.js
 function stringToBytes(str) {
   str = unescape(encodeURIComponent(str));
   let bytes = [];
@@ -12169,7 +12111,7 @@ function v35_default(name, version3, hashfunc) {
   return generateUUID.DNS = DNS, generateUUID.URL = URL2, generateUUID;
 }
 var DNS, URL2, init_v35 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v35.js"() {
+  "node_modules/uuid/dist/esm-node/v35.js"() {
     init_stringify();
     init_parse();
     __name(stringToBytes, "stringToBytes");
@@ -12178,28 +12120,28 @@ var DNS, URL2, init_v35 = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/md5.js
-import crypto4 from "crypto";
+// node_modules/uuid/dist/esm-node/md5.js
+import crypto5 from "crypto";
 function md5(bytes) {
-  return Array.isArray(bytes) ? bytes = Buffer.from(bytes) : typeof bytes == "string" && (bytes = Buffer.from(bytes, "utf8")), crypto4.createHash("md5").update(bytes).digest();
+  return Array.isArray(bytes) ? bytes = Buffer.from(bytes) : typeof bytes == "string" && (bytes = Buffer.from(bytes, "utf8")), crypto5.createHash("md5").update(bytes).digest();
 }
 var md5_default, init_md5 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/md5.js"() {
+  "node_modules/uuid/dist/esm-node/md5.js"() {
     __name(md5, "md5");
     md5_default = md5;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v3.js
+// node_modules/uuid/dist/esm-node/v3.js
 var v3, v3_default, init_v3 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v3.js"() {
+  "node_modules/uuid/dist/esm-node/v3.js"() {
     init_v35();
     init_md5();
     v3 = v35_default("v3", 48, md5_default), v3_default = v3;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v4.js
+// node_modules/uuid/dist/esm-node/v4.js
 function v4(options, buf, offset) {
   options = options || {};
   let rnds = options.random || (options.rng || rng)();
@@ -12212,7 +12154,7 @@ function v4(options, buf, offset) {
   return stringify_default(rnds);
 }
 var v4_default, init_v4 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v4.js"() {
+  "node_modules/uuid/dist/esm-node/v4.js"() {
     init_rng();
     init_stringify();
     __name(v4, "v4");
@@ -12220,49 +12162,49 @@ var v4_default, init_v4 = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/sha1.js
-import crypto5 from "crypto";
+// node_modules/uuid/dist/esm-node/sha1.js
+import crypto6 from "crypto";
 function sha1(bytes) {
-  return Array.isArray(bytes) ? bytes = Buffer.from(bytes) : typeof bytes == "string" && (bytes = Buffer.from(bytes, "utf8")), crypto5.createHash("sha1").update(bytes).digest();
+  return Array.isArray(bytes) ? bytes = Buffer.from(bytes) : typeof bytes == "string" && (bytes = Buffer.from(bytes, "utf8")), crypto6.createHash("sha1").update(bytes).digest();
 }
 var sha1_default, init_sha1 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/sha1.js"() {
+  "node_modules/uuid/dist/esm-node/sha1.js"() {
     __name(sha1, "sha1");
     sha1_default = sha1;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v5.js
+// node_modules/uuid/dist/esm-node/v5.js
 var v5, v5_default, init_v5 = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/v5.js"() {
+  "node_modules/uuid/dist/esm-node/v5.js"() {
     init_v35();
     init_sha1();
     v5 = v35_default("v5", 80, sha1_default), v5_default = v5;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/nil.js
+// node_modules/uuid/dist/esm-node/nil.js
 var nil_default, init_nil = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/nil.js"() {
+  "node_modules/uuid/dist/esm-node/nil.js"() {
     nil_default = "00000000-0000-0000-0000-000000000000";
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/version.js
+// node_modules/uuid/dist/esm-node/version.js
 function version2(uuid3) {
   if (!validate_default(uuid3))
     throw TypeError("Invalid UUID");
   return parseInt(uuid3.substr(14, 1), 16);
 }
 var version_default, init_version = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/version.js"() {
+  "node_modules/uuid/dist/esm-node/version.js"() {
     init_validate();
     __name(version2, "version");
     version_default = version2;
   }
 });
 
-// ../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/index.js
+// node_modules/uuid/dist/esm-node/index.js
 var esm_node_exports = {};
 __export(esm_node_exports, {
   NIL: () => nil_default,
@@ -12276,7 +12218,7 @@ __export(esm_node_exports, {
   version: () => version_default
 });
 var init_esm_node = __esm({
-  "../../node_modules/.pnpm/uuid@8.3.2/node_modules/uuid/dist/esm-node/index.js"() {
+  "node_modules/uuid/dist/esm-node/index.js"() {
     init_v1();
     init_v3();
     init_v4();
@@ -12289,9 +12231,9 @@ var init_esm_node = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+msal-common@15.13.0/node_modules/@azure/msal-common/lib/index-node-D8Iaiqq3.js
+// node_modules/@azure/msal-common/lib/index-node-D8Iaiqq3.js
 var require_index_node_D8Iaiqq3 = __commonJS({
-  "../../node_modules/.pnpm/@azure+msal-common@15.13.0/node_modules/@azure/msal-common/lib/index-node-D8Iaiqq3.js"(exports) {
+  "node_modules/@azure/msal-common/lib/index-node-D8Iaiqq3.js"(exports) {
     "use strict";
     var Constants = {
       LIBRARY_NAME: "MSAL.JS",
@@ -13198,22 +13140,22 @@ var require_index_node_D8Iaiqq3 = __commonJS({
        * @returns An object with the various components. Please cache this value insted of calling this multiple times on the same url.
        */
       getUrlComponents() {
-        let regEx = RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?"), match = this.urlString.match(regEx);
-        if (!match)
+        let regEx = RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?"), match2 = this.urlString.match(regEx);
+        if (!match2)
           throw createClientConfigurationError(urlParseError);
         let urlComponents = {
-          Protocol: match[1],
-          HostNameAndPort: match[4],
-          AbsolutePath: match[5],
-          QueryString: match[7]
+          Protocol: match2[1],
+          HostNameAndPort: match2[4],
+          AbsolutePath: match2[5],
+          QueryString: match2[7]
         }, pathSegments = urlComponents.AbsolutePath.split("/");
         return pathSegments = pathSegments.filter((val) => val && val.length > 0), urlComponents.PathSegments = pathSegments, urlComponents.QueryString && urlComponents.QueryString.endsWith("/") && (urlComponents.QueryString = urlComponents.QueryString.substring(0, urlComponents.QueryString.length - 1)), urlComponents;
       }
       static getDomainFromUrl(url2) {
-        let regEx = RegExp("^([^:/?#]+://)?([^/?#]*)"), match = url2.match(regEx);
-        if (!match)
+        let regEx = RegExp("^([^:/?#]+://)?([^/?#]*)"), match2 = url2.match(regEx);
+        if (!match2)
           throw createClientConfigurationError(urlParseError);
-        return match[2];
+        return match2[2];
       }
       static getAbsoluteUrl(relativeUrl, baseUrl) {
         if (relativeUrl[0] === Constants.FORWARD_SLASH) {
@@ -14531,7 +14473,7 @@ var require_index_node_D8Iaiqq3 = __commonJS({
        */
       async getCloudDiscoveryMetadataFromNetwork() {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.AuthorityGetCloudDiscoveryMetadataFromNetwork, this.correlationId);
-        let instanceDiscoveryEndpoint = `${Constants.AAD_INSTANCE_DISCOVERY_ENDPT}${this.canonicalAuthority}oauth2/v2.0/authorize`, options = {}, match = null;
+        let instanceDiscoveryEndpoint = `${Constants.AAD_INSTANCE_DISCOVERY_ENDPT}${this.canonicalAuthority}oauth2/v2.0/authorize`, options = {}, match2 = null;
         try {
           let response = await this.networkInterface.sendGetRequestAsync(instanceDiscoveryEndpoint, options), typedResponseBody, metadata;
           if (isCloudInstanceDiscoveryResponse(response.body))
@@ -14542,21 +14484,21 @@ var require_index_node_D8Iaiqq3 = __commonJS({
             this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error is ${typedResponseBody.error}`), this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error description is ${typedResponseBody.error_description}`), this.logger.warning("Setting the value of the CloudInstanceDiscoveryMetadata (returned from the network) to []"), metadata = [];
           } else
             return this.logger.error("AAD did not return a CloudInstanceDiscoveryResponse or CloudInstanceDiscoveryErrorResponse"), null;
-          this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request."), match = getCloudDiscoveryMetadataFromNetworkResponse(metadata, this.hostnameAndPort);
-        } catch (error45) {
-          if (error45 instanceof AuthError)
+          this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request."), match2 = getCloudDiscoveryMetadataFromNetworkResponse(metadata, this.hostnameAndPort);
+        } catch (error46) {
+          if (error46 instanceof AuthError)
             this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
-Error: ${error45.errorCode}
-Error Description: ${error45.errorMessage}`);
+Error: ${error46.errorCode}
+Error Description: ${error46.errorMessage}`);
           else {
-            let typedError = error45;
+            let typedError = error46;
             this.logger.error(`A non-MSALJS error was thrown while attempting to get the cloud instance discovery metadata.
 Error: ${typedError.name}
 Error Description: ${typedError.message}`);
           }
           return null;
         }
-        return match || (this.logger.warning("The developer's authority was not found within the CloudInstanceDiscoveryMetadata returned from the network request."), this.logger.verbose("Creating custom Authority for custom domain scenario."), match = _Authority.createCloudDiscoveryMetadataFromHost(this.hostnameAndPort)), match;
+        return match2 || (this.logger.warning("The developer's authority was not found within the CloudInstanceDiscoveryMetadata returned from the network request."), this.logger.verbose("Creating custom Authority for custom domain scenario."), match2 = _Authority.createCloudDiscoveryMetadataFromHost(this.hostnameAndPort)), match2;
       }
       /**
        * Helper function to determine if this host is included in the knownAuthorities config option
@@ -16367,12 +16309,12 @@ Error Description: ${typedError.message}`);
       static {
         __name(this, "NetworkError");
       }
-      constructor(error45, httpStatus, responseHeaders) {
-        super(error45.errorCode, error45.errorMessage, error45.subError), Object.setPrototypeOf(this, _NetworkError.prototype), this.name = "NetworkError", this.error = error45, this.httpStatus = httpStatus, this.responseHeaders = responseHeaders;
+      constructor(error46, httpStatus, responseHeaders) {
+        super(error46.errorCode, error46.errorMessage, error46.subError), Object.setPrototypeOf(this, _NetworkError.prototype), this.name = "NetworkError", this.error = error46, this.httpStatus = httpStatus, this.responseHeaders = responseHeaders;
       }
     };
-    function createNetworkError(error45, httpStatus, responseHeaders, additionalError) {
-      return error45.errorMessage = `${error45.errorMessage}, additionalErrorInfo: error.name:${additionalError?.name}, error.message:${additionalError?.message}`, new NetworkError(error45, httpStatus, responseHeaders);
+    function createNetworkError(error46, httpStatus, responseHeaders, additionalError) {
+      return error46.errorMessage = `${error46.errorMessage}, additionalErrorInfo: error.name:${additionalError?.name}, error.message:${additionalError?.message}`, new NetworkError(error46, httpStatus, responseHeaders);
     }
     __name(createNetworkError, "createNetworkError");
     var BaseClient = class {
@@ -17449,9 +17391,9 @@ ${serverError}`);
        * API to cache token failures for MSER data capture
        * @param error
        */
-      cacheFailedRequest(error45) {
+      cacheFailedRequest(error46) {
         let lastRequests = this.getLastRequests();
-        lastRequests.errors.length >= SERVER_TELEM_CONSTANTS.MAX_CACHED_ERRORS && (lastRequests.failedRequests.shift(), lastRequests.failedRequests.shift(), lastRequests.errors.shift()), lastRequests.failedRequests.push(this.apiId, this.correlationId), error45 instanceof Error && error45 && error45.toString() ? error45 instanceof AuthError ? error45.subError ? lastRequests.errors.push(error45.subError) : error45.errorCode ? lastRequests.errors.push(error45.errorCode) : lastRequests.errors.push(error45.toString()) : lastRequests.errors.push(error45.toString()) : lastRequests.errors.push(SERVER_TELEM_CONSTANTS.UNKNOWN_ERROR), this.cacheManager.setServerTelemetry(this.telemetryCacheKey, lastRequests, this.correlationId);
+        lastRequests.errors.length >= SERVER_TELEM_CONSTANTS.MAX_CACHED_ERRORS && (lastRequests.failedRequests.shift(), lastRequests.failedRequests.shift(), lastRequests.errors.shift()), lastRequests.failedRequests.push(this.apiId, this.correlationId), error46 instanceof Error && error46 && error46.toString() ? error46 instanceof AuthError ? error46.subError ? lastRequests.errors.push(error46.subError) : error46.errorCode ? lastRequests.errors.push(error46.errorCode) : lastRequests.errors.push(error46.toString()) : lastRequests.errors.push(error46.toString()) : lastRequests.errors.push(SERVER_TELEM_CONSTANTS.UNKNOWN_ERROR), this.cacheManager.setServerTelemetry(this.telemetryCacheKey, lastRequests, this.correlationId);
       }
       /**
        * Update server telemetry cache entry by incrementing cache hit counter
@@ -17648,9 +17590,9 @@ ${serverError}`);
   }
 });
 
-// ../../node_modules/.pnpm/@azure+msal-common@15.13.0/node_modules/@azure/msal-common/lib/index-browser.cjs
+// node_modules/@azure/msal-common/lib/index-browser.cjs
 var require_index_browser = __commonJS({
-  "../../node_modules/.pnpm/@azure+msal-common@15.13.0/node_modules/@azure/msal-common/lib/index-browser.cjs"(exports) {
+  "node_modules/@azure/msal-common/lib/index-browser.cjs"(exports) {
     "use strict";
     var indexNode = require_index_node_D8Iaiqq3(), missingKidError = "missing_kid_error", missingAlgError = "missing_alg_error", JoseHeaderErrorMessages = {
       [missingKidError]: "The JOSE Header for the requested JWT, JWS or JWK object requires a keyId to be configured as the 'kid' header claim. No 'kid' value was provided.",
@@ -17702,7 +17644,7 @@ var require_index_browser = __commonJS({
       });
     }
     __name(startContext, "startContext");
-    function endContext(event, abbreviations, stack, error45) {
+    function endContext(event, abbreviations, stack, error46) {
       if (!stack?.length)
         return;
       let peek = /* @__PURE__ */ __name((stack2) => stack2.length ? stack2[stack2.length - 1] : void 0, "peek"), abbrEventName = abbreviations.get(event.name) || event.name;
@@ -17711,7 +17653,7 @@ var require_index_browser = __commonJS({
       let current = stack?.pop();
       if (!current)
         return;
-      let errorCode = error45 instanceof indexNode.AuthError ? error45.errorCode : error45 instanceof Error ? error45.name : void 0, subErr = error45 instanceof indexNode.AuthError ? error45.subError : void 0;
+      let errorCode = error46 instanceof indexNode.AuthError ? error46.errorCode : error46 instanceof Error ? error46.name : void 0, subErr = error46 instanceof indexNode.AuthError ? error46.subError : void 0;
       errorCode && current.childErr !== errorCode && (current.err = errorCode, subErr && (current.subErr = subErr)), delete current.name, delete current.childErr;
       let context = {
         ...current,
@@ -17732,18 +17674,18 @@ var require_index_browser = __commonJS({
       return parent[childName] = context, parent;
     }
     __name(endContext, "endContext");
-    function addError(error45, logger6, event, stackMaxSize = 5) {
-      if (error45 instanceof Error) {
-        if (error45 instanceof indexNode.AuthError) {
-          event.errorCode = error45.errorCode, event.subErrorCode = error45.subError, (error45 instanceof indexNode.ServerError || error45 instanceof indexNode.InteractionRequiredAuthError) && (event.serverErrorNo = error45.errorNo);
+    function addError(error46, logger6, event, stackMaxSize = 5) {
+      if (error46 instanceof Error) {
+        if (error46 instanceof indexNode.AuthError) {
+          event.errorCode = error46.errorCode, event.subErrorCode = error46.subError, (error46 instanceof indexNode.ServerError || error46 instanceof indexNode.InteractionRequiredAuthError) && (event.serverErrorNo = error46.errorNo);
           return;
-        } else if (error45 instanceof indexNode.CacheError) {
-          event.errorCode = error45.errorCode;
+        } else if (error46 instanceof indexNode.CacheError) {
+          event.errorCode = error46.errorCode;
           return;
         } else if (event.errorStack?.length) {
           logger6.trace("PerformanceClient.addErrorStack: Stack already exist", event.correlationId);
           return;
-        } else if (!error45.stack?.length) {
+        } else if (!error46.stack?.length) {
           logger6.trace("PerformanceClient.addErrorStack: Input stack is empty", event.correlationId);
           return;
         }
@@ -17751,7 +17693,7 @@ var require_index_browser = __commonJS({
         logger6.trace("PerformanceClient.addErrorStack: Input error is not instance of Error", event.correlationId);
         return;
       }
-      error45.stack && (event.errorStack = compactStack(error45.stack, stackMaxSize)), event.errorName = error45.name;
+      error46.stack && (event.errorStack = compactStack(error46.stack, stackMaxSize)), event.errorName = error46.name;
     }
     __name(addError, "addError");
     function compactStack(stack, stackMaxSize) {
@@ -17917,12 +17859,12 @@ var require_index_browser = __commonJS({
           appVersion: this.applicationTelemetry?.appVersion
         };
         return this.cacheEventByCorrelationId(inProgressEvent), startContext(inProgressEvent, this.abbreviations, this.eventStack.get(eventCorrelationId)), {
-          end: /* @__PURE__ */ __name((event, error45, account) => this.endMeasurement({
+          end: /* @__PURE__ */ __name((event, error46, account) => this.endMeasurement({
             // Initial set of event properties
             ...inProgressEvent,
             // Properties set when event ends
             ...event
-          }, error45, account), "end"),
+          }, error46, account), "end"),
           discard: /* @__PURE__ */ __name(() => this.discardMeasurements(inProgressEvent.correlationId), "discard"),
           add: /* @__PURE__ */ __name((fields) => this.addFields(fields, inProgressEvent.correlationId), "add"),
           increment: /* @__PURE__ */ __name((fields) => this.incrementFields(fields, inProgressEvent.correlationId), "increment"),
@@ -17941,7 +17883,7 @@ var require_index_browser = __commonJS({
        * @param {AccountInfo?} account
        * @returns {(PerformanceEvent | null)}
        */
-      endMeasurement(event, error45, account) {
+      endMeasurement(event, error46, account) {
         let rootEvent = this.eventsByCorrelationId.get(event.correlationId);
         if (!rootEvent)
           return this.logger.trace(`PerformanceClient: Measurement not found for ${event.eventId}`, event.correlationId), null;
@@ -17951,10 +17893,10 @@ var require_index_browser = __commonJS({
           manuallyCompletedCount: 0
         };
         event.durationMs = Math.round(event.durationMs || this.getDurationMs(event.startTimeMs));
-        let context = JSON.stringify(endContext(event, this.abbreviations, this.eventStack.get(rootEvent.correlationId), error45));
-        if (isRoot ? (queueInfo = this.getQueueInfo(event.correlationId), this.discardMeasurements(rootEvent.correlationId)) : rootEvent.incompleteSubMeasurements?.delete(event.eventId), this.logger.trace(`PerformanceClient: Performance measurement ended for ${event.name}: ${event.durationMs} ms`, event.correlationId), error45 && addError(error45, this.logger, rootEvent), !isRoot)
+        let context = JSON.stringify(endContext(event, this.abbreviations, this.eventStack.get(rootEvent.correlationId), error46));
+        if (isRoot ? (queueInfo = this.getQueueInfo(event.correlationId), this.discardMeasurements(rootEvent.correlationId)) : rootEvent.incompleteSubMeasurements?.delete(event.eventId), this.logger.trace(`PerformanceClient: Performance measurement ended for ${event.name}: ${event.durationMs} ms`, event.correlationId), error46 && addError(error46, this.logger, rootEvent), !isRoot)
           return rootEvent[event.name + "DurationMs"] = Math.floor(event.durationMs), { ...rootEvent };
-        isRoot && !error45 && (rootEvent.errorCode || rootEvent.subErrorCode) && (this.logger.trace(`PerformanceClient: Remove error and sub-error codes for root event ${event.name} as intermediate error was successfully handled`, event.correlationId), rootEvent.errorCode = void 0, rootEvent.subErrorCode = void 0);
+        isRoot && !error46 && (rootEvent.errorCode || rootEvent.subErrorCode) && (this.logger.trace(`PerformanceClient: Remove error and sub-error codes for root event ${event.name} as intermediate error was successfully handled`, event.correlationId), rootEvent.errorCode = void 0, rootEvent.subErrorCode = void 0);
         let finalEvent = { ...rootEvent, ...event }, incompleteSubsCount = 0;
         return finalEvent.incompleteSubMeasurements?.forEach((subMeasurement) => {
           this.logger.trace(`PerformanceClient: Incomplete submeasurement ${subMeasurement.name} found for ${event.name}`, finalEvent.correlationId), incompleteSubsCount++;
@@ -18199,9 +18141,9 @@ var require_index_browser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+msal-common@15.13.0/node_modules/@azure/msal-common/lib/index.cjs
+// node_modules/@azure/msal-common/lib/index.cjs
 var require_lib2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+msal-common@15.13.0/node_modules/@azure/msal-common/lib/index.cjs"(exports) {
+  "node_modules/@azure/msal-common/lib/index.cjs"(exports) {
     "use strict";
     var indexNode = require_index_node_D8Iaiqq3(), indexBrowser = require_index_browser();
     exports.AADAuthorityConstants = indexNode.AADAuthorityConstants;
@@ -18317,9 +18259,9 @@ var require_lib2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/safe-buffer@5.2.1/node_modules/safe-buffer/index.js
+// node_modules/safe-buffer/index.js
 var require_safe_buffer = __commonJS({
-  "../../node_modules/.pnpm/safe-buffer@5.2.1/node_modules/safe-buffer/index.js"(exports, module) {
+  "node_modules/safe-buffer/index.js"(exports, module) {
     var buffer = __require("buffer"), Buffer3 = buffer.Buffer;
     function copyProps(src2, dst) {
       for (var key in src2)
@@ -18357,9 +18299,9 @@ var require_safe_buffer = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/data-stream.js
+// node_modules/jws/lib/data-stream.js
 var require_data_stream = __commonJS({
-  "../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/data-stream.js"(exports, module) {
+  "node_modules/jws/lib/data-stream.js"(exports, module) {
     var Buffer3 = require_safe_buffer().Buffer, Stream = __require("stream"), util2 = __require("util");
     function DataStream(data) {
       if (this.buffer = null, this.writable = !0, this.readable = !0, !data)
@@ -18384,9 +18326,9 @@ var require_data_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ecdsa-sig-formatter@1.0.11/node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js
+// node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js
 var require_param_bytes_for_alg = __commonJS({
-  "../../node_modules/.pnpm/ecdsa-sig-formatter@1.0.11/node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js"(exports, module) {
+  "node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js"(exports, module) {
     "use strict";
     function getParamSize(keySize) {
       var result = (keySize / 8 | 0) + (keySize % 8 === 0 ? 0 : 1);
@@ -18409,9 +18351,9 @@ var require_param_bytes_for_alg = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ecdsa-sig-formatter@1.0.11/node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js
+// node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js
 var require_ecdsa_sig_formatter = __commonJS({
-  "../../node_modules/.pnpm/ecdsa-sig-formatter@1.0.11/node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js"(exports, module) {
+  "node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js"(exports, module) {
     "use strict";
     var Buffer3 = require_safe_buffer().Buffer, getParamBytesForAlg = require_param_bytes_for_alg(), MAX_OCTET = 128, CLASS_UNIVERSAL = 0, PRIMITIVE_BIT = 32, TAG_SEQ = 16, TAG_INT = 2, ENCODED_TAG_SEQ = TAG_SEQ | PRIMITIVE_BIT | CLASS_UNIVERSAL << 6, ENCODED_TAG_INT = TAG_INT | CLASS_UNIVERSAL << 6;
     function base64Url(base643) {
@@ -18484,9 +18426,9 @@ var require_ecdsa_sig_formatter = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/buffer-equal-constant-time@1.0.1/node_modules/buffer-equal-constant-time/index.js
+// node_modules/buffer-equal-constant-time/index.js
 var require_buffer_equal_constant_time = __commonJS({
-  "../../node_modules/.pnpm/buffer-equal-constant-time@1.0.1/node_modules/buffer-equal-constant-time/index.js"(exports, module) {
+  "node_modules/buffer-equal-constant-time/index.js"(exports, module) {
     "use strict";
     var Buffer3 = __require("buffer").Buffer, SlowBuffer = __require("buffer").SlowBuffer;
     module.exports = bufferEq;
@@ -18510,12 +18452,12 @@ var require_buffer_equal_constant_time = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jwa@1.4.2/node_modules/jwa/index.js
+// node_modules/jwa/index.js
 var require_jwa = __commonJS({
-  "../../node_modules/.pnpm/jwa@1.4.2/node_modules/jwa/index.js"(exports, module) {
-    var Buffer3 = require_safe_buffer().Buffer, crypto6 = __require("crypto"), formatEcdsa = require_ecdsa_sig_formatter(), util2 = __require("util"), MSG_INVALID_ALGORITHM = `"%s" is not a valid algorithm.
+  "node_modules/jwa/index.js"(exports, module) {
+    var Buffer3 = require_safe_buffer().Buffer, crypto7 = __require("crypto"), formatEcdsa = require_ecdsa_sig_formatter(), util2 = __require("util"), MSG_INVALID_ALGORITHM = `"%s" is not a valid algorithm.
   Supported algorithms are:
-  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".`, MSG_INVALID_SECRET = "secret must be a string or buffer", MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer", MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object", supportsKeyObjects = typeof crypto6.createPublicKey == "function";
+  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".`, MSG_INVALID_SECRET = "secret must be a string or buffer", MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer", MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object", supportsKeyObjects = typeof crypto7.createPublicKey == "function";
     supportsKeyObjects && (MSG_INVALID_VERIFIER_KEY += " or a KeyObject", MSG_INVALID_SECRET += "or a KeyObject");
     function checkIsPublicKey(key) {
       if (!Buffer3.isBuffer(key) && typeof key != "string" && (!supportsKeyObjects || typeof key != "object" || typeof key.type != "string" || typeof key.asymmetricKeyType != "string" || typeof key.export != "function"))
@@ -18565,13 +18507,13 @@ var require_jwa = __commonJS({
     function createHmacSigner(bits) {
       return /* @__PURE__ */ __name(function(thing, secret) {
         checkIsSecretKey(secret), thing = normalizeInput(thing);
-        var hmac = crypto6.createHmac("sha" + bits, secret), sig = (hmac.update(thing), hmac.digest("base64"));
+        var hmac = crypto7.createHmac("sha" + bits, secret), sig = (hmac.update(thing), hmac.digest("base64"));
         return fromBase64(sig);
       }, "sign");
     }
     __name(createHmacSigner, "createHmacSigner");
-    var bufferEqual, timingSafeEqual = "timingSafeEqual" in crypto6 ? /* @__PURE__ */ __name(function(a2, b2) {
-      return a2.byteLength !== b2.byteLength ? !1 : crypto6.timingSafeEqual(a2, b2);
+    var bufferEqual, timingSafeEqual = "timingSafeEqual" in crypto7 ? /* @__PURE__ */ __name(function(a2, b2) {
+      return a2.byteLength !== b2.byteLength ? !1 : crypto7.timingSafeEqual(a2, b2);
     }, "timingSafeEqual") : /* @__PURE__ */ __name(function(a2, b2) {
       return bufferEqual || (bufferEqual = require_buffer_equal_constant_time()), bufferEqual(a2, b2);
     }, "timingSafeEqual");
@@ -18585,7 +18527,7 @@ var require_jwa = __commonJS({
     function createKeySigner(bits) {
       return /* @__PURE__ */ __name(function(thing, privateKey) {
         checkIsPrivateKey(privateKey), thing = normalizeInput(thing);
-        var signer = crypto6.createSign("RSA-SHA" + bits), sig = (signer.update(thing), signer.sign(privateKey, "base64"));
+        var signer = crypto7.createSign("RSA-SHA" + bits), sig = (signer.update(thing), signer.sign(privateKey, "base64"));
         return fromBase64(sig);
       }, "sign");
     }
@@ -18593,7 +18535,7 @@ var require_jwa = __commonJS({
     function createKeyVerifier(bits) {
       return /* @__PURE__ */ __name(function(thing, signature, publicKey) {
         checkIsPublicKey(publicKey), thing = normalizeInput(thing), signature = toBase64(signature);
-        var verifier = crypto6.createVerify("RSA-SHA" + bits);
+        var verifier = crypto7.createVerify("RSA-SHA" + bits);
         return verifier.update(thing), verifier.verify(publicKey, signature, "base64");
       }, "verify");
     }
@@ -18601,10 +18543,10 @@ var require_jwa = __commonJS({
     function createPSSKeySigner(bits) {
       return /* @__PURE__ */ __name(function(thing, privateKey) {
         checkIsPrivateKey(privateKey), thing = normalizeInput(thing);
-        var signer = crypto6.createSign("RSA-SHA" + bits), sig = (signer.update(thing), signer.sign({
+        var signer = crypto7.createSign("RSA-SHA" + bits), sig = (signer.update(thing), signer.sign({
           key: privateKey,
-          padding: crypto6.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto6.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto7.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto7.constants.RSA_PSS_SALTLEN_DIGEST
         }, "base64"));
         return fromBase64(sig);
       }, "sign");
@@ -18613,11 +18555,11 @@ var require_jwa = __commonJS({
     function createPSSKeyVerifier(bits) {
       return /* @__PURE__ */ __name(function(thing, signature, publicKey) {
         checkIsPublicKey(publicKey), thing = normalizeInput(thing), signature = toBase64(signature);
-        var verifier = crypto6.createVerify("RSA-SHA" + bits);
+        var verifier = crypto7.createVerify("RSA-SHA" + bits);
         return verifier.update(thing), verifier.verify({
           key: publicKey,
-          padding: crypto6.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto6.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto7.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto7.constants.RSA_PSS_SALTLEN_DIGEST
         }, signature, "base64");
       }, "verify");
     }
@@ -18664,10 +18606,10 @@ var require_jwa = __commonJS({
         ps: createPSSKeyVerifier,
         es: createECDSAVerifer,
         none: createNoneVerifier
-      }, match = algorithm.match(/^(RS|PS|ES|HS)(256|384|512)$|^(none)$/i);
-      if (!match)
+      }, match2 = algorithm.match(/^(RS|PS|ES|HS)(256|384|512)$|^(none)$/i);
+      if (!match2)
         throw typeError(MSG_INVALID_ALGORITHM, algorithm);
-      var algo = (match[1] || match[3]).toLowerCase(), bits = match[2];
+      var algo = (match2[1] || match2[3]).toLowerCase(), bits = match2[2];
       return {
         sign: signerFactories[algo](bits),
         verify: verifierFactories[algo](bits)
@@ -18676,9 +18618,9 @@ var require_jwa = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/tostring.js
+// node_modules/jws/lib/tostring.js
 var require_tostring = __commonJS({
-  "../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/tostring.js"(exports, module) {
+  "node_modules/jws/lib/tostring.js"(exports, module) {
     var Buffer3 = __require("buffer").Buffer;
     module.exports = /* @__PURE__ */ __name(function(obj) {
       return typeof obj == "string" ? obj : typeof obj == "number" || Buffer3.isBuffer(obj) ? obj.toString() : JSON.stringify(obj);
@@ -18686,9 +18628,9 @@ var require_tostring = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/sign-stream.js
+// node_modules/jws/lib/sign-stream.js
 var require_sign_stream = __commonJS({
-  "../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/sign-stream.js"(exports, module) {
+  "node_modules/jws/lib/sign-stream.js"(exports, module) {
     var Buffer3 = require_safe_buffer().Buffer, DataStream = require_data_stream(), jwa = require_jwa(), Stream = __require("stream"), toString = require_tostring(), util2 = __require("util");
     function base64url3(string4, encoding) {
       return Buffer3.from(string4, encoding).toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
@@ -18733,9 +18675,9 @@ var require_sign_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/verify-stream.js
+// node_modules/jws/lib/verify-stream.js
 var require_verify_stream = __commonJS({
-  "../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/lib/verify-stream.js"(exports, module) {
+  "node_modules/jws/lib/verify-stream.js"(exports, module) {
     var Buffer3 = require_safe_buffer().Buffer, DataStream = require_data_stream(), jwa = require_jwa(), Stream = __require("stream"), toString = require_tostring(), util2 = __require("util"), JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
     function isObject2(thing) {
       return Object.prototype.toString.call(thing) === "[object Object]";
@@ -18824,9 +18766,9 @@ var require_verify_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/index.js
+// node_modules/jws/index.js
 var require_jws = __commonJS({
-  "../../node_modules/.pnpm/jws@3.2.2/node_modules/jws/index.js"(exports) {
+  "node_modules/jws/index.js"(exports) {
     var SignStream = require_sign_stream(), VerifyStream = require_verify_stream(), ALGORITHMS = [
       "HS256",
       "HS384",
@@ -18855,9 +18797,9 @@ var require_jws = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/decode.js
+// node_modules/jsonwebtoken/decode.js
 var require_decode = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/decode.js"(exports, module) {
+  "node_modules/jsonwebtoken/decode.js"(exports, module) {
     var jws = require_jws();
     module.exports = function(jwt2, options) {
       options = options || {};
@@ -18880,11 +18822,11 @@ var require_decode = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/JsonWebTokenError.js
+// node_modules/jsonwebtoken/lib/JsonWebTokenError.js
 var require_JsonWebTokenError = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/JsonWebTokenError.js"(exports, module) {
-    var JsonWebTokenError = /* @__PURE__ */ __name(function(message, error45) {
-      Error.call(this, message), Error.captureStackTrace && Error.captureStackTrace(this, this.constructor), this.name = "JsonWebTokenError", this.message = message, error45 && (this.inner = error45);
+  "node_modules/jsonwebtoken/lib/JsonWebTokenError.js"(exports, module) {
+    var JsonWebTokenError = /* @__PURE__ */ __name(function(message, error46) {
+      Error.call(this, message), Error.captureStackTrace && Error.captureStackTrace(this, this.constructor), this.name = "JsonWebTokenError", this.message = message, error46 && (this.inner = error46);
     }, "JsonWebTokenError");
     JsonWebTokenError.prototype = Object.create(Error.prototype);
     JsonWebTokenError.prototype.constructor = JsonWebTokenError;
@@ -18892,9 +18834,9 @@ var require_JsonWebTokenError = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/NotBeforeError.js
+// node_modules/jsonwebtoken/lib/NotBeforeError.js
 var require_NotBeforeError = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/NotBeforeError.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/NotBeforeError.js"(exports, module) {
     var JsonWebTokenError = require_JsonWebTokenError(), NotBeforeError = /* @__PURE__ */ __name(function(message, date5) {
       JsonWebTokenError.call(this, message), this.name = "NotBeforeError", this.date = date5;
     }, "NotBeforeError");
@@ -18904,9 +18846,9 @@ var require_NotBeforeError = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/TokenExpiredError.js
+// node_modules/jsonwebtoken/lib/TokenExpiredError.js
 var require_TokenExpiredError = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/TokenExpiredError.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/TokenExpiredError.js"(exports, module) {
     var JsonWebTokenError = require_JsonWebTokenError(), TokenExpiredError = /* @__PURE__ */ __name(function(message, expiredAt) {
       JsonWebTokenError.call(this, message), this.name = "TokenExpiredError", this.expiredAt = expiredAt;
     }, "TokenExpiredError");
@@ -18916,9 +18858,9 @@ var require_TokenExpiredError = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/timespan.js
+// node_modules/jsonwebtoken/lib/timespan.js
 var require_timespan = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/timespan.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/timespan.js"(exports, module) {
     var ms = require_ms();
     module.exports = function(time4, iat) {
       var timestamp = iat || Math.floor(Date.now() / 1e3);
@@ -18930,9 +18872,9 @@ var require_timespan = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/constants.js
+// node_modules/semver/internal/constants.js
 var require_constants2 = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/constants.js"(exports, module) {
+  "node_modules/semver/internal/constants.js"(exports, module) {
     "use strict";
     var SEMVER_SPEC_VERSION = "2.0.0", MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || /* istanbul ignore next */
     9007199254740991, MAX_SAFE_COMPONENT_LENGTH = 16, MAX_SAFE_BUILD_LENGTH = 250, RELEASE_TYPES = [
@@ -18957,9 +18899,9 @@ var require_constants2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/debug.js
+// node_modules/semver/internal/debug.js
 var require_debug2 = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/debug.js"(exports, module) {
+  "node_modules/semver/internal/debug.js"(exports, module) {
     "use strict";
     var debug = typeof process == "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
     };
@@ -18967,9 +18909,9 @@ var require_debug2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/re.js
+// node_modules/semver/internal/re.js
 var require_re = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/re.js"(exports, module) {
+  "node_modules/semver/internal/re.js"(exports, module) {
     "use strict";
     var {
       MAX_SAFE_COMPONENT_LENGTH,
@@ -19038,20 +18980,22 @@ var require_re = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/parse-options.js
+// node_modules/semver/internal/parse-options.js
 var require_parse_options = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/parse-options.js"(exports, module) {
+  "node_modules/semver/internal/parse-options.js"(exports, module) {
     "use strict";
     var looseOption = Object.freeze({ loose: !0 }), emptyOpts = Object.freeze({}), parseOptions = /* @__PURE__ */ __name((options) => options ? typeof options != "object" ? looseOption : options : emptyOpts, "parseOptions");
     module.exports = parseOptions;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/identifiers.js
+// node_modules/semver/internal/identifiers.js
 var require_identifiers = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/identifiers.js"(exports, module) {
+  "node_modules/semver/internal/identifiers.js"(exports, module) {
     "use strict";
     var numeric = /^[0-9]+$/, compareIdentifiers = /* @__PURE__ */ __name((a2, b2) => {
+      if (typeof a2 == "number" && typeof b2 == "number")
+        return a2 === b2 ? 0 : a2 < b2 ? -1 : 1;
       let anum = numeric.test(a2), bnum = numeric.test(b2);
       return anum && bnum && (a2 = +a2, b2 = +b2), a2 === b2 ? 0 : anum && !bnum ? -1 : bnum && !anum ? 1 : a2 < b2 ? -1 : 1;
     }, "compareIdentifiers"), rcompareIdentifiers = /* @__PURE__ */ __name((a2, b2) => compareIdentifiers(b2, a2), "rcompareIdentifiers");
@@ -19062,9 +19006,9 @@ var require_identifiers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/classes/semver.js
+// node_modules/semver/classes/semver.js
 var require_semver = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/classes/semver.js"(exports, module) {
+  "node_modules/semver/classes/semver.js"(exports, module) {
     "use strict";
     var debug = require_debug2(), { MAX_LENGTH, MAX_SAFE_INTEGER } = require_constants2(), { safeRe: re, t: t2 } = require_re(), parseOptions = require_parse_options(), { compareIdentifiers } = require_identifiers(), SemVer = class _SemVer {
       static {
@@ -19115,7 +19059,7 @@ var require_semver = __commonJS({
         return other.version === this.version ? 0 : this.compareMain(other) || this.comparePre(other);
       }
       compareMain(other) {
-        return other instanceof _SemVer || (other = new _SemVer(other, this.options)), compareIdentifiers(this.major, other.major) || compareIdentifiers(this.minor, other.minor) || compareIdentifiers(this.patch, other.patch);
+        return other instanceof _SemVer || (other = new _SemVer(other, this.options)), this.major < other.major ? -1 : this.major > other.major ? 1 : this.minor < other.minor ? -1 : this.minor > other.minor ? 1 : this.patch < other.patch ? -1 : this.patch > other.patch ? 1 : 0;
       }
       comparePre(other) {
         if (other instanceof _SemVer || (other = new _SemVer(other, this.options)), this.prerelease.length && !other.prerelease.length)
@@ -19161,8 +19105,8 @@ var require_semver = __commonJS({
           if (!identifier && identifierBase === !1)
             throw new Error("invalid increment argument: identifier is empty");
           if (identifier) {
-            let match = `-${identifier}`.match(this.options.loose ? re[t2.PRERELEASELOOSE] : re[t2.PRERELEASE]);
-            if (!match || match[1] !== identifier)
+            let match2 = `-${identifier}`.match(this.options.loose ? re[t2.PRERELEASELOOSE] : re[t2.PRERELEASE]);
+            if (!match2 || match2[1] !== identifier)
               throw new Error(`invalid identifier: ${identifier}`);
           }
         }
@@ -19227,9 +19171,9 @@ var require_semver = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/parse.js
+// node_modules/semver/functions/parse.js
 var require_parse = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/parse.js"(exports, module) {
+  "node_modules/semver/functions/parse.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), parse4 = /* @__PURE__ */ __name((version3, options, throwErrors = !1) => {
       if (version3 instanceof SemVer)
@@ -19246,9 +19190,9 @@ var require_parse = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/valid.js
+// node_modules/semver/functions/valid.js
 var require_valid = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/valid.js"(exports, module) {
+  "node_modules/semver/functions/valid.js"(exports, module) {
     "use strict";
     var parse4 = require_parse(), valid = /* @__PURE__ */ __name((version3, options) => {
       let v2 = parse4(version3, options);
@@ -19258,9 +19202,9 @@ var require_valid = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/clean.js
+// node_modules/semver/functions/clean.js
 var require_clean = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/clean.js"(exports, module) {
+  "node_modules/semver/functions/clean.js"(exports, module) {
     "use strict";
     var parse4 = require_parse(), clean = /* @__PURE__ */ __name((version3, options) => {
       let s2 = parse4(version3.trim().replace(/^[=v]+/, ""), options);
@@ -19270,9 +19214,9 @@ var require_clean = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/inc.js
+// node_modules/semver/functions/inc.js
 var require_inc = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/inc.js"(exports, module) {
+  "node_modules/semver/functions/inc.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), inc = /* @__PURE__ */ __name((version3, release, options, identifier, identifierBase) => {
       typeof options == "string" && (identifierBase = identifier, identifier = options, options = void 0);
@@ -19289,9 +19233,9 @@ var require_inc = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/diff.js
+// node_modules/semver/functions/diff.js
 var require_diff = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/diff.js"(exports, module) {
+  "node_modules/semver/functions/diff.js"(exports, module) {
     "use strict";
     var parse4 = require_parse(), diff = /* @__PURE__ */ __name((version1, version22) => {
       let v12 = parse4(version1, null, !0), v2 = parse4(version22, null, !0), comparison = v12.compare(v2);
@@ -19311,36 +19255,36 @@ var require_diff = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/major.js
+// node_modules/semver/functions/major.js
 var require_major = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/major.js"(exports, module) {
+  "node_modules/semver/functions/major.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), major = /* @__PURE__ */ __name((a2, loose) => new SemVer(a2, loose).major, "major");
     module.exports = major;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/minor.js
+// node_modules/semver/functions/minor.js
 var require_minor = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/minor.js"(exports, module) {
+  "node_modules/semver/functions/minor.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), minor = /* @__PURE__ */ __name((a2, loose) => new SemVer(a2, loose).minor, "minor");
     module.exports = minor;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/patch.js
+// node_modules/semver/functions/patch.js
 var require_patch = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/patch.js"(exports, module) {
+  "node_modules/semver/functions/patch.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), patch = /* @__PURE__ */ __name((a2, loose) => new SemVer(a2, loose).patch, "patch");
     module.exports = patch;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/prerelease.js
+// node_modules/semver/functions/prerelease.js
 var require_prerelease = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/prerelease.js"(exports, module) {
+  "node_modules/semver/functions/prerelease.js"(exports, module) {
     "use strict";
     var parse4 = require_parse(), prerelease = /* @__PURE__ */ __name((version3, options) => {
       let parsed = parse4(version3, options);
@@ -19350,36 +19294,36 @@ var require_prerelease = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/compare.js
+// node_modules/semver/functions/compare.js
 var require_compare = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/compare.js"(exports, module) {
+  "node_modules/semver/functions/compare.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), compare = /* @__PURE__ */ __name((a2, b2, loose) => new SemVer(a2, loose).compare(new SemVer(b2, loose)), "compare");
     module.exports = compare;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/rcompare.js
+// node_modules/semver/functions/rcompare.js
 var require_rcompare = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/rcompare.js"(exports, module) {
+  "node_modules/semver/functions/rcompare.js"(exports, module) {
     "use strict";
     var compare = require_compare(), rcompare = /* @__PURE__ */ __name((a2, b2, loose) => compare(b2, a2, loose), "rcompare");
     module.exports = rcompare;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/compare-loose.js
+// node_modules/semver/functions/compare-loose.js
 var require_compare_loose = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/compare-loose.js"(exports, module) {
+  "node_modules/semver/functions/compare-loose.js"(exports, module) {
     "use strict";
     var compare = require_compare(), compareLoose = /* @__PURE__ */ __name((a2, b2) => compare(a2, b2, !0), "compareLoose");
     module.exports = compareLoose;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/compare-build.js
+// node_modules/semver/functions/compare-build.js
 var require_compare_build = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/compare-build.js"(exports, module) {
+  "node_modules/semver/functions/compare-build.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), compareBuild = /* @__PURE__ */ __name((a2, b2, loose) => {
       let versionA = new SemVer(a2, loose), versionB = new SemVer(b2, loose);
@@ -19389,81 +19333,81 @@ var require_compare_build = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/sort.js
+// node_modules/semver/functions/sort.js
 var require_sort = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/sort.js"(exports, module) {
+  "node_modules/semver/functions/sort.js"(exports, module) {
     "use strict";
     var compareBuild = require_compare_build(), sort = /* @__PURE__ */ __name((list, loose) => list.sort((a2, b2) => compareBuild(a2, b2, loose)), "sort");
     module.exports = sort;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/rsort.js
+// node_modules/semver/functions/rsort.js
 var require_rsort = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/rsort.js"(exports, module) {
+  "node_modules/semver/functions/rsort.js"(exports, module) {
     "use strict";
     var compareBuild = require_compare_build(), rsort = /* @__PURE__ */ __name((list, loose) => list.sort((a2, b2) => compareBuild(b2, a2, loose)), "rsort");
     module.exports = rsort;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/gt.js
+// node_modules/semver/functions/gt.js
 var require_gt = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/gt.js"(exports, module) {
+  "node_modules/semver/functions/gt.js"(exports, module) {
     "use strict";
     var compare = require_compare(), gt = /* @__PURE__ */ __name((a2, b2, loose) => compare(a2, b2, loose) > 0, "gt");
     module.exports = gt;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/lt.js
+// node_modules/semver/functions/lt.js
 var require_lt = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/lt.js"(exports, module) {
+  "node_modules/semver/functions/lt.js"(exports, module) {
     "use strict";
     var compare = require_compare(), lt = /* @__PURE__ */ __name((a2, b2, loose) => compare(a2, b2, loose) < 0, "lt");
     module.exports = lt;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/eq.js
+// node_modules/semver/functions/eq.js
 var require_eq = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/eq.js"(exports, module) {
+  "node_modules/semver/functions/eq.js"(exports, module) {
     "use strict";
     var compare = require_compare(), eq = /* @__PURE__ */ __name((a2, b2, loose) => compare(a2, b2, loose) === 0, "eq");
     module.exports = eq;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/neq.js
+// node_modules/semver/functions/neq.js
 var require_neq = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/neq.js"(exports, module) {
+  "node_modules/semver/functions/neq.js"(exports, module) {
     "use strict";
     var compare = require_compare(), neq = /* @__PURE__ */ __name((a2, b2, loose) => compare(a2, b2, loose) !== 0, "neq");
     module.exports = neq;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/gte.js
+// node_modules/semver/functions/gte.js
 var require_gte = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/gte.js"(exports, module) {
+  "node_modules/semver/functions/gte.js"(exports, module) {
     "use strict";
     var compare = require_compare(), gte = /* @__PURE__ */ __name((a2, b2, loose) => compare(a2, b2, loose) >= 0, "gte");
     module.exports = gte;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/lte.js
+// node_modules/semver/functions/lte.js
 var require_lte = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/lte.js"(exports, module) {
+  "node_modules/semver/functions/lte.js"(exports, module) {
     "use strict";
     var compare = require_compare(), lte = /* @__PURE__ */ __name((a2, b2, loose) => compare(a2, b2, loose) <= 0, "lte");
     module.exports = lte;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/cmp.js
+// node_modules/semver/functions/cmp.js
 var require_cmp = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/cmp.js"(exports, module) {
+  "node_modules/semver/functions/cmp.js"(exports, module) {
     "use strict";
     var eq = require_eq(), neq = require_neq(), gt = require_gt(), gte = require_gte(), lt = require_lt(), lte = require_lte(), cmp = /* @__PURE__ */ __name((a2, op, b2, loose) => {
       switch (op) {
@@ -19493,9 +19437,9 @@ var require_cmp = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/coerce.js
+// node_modules/semver/functions/coerce.js
 var require_coerce = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/coerce.js"(exports, module) {
+  "node_modules/semver/functions/coerce.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), parse4 = require_parse(), { safeRe: re, t: t2 } = require_re(), coerce2 = /* @__PURE__ */ __name((version3, options) => {
       if (version3 instanceof SemVer)
@@ -19503,27 +19447,27 @@ var require_coerce = __commonJS({
       if (typeof version3 == "number" && (version3 = String(version3)), typeof version3 != "string")
         return null;
       options = options || {};
-      let match = null;
+      let match2 = null;
       if (!options.rtl)
-        match = version3.match(options.includePrerelease ? re[t2.COERCEFULL] : re[t2.COERCE]);
+        match2 = version3.match(options.includePrerelease ? re[t2.COERCEFULL] : re[t2.COERCE]);
       else {
         let coerceRtlRegex = options.includePrerelease ? re[t2.COERCERTLFULL] : re[t2.COERCERTL], next;
-        for (; (next = coerceRtlRegex.exec(version3)) && (!match || match.index + match[0].length !== version3.length); )
-          (!match || next.index + next[0].length !== match.index + match[0].length) && (match = next), coerceRtlRegex.lastIndex = next.index + next[1].length + next[2].length;
+        for (; (next = coerceRtlRegex.exec(version3)) && (!match2 || match2.index + match2[0].length !== version3.length); )
+          (!match2 || next.index + next[0].length !== match2.index + match2[0].length) && (match2 = next), coerceRtlRegex.lastIndex = next.index + next[1].length + next[2].length;
         coerceRtlRegex.lastIndex = -1;
       }
-      if (match === null)
+      if (match2 === null)
         return null;
-      let major = match[2], minor = match[3] || "0", patch = match[4] || "0", prerelease = options.includePrerelease && match[5] ? `-${match[5]}` : "", build = options.includePrerelease && match[6] ? `+${match[6]}` : "";
+      let major = match2[2], minor = match2[3] || "0", patch = match2[4] || "0", prerelease = options.includePrerelease && match2[5] ? `-${match2[5]}` : "", build = options.includePrerelease && match2[6] ? `+${match2[6]}` : "";
       return parse4(`${major}.${minor}.${patch}${prerelease}${build}`, options);
     }, "coerce");
     module.exports = coerce2;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/lrucache.js
+// node_modules/semver/internal/lrucache.js
 var require_lrucache = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/internal/lrucache.js"(exports, module) {
+  "node_modules/semver/internal/lrucache.js"(exports, module) {
     "use strict";
     var LRUCache = class {
       static {
@@ -19555,9 +19499,9 @@ var require_lrucache = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/classes/range.js
+// node_modules/semver/classes/range.js
 var require_range = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/classes/range.js"(exports, module) {
+  "node_modules/semver/classes/range.js"(exports, module) {
     "use strict";
     var SPACE_CHARACTERS = /\s+/g, Range = class _Range {
       static {
@@ -19653,7 +19597,7 @@ var require_range = __commonJS({
       for (; result && remainingComparators.length; )
         result = remainingComparators.every((otherComparator) => testComparator.intersects(otherComparator, options)), testComparator = remainingComparators.pop();
       return result;
-    }, "isSatisfiable"), parseComparator = /* @__PURE__ */ __name((comp, options) => (debug("comp", comp, options), comp = replaceCarets(comp, options), debug("caret", comp), comp = replaceTildes(comp, options), debug("tildes", comp), comp = replaceXRanges(comp, options), debug("xrange", comp), comp = replaceStars(comp, options), debug("stars", comp), comp), "parseComparator"), isX = /* @__PURE__ */ __name((id) => !id || id.toLowerCase() === "x" || id === "*", "isX"), replaceTildes = /* @__PURE__ */ __name((comp, options) => comp.trim().split(/\s+/).map((c3) => replaceTilde(c3, options)).join(" "), "replaceTildes"), replaceTilde = /* @__PURE__ */ __name((comp, options) => {
+    }, "isSatisfiable"), parseComparator = /* @__PURE__ */ __name((comp, options) => (comp = comp.replace(re[t2.BUILD], ""), debug("comp", comp, options), comp = replaceCarets(comp, options), debug("caret", comp), comp = replaceTildes(comp, options), debug("tildes", comp), comp = replaceXRanges(comp, options), debug("xrange", comp), comp = replaceStars(comp, options), debug("stars", comp), comp), "parseComparator"), isX = /* @__PURE__ */ __name((id) => !id || id.toLowerCase() === "x" || id === "*", "isX"), replaceTildes = /* @__PURE__ */ __name((comp, options) => comp.trim().split(/\s+/).map((c3) => replaceTilde(c3, options)).join(" "), "replaceTildes"), replaceTilde = /* @__PURE__ */ __name((comp, options) => {
       let r3 = options.loose ? re[t2.TILDELOOSE] : re[t2.TILDE];
       return comp.replace(r3, (_3, M, m2, p, pr) => {
         debug("tilde", comp, _3, M, m2, p, pr);
@@ -19694,9 +19638,9 @@ var require_range = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/classes/comparator.js
+// node_modules/semver/classes/comparator.js
 var require_comparator = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/classes/comparator.js"(exports, module) {
+  "node_modules/semver/classes/comparator.js"(exports, module) {
     "use strict";
     var ANY = Symbol("SemVer ANY"), Comparator = class _Comparator {
       static {
@@ -19744,9 +19688,9 @@ var require_comparator = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/satisfies.js
+// node_modules/semver/functions/satisfies.js
 var require_satisfies = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/functions/satisfies.js"(exports, module) {
+  "node_modules/semver/functions/satisfies.js"(exports, module) {
     "use strict";
     var Range = require_range(), satisfies = /* @__PURE__ */ __name((version3, range, options) => {
       try {
@@ -19760,18 +19704,18 @@ var require_satisfies = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/to-comparators.js
+// node_modules/semver/ranges/to-comparators.js
 var require_to_comparators = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/to-comparators.js"(exports, module) {
+  "node_modules/semver/ranges/to-comparators.js"(exports, module) {
     "use strict";
     var Range = require_range(), toComparators = /* @__PURE__ */ __name((range, options) => new Range(range, options).set.map((comp) => comp.map((c3) => c3.value).join(" ").trim().split(" ")), "toComparators");
     module.exports = toComparators;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/max-satisfying.js
+// node_modules/semver/ranges/max-satisfying.js
 var require_max_satisfying = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/max-satisfying.js"(exports, module) {
+  "node_modules/semver/ranges/max-satisfying.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), Range = require_range(), maxSatisfying = /* @__PURE__ */ __name((versions, range, options) => {
       let max = null, maxSV = null, rangeObj = null;
@@ -19788,9 +19732,9 @@ var require_max_satisfying = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/min-satisfying.js
+// node_modules/semver/ranges/min-satisfying.js
 var require_min_satisfying = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/min-satisfying.js"(exports, module) {
+  "node_modules/semver/ranges/min-satisfying.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), Range = require_range(), minSatisfying = /* @__PURE__ */ __name((versions, range, options) => {
       let min = null, minSV = null, rangeObj = null;
@@ -19807,9 +19751,9 @@ var require_min_satisfying = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/min-version.js
+// node_modules/semver/ranges/min-version.js
 var require_min_version = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/min-version.js"(exports, module) {
+  "node_modules/semver/ranges/min-version.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), Range = require_range(), gt = require_gt(), minVersion = /* @__PURE__ */ __name((range, loose) => {
       range = new Range(range, loose);
@@ -19844,9 +19788,9 @@ var require_min_version = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/valid.js
+// node_modules/semver/ranges/valid.js
 var require_valid2 = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/valid.js"(exports, module) {
+  "node_modules/semver/ranges/valid.js"(exports, module) {
     "use strict";
     var Range = require_range(), validRange = /* @__PURE__ */ __name((range, options) => {
       try {
@@ -19859,9 +19803,9 @@ var require_valid2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/outside.js
+// node_modules/semver/ranges/outside.js
 var require_outside = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/outside.js"(exports, module) {
+  "node_modules/semver/ranges/outside.js"(exports, module) {
     "use strict";
     var SemVer = require_semver(), Comparator = require_comparator(), { ANY } = Comparator, Range = require_range(), satisfies = require_satisfies(), gt = require_gt(), lt = require_lt(), lte = require_lte(), gte = require_gte(), outside = /* @__PURE__ */ __name((version3, range, hilo, options) => {
       version3 = new SemVer(version3, options), range = new Range(range, options);
@@ -19893,36 +19837,36 @@ var require_outside = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/gtr.js
+// node_modules/semver/ranges/gtr.js
 var require_gtr = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/gtr.js"(exports, module) {
+  "node_modules/semver/ranges/gtr.js"(exports, module) {
     "use strict";
     var outside = require_outside(), gtr = /* @__PURE__ */ __name((version3, range, options) => outside(version3, range, ">", options), "gtr");
     module.exports = gtr;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/ltr.js
+// node_modules/semver/ranges/ltr.js
 var require_ltr = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/ltr.js"(exports, module) {
+  "node_modules/semver/ranges/ltr.js"(exports, module) {
     "use strict";
     var outside = require_outside(), ltr = /* @__PURE__ */ __name((version3, range, options) => outside(version3, range, "<", options), "ltr");
     module.exports = ltr;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/intersects.js
+// node_modules/semver/ranges/intersects.js
 var require_intersects = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/intersects.js"(exports, module) {
+  "node_modules/semver/ranges/intersects.js"(exports, module) {
     "use strict";
     var Range = require_range(), intersects = /* @__PURE__ */ __name((r1, r22, options) => (r1 = new Range(r1, options), r22 = new Range(r22, options), r1.intersects(r22, options)), "intersects");
     module.exports = intersects;
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/simplify.js
+// node_modules/semver/ranges/simplify.js
 var require_simplify = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/simplify.js"(exports, module) {
+  "node_modules/semver/ranges/simplify.js"(exports, module) {
     "use strict";
     var satisfies = require_satisfies(), compare = require_compare();
     module.exports = (versions, range, options) => {
@@ -19939,9 +19883,9 @@ var require_simplify = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/subset.js
+// node_modules/semver/ranges/subset.js
 var require_subset = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/ranges/subset.js"(exports, module) {
+  "node_modules/semver/ranges/subset.js"(exports, module) {
     "use strict";
     var Range = require_range(), Comparator = require_comparator(), { ANY } = Comparator, satisfies = require_satisfies(), compare = require_compare(), subset = /* @__PURE__ */ __name((sub, dom, options = {}) => {
       if (sub === dom)
@@ -20027,9 +19971,9 @@ var require_subset = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/index.js
+// node_modules/semver/index.js
 var require_semver2 = __commonJS({
-  "../../node_modules/.pnpm/semver@7.7.2/node_modules/semver/index.js"(exports, module) {
+  "node_modules/semver/index.js"(exports, module) {
     "use strict";
     var internalRe = require_re(), constants = require_constants2(), SemVer = require_semver(), identifiers = require_identifiers(), parse4 = require_parse(), valid = require_valid(), clean = require_clean(), inc = require_inc(), diff = require_diff(), major = require_major(), minor = require_minor(), patch = require_patch(), prerelease = require_prerelease(), compare = require_compare(), rcompare = require_rcompare(), compareLoose = require_compare_loose(), compareBuild = require_compare_build(), sort = require_sort(), rsort = require_rsort(), gt = require_gt(), lt = require_lt(), eq = require_eq(), neq = require_neq(), gte = require_gte(), lte = require_lte(), cmp = require_cmp(), coerce2 = require_coerce(), Comparator = require_comparator(), Range = require_range(), satisfies = require_satisfies(), toComparators = require_to_comparators(), maxSatisfying = require_max_satisfying(), minSatisfying = require_min_satisfying(), minVersion = require_min_version(), validRange = require_valid2(), outside = require_outside(), gtr = require_gtr(), ltr = require_ltr(), intersects = require_intersects(), simplifyRange = require_simplify(), subset = require_subset();
     module.exports = {
@@ -20082,25 +20026,25 @@ var require_semver2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/asymmetricKeyDetailsSupported.js
+// node_modules/jsonwebtoken/lib/asymmetricKeyDetailsSupported.js
 var require_asymmetricKeyDetailsSupported = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/asymmetricKeyDetailsSupported.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/asymmetricKeyDetailsSupported.js"(exports, module) {
     var semver = require_semver2();
     module.exports = semver.satisfies(process.version, ">=15.7.0");
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/rsaPssKeyDetailsSupported.js
+// node_modules/jsonwebtoken/lib/rsaPssKeyDetailsSupported.js
 var require_rsaPssKeyDetailsSupported = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/rsaPssKeyDetailsSupported.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/rsaPssKeyDetailsSupported.js"(exports, module) {
     var semver = require_semver2();
     module.exports = semver.satisfies(process.version, ">=16.9.0");
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/validateAsymmetricKey.js
+// node_modules/jsonwebtoken/lib/validateAsymmetricKey.js
 var require_validateAsymmetricKey = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/validateAsymmetricKey.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/validateAsymmetricKey.js"(exports, module) {
     var ASYMMETRIC_KEY_DETAILS_SUPPORTED = require_asymmetricKeyDetailsSupported(), RSA_PSS_KEY_DETAILS_SUPPORTED = require_rsaPssKeyDetailsSupported(), allowedAlgorithmsForKeys = {
       ec: ["ES256", "ES384", "ES512"],
       rsa: ["RS256", "PS256", "RS384", "PS384", "RS512", "PS512"],
@@ -20140,17 +20084,17 @@ var require_validateAsymmetricKey = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/psSupported.js
+// node_modules/jsonwebtoken/lib/psSupported.js
 var require_psSupported = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/lib/psSupported.js"(exports, module) {
+  "node_modules/jsonwebtoken/lib/psSupported.js"(exports, module) {
     var semver = require_semver2();
     module.exports = semver.satisfies(process.version, "^6.12.0 || >=8.0.0");
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js
+// node_modules/jsonwebtoken/verify.js
 var require_verify = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/verify.js"(exports, module) {
+  "node_modules/jsonwebtoken/verify.js"(exports, module) {
     var JsonWebTokenError = require_JsonWebTokenError(), NotBeforeError = require_NotBeforeError(), TokenExpiredError = require_TokenExpiredError(), decode3 = require_decode(), timespan = require_timespan(), validateAsymmetricKey = require_validateAsymmetricKey(), PS_SUPPORTED = require_psSupported(), jws = require_jws(), { KeyObject, createSecretKey, createPublicKey } = __require("crypto"), PUB_KEY_ALGS = ["RS256", "RS384", "RS512"], EC_KEY_ALGS = ["ES256", "ES384", "ES512"], RSA_KEY_ALGS = ["RS256", "RS384", "RS512"], HS_ALGS = ["HS256", "HS384", "HS512"];
     PS_SUPPORTED && (PUB_KEY_ALGS.splice(PUB_KEY_ALGS.length, 0, "PS256", "PS384", "PS512"), RSA_KEY_ALGS.splice(RSA_KEY_ALGS.length, 0, "PS256", "PS384", "PS512"));
     module.exports = function(jwtString, secretOrPublicKey, options, callback) {
@@ -20283,9 +20227,9 @@ var require_verify = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.includes@4.3.0/node_modules/lodash.includes/index.js
+// node_modules/lodash.includes/index.js
 var require_lodash = __commonJS({
-  "../../node_modules/.pnpm/lodash.includes@4.3.0/node_modules/lodash.includes/index.js"(exports, module) {
+  "node_modules/lodash.includes/index.js"(exports, module) {
     var INFINITY = 1 / 0, MAX_SAFE_INTEGER = 9007199254740991, MAX_INTEGER = 17976931348623157e292, NAN = NaN, argsTag = "[object Arguments]", funcTag = "[object Function]", genTag = "[object GeneratorFunction]", stringTag = "[object String]", symbolTag = "[object Symbol]", reTrim = /^\s+|\s+$/g, reIsBadHex = /^[-+]0x[0-9a-f]+$/i, reIsBinary = /^0b[01]+$/i, reIsOctal = /^0o[0-7]+$/i, reIsUint = /^(?:0|[1-9]\d*)$/, freeParseInt = parseInt;
     function arrayMap(array2, iteratee) {
       for (var index = -1, length = array2 ? array2.length : 0, result = Array(length); ++index < length; )
@@ -20445,9 +20389,9 @@ var require_lodash = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.isboolean@3.0.3/node_modules/lodash.isboolean/index.js
+// node_modules/lodash.isboolean/index.js
 var require_lodash2 = __commonJS({
-  "../../node_modules/.pnpm/lodash.isboolean@3.0.3/node_modules/lodash.isboolean/index.js"(exports, module) {
+  "node_modules/lodash.isboolean/index.js"(exports, module) {
     var boolTag = "[object Boolean]", objectProto = Object.prototype, objectToString = objectProto.toString;
     function isBoolean(value) {
       return value === !0 || value === !1 || isObjectLike(value) && objectToString.call(value) == boolTag;
@@ -20461,9 +20405,9 @@ var require_lodash2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.isinteger@4.0.4/node_modules/lodash.isinteger/index.js
+// node_modules/lodash.isinteger/index.js
 var require_lodash3 = __commonJS({
-  "../../node_modules/.pnpm/lodash.isinteger@4.0.4/node_modules/lodash.isinteger/index.js"(exports, module) {
+  "node_modules/lodash.isinteger/index.js"(exports, module) {
     var INFINITY = 1 / 0, MAX_INTEGER = 17976931348623157e292, NAN = NaN, symbolTag = "[object Symbol]", reTrim = /^\s+|\s+$/g, reIsBadHex = /^[-+]0x[0-9a-f]+$/i, reIsBinary = /^0b[01]+$/i, reIsOctal = /^0o[0-7]+$/i, freeParseInt = parseInt, objectProto = Object.prototype, objectToString = objectProto.toString;
     function isInteger(value) {
       return typeof value == "number" && value == toInteger(value);
@@ -20517,9 +20461,9 @@ var require_lodash3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.isnumber@3.0.3/node_modules/lodash.isnumber/index.js
+// node_modules/lodash.isnumber/index.js
 var require_lodash4 = __commonJS({
-  "../../node_modules/.pnpm/lodash.isnumber@3.0.3/node_modules/lodash.isnumber/index.js"(exports, module) {
+  "node_modules/lodash.isnumber/index.js"(exports, module) {
     var numberTag = "[object Number]", objectProto = Object.prototype, objectToString = objectProto.toString;
     function isObjectLike(value) {
       return !!value && typeof value == "object";
@@ -20533,9 +20477,9 @@ var require_lodash4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.isplainobject@4.0.6/node_modules/lodash.isplainobject/index.js
+// node_modules/lodash.isplainobject/index.js
 var require_lodash5 = __commonJS({
-  "../../node_modules/.pnpm/lodash.isplainobject@4.0.6/node_modules/lodash.isplainobject/index.js"(exports, module) {
+  "node_modules/lodash.isplainobject/index.js"(exports, module) {
     var objectTag = "[object Object]";
     function isHostObject(value) {
       var result = !1;
@@ -20572,9 +20516,9 @@ var require_lodash5 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.isstring@4.0.1/node_modules/lodash.isstring/index.js
+// node_modules/lodash.isstring/index.js
 var require_lodash6 = __commonJS({
-  "../../node_modules/.pnpm/lodash.isstring@4.0.1/node_modules/lodash.isstring/index.js"(exports, module) {
+  "node_modules/lodash.isstring/index.js"(exports, module) {
     var stringTag = "[object String]", objectProto = Object.prototype, objectToString = objectProto.toString, isArray = Array.isArray;
     function isObjectLike(value) {
       return !!value && typeof value == "object";
@@ -20588,9 +20532,9 @@ var require_lodash6 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/lodash.once@4.1.1/node_modules/lodash.once/index.js
+// node_modules/lodash.once/index.js
 var require_lodash7 = __commonJS({
-  "../../node_modules/.pnpm/lodash.once@4.1.1/node_modules/lodash.once/index.js"(exports, module) {
+  "node_modules/lodash.once/index.js"(exports, module) {
     var FUNC_ERROR_TEXT = "Expected a function", INFINITY = 1 / 0, MAX_INTEGER = 17976931348623157e292, NAN = NaN, symbolTag = "[object Symbol]", reTrim = /^\s+|\s+$/g, reIsBadHex = /^[-+]0x[0-9a-f]+$/i, reIsBinary = /^0b[01]+$/i, reIsOctal = /^0o[0-7]+$/i, freeParseInt = parseInt, objectProto = Object.prototype, objectToString = objectProto.toString;
     function before(n2, func) {
       var result;
@@ -20653,9 +20597,9 @@ var require_lodash7 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/sign.js
+// node_modules/jsonwebtoken/sign.js
 var require_sign = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/sign.js"(exports, module) {
+  "node_modules/jsonwebtoken/sign.js"(exports, module) {
     var timespan = require_timespan(), PS_SUPPORTED = require_psSupported(), validateAsymmetricKey = require_validateAsymmetricKey(), jws = require_jws(), includes = require_lodash(), isBoolean = require_lodash2(), isInteger = require_lodash3(), isNumber = require_lodash4(), isPlainObject3 = require_lodash5(), isString = require_lodash6(), once = require_lodash7(), { KeyObject, createSecretKey, createPrivateKey } = __require("crypto"), SUPPORTED_ALGS = ["RS256", "RS384", "RS512", "ES256", "ES384", "ES512", "HS256", "HS384", "HS512", "none"];
     PS_SUPPORTED && SUPPORTED_ALGS.splice(3, 0, "PS256", "PS384", "PS512");
     var sign_options_schema = {
@@ -20759,8 +20703,8 @@ var require_sign = __commonJS({
       if (isObjectPayload) {
         try {
           validatePayload(payload);
-        } catch (error45) {
-          return failure(error45);
+        } catch (error46) {
+          return failure(error46);
         }
         options.mutatePayload || (payload = Object.assign({}, payload));
       } else {
@@ -20776,14 +20720,14 @@ var require_sign = __commonJS({
         return failure(new Error('Bad "options.notBefore" option the payload already has an "nbf" property.'));
       try {
         validateOptions(options);
-      } catch (error45) {
-        return failure(error45);
+      } catch (error46) {
+        return failure(error46);
       }
       if (!options.allowInvalidAsymmetricKeyTypes)
         try {
           validateAsymmetricKey(header.alg, secretOrPrivateKey);
-        } catch (error45) {
-          return failure(error45);
+        } catch (error46) {
+          return failure(error46);
         }
       let timestamp = payload.iat || Math.floor(Date.now() / 1e3);
       if (options.noTimestamp ? delete payload.iat : isObjectPayload && (payload.iat = timestamp), typeof options.notBefore < "u") {
@@ -20834,9 +20778,9 @@ var require_sign = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/index.js
+// node_modules/jsonwebtoken/index.js
 var require_jsonwebtoken = __commonJS({
-  "../../node_modules/.pnpm/jsonwebtoken@9.0.2/node_modules/jsonwebtoken/index.js"(exports, module) {
+  "node_modules/jsonwebtoken/index.js"(exports, module) {
     module.exports = {
       decode: require_decode(),
       verify: require_verify(),
@@ -20848,11 +20792,11 @@ var require_jsonwebtoken = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+msal-node@3.8.0/node_modules/@azure/msal-node/lib/msal-node.cjs
+// node_modules/@azure/msal-node/lib/msal-node.cjs
 var require_msal_node = __commonJS({
-  "../../node_modules/.pnpm/@azure+msal-node@3.8.0/node_modules/@azure/msal-node/lib/msal-node.cjs"(exports) {
+  "node_modules/@azure/msal-node/lib/msal-node.cjs"(exports) {
     "use strict";
-    var http = __require("http"), https = __require("https"), uuid3 = (init_esm_node(), __toCommonJS(esm_node_exports)), crypto6 = __require("crypto"), msalCommon = require_lib2(), jwt2 = require_jsonwebtoken(), fs6 = __require("fs"), path2 = __require("path"), Serializer = class {
+    var http = __require("http"), https = __require("https"), uuid3 = (init_esm_node(), __toCommonJS(esm_node_exports)), crypto7 = __require("crypto"), msalCommon = require_lib2(), jwt2 = require_jsonwebtoken(), fs6 = __require("fs"), path2 = __require("path"), Serializer = class {
       static {
         __name(this, "Serializer");
       }
@@ -22204,22 +22148,22 @@ var require_msal_node = __commonJS({
        * @returns An object with the various components. Please cache this value insted of calling this multiple times on the same url.
        */
       getUrlComponents() {
-        let regEx = RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?"), match = this.urlString.match(regEx);
-        if (!match)
+        let regEx = RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?"), match2 = this.urlString.match(regEx);
+        if (!match2)
           throw createClientConfigurationError(urlParseError);
         let urlComponents = {
-          Protocol: match[1],
-          HostNameAndPort: match[4],
-          AbsolutePath: match[5],
-          QueryString: match[7]
+          Protocol: match2[1],
+          HostNameAndPort: match2[4],
+          AbsolutePath: match2[5],
+          QueryString: match2[7]
         }, pathSegments = urlComponents.AbsolutePath.split("/");
         return pathSegments = pathSegments.filter((val) => val && val.length > 0), urlComponents.PathSegments = pathSegments, urlComponents.QueryString && urlComponents.QueryString.endsWith("/") && (urlComponents.QueryString = urlComponents.QueryString.substring(0, urlComponents.QueryString.length - 1)), urlComponents;
       }
       static getDomainFromUrl(url2) {
-        let regEx = RegExp("^([^:/?#]+://)?([^/?#]*)"), match = url2.match(regEx);
-        if (!match)
+        let regEx = RegExp("^([^:/?#]+://)?([^/?#]*)"), match2 = url2.match(regEx);
+        if (!match2)
           throw createClientConfigurationError(urlParseError);
-        return match[2];
+        return match2[2];
       }
       static getAbsoluteUrl(relativeUrl, baseUrl) {
         if (relativeUrl[0] === Constants$1.FORWARD_SLASH) {
@@ -24313,7 +24257,7 @@ var require_msal_node = __commonJS({
        */
       async getCloudDiscoveryMetadataFromNetwork() {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.AuthorityGetCloudDiscoveryMetadataFromNetwork, this.correlationId);
-        let instanceDiscoveryEndpoint = `${Constants$1.AAD_INSTANCE_DISCOVERY_ENDPT}${this.canonicalAuthority}oauth2/v2.0/authorize`, options = {}, match = null;
+        let instanceDiscoveryEndpoint = `${Constants$1.AAD_INSTANCE_DISCOVERY_ENDPT}${this.canonicalAuthority}oauth2/v2.0/authorize`, options = {}, match2 = null;
         try {
           let response = await this.networkInterface.sendGetRequestAsync(instanceDiscoveryEndpoint, options), typedResponseBody, metadata;
           if (isCloudInstanceDiscoveryResponse(response.body))
@@ -24324,21 +24268,21 @@ var require_msal_node = __commonJS({
             this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error is ${typedResponseBody.error}`), this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error description is ${typedResponseBody.error_description}`), this.logger.warning("Setting the value of the CloudInstanceDiscoveryMetadata (returned from the network) to []"), metadata = [];
           } else
             return this.logger.error("AAD did not return a CloudInstanceDiscoveryResponse or CloudInstanceDiscoveryErrorResponse"), null;
-          this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request."), match = getCloudDiscoveryMetadataFromNetworkResponse(metadata, this.hostnameAndPort);
-        } catch (error45) {
-          if (error45 instanceof AuthError)
+          this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request."), match2 = getCloudDiscoveryMetadataFromNetworkResponse(metadata, this.hostnameAndPort);
+        } catch (error46) {
+          if (error46 instanceof AuthError)
             this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
-Error: ${error45.errorCode}
-Error Description: ${error45.errorMessage}`);
+Error: ${error46.errorCode}
+Error Description: ${error46.errorMessage}`);
           else {
-            let typedError = error45;
+            let typedError = error46;
             this.logger.error(`A non-MSALJS error was thrown while attempting to get the cloud instance discovery metadata.
 Error: ${typedError.name}
 Error Description: ${typedError.message}`);
           }
           return null;
         }
-        return match || (this.logger.warning("The developer's authority was not found within the CloudInstanceDiscoveryMetadata returned from the network request."), this.logger.verbose("Creating custom Authority for custom domain scenario."), match = _Authority.createCloudDiscoveryMetadataFromHost(this.hostnameAndPort)), match;
+        return match2 || (this.logger.warning("The developer's authority was not found within the CloudInstanceDiscoveryMetadata returned from the network request."), this.logger.verbose("Creating custom Authority for custom domain scenario."), match2 = _Authority.createCloudDiscoveryMetadataFromHost(this.hostnameAndPort)), match2;
       }
       /**
        * Helper function to determine if this host is included in the knownAuthorities config option
@@ -24595,8 +24539,8 @@ Error Description: ${typedError.message}`);
       static {
         __name(this, "NetworkError");
       }
-      constructor(error45, httpStatus, responseHeaders) {
-        super(error45.errorCode, error45.errorMessage, error45.subError), Object.setPrototypeOf(this, _NetworkError.prototype), this.name = "NetworkError", this.error = error45, this.httpStatus = httpStatus, this.responseHeaders = responseHeaders;
+      constructor(error46, httpStatus, responseHeaders) {
+        super(error46.errorCode, error46.errorMessage, error46.subError), Object.setPrototypeOf(this, _NetworkError.prototype), this.name = "NetworkError", this.error = error46, this.httpStatus = httpStatus, this.responseHeaders = responseHeaders;
       }
     };
     var BaseClient = class {
@@ -25595,9 +25539,9 @@ ${serverError}`);
        * API to cache token failures for MSER data capture
        * @param error
        */
-      cacheFailedRequest(error45) {
+      cacheFailedRequest(error46) {
         let lastRequests = this.getLastRequests();
-        lastRequests.errors.length >= SERVER_TELEM_CONSTANTS.MAX_CACHED_ERRORS && (lastRequests.failedRequests.shift(), lastRequests.failedRequests.shift(), lastRequests.errors.shift()), lastRequests.failedRequests.push(this.apiId, this.correlationId), error45 instanceof Error && error45 && error45.toString() ? error45 instanceof AuthError ? error45.subError ? lastRequests.errors.push(error45.subError) : error45.errorCode ? lastRequests.errors.push(error45.errorCode) : lastRequests.errors.push(error45.toString()) : lastRequests.errors.push(error45.toString()) : lastRequests.errors.push(SERVER_TELEM_CONSTANTS.UNKNOWN_ERROR), this.cacheManager.setServerTelemetry(this.telemetryCacheKey, lastRequests, this.correlationId);
+        lastRequests.errors.length >= SERVER_TELEM_CONSTANTS.MAX_CACHED_ERRORS && (lastRequests.failedRequests.shift(), lastRequests.failedRequests.shift(), lastRequests.errors.shift()), lastRequests.failedRequests.push(this.apiId, this.correlationId), error46 instanceof Error && error46 && error46.toString() ? error46 instanceof AuthError ? error46.subError ? lastRequests.errors.push(error46.subError) : error46.errorCode ? lastRequests.errors.push(error46.errorCode) : lastRequests.errors.push(error46.toString()) : lastRequests.errors.push(error46.toString()) : lastRequests.errors.push(SERVER_TELEM_CONSTANTS.UNKNOWN_ERROR), this.cacheManager.setServerTelemetry(this.telemetryCacheKey, lastRequests, this.correlationId);
       }
       /**
        * Update server telemetry cache entry by incrementing cache hit counter
@@ -26347,7 +26291,7 @@ Headers: ${JSON.stringify(headers)}`
        * @param buffer
        */
       sha256(buffer) {
-        return crypto6.createHash(Hash.SHA256).update(buffer).digest();
+        return crypto7.createHash(Hash.SHA256).update(buffer).digest();
       }
     }, PkceGenerator = class {
       static {
@@ -26370,7 +26314,7 @@ Headers: ${JSON.stringify(headers)}`
       generateCodeVerifier() {
         let charArr = [], maxNumber = 256 - 256 % CharSet.CV_CHARSET.length;
         for (; charArr.length <= RANDOM_OCTET_SIZE; ) {
-          let byte = crypto6.randomBytes(1)[0];
+          let byte = crypto7.randomBytes(1)[0];
           if (byte >= maxNumber)
             continue;
           let index = byte % CharSet.CV_CHARSET.length;
@@ -27264,13 +27208,13 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Silent flow client created", validRequest.correlationId);
           try {
             return await this.tokenCache.overwriteCache(), await this.acquireCachedTokenSilent(validRequest, silentFlowClient, clientConfiguration);
-          } catch (error45) {
-            if (error45 instanceof ClientAuthError && error45.errorCode === tokenRefreshRequired)
+          } catch (error46) {
+            if (error46 instanceof ClientAuthError && error46.errorCode === tokenRefreshRequired)
               return new RefreshTokenClient(clientConfiguration).acquireTokenByRefreshToken(validRequest);
-            throw error45;
+            throw error46;
           }
-        } catch (error45) {
-          throw error45 instanceof AuthError && error45.setCorrelationId(validRequest.correlationId), serverTelemetryManager.cacheFailedRequest(error45), error45;
+        } catch (error46) {
+          throw error46 instanceof AuthError && error46.setCorrelationId(validRequest.correlationId), serverTelemetryManager.cacheFailedRequest(error46), error46;
         }
       }
       async acquireCachedTokenSilent(validRequest, silentFlowClient, clientConfiguration) {
@@ -28246,8 +28190,8 @@ Headers: ${JSON.stringify(headers)}`
         let networkClientHelper = this.disableInternalRetries ? this.networkClient : new HttpClientWithRetries(this.networkClient, networkRequest.retryPolicy, this.logger), reqTimestamp = nowSeconds(), response;
         try {
           networkRequest.httpMethod === HttpMethod.POST ? response = await networkClientHelper.sendPostRequestAsync(networkRequest.computeUri(), networkRequestOptions) : response = await networkClientHelper.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
-        } catch (error45) {
-          throw error45 instanceof AuthError ? error45 : createClientAuthError(networkError);
+        } catch (error46) {
+          throw error46 instanceof AuthError ? error46 : createClientAuthError(networkError);
         }
         let responseHandler = new ResponseHandler(managedIdentityId.id, this.nodeStorage, this.cryptoProvider, this.logger, null, null), serverTokenResponse = await this.getServerTokenResponseAsync(response, networkClientHelper, networkRequest, networkRequestOptions);
         return responseHandler.validateTokenResponse(serverTokenResponse, refreshAccessToken), responseHandler.handleServerTokenResponse(serverTokenResponse, fakeAuthority, reqTimestamp, managedIdentityRequest);
@@ -28433,8 +28377,8 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.info("[Managed Identity] Adding authorization header to the request."), networkRequest.headers[ManagedIdentityHeaders.AUTHORIZATION_HEADER_NAME] = authHeaderValue;
           try {
             retryResponse = await networkClient.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
-          } catch (error45) {
-            throw error45 instanceof AuthError ? error45 : createClientAuthError(networkError);
+          } catch (error46) {
+            throw error46 instanceof AuthError ? error46 : createClientAuthError(networkError);
           }
         }
         return this.getServerTokenResponse(retryResponse || originalResponse);
@@ -28849,9 +28793,9 @@ Headers: ${JSON.stringify(headers)}`
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/random.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/random.js
 var require_random = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/random.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/random.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getRandomIntegerInclusive = getRandomIntegerInclusive;
@@ -28862,9 +28806,9 @@ var require_random = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/delay.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/delay.js
 var require_delay = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/delay.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/delay.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.calculateRetryDelay = calculateRetryDelay;
@@ -28877,9 +28821,9 @@ var require_delay = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/object.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/object.js
 var require_object = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/object.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/object.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isObject = isObject2;
@@ -28890,9 +28834,9 @@ var require_object = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/error.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/error.js
 var require_error3 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/error.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/error.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isError = isError;
@@ -28908,9 +28852,9 @@ var require_error3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sha256.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sha256.js
 var require_sha256 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sha256.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sha256.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.computeSha256Hmac = computeSha256Hmac;
@@ -28928,9 +28872,9 @@ var require_sha256 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/uuidUtils.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/uuidUtils.js
 var require_uuidUtils = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/uuidUtils.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/uuidUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.randomUUID = randomUUID;
@@ -28942,9 +28886,9 @@ var require_uuidUtils = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/checkEnvironment.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/checkEnvironment.js
 var require_checkEnvironment = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/checkEnvironment.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/checkEnvironment.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isReactNative = exports.isNodeRuntime = exports.isNodeLike = exports.isBun = exports.isDeno = exports.isWebWorker = exports.isBrowser = void 0;
@@ -28958,9 +28902,9 @@ var require_checkEnvironment = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/bytesEncoding.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/bytesEncoding.js
 var require_bytesEncoding = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/bytesEncoding.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/bytesEncoding.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.uint8ArrayToString = uint8ArrayToString;
@@ -28976,9 +28920,9 @@ var require_bytesEncoding = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sanitizer.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sanitizer.js
 var require_sanitizer = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sanitizer.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/sanitizer.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.Sanitizer = void 0;
@@ -29099,9 +29043,9 @@ var require_sanitizer = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/internal.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/internal.js
 var require_internal2 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/internal.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/internal.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.Sanitizer = exports.uint8ArrayToString = exports.stringToUint8Array = exports.isWebWorker = exports.isReactNative = exports.isDeno = exports.isNodeRuntime = exports.isNodeLike = exports.isBun = exports.isBrowser = exports.randomUUID = exports.computeSha256Hmac = exports.computeSha256Hash = exports.isError = exports.isObject = exports.getRandomIntegerInclusive = exports.calculateRetryDelay = void 0;
@@ -29168,9 +29112,9 @@ var require_internal2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/aborterUtils.js
+// node_modules/@azure/core-util/dist/commonjs/aborterUtils.js
 var require_aborterUtils = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/aborterUtils.js"(exports) {
+  "node_modules/@azure/core-util/dist/commonjs/aborterUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.cancelablePromiseRace = cancelablePromiseRace;
@@ -29190,9 +29134,9 @@ var require_aborterUtils = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+abort-controller@2.1.2/node_modules/@azure/abort-controller/dist/commonjs/AbortError.js
+// node_modules/@azure/abort-controller/dist/commonjs/AbortError.js
 var require_AbortError = __commonJS({
-  "../../node_modules/.pnpm/@azure+abort-controller@2.1.2/node_modules/@azure/abort-controller/dist/commonjs/AbortError.js"(exports) {
+  "node_modules/@azure/abort-controller/dist/commonjs/AbortError.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AbortError = void 0;
@@ -29208,9 +29152,9 @@ var require_AbortError = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+abort-controller@2.1.2/node_modules/@azure/abort-controller/dist/commonjs/index.js
+// node_modules/@azure/abort-controller/dist/commonjs/index.js
 var require_commonjs3 = __commonJS({
-  "../../node_modules/.pnpm/@azure+abort-controller@2.1.2/node_modules/@azure/abort-controller/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/abort-controller/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AbortError = void 0;
@@ -29221,9 +29165,9 @@ var require_commonjs3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/createAbortablePromise.js
+// node_modules/@azure/core-util/dist/commonjs/createAbortablePromise.js
 var require_createAbortablePromise = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/createAbortablePromise.js"(exports) {
+  "node_modules/@azure/core-util/dist/commonjs/createAbortablePromise.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createAbortablePromise = createAbortablePromise;
@@ -29260,9 +29204,9 @@ var require_createAbortablePromise = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/delay.js
+// node_modules/@azure/core-util/dist/commonjs/delay.js
 var require_delay2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/delay.js"(exports) {
+  "node_modules/@azure/core-util/dist/commonjs/delay.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.delay = delay;
@@ -29287,9 +29231,9 @@ var require_delay2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/error.js
+// node_modules/@azure/core-util/dist/commonjs/error.js
 var require_error4 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/error.js"(exports) {
+  "node_modules/@azure/core-util/dist/commonjs/error.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getErrorMessage = getErrorMessage;
@@ -29311,9 +29255,9 @@ var require_error4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/typeGuards.js
+// node_modules/@azure/core-util/dist/commonjs/typeGuards.js
 var require_typeGuards = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/typeGuards.js"(exports) {
+  "node_modules/@azure/core-util/dist/commonjs/typeGuards.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isDefined = isDefined;
@@ -29339,9 +29283,9 @@ var require_typeGuards = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/index.js
+// node_modules/@azure/core-util/dist/commonjs/index.js
 var require_commonjs4 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-util@1.13.1/node_modules/@azure/core-util/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/core-util/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isWebWorker = exports.isReactNative = exports.isNodeRuntime = exports.isNodeLike = exports.isNode = exports.isDeno = exports.isBun = exports.isBrowser = exports.objectHasProperty = exports.isObjectWithProperties = exports.isDefined = exports.getErrorMessage = exports.delay = exports.createAbortablePromise = exports.cancelablePromiseRace = void 0;
@@ -29427,9 +29371,9 @@ var require_commonjs4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/msal.js
+// node_modules/@azure/identity/dist/commonjs/msal/msal.js
 var require_msal = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/msal.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/msal/msal.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.msalCommon = void 0;
@@ -29438,9 +29382,9 @@ var require_msal = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/utils.js
+// node_modules/@azure/identity/dist/commonjs/msal/utils.js
 var require_utils3 = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/utils.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/msal/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.defaultLoggerCallback = void 0;
@@ -29457,17 +29401,17 @@ var require_utils3 = __commonJS({
     exports.deserializeAuthenticationRecord = deserializeAuthenticationRecord;
     var errors_js_1 = require_errors(), logging_js_1 = require_logging(), constants_js_1 = require_constants(), core_util_1 = require_commonjs4(), abort_controller_1 = require_commonjs3(), msal_js_1 = require_msal(), logger6 = (0, logging_js_1.credentialLogger)("IdentityUtils"), LatestAuthenticationRecordVersion = "1.0";
     function ensureValidMsalToken(scopes, msalToken, getTokenOptions) {
-      let error45 = /* @__PURE__ */ __name((message) => (logger6.getToken.info(message), new errors_js_1.AuthenticationRequiredError({
+      let error46 = /* @__PURE__ */ __name((message) => (logger6.getToken.info(message), new errors_js_1.AuthenticationRequiredError({
         scopes: Array.isArray(scopes) ? scopes : [scopes],
         getTokenOptions,
         message
       })), "error");
       if (!msalToken)
-        throw error45("No response");
+        throw error46("No response");
       if (!msalToken.expiresOn)
-        throw error45('Response had no "expiresOn" property.');
+        throw error46('Response had no "expiresOn" property.');
       if (!msalToken.accessToken)
-        throw error45('Response had no "accessToken" property.');
+        throw error46('Response had no "accessToken" property.');
     }
     __name(ensureValidMsalToken, "ensureValidMsalToken");
     function getAuthorityHost(options) {
@@ -29520,12 +29464,12 @@ var require_utils3 = __commonJS({
       return (0, core_util_1.randomUUID)();
     }
     __name(randomUUID, "randomUUID");
-    function handleMsalError(scopes, error45, getTokenOptions) {
-      if (error45.name === "AuthError" || error45.name === "ClientAuthError" || error45.name === "BrowserAuthError") {
-        let msalError = error45;
+    function handleMsalError(scopes, error46, getTokenOptions) {
+      if (error46.name === "AuthError" || error46.name === "ClientAuthError" || error46.name === "BrowserAuthError") {
+        let msalError = error46;
         switch (msalError.errorCode) {
           case "endpoints_resolution_error":
-            return logger6.info((0, logging_js_1.formatError)(scopes, error45.message)), new errors_js_1.CredentialUnavailableError(error45.message);
+            return logger6.info((0, logging_js_1.formatError)(scopes, error46.message)), new errors_js_1.CredentialUnavailableError(error46.message);
           case "device_code_polling_cancelled":
             return new abort_controller_1.AbortError("The authentication has been aborted by the caller.");
           case "consent_required":
@@ -29534,11 +29478,11 @@ var require_utils3 = __commonJS({
             logger6.info((0, logging_js_1.formatError)(scopes, `Authentication returned errorCode ${msalError.errorCode}`));
             break;
           default:
-            logger6.info((0, logging_js_1.formatError)(scopes, `Failed to acquire token: ${error45.message}`));
+            logger6.info((0, logging_js_1.formatError)(scopes, `Failed to acquire token: ${error46.message}`));
             break;
         }
       }
-      return error45.name === "ClientConfigurationError" || error45.name === "BrowserConfigurationAuthError" || error45.name === "AbortError" || error45.name === "AuthenticationError" ? error45 : error45.name === "NativeAuthError" ? (logger6.info((0, logging_js_1.formatError)(scopes, `Error from the native broker: ${error45.message} with status code: ${error45.statusCode}`)), error45) : new errors_js_1.AuthenticationRequiredError({ scopes, getTokenOptions, message: error45.message });
+      return error46.name === "ClientConfigurationError" || error46.name === "BrowserConfigurationAuthError" || error46.name === "AbortError" || error46.name === "AuthenticationError" ? error46 : error46.name === "NativeAuthError" ? (logger6.info((0, logging_js_1.formatError)(scopes, `Error from the native broker: ${error46.message} with status code: ${error46.statusCode}`)), error46) : new errors_js_1.AuthenticationRequiredError({ scopes, getTokenOptions, message: error46.message });
     }
     __name(handleMsalError, "handleMsalError");
     function publicToMsal(account) {
@@ -29576,9 +29520,9 @@ var require_utils3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/base64.js
+// node_modules/@azure/core-client/dist/commonjs/base64.js
 var require_base64 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/base64.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/base64.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.encodeString = encodeString;
@@ -29604,9 +29548,9 @@ var require_base64 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/interfaces.js
+// node_modules/@azure/core-client/dist/commonjs/interfaces.js
 var require_interfaces = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/interfaces.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/interfaces.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.XML_CHARKEY = exports.XML_ATTRKEY = void 0;
@@ -29615,9 +29559,9 @@ var require_interfaces = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/utils.js
+// node_modules/@azure/core-client/dist/commonjs/utils.js
 var require_utils4 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/utils.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isPrimitiveBody = isPrimitiveBody;
@@ -29684,9 +29628,9 @@ var require_utils4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/serializer.js
+// node_modules/@azure/core-client/dist/commonjs/serializer.js
 var require_serializer = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/serializer.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/serializer.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.MapperTypeNames = void 0;
@@ -30184,9 +30128,9 @@ var require_serializer = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/abort-controller/AbortError.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/abort-controller/AbortError.js
 var require_AbortError2 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/abort-controller/AbortError.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/abort-controller/AbortError.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AbortError = void 0;
@@ -30202,9 +30146,9 @@ var require_AbortError2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/httpHeaders.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/httpHeaders.js
 var require_httpHeaders = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/httpHeaders.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/httpHeaders.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createHttpHeaders = createHttpHeaders;
@@ -30291,25 +30235,25 @@ var require_httpHeaders = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/schemes.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/schemes.js
 var require_schemes = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/schemes.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/schemes.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/oauth2Flows.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/oauth2Flows.js
 var require_oauth2Flows = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/oauth2Flows.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/oauth2Flows.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/pipelineRequest.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/pipelineRequest.js
 var require_pipelineRequest = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/pipelineRequest.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/pipelineRequest.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createPipelineRequest = createPipelineRequest;
@@ -30347,9 +30291,9 @@ var require_pipelineRequest = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/pipeline.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/pipeline.js
 var require_pipeline = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/pipeline.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/pipeline.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createEmptyPipeline = createEmptyPipeline;
@@ -30470,9 +30414,9 @@ var require_pipeline = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/inspect.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/inspect.js
 var require_inspect = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/inspect.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/inspect.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.custom = void 0;
@@ -30481,9 +30425,9 @@ var require_inspect = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/restError.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/restError.js
 var require_restError = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/restError.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/restError.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.RestError = void 0;
@@ -30550,9 +30494,9 @@ var require_restError = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/log.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/log.js
 var require_log2 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/log.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/log.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.logger = void 0;
@@ -30561,9 +30505,9 @@ var require_log2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/nodeHttpClient.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/nodeHttpClient.js
 var require_nodeHttpClient = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/nodeHttpClient.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/nodeHttpClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getBodyLength = getBodyLength;
@@ -30759,9 +30703,9 @@ var require_nodeHttpClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/defaultHttpClient.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/defaultHttpClient.js
 var require_defaultHttpClient = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/defaultHttpClient.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/defaultHttpClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createDefaultHttpClient = createDefaultHttpClient;
@@ -30773,9 +30717,9 @@ var require_defaultHttpClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/logPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/logPolicy.js
 var require_logPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/logPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/logPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.logPolicyName = void 0;
@@ -30802,9 +30746,9 @@ var require_logPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/redirectPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/redirectPolicy.js
 var require_redirectPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/redirectPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/redirectPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.redirectPolicyName = void 0;
@@ -30836,9 +30780,9 @@ var require_redirectPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgentPlatform.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgentPlatform.js
 var require_userAgentPlatform = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgentPlatform.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgentPlatform.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getHeaderName = getHeaderName;
@@ -30859,9 +30803,9 @@ var require_userAgentPlatform = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/constants.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/constants.js
 var require_constants3 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/constants.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/constants.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DEFAULT_RETRY_POLICY_COUNT = exports.SDK_VERSION = void 0;
@@ -30870,9 +30814,9 @@ var require_constants3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgent.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgent.js
 var require_userAgent = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgent.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/userAgent.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getUserAgentHeaderName = getUserAgentHeaderName;
@@ -30901,9 +30845,9 @@ var require_userAgent = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/userAgentPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/userAgentPolicy.js
 var require_userAgentPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/userAgentPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/userAgentPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.userAgentPolicyName = void 0;
@@ -30923,9 +30867,9 @@ var require_userAgentPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/decompressResponsePolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/decompressResponsePolicy.js
 var require_decompressResponsePolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/decompressResponsePolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/decompressResponsePolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.decompressResponsePolicyName = void 0;
@@ -30943,9 +30887,9 @@ var require_decompressResponsePolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/helpers.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/helpers.js
 var require_helpers = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/helpers.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/helpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.delay = delay;
@@ -30976,9 +30920,9 @@ var require_helpers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/throttlingRetryStrategy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/throttlingRetryStrategy.js
 var require_throttlingRetryStrategy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/throttlingRetryStrategy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/throttlingRetryStrategy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isThrottlingRetryResponse = isThrottlingRetryResponse;
@@ -31021,9 +30965,9 @@ var require_throttlingRetryStrategy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/exponentialRetryStrategy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/exponentialRetryStrategy.js
 var require_exponentialRetryStrategy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/exponentialRetryStrategy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/retryStrategies/exponentialRetryStrategy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.exponentialRetryStrategy = exponentialRetryStrategy;
@@ -31055,9 +30999,9 @@ var require_exponentialRetryStrategy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/retryPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/retryPolicy.js
 var require_retryPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/retryPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/retryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.retryPolicy = retryPolicy;
@@ -31123,9 +31067,9 @@ var require_retryPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/defaultRetryPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/defaultRetryPolicy.js
 var require_defaultRetryPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/defaultRetryPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/defaultRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.defaultRetryPolicyName = void 0;
@@ -31144,9 +31088,9 @@ var require_defaultRetryPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/formDataPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/formDataPolicy.js
 var require_formDataPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/formDataPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/formDataPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.formDataPolicyName = void 0;
@@ -31216,9 +31160,9 @@ var require_formDataPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/agent-base@7.1.4/node_modules/agent-base/dist/helpers.js
+// node_modules/agent-base/dist/helpers.js
 var require_helpers2 = __commonJS({
-  "../../node_modules/.pnpm/agent-base@7.1.4/node_modules/agent-base/dist/helpers.js"(exports) {
+  "node_modules/agent-base/dist/helpers.js"(exports) {
     "use strict";
     var __createBinding2 = exports && exports.__createBinding || (Object.create ? (function(o3, m2, k2, k22) {
       k22 === void 0 && (k22 = k2);
@@ -31271,9 +31215,9 @@ var require_helpers2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/agent-base@7.1.4/node_modules/agent-base/dist/index.js
+// node_modules/agent-base/dist/index.js
 var require_dist = __commonJS({
-  "../../node_modules/.pnpm/agent-base@7.1.4/node_modules/agent-base/dist/index.js"(exports) {
+  "node_modules/agent-base/dist/index.js"(exports) {
     "use strict";
     var __createBinding2 = exports && exports.__createBinding || (Object.create ? (function(o3, m2, k2, k22) {
       k22 === void 0 && (k22 = k2);
@@ -31384,9 +31328,9 @@ var require_dist = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/https-proxy-agent@7.0.6/node_modules/https-proxy-agent/dist/parse-proxy-response.js
+// node_modules/https-proxy-agent/dist/parse-proxy-response.js
 var require_parse_proxy_response = __commonJS({
-  "../../node_modules/.pnpm/https-proxy-agent@7.0.6/node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports) {
+  "node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports) {
     "use strict";
     var __importDefault2 = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { default: mod };
@@ -31454,9 +31398,9 @@ var require_parse_proxy_response = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/https-proxy-agent@7.0.6/node_modules/https-proxy-agent/dist/index.js
+// node_modules/https-proxy-agent/dist/index.js
 var require_dist2 = __commonJS({
-  "../../node_modules/.pnpm/https-proxy-agent@7.0.6/node_modules/https-proxy-agent/dist/index.js"(exports) {
+  "node_modules/https-proxy-agent/dist/index.js"(exports) {
     "use strict";
     var __createBinding2 = exports && exports.__createBinding || (Object.create ? (function(o3, m2, k2, k22) {
       k22 === void 0 && (k22 = k2);
@@ -31550,9 +31494,9 @@ var require_dist2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/http-proxy-agent@7.0.2/node_modules/http-proxy-agent/dist/index.js
+// node_modules/http-proxy-agent/dist/index.js
 var require_dist3 = __commonJS({
-  "../../node_modules/.pnpm/http-proxy-agent@7.0.2/node_modules/http-proxy-agent/dist/index.js"(exports) {
+  "node_modules/http-proxy-agent/dist/index.js"(exports) {
     "use strict";
     var __createBinding2 = exports && exports.__createBinding || (Object.create ? (function(o3, m2, k2, k22) {
       k22 === void 0 && (k22 = k2);
@@ -31628,9 +31572,9 @@ var require_dist3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/proxyPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/proxyPolicy.js
 var require_proxyPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/proxyPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/proxyPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.globalNoProxyList = exports.proxyPolicyName = void 0;
@@ -31722,9 +31666,9 @@ var require_proxyPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/agentPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/agentPolicy.js
 var require_agentPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/agentPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/agentPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.agentPolicyName = void 0;
@@ -31740,9 +31684,9 @@ var require_agentPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/tlsPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/tlsPolicy.js
 var require_tlsPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/tlsPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/tlsPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.tlsPolicyName = void 0;
@@ -31758,9 +31702,9 @@ var require_tlsPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/typeGuards.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/typeGuards.js
 var require_typeGuards2 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/typeGuards.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/typeGuards.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isNodeReadableStream = isNodeReadableStream;
@@ -31791,9 +31735,9 @@ var require_typeGuards2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/concat.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/util/concat.js
 var require_concat = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/concat.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/util/concat.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.concat = concat;
@@ -31838,9 +31782,9 @@ var require_concat = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/multipartPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/multipartPolicy.js
 var require_multipartPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/multipartPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/multipartPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.multipartPolicyName = void 0;
@@ -31924,9 +31868,9 @@ var require_multipartPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/createPipelineFromOptions.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/createPipelineFromOptions.js
 var require_createPipelineFromOptions = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/createPipelineFromOptions.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/createPipelineFromOptions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createPipelineFromOptions = createPipelineFromOptions;
@@ -31939,9 +31883,9 @@ var require_createPipelineFromOptions = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/apiVersionPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/apiVersionPolicy.js
 var require_apiVersionPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/apiVersionPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/apiVersionPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.apiVersionPolicyName = void 0;
@@ -31960,9 +31904,9 @@ var require_apiVersionPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/credentials.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/credentials.js
 var require_credentials = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/credentials.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/auth/credentials.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isOAuth2TokenCredential = isOAuth2TokenCredential;
@@ -31988,9 +31932,9 @@ var require_credentials = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/checkInsecureConnection.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/checkInsecureConnection.js
 var require_checkInsecureConnection = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/checkInsecureConnection.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/checkInsecureConnection.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ensureSecureConnection = ensureSecureConnection;
@@ -32020,9 +31964,9 @@ var require_checkInsecureConnection = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/apiKeyAuthenticationPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/apiKeyAuthenticationPolicy.js
 var require_apiKeyAuthenticationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/apiKeyAuthenticationPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/apiKeyAuthenticationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.apiKeyAuthenticationPolicyName = void 0;
@@ -32047,9 +31991,9 @@ var require_apiKeyAuthenticationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/basicAuthenticationPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/basicAuthenticationPolicy.js
 var require_basicAuthenticationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/basicAuthenticationPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/basicAuthenticationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.basicAuthenticationPolicyName = void 0;
@@ -32071,9 +32015,9 @@ var require_basicAuthenticationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/bearerAuthenticationPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/bearerAuthenticationPolicy.js
 var require_bearerAuthenticationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/bearerAuthenticationPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/bearerAuthenticationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.bearerAuthenticationPolicyName = void 0;
@@ -32097,9 +32041,9 @@ var require_bearerAuthenticationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/oauth2AuthenticationPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/oauth2AuthenticationPolicy.js
 var require_oauth2AuthenticationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/oauth2AuthenticationPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/auth/oauth2AuthenticationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.oauth2AuthenticationPolicyName = void 0;
@@ -32125,9 +32069,9 @@ var require_oauth2AuthenticationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/clientHelpers.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/clientHelpers.js
 var require_clientHelpers = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/clientHelpers.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/clientHelpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createDefaultPipeline = createDefaultPipeline;
@@ -32147,9 +32091,9 @@ var require_clientHelpers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/multipart.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/multipart.js
 var require_multipart = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/multipart.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/multipart.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.buildBodyPart = buildBodyPart;
@@ -32227,9 +32171,9 @@ var require_multipart = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/sendRequest.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/sendRequest.js
 var require_sendRequest = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/sendRequest.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/sendRequest.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.sendRequest = sendRequest;
@@ -32320,9 +32264,9 @@ var require_sendRequest = __commonJS({
         return String(bodyToParse);
       try {
         return bodyToParse ? JSON.parse(bodyToParse) : void 0;
-      } catch (error45) {
+      } catch (error46) {
         if (firstType === "application/json")
-          throw createParseError(response, error45);
+          throw createParseError(response, error46);
         return String(bodyToParse);
       }
     }
@@ -32340,9 +32284,9 @@ var require_sendRequest = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/urlHelpers.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/urlHelpers.js
 var require_urlHelpers = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/urlHelpers.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/urlHelpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.buildRequestUrl = buildRequestUrl;
@@ -32431,9 +32375,9 @@ var require_urlHelpers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/getClient.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/getClient.js
 var require_getClient = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/getClient.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/getClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getClient = getClient;
@@ -32488,9 +32432,9 @@ var require_getClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/operationOptionHelpers.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/operationOptionHelpers.js
 var require_operationOptionHelpers = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/operationOptionHelpers.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/operationOptionHelpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.operationOptionsToRequestParameters = operationOptionsToRequestParameters;
@@ -32510,9 +32454,9 @@ var require_operationOptionHelpers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/restError.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/client/restError.js
 var require_restError2 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/client/restError.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/client/restError.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createRestError = createRestError;
@@ -32543,9 +32487,9 @@ var require_restError2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/index.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/index.js
 var require_commonjs5 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/index.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createRestError = exports.operationOptionsToRequestParameters = exports.getClient = exports.createDefaultHttpClient = exports.uint8ArrayToString = exports.stringToUint8Array = exports.isRestError = exports.RestError = exports.createEmptyPipeline = exports.createPipelineRequest = exports.createHttpHeaders = exports.TypeSpecRuntimeLogger = exports.setLogLevel = exports.getLogLevel = exports.createClientLogger = exports.AbortError = void 0;
@@ -32613,9 +32557,9 @@ var require_commonjs5 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/pipeline.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/pipeline.js
 var require_pipeline2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/pipeline.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/pipeline.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createEmptyPipeline = createEmptyPipeline;
@@ -32627,9 +32571,9 @@ var require_pipeline2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/log.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/log.js
 var require_log3 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/log.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/log.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.logger = void 0;
@@ -32638,9 +32582,9 @@ var require_log3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/exponentialRetryPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/exponentialRetryPolicy.js
 var require_exponentialRetryPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/exponentialRetryPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/exponentialRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.exponentialRetryPolicyName = void 0;
@@ -32661,9 +32605,9 @@ var require_exponentialRetryPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/systemErrorRetryPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/systemErrorRetryPolicy.js
 var require_systemErrorRetryPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/systemErrorRetryPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/systemErrorRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.systemErrorRetryPolicyName = void 0;
@@ -32687,9 +32631,9 @@ var require_systemErrorRetryPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/throttlingRetryPolicy.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/throttlingRetryPolicy.js
 var require_throttlingRetryPolicy = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/throttlingRetryPolicy.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/throttlingRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.throttlingRetryPolicyName = void 0;
@@ -32708,9 +32652,9 @@ var require_throttlingRetryPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/internal.js
+// node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/internal.js
 var require_internal3 = __commonJS({
-  "../../node_modules/.pnpm/@typespec+ts-http-runtime@0.3.1/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/internal.js"(exports) {
+  "node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/internal.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.userAgentPolicyName = exports.userAgentPolicy = exports.tlsPolicyName = exports.tlsPolicy = exports.redirectPolicyName = exports.redirectPolicy = exports.getDefaultProxySettings = exports.proxyPolicyName = exports.proxyPolicy = exports.multipartPolicyName = exports.multipartPolicy = exports.logPolicyName = exports.logPolicy = exports.formDataPolicyName = exports.formDataPolicy = exports.throttlingRetryPolicyName = exports.throttlingRetryPolicy = exports.systemErrorRetryPolicyName = exports.systemErrorRetryPolicy = exports.retryPolicy = exports.exponentialRetryPolicyName = exports.exponentialRetryPolicy = exports.defaultRetryPolicyName = exports.defaultRetryPolicy = exports.decompressResponsePolicyName = exports.decompressResponsePolicy = exports.agentPolicyName = exports.agentPolicy = void 0;
@@ -32815,9 +32759,9 @@ var require_internal3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/logPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/logPolicy.js
 var require_logPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/logPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/logPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.logPolicyName = void 0;
@@ -32834,9 +32778,9 @@ var require_logPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/redirectPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/redirectPolicy.js
 var require_redirectPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/redirectPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/redirectPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.redirectPolicyName = void 0;
@@ -32850,9 +32794,9 @@ var require_redirectPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgentPlatform.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgentPlatform.js
 var require_userAgentPlatform2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgentPlatform.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgentPlatform.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getHeaderName = getHeaderName;
@@ -32873,9 +32817,9 @@ var require_userAgentPlatform2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/constants.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/constants.js
 var require_constants4 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/constants.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/constants.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DEFAULT_RETRY_POLICY_COUNT = exports.SDK_VERSION = void 0;
@@ -32884,9 +32828,9 @@ var require_constants4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgent.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgent.js
 var require_userAgent2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgent.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/util/userAgent.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getUserAgentHeaderName = getUserAgentHeaderName;
@@ -32915,9 +32859,9 @@ var require_userAgent2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/userAgentPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/userAgentPolicy.js
 var require_userAgentPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/userAgentPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/userAgentPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.userAgentPolicyName = void 0;
@@ -32937,9 +32881,9 @@ var require_userAgentPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/file.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/util/file.js
 var require_file = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/file.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/util/file.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.hasRawContent = hasRawContent;
@@ -33008,9 +32952,9 @@ var require_file = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/multipartPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/multipartPolicy.js
 var require_multipartPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/multipartPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/multipartPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.multipartPolicyName = void 0;
@@ -33033,9 +32977,9 @@ var require_multipartPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/decompressResponsePolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/decompressResponsePolicy.js
 var require_decompressResponsePolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/decompressResponsePolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/decompressResponsePolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.decompressResponsePolicyName = void 0;
@@ -33049,9 +32993,9 @@ var require_decompressResponsePolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/defaultRetryPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/defaultRetryPolicy.js
 var require_defaultRetryPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/defaultRetryPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/defaultRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.defaultRetryPolicyName = void 0;
@@ -33065,9 +33009,9 @@ var require_defaultRetryPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/formDataPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/formDataPolicy.js
 var require_formDataPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/formDataPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/formDataPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.formDataPolicyName = void 0;
@@ -33081,9 +33025,9 @@ var require_formDataPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/proxyPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/proxyPolicy.js
 var require_proxyPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/proxyPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/proxyPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.proxyPolicyName = void 0;
@@ -33102,9 +33046,9 @@ var require_proxyPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/setClientRequestIdPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/setClientRequestIdPolicy.js
 var require_setClientRequestIdPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/setClientRequestIdPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/setClientRequestIdPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.setClientRequestIdPolicyName = void 0;
@@ -33122,9 +33066,9 @@ var require_setClientRequestIdPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/agentPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/agentPolicy.js
 var require_agentPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/agentPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/agentPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.agentPolicyName = void 0;
@@ -33138,9 +33082,9 @@ var require_agentPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tlsPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tlsPolicy.js
 var require_tlsPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tlsPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tlsPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.tlsPolicyName = void 0;
@@ -33154,9 +33098,9 @@ var require_tlsPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/restError.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/restError.js
 var require_restError3 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/restError.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/restError.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.RestError = void 0;
@@ -33170,9 +33114,9 @@ var require_restError3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tracingPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tracingPolicy.js
 var require_tracingPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tracingPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/tracingPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.tracingPolicyName = void 0;
@@ -33241,12 +33185,12 @@ var require_tracingPolicy = __commonJS({
       }
     }
     __name(tryCreateSpan, "tryCreateSpan");
-    function tryProcessError(span, error45) {
+    function tryProcessError(span, error46) {
       try {
         span.setStatus({
           status: "error",
-          error: (0, core_util_1.isError)(error45) ? error45 : void 0
-        }), (0, restError_js_1.isRestError)(error45) && error45.statusCode && span.setAttribute("http.status_code", error45.statusCode), span.end();
+          error: (0, core_util_1.isError)(error46) ? error46 : void 0
+        }), (0, restError_js_1.isRestError)(error46) && error46.statusCode && span.setAttribute("http.status_code", error46.statusCode), span.end();
       } catch (e2) {
         log_js_1.logger.warning(`Skipping tracing span processing due to an error: ${(0, core_util_1.getErrorMessage)(e2)}`);
       }
@@ -33267,9 +33211,9 @@ var require_tracingPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/wrapAbortSignal.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/util/wrapAbortSignal.js
 var require_wrapAbortSignal = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/wrapAbortSignal.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/util/wrapAbortSignal.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.wrapAbortSignalLike = wrapAbortSignalLike;
@@ -33292,9 +33236,9 @@ var require_wrapAbortSignal = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/wrapAbortSignalLikePolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/wrapAbortSignalLikePolicy.js
 var require_wrapAbortSignalLikePolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/wrapAbortSignalLikePolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/wrapAbortSignalLikePolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.wrapAbortSignalLikePolicyName = void 0;
@@ -33321,9 +33265,9 @@ var require_wrapAbortSignalLikePolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/createPipelineFromOptions.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/createPipelineFromOptions.js
 var require_createPipelineFromOptions2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/createPipelineFromOptions.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/createPipelineFromOptions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createPipelineFromOptions = createPipelineFromOptions;
@@ -33338,9 +33282,9 @@ var require_createPipelineFromOptions2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/defaultHttpClient.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/defaultHttpClient.js
 var require_defaultHttpClient2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/defaultHttpClient.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/defaultHttpClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createDefaultHttpClient = createDefaultHttpClient;
@@ -33362,9 +33306,9 @@ var require_defaultHttpClient2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/httpHeaders.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/httpHeaders.js
 var require_httpHeaders2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/httpHeaders.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/httpHeaders.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createHttpHeaders = createHttpHeaders;
@@ -33376,9 +33320,9 @@ var require_httpHeaders2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/pipelineRequest.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/pipelineRequest.js
 var require_pipelineRequest2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/pipelineRequest.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/pipelineRequest.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createPipelineRequest = createPipelineRequest;
@@ -33390,9 +33334,9 @@ var require_pipelineRequest2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/exponentialRetryPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/exponentialRetryPolicy.js
 var require_exponentialRetryPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/exponentialRetryPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/exponentialRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.exponentialRetryPolicyName = void 0;
@@ -33406,9 +33350,9 @@ var require_exponentialRetryPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/systemErrorRetryPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/systemErrorRetryPolicy.js
 var require_systemErrorRetryPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/systemErrorRetryPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/systemErrorRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.systemErrorRetryPolicyName = void 0;
@@ -33422,9 +33366,9 @@ var require_systemErrorRetryPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/throttlingRetryPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/throttlingRetryPolicy.js
 var require_throttlingRetryPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/throttlingRetryPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/throttlingRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.throttlingRetryPolicyName = void 0;
@@ -33438,9 +33382,9 @@ var require_throttlingRetryPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/retryPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/retryPolicy.js
 var require_retryPolicy2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/retryPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/retryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.retryPolicy = retryPolicy;
@@ -33455,9 +33399,9 @@ var require_retryPolicy2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/tokenCycler.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/util/tokenCycler.js
 var require_tokenCycler = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/util/tokenCycler.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/util/tokenCycler.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DEFAULT_CYCLER_OPTIONS = void 0;
@@ -33538,9 +33482,9 @@ var require_tokenCycler = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/bearerTokenAuthenticationPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/bearerTokenAuthenticationPolicy.js
 var require_bearerTokenAuthenticationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/bearerTokenAuthenticationPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/bearerTokenAuthenticationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.bearerTokenAuthenticationPolicyName = void 0;
@@ -33611,8 +33555,8 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
             getAccessToken,
             logger: logger6
           });
-          let response, error45, shouldSendRequest;
-          if ([response, error45] = await trySendRequest(request, next), isChallengeResponse(response)) {
+          let response, error46, shouldSendRequest;
+          if ([response, error46] = await trySendRequest(request, next), isChallengeResponse(response)) {
             let claims = getCaeChallengeClaims(response.headers.get("WWW-Authenticate"));
             if (claims) {
               let parsedClaim;
@@ -33627,14 +33571,14 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
                 request,
                 getAccessToken,
                 logger: logger6
-              }, parsedClaim), shouldSendRequest && ([response, error45] = await trySendRequest(request, next));
+              }, parsedClaim), shouldSendRequest && ([response, error46] = await trySendRequest(request, next));
             } else if (callbacks.authorizeRequestOnChallenge && (shouldSendRequest = await callbacks.authorizeRequestOnChallenge({
               scopes: Array.isArray(scopes) ? scopes : [scopes],
               request,
               response,
               getAccessToken,
               logger: logger6
-            }), shouldSendRequest && ([response, error45] = await trySendRequest(request, next)), isChallengeResponse(response) && (claims = getCaeChallengeClaims(response.headers.get("WWW-Authenticate")), claims))) {
+            }), shouldSendRequest && ([response, error46] = await trySendRequest(request, next)), isChallengeResponse(response) && (claims = getCaeChallengeClaims(response.headers.get("WWW-Authenticate")), claims))) {
               let parsedClaim;
               try {
                 parsedClaim = atob(claims);
@@ -33647,20 +33591,20 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
                 request,
                 getAccessToken,
                 logger: logger6
-              }, parsedClaim), shouldSendRequest && ([response, error45] = await trySendRequest(request, next));
+              }, parsedClaim), shouldSendRequest && ([response, error46] = await trySendRequest(request, next));
             }
           }
-          if (error45)
-            throw error45;
+          if (error46)
+            throw error46;
           return response;
         }
       };
     }
     __name(bearerTokenAuthenticationPolicy, "bearerTokenAuthenticationPolicy");
     function parseChallenges(challenges) {
-      let challengeRegex = /(\w+)\s+((?:\w+=(?:"[^"]*"|[^,]*),?\s*)+)/g, paramRegex = /(\w+)="([^"]*)"/g, parsedChallenges = [], match;
-      for (; (match = challengeRegex.exec(challenges)) !== null; ) {
-        let scheme = match[1], paramsString = match[2], params = {}, paramMatch;
+      let challengeRegex = /(\w+)\s+((?:\w+=(?:"[^"]*"|[^,]*),?\s*)+)/g, paramRegex = /(\w+)="([^"]*)"/g, parsedChallenges = [], match2;
+      for (; (match2 = challengeRegex.exec(challenges)) !== null; ) {
+        let scheme = match2[1], paramsString = match2[2], params = {}, paramMatch;
         for (; (paramMatch = paramRegex.exec(paramsString)) !== null; )
           params[paramMatch[1]] = paramMatch[2];
         parsedChallenges.push({ scheme, params });
@@ -33675,9 +33619,9 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/ndJsonPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/ndJsonPolicy.js
 var require_ndJsonPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/ndJsonPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/ndJsonPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ndJsonPolicyName = void 0;
@@ -33700,9 +33644,9 @@ var require_ndJsonPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/auxiliaryAuthenticationHeaderPolicy.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/auxiliaryAuthenticationHeaderPolicy.js
 var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/auxiliaryAuthenticationHeaderPolicy.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/policies/auxiliaryAuthenticationHeaderPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.auxiliaryAuthenticationHeaderPolicyName = void 0;
@@ -33746,9 +33690,9 @@ var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/index.js
+// node_modules/@azure/core-rest-pipeline/dist/commonjs/index.js
 var require_commonjs6 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-rest-pipeline@1.22.1/node_modules/@azure/core-rest-pipeline/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/core-rest-pipeline/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createFileFromStream = exports.createFile = exports.agentPolicyName = exports.agentPolicy = exports.auxiliaryAuthenticationHeaderPolicyName = exports.auxiliaryAuthenticationHeaderPolicy = exports.ndJsonPolicyName = exports.ndJsonPolicy = exports.bearerTokenAuthenticationPolicyName = exports.bearerTokenAuthenticationPolicy = exports.formDataPolicyName = exports.formDataPolicy = exports.tlsPolicyName = exports.tlsPolicy = exports.userAgentPolicyName = exports.userAgentPolicy = exports.defaultRetryPolicy = exports.tracingPolicyName = exports.tracingPolicy = exports.retryPolicy = exports.throttlingRetryPolicyName = exports.throttlingRetryPolicy = exports.systemErrorRetryPolicyName = exports.systemErrorRetryPolicy = exports.redirectPolicyName = exports.redirectPolicy = exports.getDefaultProxySettings = exports.proxyPolicyName = exports.proxyPolicy = exports.multipartPolicyName = exports.multipartPolicy = exports.logPolicyName = exports.logPolicy = exports.setClientRequestIdPolicyName = exports.setClientRequestIdPolicy = exports.exponentialRetryPolicyName = exports.exponentialRetryPolicy = exports.decompressResponsePolicyName = exports.decompressResponsePolicy = exports.isRestError = exports.RestError = exports.createPipelineRequest = exports.createHttpHeaders = exports.createDefaultHttpClient = exports.createPipelineFromOptions = exports.createEmptyPipeline = void 0;
@@ -33919,9 +33863,9 @@ var require_commonjs6 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/state.js
+// node_modules/@azure/core-client/dist/commonjs/state.js
 var require_state2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/state.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/state.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.state = void 0;
@@ -33931,9 +33875,9 @@ var require_state2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/operationHelpers.js
+// node_modules/@azure/core-client/dist/commonjs/operationHelpers.js
 var require_operationHelpers = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/operationHelpers.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/operationHelpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getOperationArgumentValueFromParameter = getOperationArgumentValueFromParameter;
@@ -33991,9 +33935,9 @@ var require_operationHelpers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/deserializationPolicy.js
+// node_modules/@azure/core-client/dist/commonjs/deserializationPolicy.js
 var require_deserializationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/deserializationPolicy.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/deserializationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.deserializationPolicyName = void 0;
@@ -34034,9 +33978,9 @@ var require_deserializationPolicy = __commonJS({
       let operationSpec = (0, operationHelpers_js_1.getOperationRequestInfo)(parsedResponse.request)?.operationSpec;
       if (!operationSpec || !operationSpec.responses)
         return parsedResponse;
-      let responseSpec = getOperationResponseMap(parsedResponse), { error: error45, shouldReturnResponse } = handleErrorResponse(parsedResponse, operationSpec, responseSpec, options);
-      if (error45)
-        throw error45;
+      let responseSpec = getOperationResponseMap(parsedResponse), { error: error46, shouldReturnResponse } = handleErrorResponse(parsedResponse, operationSpec, responseSpec, options);
+      if (error46)
+        throw error46;
       if (shouldReturnResponse)
         return parsedResponse;
       if (responseSpec) {
@@ -34071,13 +34015,13 @@ var require_deserializationPolicy = __commonJS({
             return { error: null, shouldReturnResponse: !1 };
         } else
           return { error: null, shouldReturnResponse: !1 };
-      let errorResponseSpec = responseSpec ?? operationSpec.responses.default, initialErrorMessage = parsedResponse.request.streamResponseStatusCodes?.has(parsedResponse.status) ? `Unexpected status code: ${parsedResponse.status}` : parsedResponse.bodyAsText, error45 = new core_rest_pipeline_1.RestError(initialErrorMessage, {
+      let errorResponseSpec = responseSpec ?? operationSpec.responses.default, initialErrorMessage = parsedResponse.request.streamResponseStatusCodes?.has(parsedResponse.status) ? `Unexpected status code: ${parsedResponse.status}` : parsedResponse.bodyAsText, error46 = new core_rest_pipeline_1.RestError(initialErrorMessage, {
         statusCode: parsedResponse.status,
         request: parsedResponse.request,
         response: parsedResponse
       });
       if (!errorResponseSpec && !(parsedResponse.parsedBody?.error?.code && parsedResponse.parsedBody?.error?.message))
-        throw error45;
+        throw error46;
       let defaultBodyMapper = errorResponseSpec?.bodyMapper, defaultHeadersMapper = errorResponseSpec?.headersMapper;
       try {
         if (parsedResponse.parsedBody) {
@@ -34092,13 +34036,13 @@ var require_deserializationPolicy = __commonJS({
             deserializedError = operationSpec.serializer.deserialize(defaultBodyMapper, valueToDeserialize, "error.response.parsedBody", options);
           }
           let internalError = parsedBody.error || deserializedError || parsedBody;
-          error45.code = internalError.code, internalError.message && (error45.message = internalError.message), defaultBodyMapper && (error45.response.parsedBody = deserializedError);
+          error46.code = internalError.code, internalError.message && (error46.message = internalError.message), defaultBodyMapper && (error46.response.parsedBody = deserializedError);
         }
-        parsedResponse.headers && defaultHeadersMapper && (error45.response.parsedHeaders = operationSpec.serializer.deserialize(defaultHeadersMapper, parsedResponse.headers.toJSON(), "operationRes.parsedHeaders"));
+        parsedResponse.headers && defaultHeadersMapper && (error46.response.parsedHeaders = operationSpec.serializer.deserialize(defaultHeadersMapper, parsedResponse.headers.toJSON(), "operationRes.parsedHeaders"));
       } catch (defaultError) {
-        error45.message = `Error "${defaultError.message}" occurred in deserializing the responseBody - "${parsedResponse.bodyAsText}" for the default response.`;
+        error46.message = `Error "${defaultError.message}" occurred in deserializing the responseBody - "${parsedResponse.bodyAsText}" for the default response.`;
       }
-      return { error: error45, shouldReturnResponse: !1 };
+      return { error: error46, shouldReturnResponse: !1 };
     }
     __name(handleErrorResponse, "handleErrorResponse");
     async function parse4(jsonContentTypes, xmlContentTypes, operationResponse, opts, parseXML) {
@@ -34129,9 +34073,9 @@ var require_deserializationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/interfaceHelpers.js
+// node_modules/@azure/core-client/dist/commonjs/interfaceHelpers.js
 var require_interfaceHelpers = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/interfaceHelpers.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/interfaceHelpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getStreamingResponseStatusCodes = getStreamingResponseStatusCodes;
@@ -34154,9 +34098,9 @@ var require_interfaceHelpers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/serializationPolicy.js
+// node_modules/@azure/core-client/dist/commonjs/serializationPolicy.js
 var require_serializationPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/serializationPolicy.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/serializationPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.serializationPolicyName = void 0;
@@ -34226,8 +34170,8 @@ var require_serializationPolicy = __commonJS({
               isStream || (request.body = JSON.stringify(request.body));
             }
           }
-        } catch (error45) {
-          throw new Error(`Error "${error45.message}" occurred in serializing the payload - ${JSON.stringify(serializedName, void 0, "  ")}.`);
+        } catch (error46) {
+          throw new Error(`Error "${error46.message}" occurred in serializing the payload - ${JSON.stringify(serializedName, void 0, "  ")}.`);
         }
       } else if (operationSpec.formDataParameters && operationSpec.formDataParameters.length > 0) {
         request.formData = {};
@@ -34259,9 +34203,9 @@ var require_serializationPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/pipeline.js
+// node_modules/@azure/core-client/dist/commonjs/pipeline.js
 var require_pipeline3 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/pipeline.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/pipeline.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createClientPipeline = createClientPipeline;
@@ -34279,9 +34223,9 @@ var require_pipeline3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/httpClientCache.js
+// node_modules/@azure/core-client/dist/commonjs/httpClientCache.js
 var require_httpClientCache = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/httpClientCache.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/httpClientCache.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getCachedDefaultHttpClient = getCachedDefaultHttpClient;
@@ -34293,9 +34237,9 @@ var require_httpClientCache = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/urlHelpers.js
+// node_modules/@azure/core-client/dist/commonjs/urlHelpers.js
 var require_urlHelpers2 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/urlHelpers.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/urlHelpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getRequestUrl = getRequestUrl;
@@ -34415,9 +34359,9 @@ var require_urlHelpers2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/log.js
+// node_modules/@azure/core-client/dist/commonjs/log.js
 var require_log4 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/log.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/log.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.logger = void 0;
@@ -34426,9 +34370,9 @@ var require_log4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/serviceClient.js
+// node_modules/@azure/core-client/dist/commonjs/serviceClient.js
 var require_serviceClient = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/serviceClient.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/serviceClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ServiceClient = void 0;
@@ -34504,12 +34448,12 @@ var require_serviceClient = __commonJS({
         try {
           let rawResponse = await this.sendRequest(request), flatResponse = (0, utils_js_1.flattenResponse)(rawResponse, operationSpec.responses[rawResponse.status]);
           return options?.onResponse && options.onResponse(rawResponse, flatResponse), flatResponse;
-        } catch (error45) {
-          if (typeof error45 == "object" && error45?.response) {
-            let rawResponse = error45.response, flatResponse = (0, utils_js_1.flattenResponse)(rawResponse, operationSpec.responses[error45.statusCode] || operationSpec.responses.default);
-            error45.details = flatResponse, options?.onResponse && options.onResponse(rawResponse, flatResponse, error45);
+        } catch (error46) {
+          if (typeof error46 == "object" && error46?.response) {
+            let rawResponse = error46.response, flatResponse = (0, utils_js_1.flattenResponse)(rawResponse, operationSpec.responses[error46.statusCode] || operationSpec.responses.default);
+            error46.details = flatResponse, options?.onResponse && options.onResponse(rawResponse, flatResponse, error46);
           }
-          throw error45;
+          throw error46;
         }
       }
     };
@@ -34536,9 +34480,9 @@ var require_serviceClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnClaimChallenge.js
+// node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnClaimChallenge.js
 var require_authorizeRequestOnClaimChallenge = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnClaimChallenge.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnClaimChallenge.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.parseCAEChallenge = parseCAEChallenge;
@@ -34564,9 +34508,9 @@ var require_authorizeRequestOnClaimChallenge = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnTenantChallenge.js
+// node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnTenantChallenge.js
 var require_authorizeRequestOnTenantChallenge = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnTenantChallenge.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/authorizeRequestOnTenantChallenge.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.authorizeRequestOnTenantChallenge = void 0;
@@ -34639,9 +34583,9 @@ var require_authorizeRequestOnTenantChallenge = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/index.js
+// node_modules/@azure/core-client/dist/commonjs/index.js
 var require_commonjs7 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-client@1.10.1/node_modules/@azure/core-client/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/core-client/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.authorizeRequestOnTenantChallenge = exports.authorizeRequestOnClaimChallenge = exports.serializationPolicyName = exports.serializationPolicy = exports.deserializationPolicyName = exports.deserializationPolicy = exports.XML_CHARKEY = exports.XML_ATTRKEY = exports.createClientPipeline = exports.ServiceClient = exports.MapperTypeNames = exports.createSerializer = void 0;
@@ -34692,9 +34636,9 @@ var require_commonjs7 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/identityTokenEndpoint.js
+// node_modules/@azure/identity/dist/commonjs/util/identityTokenEndpoint.js
 var require_identityTokenEndpoint = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/identityTokenEndpoint.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/identityTokenEndpoint.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getIdentityTokenEndpointSuffix = getIdentityTokenEndpointSuffix;
@@ -34705,9 +34649,9 @@ var require_identityTokenEndpoint = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/utils.js
+// node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/utils.js
 var require_utils5 = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/utils.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.serviceFabricErrorMessage = void 0;
@@ -34762,9 +34706,9 @@ var require_utils5 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/client/identityClient.js
+// node_modules/@azure/identity/dist/commonjs/client/identityClient.js
 var require_identityClient = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/client/identityClient.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/client/identityClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.IdentityClient = void 0;
@@ -34820,8 +34764,8 @@ var require_identityClient = __commonJS({
           };
           return logging_js_1.logger.info(`IdentityClient: [${request.url}] token acquired, expires on ${token.accessToken.expiresOnTimestamp}`), token;
         } else {
-          let error45 = new errors_js_1.AuthenticationError(response.status, response.bodyAsText);
-          throw logging_js_1.logger.warning(`IdentityClient: authentication error. HTTP status: ${response.status}, ${error45.errorResponse.errorDescription}`), error45;
+          let error46 = new errors_js_1.AuthenticationError(response.status, response.bodyAsText);
+          throw logging_js_1.logger.warning(`IdentityClient: authentication error. HTTP status: ${response.status}, ${error46.errorResponse.errorDescription}`), error46;
         }
       }
       async refreshAccessToken(tenantId, clientId, scopes, refreshToken, clientSecret, options = {}) {
@@ -34953,9 +34897,9 @@ var require_identityClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/regionalAuthority.js
+// node_modules/@azure/identity/dist/commonjs/regionalAuthority.js
 var require_regionalAuthority = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/regionalAuthority.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/regionalAuthority.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.RegionalAuthority = void 0;
@@ -34972,9 +34916,9 @@ var require_regionalAuthority = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/processMultiTenantRequest.js
+// node_modules/@azure/identity/dist/commonjs/util/processMultiTenantRequest.js
 var require_processMultiTenantRequest = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/processMultiTenantRequest.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/processMultiTenantRequest.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.processMultiTenantRequest = processMultiTenantRequest;
@@ -34995,9 +34939,9 @@ var require_processMultiTenantRequest = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/tenantIdUtils.js
+// node_modules/@azure/identity/dist/commonjs/util/tenantIdUtils.js
 var require_tenantIdUtils = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/tenantIdUtils.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/tenantIdUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.processMultiTenantRequest = void 0;
@@ -35010,8 +34954,8 @@ var require_tenantIdUtils = __commonJS({
     }, "get") });
     function checkTenantId(logger6, tenantId) {
       if (!tenantId.match(/^[0-9a-zA-Z-.]+$/)) {
-        let error45 = new Error("Invalid tenant id provided. You can locate your tenant id by following the instructions listed here: https://learn.microsoft.com/partner-center/find-ids-and-domain-names.");
-        throw logger6.info((0, logging_js_1.formatError)("", error45)), error45;
+        let error46 = new Error("Invalid tenant id provided. You can locate your tenant id by following the instructions listed here: https://learn.microsoft.com/partner-center/find-ids-and-domain-names.");
+        throw logger6.info((0, logging_js_1.formatError)("", error46)), error46;
       }
     }
     __name(checkTenantId, "checkTenantId");
@@ -35026,7 +34970,7 @@ var require_tenantIdUtils = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/is-docker@3.0.0/node_modules/is-docker/index.js
+// node_modules/is-docker/index.js
 import fs from "node:fs";
 function hasDockerEnv() {
   try {
@@ -35046,20 +34990,20 @@ function isDocker() {
   return isDockerCached === void 0 && (isDockerCached = hasDockerEnv() || hasDockerCGroup()), isDockerCached;
 }
 var isDockerCached, init_is_docker = __esm({
-  "../../node_modules/.pnpm/is-docker@3.0.0/node_modules/is-docker/index.js"() {
+  "node_modules/is-docker/index.js"() {
     __name(hasDockerEnv, "hasDockerEnv");
     __name(hasDockerCGroup, "hasDockerCGroup");
     __name(isDocker, "isDocker");
   }
 });
 
-// ../../node_modules/.pnpm/is-inside-container@1.0.0/node_modules/is-inside-container/index.js
+// node_modules/is-inside-container/index.js
 import fs2 from "node:fs";
 function isInsideContainer() {
   return cachedResult === void 0 && (cachedResult = hasContainerEnv() || isDocker()), cachedResult;
 }
 var cachedResult, hasContainerEnv, init_is_inside_container = __esm({
-  "../../node_modules/.pnpm/is-inside-container@1.0.0/node_modules/is-inside-container/index.js"() {
+  "node_modules/is-inside-container/index.js"() {
     init_is_docker();
     hasContainerEnv = /* @__PURE__ */ __name(() => {
       try {
@@ -35072,12 +35016,12 @@ var cachedResult, hasContainerEnv, init_is_inside_container = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/is-wsl@3.1.0/node_modules/is-wsl/index.js
+// node_modules/is-wsl/index.js
 import process3 from "node:process";
 import os from "node:os";
 import fs3 from "node:fs";
 var isWsl, is_wsl_default, init_is_wsl = __esm({
-  "../../node_modules/.pnpm/is-wsl@3.1.0/node_modules/is-wsl/index.js"() {
+  "node_modules/is-wsl/index.js"() {
     init_is_inside_container();
     isWsl = /* @__PURE__ */ __name(() => {
       if (process3.platform !== "linux")
@@ -35093,11 +35037,11 @@ var isWsl, is_wsl_default, init_is_wsl = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/wsl-utils@0.1.0/node_modules/wsl-utils/index.js
+// node_modules/wsl-utils/index.js
 import process4 from "node:process";
 import fs4, { constants as fsConstants } from "node:fs/promises";
 var wslDrivesMountPoint, powerShellPathFromWsl, powerShellPath, init_wsl_utils = __esm({
-  "../../node_modules/.pnpm/wsl-utils@0.1.0/node_modules/wsl-utils/index.js"() {
+  "node_modules/wsl-utils/index.js"() {
     init_is_wsl();
     init_is_wsl();
     wslDrivesMountPoint = /* @__PURE__ */ (() => {
@@ -35119,7 +35063,7 @@ var wslDrivesMountPoint, powerShellPathFromWsl, powerShellPath, init_wsl_utils =
   }
 });
 
-// ../../node_modules/.pnpm/define-lazy-prop@3.0.0/node_modules/define-lazy-prop/index.js
+// node_modules/define-lazy-prop/index.js
 function defineLazyProperty(object2, propertyName, valueGetter) {
   let define2 = /* @__PURE__ */ __name((value) => Object.defineProperty(object2, propertyName, { value, enumerable: !0, writable: !0 }), "define");
   return Object.defineProperty(object2, propertyName, {
@@ -35135,12 +35079,12 @@ function defineLazyProperty(object2, propertyName, valueGetter) {
   }), object2;
 }
 var init_define_lazy_prop = __esm({
-  "../../node_modules/.pnpm/define-lazy-prop@3.0.0/node_modules/define-lazy-prop/index.js"() {
+  "node_modules/define-lazy-prop/index.js"() {
     __name(defineLazyProperty, "defineLazyProperty");
   }
 });
 
-// ../../node_modules/.pnpm/default-browser-id@5.0.0/node_modules/default-browser-id/index.js
+// node_modules/default-browser-id/index.js
 import { promisify } from "node:util";
 import process5 from "node:process";
 import { execFile } from "node:child_process";
@@ -35151,13 +35095,13 @@ async function defaultBrowserId() {
   return /LSHandlerRoleAll = "(?!-)(?<id>[^"]+?)";\s+?LSHandlerURLScheme = (?:http|https);/.exec(stdout2)?.groups.id ?? "com.apple.Safari";
 }
 var execFileAsync, init_default_browser_id = __esm({
-  "../../node_modules/.pnpm/default-browser-id@5.0.0/node_modules/default-browser-id/index.js"() {
+  "node_modules/default-browser-id/index.js"() {
     execFileAsync = promisify(execFile);
     __name(defaultBrowserId, "defaultBrowserId");
   }
 });
 
-// ../../node_modules/.pnpm/run-applescript@7.1.0/node_modules/run-applescript/index.js
+// node_modules/run-applescript/index.js
 import process6 from "node:process";
 import { promisify as promisify2 } from "node:util";
 import { execFile as execFile2, execFileSync } from "node:child_process";
@@ -35170,25 +35114,25 @@ async function runAppleScript(script, { humanReadableOutput = !0, signal } = {})
   return stdout2.trim();
 }
 var execFileAsync2, init_run_applescript = __esm({
-  "../../node_modules/.pnpm/run-applescript@7.1.0/node_modules/run-applescript/index.js"() {
+  "node_modules/run-applescript/index.js"() {
     execFileAsync2 = promisify2(execFile2);
     __name(runAppleScript, "runAppleScript");
   }
 });
 
-// ../../node_modules/.pnpm/bundle-name@4.1.0/node_modules/bundle-name/index.js
+// node_modules/bundle-name/index.js
 async function bundleName(bundleId) {
   return runAppleScript(`tell application "Finder" to set app_path to application file id "${bundleId}" as string
 tell application "System Events" to get value of property list item "CFBundleName" of property list file (app_path & ":Contents:Info.plist")`);
 }
 var init_bundle_name = __esm({
-  "../../node_modules/.pnpm/bundle-name@4.1.0/node_modules/bundle-name/index.js"() {
+  "node_modules/bundle-name/index.js"() {
     init_run_applescript();
     __name(bundleName, "bundleName");
   }
 });
 
-// ../../node_modules/.pnpm/default-browser@5.2.1/node_modules/default-browser/windows.js
+// node_modules/default-browser/windows.js
 import { promisify as promisify3 } from "node:util";
 import { execFile as execFile3 } from "node:child_process";
 async function defaultBrowser(_execFileAsync = execFileAsync3) {
@@ -35197,16 +35141,16 @@ async function defaultBrowser(_execFileAsync = execFileAsync3) {
     " HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice",
     "/v",
     "ProgId"
-  ]), match = /ProgId\s*REG_SZ\s*(?<id>\S+)/.exec(stdout2);
-  if (!match)
+  ]), match2 = /ProgId\s*REG_SZ\s*(?<id>\S+)/.exec(stdout2);
+  if (!match2)
     throw new UnknownBrowserError(`Cannot find Windows browser in stdout: ${JSON.stringify(stdout2)}`);
-  let { id } = match.groups, browser = windowsBrowserProgIds[id];
+  let { id } = match2.groups, browser = windowsBrowserProgIds[id];
   if (!browser)
     throw new UnknownBrowserError(`Unknown browser ID: ${id}`);
   return browser;
 }
 var execFileAsync3, windowsBrowserProgIds, UnknownBrowserError, init_windows = __esm({
-  "../../node_modules/.pnpm/default-browser@5.2.1/node_modules/default-browser/windows.js"() {
+  "node_modules/default-browser/windows.js"() {
     execFileAsync3 = promisify3(execFile3), windowsBrowserProgIds = {
       AppXq0fevzme2pys62n3e0fbqa7peapykr8v: { name: "Edge", id: "com.microsoft.edge.old" },
       MSEdgeDHTML: { name: "Edge", id: "com.microsoft.edge" },
@@ -35228,7 +35172,7 @@ var execFileAsync3, windowsBrowserProgIds, UnknownBrowserError, init_windows = _
   }
 });
 
-// ../../node_modules/.pnpm/default-browser@5.2.1/node_modules/default-browser/index.js
+// node_modules/default-browser/index.js
 import { promisify as promisify4 } from "node:util";
 import process7 from "node:process";
 import { execFile as execFile4 } from "node:child_process";
@@ -35246,7 +35190,7 @@ async function defaultBrowser2() {
   throw new Error("Only macOS, Linux, and Windows are supported");
 }
 var execFileAsync4, titleize, init_default_browser = __esm({
-  "../../node_modules/.pnpm/default-browser@5.2.1/node_modules/default-browser/index.js"() {
+  "node_modules/default-browser/index.js"() {
     init_default_browser_id();
     init_bundle_name();
     init_windows();
@@ -35255,7 +35199,7 @@ var execFileAsync4, titleize, init_default_browser = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/open@10.2.0/node_modules/open/index.js
+// node_modules/open/index.js
 var open_exports = {};
 __export(open_exports, {
   apps: () => apps,
@@ -35305,7 +35249,7 @@ function detectPlatformBinary({ [platform2]: platformBinary }, { wsl }) {
   return detectArchBinary(platformBinary);
 }
 var execFile5, __dirname, localXdgOpenPath, platform2, arch, pTryEach, baseOpen, open, openApp, apps, open_default, init_open = __esm({
-  "../../node_modules/.pnpm/open@10.2.0/node_modules/open/index.js"() {
+  "node_modules/open/index.js"() {
     init_wsl_utils();
     init_define_lazy_prop();
     init_default_browser();
@@ -35317,8 +35261,8 @@ var execFile5, __dirname, localXdgOpenPath, platform2, arch, pTryEach, baseOpen,
       for (let item of array2)
         try {
           return await mapper(item);
-        } catch (error45) {
-          latestError = error45;
+        } catch (error46) {
+          latestError = error46;
         }
       throw latestError;
     }, "pTryEach"), baseOpen = /* @__PURE__ */ __name(async (options) => {
@@ -35472,9 +35416,9 @@ var execFile5, __dirname, localXdgOpenPath, platform2, arch, pTryEach, baseOpen,
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalClient.js
+// node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalClient.js
 var require_msalClient = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalClient.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/msal/nodeFlows/msalClient.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.generateMsalConfiguration = generateMsalConfiguration;
@@ -35790,9 +35734,9 @@ var require_msalClient = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/clientCertificateCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/clientCertificateCredential.js
 var require_clientCertificateCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/clientCertificateCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/clientCertificateCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ClientCertificateCredential = void 0;
@@ -35859,10 +35803,10 @@ var require_clientCertificateCredential = __commonJS({
     };
     exports.ClientCertificateCredential = ClientCertificateCredential;
     async function parseCertificate(certificateConfiguration, sendCertificateChain) {
-      let certificate = certificateConfiguration.certificate, certificatePath = certificateConfiguration.certificatePath, certificateContents = certificate || await (0, promises_1.readFile)(certificatePath, "utf8"), x5c = sendCertificateChain ? certificateContents : void 0, certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g, publicKeys = [], match;
+      let certificate = certificateConfiguration.certificate, certificatePath = certificateConfiguration.certificatePath, certificateContents = certificate || await (0, promises_1.readFile)(certificatePath, "utf8"), x5c = sendCertificateChain ? certificateContents : void 0, certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g, publicKeys = [], match2;
       do
-        match = certificatePattern.exec(certificateContents), match && publicKeys.push(match[3]);
-      while (match);
+        match2 = certificatePattern.exec(certificateContents), match2 && publicKeys.push(match2[3]);
+      while (match2);
       if (publicKeys.length === 0)
         throw new Error("The file at the specified path does not contain a PEM-encoded certificate.");
       let thumbprint = (0, node_crypto_1.createHash)("sha1").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase(), thumbprintSha256 = (0, node_crypto_1.createHash)("sha256").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase();
@@ -35877,9 +35821,9 @@ var require_clientCertificateCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/scopeUtils.js
+// node_modules/@azure/identity/dist/commonjs/util/scopeUtils.js
 var require_scopeUtils = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/scopeUtils.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/scopeUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ensureScopes = ensureScopes;
@@ -35892,8 +35836,8 @@ var require_scopeUtils = __commonJS({
     __name(ensureScopes, "ensureScopes");
     function ensureValidScopeForDevTimeCreds(scope, logger6) {
       if (!scope.match(/^[0-9a-zA-Z-_.:/]+$/)) {
-        let error45 = new Error("Invalid scope was specified by the user or calling client");
-        throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error45)), error45;
+        let error46 = new Error("Invalid scope was specified by the user or calling client");
+        throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
       }
     }
     __name(ensureValidScopeForDevTimeCreds, "ensureValidScopeForDevTimeCreds");
@@ -35904,9 +35848,9 @@ var require_scopeUtils = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/clientSecretCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/clientSecretCredential.js
 var require_clientSecretCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/clientSecretCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/clientSecretCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ClientSecretCredential = void 0;
@@ -35961,9 +35905,9 @@ var require_clientSecretCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/usernamePasswordCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/usernamePasswordCredential.js
 var require_usernamePasswordCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/usernamePasswordCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/usernamePasswordCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.UsernamePasswordCredential = void 0;
@@ -36025,9 +35969,9 @@ var require_usernamePasswordCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/environmentCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/environmentCredential.js
 var require_environmentCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/environmentCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/environmentCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.EnvironmentCredential = exports.AllSupportedEnvironmentVariables = void 0;
@@ -36127,9 +36071,9 @@ var require_environmentCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsRetryPolicy.js
+// node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsRetryPolicy.js
 var require_imdsRetryPolicy = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsRetryPolicy.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsRetryPolicy.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.imdsRetryPolicy = imdsRetryPolicy;
@@ -36156,9 +36100,9 @@ var require_imdsRetryPolicy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsMsi.js
+// node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsMsi.js
 var require_imdsMsi = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsMsi.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/imdsMsi.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.imdsMsi = void 0;
@@ -36206,9 +36150,9 @@ var require_imdsMsi = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/clientAssertionCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/clientAssertionCredential.js
 var require_clientAssertionCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/clientAssertionCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/clientAssertionCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ClientAssertionCredential = void 0;
@@ -36264,9 +36208,9 @@ var require_clientAssertionCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/workloadIdentityCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/workloadIdentityCredential.js
 var require_workloadIdentityCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/workloadIdentityCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/workloadIdentityCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.WorkloadIdentityCredential = exports.SupportedWorkloadEnvironmentVariables = void 0;
@@ -36340,9 +36284,9 @@ var require_workloadIdentityCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/tokenExchangeMsi.js
+// node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/tokenExchangeMsi.js
 var require_tokenExchangeMsi = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/tokenExchangeMsi.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/tokenExchangeMsi.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.tokenExchangeMsi = void 0;
@@ -36367,9 +36311,9 @@ var require_tokenExchangeMsi = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/index.js
+// node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/index.js
 var require_managedIdentityCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/index.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/managedIdentityCredential/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ManagedIdentityCredential = void 0;
@@ -36388,13 +36332,14 @@ var require_managedIdentityCredential = __commonJS({
         intervalIncrement: 2
       };
       isAvailableIdentityClient;
+      sendProbeRequest;
       /**
        * @internal
        * @hidden
        */
       constructor(clientIdOrOptions, options) {
         let _options;
-        typeof clientIdOrOptions == "string" ? (this.clientId = clientIdOrOptions, _options = options ?? {}) : (this.clientId = clientIdOrOptions?.clientId, _options = clientIdOrOptions ?? {}), this.resourceId = _options?.resourceId, this.objectId = _options?.objectId;
+        typeof clientIdOrOptions == "string" ? (this.clientId = clientIdOrOptions, _options = options ?? {}) : (this.clientId = clientIdOrOptions?.clientId, _options = clientIdOrOptions ?? {}), this.resourceId = _options?.resourceId, this.objectId = _options?.objectId, this.sendProbeRequest = _options?.sendProbeRequest ?? !1;
         let providedIds = [
           { key: "clientId", value: this.clientId },
           { key: "resourceId", value: this.resourceId },
@@ -36473,7 +36418,7 @@ var require_managedIdentityCredential = __commonJS({
               if (result === null)
                 throw new errors_js_1.CredentialUnavailableError("Attempted to use the token exchange managed identity, but received a null response.");
               return result;
-            } else if (isImdsMsi && (logger6.getToken.info("Using the IMDS endpoint to probe for availability."), !await imdsMsi_js_1.imdsMsi.isAvailable({
+            } else if (isImdsMsi && this.sendProbeRequest && (logger6.getToken.info("Using the IMDS endpoint to probe for availability."), !await imdsMsi_js_1.imdsMsi.isAvailable({
               scopes,
               clientId: this.clientId,
               getTokenOptions: options,
@@ -36521,9 +36466,9 @@ var require_managedIdentityCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azureDeveloperCliCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/azureDeveloperCliCredential.js
 var require_azureDeveloperCliCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azureDeveloperCliCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/azureDeveloperCliCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureDeveloperCliCredential = exports.developerCliCredentialInternals = exports.azureDeveloperCliPublicErrorMessages = void 0;
@@ -36569,8 +36514,8 @@ var require_azureDeveloperCliCredential = __commonJS({
             child_process_1.default.exec(command, {
               cwd: exports.developerCliCredentialInternals.getSafeWorkingDir(),
               timeout
-            }, (error45, stdout2, stderr) => {
-              resolve({ stdout: stdout2, stderr, error: error45 });
+            }, (error46, stdout2, stderr) => {
+              resolve({ stdout: stdout2, stderr, error: error46 });
             });
           } catch (err) {
             reject(err);
@@ -36615,16 +36560,16 @@ var require_azureDeveloperCliCredential = __commonJS({
             });
             let obj = await exports.developerCliCredentialInternals.getAzdAccessToken(scopeList, tenantId, this.timeout, options.claims), isMFARequiredError = obj.stderr?.match("must use multi-factor authentication") || obj.stderr?.match("reauthentication required"), isNotLoggedInError = obj.stderr?.match("not logged in, run `azd login` to login") || obj.stderr?.match("not logged in, run `azd auth login` to login");
             if (obj.stderr?.match("azd:(.*)not found") || obj.stderr?.startsWith("'azd' is not recognized") || obj.error && obj.error.code === "ENOENT") {
-              let error45 = new errors_js_1.CredentialUnavailableError(exports.azureDeveloperCliPublicErrorMessages.notInstalled);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+              let error46 = new errors_js_1.CredentialUnavailableError(exports.azureDeveloperCliPublicErrorMessages.notInstalled);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             if (isNotLoggedInError) {
-              let error45 = new errors_js_1.CredentialUnavailableError(exports.azureDeveloperCliPublicErrorMessages.login);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+              let error46 = new errors_js_1.CredentialUnavailableError(exports.azureDeveloperCliPublicErrorMessages.login);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             if (isMFARequiredError) {
-              let loginCmd = `azd auth login ${scopeList.reduce((previous, current) => previous.concat("--scope", current), []).join(" ")}`, error45 = new errors_js_1.CredentialUnavailableError(`${exports.azureDeveloperCliPublicErrorMessages.claim} ${loginCmd}`);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+              let loginCmd = `azd auth login ${scopeList.reduce((previous, current) => previous.concat("--scope", current), []).join(" ")}`, error46 = new errors_js_1.CredentialUnavailableError(`${exports.azureDeveloperCliPublicErrorMessages.claim} ${loginCmd}`);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             try {
               let resp = JSON.parse(obj.stdout);
@@ -36637,8 +36582,8 @@ var require_azureDeveloperCliCredential = __commonJS({
               throw obj.stderr ? new errors_js_1.CredentialUnavailableError(obj.stderr) : e2;
             }
           } catch (err) {
-            let error45 = err.name === "CredentialUnavailableError" ? err : new errors_js_1.CredentialUnavailableError(err.message || exports.azureDeveloperCliPublicErrorMessages.unknown);
-            throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+            let error46 = err.name === "CredentialUnavailableError" ? err : new errors_js_1.CredentialUnavailableError(err.message || exports.azureDeveloperCliPublicErrorMessages.unknown);
+            throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
           }
         });
       }
@@ -36647,26 +36592,26 @@ var require_azureDeveloperCliCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/subscriptionUtils.js
+// node_modules/@azure/identity/dist/commonjs/util/subscriptionUtils.js
 var require_subscriptionUtils = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/subscriptionUtils.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/subscriptionUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.checkSubscription = checkSubscription;
     var logging_js_1 = require_logging();
     function checkSubscription(logger6, subscription) {
       if (!subscription.match(/^[0-9a-zA-Z-._ ]+$/)) {
-        let error45 = new Error(`Subscription '${subscription}' contains invalid characters. If this is the name of a subscription, use its ID instead. You can locate your subscription by following the instructions listed here: https://learn.microsoft.com/azure/azure-portal/get-subscription-tenant-id`);
-        throw logger6.info((0, logging_js_1.formatError)("", error45)), error45;
+        let error46 = new Error(`Subscription '${subscription}' contains invalid characters. If this is the name of a subscription, use its ID instead. You can locate your subscription by following the instructions listed here: https://learn.microsoft.com/azure/azure-portal/get-subscription-tenant-id`);
+        throw logger6.info((0, logging_js_1.formatError)("", error46)), error46;
       }
     }
     __name(checkSubscription, "checkSubscription");
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azureCliCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/azureCliCredential.js
 var require_azureCliCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azureCliCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/azureCliCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureCliCredential = exports.cliCredentialInternals = exports.azureCliPublicErrorMessages = void 0;
@@ -36708,8 +36653,8 @@ var require_azureCliCredential = __commonJS({
               ...tenantSection,
               ...subscriptionSection
             ]].join(" ");
-            child_process_1.default.exec(command, { cwd: exports.cliCredentialInternals.getSafeWorkingDir(), timeout }, (error45, stdout2, stderr) => {
-              resolve({ stdout: stdout2, stderr, error: error45 });
+            child_process_1.default.exec(command, { cwd: exports.cliCredentialInternals.getSafeWorkingDir(), timeout }, (error46, stdout2, stderr) => {
+              resolve({ stdout: stdout2, stderr, error: error46 });
             });
           } catch (err) {
             reject(err);
@@ -36749,8 +36694,8 @@ var require_azureCliCredential = __commonJS({
         if (claimsValue && claimsValue.trim()) {
           let loginCmd = `az login --claims-challenge ${btoa(claimsValue)} --scope ${scope}`, tenantIdFromOptions = options.tenantId;
           tenantIdFromOptions && (loginCmd += ` --tenant ${tenantIdFromOptions}`);
-          let error45 = new errors_js_1.CredentialUnavailableError(`${exports.azureCliPublicErrorMessages.claim} ${loginCmd}`);
-          throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error45)), error45;
+          let error46 = new errors_js_1.CredentialUnavailableError(`${exports.azureCliPublicErrorMessages.claim} ${loginCmd}`);
+          throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
         }
         let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, options, this.additionallyAllowedTenantIds);
         return tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger6, tenantId), this.subscription && (0, subscriptionUtils_js_1.checkSubscription)(logger6, this.subscription), logger6.getToken.info(`Using the scope ${scope}`), tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
@@ -36758,12 +36703,12 @@ var require_azureCliCredential = __commonJS({
             (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger6);
             let resource = (0, scopeUtils_js_1.getScopeResource)(scope), obj = await exports.cliCredentialInternals.getAzureCliAccessToken(resource, tenantId, this.subscription, this.timeout), specificScope = obj.stderr?.match("(.*)az login --scope(.*)"), isLoginError = obj.stderr?.match("(.*)az login(.*)") && !specificScope;
             if (obj.stderr?.match("az:(.*)not found") || obj.stderr?.startsWith("'az' is not recognized")) {
-              let error45 = new errors_js_1.CredentialUnavailableError(exports.azureCliPublicErrorMessages.notInstalled);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+              let error46 = new errors_js_1.CredentialUnavailableError(exports.azureCliPublicErrorMessages.notInstalled);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             if (isLoginError) {
-              let error45 = new errors_js_1.CredentialUnavailableError(exports.azureCliPublicErrorMessages.login);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+              let error46 = new errors_js_1.CredentialUnavailableError(exports.azureCliPublicErrorMessages.login);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             try {
               let responseData = obj.stdout, response = this.parseRawResponse(responseData);
@@ -36772,8 +36717,8 @@ var require_azureCliCredential = __commonJS({
               throw obj.stderr ? new errors_js_1.CredentialUnavailableError(obj.stderr) : e2;
             }
           } catch (err) {
-            let error45 = err.name === "CredentialUnavailableError" ? err : new errors_js_1.CredentialUnavailableError(err.message || exports.azureCliPublicErrorMessages.unknown);
-            throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), error45;
+            let error46 = err.name === "CredentialUnavailableError" ? err : new errors_js_1.CredentialUnavailableError(err.message || exports.azureCliPublicErrorMessages.unknown);
+            throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
           }
         });
       }
@@ -36808,9 +36753,9 @@ var require_azureCliCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/processUtils.js
+// node_modules/@azure/identity/dist/commonjs/util/processUtils.js
 var require_processUtils = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/util/processUtils.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/util/processUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.processUtils = void 0;
@@ -36822,8 +36767,8 @@ var require_processUtils = __commonJS({
        */
       execFile(file2, params, options) {
         return new Promise((resolve, reject) => {
-          node_child_process_1.default.execFile(file2, params, options, (error45, stdout2, stderr) => {
-            Buffer.isBuffer(stdout2) && (stdout2 = stdout2.toString("utf8")), Buffer.isBuffer(stderr) && (stderr = stderr.toString("utf8")), stderr || error45 ? reject(stderr ? new Error(stderr) : error45) : resolve(stdout2);
+          node_child_process_1.default.execFile(file2, params, options, (error46, stdout2, stderr) => {
+            Buffer.isBuffer(stdout2) && (stdout2 = stdout2.toString("utf8")), Buffer.isBuffer(stderr) && (stderr = stderr.toString("utf8")), stderr || error46 ? reject(stderr ? new Error(stderr) : error46) : resolve(stdout2);
           });
         });
       }
@@ -36831,9 +36776,9 @@ var require_processUtils = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azurePowerShellCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/azurePowerShellCredential.js
 var require_azurePowerShellCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azurePowerShellCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/azurePowerShellCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzurePowerShellCredential = exports.commandStack = exports.powerShellPublicErrorMessages = exports.powerShellErrors = void 0;
@@ -36969,8 +36914,8 @@ var require_azurePowerShellCredential = __commonJS({
           if (claimsValue && claimsValue.trim()) {
             let loginCmd = `Connect-AzAccount -ClaimsChallenge ${btoa(claimsValue)}`, tenantIdFromOptions = options.tenantId;
             tenantIdFromOptions && (loginCmd += ` -Tenant ${tenantIdFromOptions}`);
-            let error45 = new errors_js_1.CredentialUnavailableError(`${exports.powerShellPublicErrorMessages.claim} ${loginCmd}`);
-            throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error45)), error45;
+            let error46 = new errors_js_1.CredentialUnavailableError(`${exports.powerShellPublicErrorMessages.claim} ${loginCmd}`);
+            throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
           }
           let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, options, this.additionallyAllowedTenantIds);
           tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger6, tenantId);
@@ -36984,14 +36929,14 @@ var require_azurePowerShellCredential = __commonJS({
             };
           } catch (err) {
             if (isNotInstalledError(err)) {
-              let error46 = new errors_js_1.CredentialUnavailableError(exports.powerShellPublicErrorMessages.installed);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
+              let error47 = new errors_js_1.CredentialUnavailableError(exports.powerShellPublicErrorMessages.installed);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error47)), error47;
             } else if (isLoginError(err)) {
-              let error46 = new errors_js_1.CredentialUnavailableError(exports.powerShellPublicErrorMessages.login);
-              throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
+              let error47 = new errors_js_1.CredentialUnavailableError(exports.powerShellPublicErrorMessages.login);
+              throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error47)), error47;
             }
-            let error45 = new errors_js_1.CredentialUnavailableError(`${err}. ${exports.powerShellPublicErrorMessages.troubleshoot}`);
-            throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error45)), error45;
+            let error46 = new errors_js_1.CredentialUnavailableError(`${err}. ${exports.powerShellPublicErrorMessages.troubleshoot}`);
+            throw logger6.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
           }
         });
       }
@@ -37018,9 +36963,9 @@ var require_azurePowerShellCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/visualStudioCodeCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/visualStudioCodeCredential.js
 var require_visualStudioCodeCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/visualStudioCodeCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/visualStudioCodeCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.VisualStudioCodeCredential = void 0;
@@ -37112,8 +37057,8 @@ var require_visualStudioCodeCredential = __commonJS({
         try {
           let authRecordContent = await (0, promises_1.readFile)(authRecordPath, { encoding: "utf8" });
           return (0, utils_js_1.deserializeAuthenticationRecord)(authRecordContent);
-        } catch (error45) {
-          throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error45)), new errors_js_1.CredentialUnavailableError("Cannot load authentication record in Visual Studio Code. Ensure you have have Azure Resources Extension installed in VS Code, signed into Azure via VS Code, installed the @azure/identity-vscode package, and properly configured the extension.");
+        } catch (error46) {
+          throw logger6.getToken.info((0, logging_js_1.formatError)(scopes, error46)), new errors_js_1.CredentialUnavailableError("Cannot load authentication record in Visual Studio Code. Ensure you have have Azure Resources Extension installed in VS Code, signed into Azure via VS Code, installed the @azure/identity-vscode package, and properly configured the extension.");
         }
       }
     };
@@ -37121,9 +37066,9 @@ var require_visualStudioCodeCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/brokerCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/brokerCredential.js
 var require_brokerCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/brokerCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/brokerCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.BrokerCredential = void 0;
@@ -37185,9 +37130,9 @@ var require_brokerCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredentialFunctions.js
+// node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredentialFunctions.js
 var require_defaultAzureCredentialFunctions = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredentialFunctions.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredentialFunctions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.createDefaultBrokerCredential = createDefaultBrokerCredential;
@@ -37211,7 +37156,7 @@ var require_defaultAzureCredentialFunctions = __commonJS({
       options.retryOptions ??= {
         maxRetries: 5,
         retryDelayInMs: 800
-      };
+      }, options.sendProbeRequest ??= !0;
       let managedIdentityClientId = options?.managedIdentityClientId ?? process.env.AZURE_CLIENT_ID, workloadIdentityClientId = options?.workloadIdentityClientId ?? managedIdentityClientId, managedResourceId = options?.managedIdentityResourceId, workloadFile = process.env.AZURE_FEDERATED_TOKEN_FILE, tenantId = options?.tenantId ?? process.env.AZURE_TENANT_ID;
       if (managedResourceId) {
         let managedIdentityResourceIdOptions = {
@@ -37277,9 +37222,9 @@ var require_defaultAzureCredentialFunctions = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredential.js
 var require_defaultAzureCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/defaultAzureCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DefaultAzureCredential = exports.UnavailableDefaultCredential = void 0;
@@ -37329,7 +37274,9 @@ var require_defaultAzureCredential = __commonJS({
               credentialFunctions = [defaultAzureCredentialFunctions_js_1.createDefaultWorkloadIdentityCredential];
               break;
             case "managedidentitycredential":
-              credentialFunctions = [defaultAzureCredentialFunctions_js_1.createDefaultManagedIdentityCredential];
+              credentialFunctions = [
+                () => (0, defaultAzureCredentialFunctions_js_1.createDefaultManagedIdentityCredential)({ sendProbeRequest: !1 })
+              ];
               break;
             case "visualstudiocodecredential":
               credentialFunctions = [defaultAzureCredentialFunctions_js_1.createDefaultVisualStudioCodeCredential];
@@ -37352,7 +37299,7 @@ var require_defaultAzureCredential = __commonJS({
           credentialFunctions = [...prodCredentialFunctions, ...devCredentialFunctions];
         let credentials = credentialFunctions.map((createCredentialFn) => {
           try {
-            return createCredentialFn(options);
+            return createCredentialFn(options ?? {});
           } catch (err) {
             return logger6.warning(`Skipped ${createCredentialFn.name} because of an error creating the credential: ${err}`), new UnavailableDefaultCredential(createCredentialFn.name, err.message);
           }
@@ -37374,9 +37321,9 @@ var require_defaultAzureCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/interactiveBrowserCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/interactiveBrowserCredential.js
 var require_interactiveBrowserCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/interactiveBrowserCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/interactiveBrowserCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.InteractiveBrowserCredential = void 0;
@@ -37475,9 +37422,9 @@ var require_interactiveBrowserCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/deviceCodeCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/deviceCodeCredential.js
 var require_deviceCodeCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/deviceCodeCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/deviceCodeCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DeviceCodeCredential = void 0;
@@ -37574,9 +37521,9 @@ var require_deviceCodeCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azurePipelinesCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/azurePipelinesCredential.js
 var require_azurePipelinesCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/azurePipelinesCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/azurePipelinesCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzurePipelinesCredential = void 0;
@@ -37690,9 +37637,9 @@ var require_azurePipelinesCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/authorizationCodeCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/authorizationCodeCredential.js
 var require_authorizationCodeCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/authorizationCodeCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/authorizationCodeCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AuthorizationCodeCredential = void 0;
@@ -37742,9 +37689,9 @@ var require_authorizationCodeCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/onBehalfOfCredential.js
+// node_modules/@azure/identity/dist/commonjs/credentials/onBehalfOfCredential.js
 var require_onBehalfOfCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/credentials/onBehalfOfCredential.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/credentials/onBehalfOfCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.OnBehalfOfCredential = void 0;
@@ -37808,15 +37755,15 @@ var require_onBehalfOfCredential = __commonJS({
             privateKey: parts.certificateContents,
             x5c: parts.x5c
           };
-        } catch (error45) {
-          throw logger6.info((0, logging_js_1.formatError)("", error45)), error45;
+        } catch (error46) {
+          throw logger6.info((0, logging_js_1.formatError)("", error46)), error46;
         }
       }
       async parseCertificate(configuration, sendCertificateChain) {
-        let certificatePath = configuration.certificatePath, certificateContents = await (0, promises_1.readFile)(certificatePath, "utf8"), x5c = sendCertificateChain ? certificateContents : void 0, certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g, publicKeys = [], match;
+        let certificatePath = configuration.certificatePath, certificateContents = await (0, promises_1.readFile)(certificatePath, "utf8"), x5c = sendCertificateChain ? certificateContents : void 0, certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g, publicKeys = [], match2;
         do
-          match = certificatePattern.exec(certificateContents), match && publicKeys.push(match[3]);
-        while (match);
+          match2 = certificatePattern.exec(certificateContents), match2 && publicKeys.push(match2[3]);
+        while (match2);
         if (publicKeys.length === 0)
           throw new Error("The file at the specified path does not contain a PEM-encoded certificate.");
         let thumbprint = (0, node_crypto_1.createHash)("sha1").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase(), thumbprintSha256 = (0, node_crypto_1.createHash)("sha256").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase();
@@ -37832,9 +37779,9 @@ var require_onBehalfOfCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/tokenProvider.js
+// node_modules/@azure/identity/dist/commonjs/tokenProvider.js
 var require_tokenProvider = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/tokenProvider.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/tokenProvider.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getBearerTokenProvider = getBearerTokenProvider;
@@ -37864,9 +37811,9 @@ var require_tokenProvider = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/index.js
+// node_modules/@azure/identity/dist/commonjs/index.js
 var require_commonjs8 = __commonJS({
-  "../../node_modules/.pnpm/@azure+identity@4.12.0/node_modules/@azure/identity/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/identity/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.getBearerTokenProvider = exports.AzureAuthorityHosts = exports.logger = exports.WorkloadIdentityCredential = exports.OnBehalfOfCredential = exports.VisualStudioCodeCredential = exports.UsernamePasswordCredential = exports.AzurePowerShellCredential = exports.AuthorizationCodeCredential = exports.AzurePipelinesCredential = exports.DeviceCodeCredential = exports.ManagedIdentityCredential = exports.InteractiveBrowserCredential = exports.AzureDeveloperCliCredential = exports.AzureCliCredential = exports.ClientAssertionCredential = exports.ClientCertificateCredential = exports.EnvironmentCredential = exports.DefaultAzureCredential = exports.ClientSecretCredential = exports.ChainedTokenCredential = exports.deserializeAuthenticationRecord = exports.serializeAuthenticationRecord = exports.AuthenticationRequiredError = exports.CredentialUnavailableErrorName = exports.CredentialUnavailableError = exports.AggregateAuthenticationErrorName = exports.AuthenticationErrorName = exports.AggregateAuthenticationError = exports.AuthenticationError = void 0;
@@ -37993,9 +37940,9 @@ var require_commonjs8 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/azureKeyCredential.js
+// node_modules/@azure/core-auth/dist/commonjs/azureKeyCredential.js
 var require_azureKeyCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/azureKeyCredential.js"(exports) {
+  "node_modules/@azure/core-auth/dist/commonjs/azureKeyCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureKeyCredential = void 0;
@@ -38037,9 +37984,9 @@ var require_azureKeyCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/keyCredential.js
+// node_modules/@azure/core-auth/dist/commonjs/keyCredential.js
 var require_keyCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/keyCredential.js"(exports) {
+  "node_modules/@azure/core-auth/dist/commonjs/keyCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isKeyCredential = isKeyCredential;
@@ -38051,9 +37998,9 @@ var require_keyCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/azureNamedKeyCredential.js
+// node_modules/@azure/core-auth/dist/commonjs/azureNamedKeyCredential.js
 var require_azureNamedKeyCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/azureNamedKeyCredential.js"(exports) {
+  "node_modules/@azure/core-auth/dist/commonjs/azureNamedKeyCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureNamedKeyCredential = void 0;
@@ -38111,9 +38058,9 @@ var require_azureNamedKeyCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/azureSASCredential.js
+// node_modules/@azure/core-auth/dist/commonjs/azureSASCredential.js
 var require_azureSASCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/azureSASCredential.js"(exports) {
+  "node_modules/@azure/core-auth/dist/commonjs/azureSASCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureSASCredential = void 0;
@@ -38162,9 +38109,9 @@ var require_azureSASCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/tokenCredential.js
+// node_modules/@azure/core-auth/dist/commonjs/tokenCredential.js
 var require_tokenCredential = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/tokenCredential.js"(exports) {
+  "node_modules/@azure/core-auth/dist/commonjs/tokenCredential.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isBearerToken = isBearerToken;
@@ -38186,9 +38133,9 @@ var require_tokenCredential = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/index.js
+// node_modules/@azure/core-auth/dist/commonjs/index.js
 var require_commonjs9 = __commonJS({
-  "../../node_modules/.pnpm/@azure+core-auth@1.10.1/node_modules/@azure/core-auth/dist/commonjs/index.js"(exports) {
+  "node_modules/@azure/core-auth/dist/commonjs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.isTokenCredential = exports.isSASCredential = exports.AzureSASCredential = exports.isNamedKeyCredential = exports.AzureNamedKeyCredential = exports.isKeyCredential = exports.AzureKeyCredential = void 0;
@@ -38221,9 +38168,9 @@ var require_commonjs9 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/debug.js
+// node_modules/tedious/lib/debug.js
 var require_debug3 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/debug.js"(exports, module) {
+  "node_modules/tedious/lib/debug.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38300,9 +38247,9 @@ var require_debug3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/sender.js
+// node_modules/tedious/lib/sender.js
 var require_sender = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/sender.js"(exports) {
+  "node_modules/tedious/lib/sender.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38357,9 +38304,9 @@ var require_sender = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/instance-lookup.js
+// node_modules/tedious/lib/instance-lookup.js
 var require_instance_lookup = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/instance-lookup.js"(exports) {
+  "node_modules/tedious/lib/instance-lookup.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38427,9 +38374,9 @@ var require_instance_lookup = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/transient-error-lookup.js
+// node_modules/tedious/lib/transient-error-lookup.js
 var require_transient_error_lookup = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/transient-error-lookup.js"(exports) {
+  "node_modules/tedious/lib/transient-error-lookup.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38439,17 +38386,17 @@ var require_transient_error_lookup = __commonJS({
       static {
         __name(this, "TransientErrorLookup");
       }
-      isTransientError(error45) {
-        return [4060, 10928, 10929, 40197, 40501, 40613].indexOf(error45) !== -1;
+      isTransientError(error46) {
+        return [4060, 10928, 10929, 40197, 40501, 40613].indexOf(error46) !== -1;
       }
     };
     exports.TransientErrorLookup = TransientErrorLookup;
   }
 });
 
-// ../../node_modules/.pnpm/sprintf-js@1.1.3/node_modules/sprintf-js/src/sprintf.js
+// node_modules/sprintf-js/src/sprintf.js
 var require_sprintf = __commonJS({
-  "../../node_modules/.pnpm/sprintf-js@1.1.3/node_modules/sprintf-js/src/sprintf.js"(exports) {
+  "node_modules/sprintf-js/src/sprintf.js"(exports) {
     (function() {
       "use strict";
       var re = {
@@ -38549,15 +38496,15 @@ var require_sprintf = __commonJS({
       function sprintf_parse(fmt) {
         if (sprintf_cache[fmt])
           return sprintf_cache[fmt];
-        for (var _fmt = fmt, match, parse_tree = [], arg_names = 0; _fmt; ) {
-          if ((match = re.text.exec(_fmt)) !== null)
-            parse_tree.push(match[0]);
-          else if ((match = re.modulo.exec(_fmt)) !== null)
+        for (var _fmt = fmt, match2, parse_tree = [], arg_names = 0; _fmt; ) {
+          if ((match2 = re.text.exec(_fmt)) !== null)
+            parse_tree.push(match2[0]);
+          else if ((match2 = re.modulo.exec(_fmt)) !== null)
             parse_tree.push("%");
-          else if ((match = re.placeholder.exec(_fmt)) !== null) {
-            if (match[2]) {
+          else if ((match2 = re.placeholder.exec(_fmt)) !== null) {
+            if (match2[2]) {
               arg_names |= 1;
-              var field_list = [], replacement_field = match[2], field_match = [];
+              var field_list = [], replacement_field = match2[2], field_match = [];
               if ((field_match = re.key.exec(replacement_field)) !== null)
                 for (field_list.push(field_match[1]); (replacement_field = replacement_field.substring(field_match[0].length)) !== ""; )
                   if ((field_match = re.key_access.exec(replacement_field)) !== null)
@@ -38568,27 +38515,27 @@ var require_sprintf = __commonJS({
                     throw new SyntaxError("[sprintf] failed to parse named argument key");
               else
                 throw new SyntaxError("[sprintf] failed to parse named argument key");
-              match[2] = field_list;
+              match2[2] = field_list;
             } else
               arg_names |= 2;
             if (arg_names === 3)
               throw new Error("[sprintf] mixing positional and named placeholders is not (yet) supported");
             parse_tree.push(
               {
-                placeholder: match[0],
-                param_no: match[1],
-                keys: match[2],
-                sign: match[3],
-                pad_char: match[4],
-                align: match[5],
-                width: match[6],
-                precision: match[7],
-                type: match[8]
+                placeholder: match2[0],
+                param_no: match2[1],
+                keys: match2[2],
+                sign: match2[3],
+                pad_char: match2[4],
+                align: match2[5],
+                width: match2[6],
+                precision: match2[7],
+                type: match2[8]
               }
             );
           } else
             throw new SyntaxError("[sprintf] unexpected placeholder");
-          _fmt = _fmt.substring(match[0].length);
+          _fmt = _fmt.substring(match2[0].length);
         }
         return sprintf_cache[fmt] = parse_tree;
       }
@@ -38602,9 +38549,9 @@ var require_sprintf = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/packet.js
+// node_modules/tedious/lib/packet.js
 var require_packet = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/packet.js"(exports) {
+  "node_modules/tedious/lib/packet.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38723,9 +38670,9 @@ var require_packet = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/prelogin-payload.js
+// node_modules/tedious/lib/prelogin-payload.js
 var require_prelogin_payload = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/prelogin-payload.js"(exports, module) {
+  "node_modules/tedious/lib/prelogin-payload.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38899,9 +38846,9 @@ var require_prelogin_payload = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/tds-versions.js
+// node_modules/tedious/lib/tds-versions.js
 var require_tds_versions = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/tds-versions.js"(exports) {
+  "node_modules/tedious/lib/tds-versions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -38920,9 +38867,9 @@ var require_tds_versions = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/login7-payload.js
+// node_modules/tedious/lib/login7-payload.js
 var require_login7_payload = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/login7-payload.js"(exports, module) {
+  "node_modules/tedious/lib/login7-payload.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39106,9 +39053,9 @@ var require_login7_payload = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/js-md4@0.3.2/node_modules/js-md4/src/md4.js
+// node_modules/js-md4/src/md4.js
 var require_md4 = __commonJS({
-  "../../node_modules/.pnpm/js-md4@0.3.2/node_modules/js-md4/src/md4.js"(exports, module) {
+  "node_modules/js-md4/src/md4.js"(exports, module) {
     (function() {
       "use strict";
       var root = typeof window == "object" ? window : {}, NODE_JS = !root.JS_MD4_NO_NODE_JS && typeof process == "object" && process.versions && process.versions.node;
@@ -39135,14 +39082,14 @@ var require_md4 = __commonJS({
         }
         return method;
       }, "createMethod"), nodeWrap = /* @__PURE__ */ __name(function(method) {
-        var crypto6 = __require("crypto"), Buffer3 = __require("buffer").Buffer, nodeMethod = /* @__PURE__ */ __name(function(message) {
+        var crypto7 = __require("crypto"), Buffer3 = __require("buffer").Buffer, nodeMethod = /* @__PURE__ */ __name(function(message) {
           if (typeof message == "string")
-            return crypto6.createHash("md4").update(message, "utf8").digest("hex");
+            return crypto7.createHash("md4").update(message, "utf8").digest("hex");
           if (ARRAY_BUFFER && message instanceof ArrayBuffer)
             message = new Uint8Array(message);
           else if (message.length === void 0)
             return method(message);
-          return crypto6.createHash("md4").update(new Buffer3(message)).digest("hex");
+          return crypto7.createHash("md4").update(new Buffer3(message)).digest("hex");
         }, "nodeMethod");
         return nodeMethod;
       }, "nodeWrap");
@@ -39225,15 +39172,15 @@ var require_md4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/ntlm-payload.js
+// node_modules/tedious/lib/ntlm-payload.js
 var require_ntlm_payload = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/ntlm-payload.js"(exports, module) {
+  "node_modules/tedious/lib/ntlm-payload.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
     });
     exports.default = void 0;
-    var _writableTrackingBuffer = _interopRequireDefault(require_writable_tracking_buffer()), crypto6 = _interopRequireWildcard(__require("crypto")), _jsMd = _interopRequireDefault(require_md4());
+    var _writableTrackingBuffer = _interopRequireDefault(require_writable_tracking_buffer()), crypto7 = _interopRequireWildcard(__require("crypto")), _jsMd = _interopRequireDefault(require_md4());
     function _getRequireWildcardCache(e2) {
       if (typeof WeakMap != "function") return null;
       var r3 = /* @__PURE__ */ new WeakMap(), t2 = /* @__PURE__ */ new WeakMap();
@@ -39310,16 +39257,16 @@ var require_ntlm_payload = __commonJS({
         return Buffer.from(_jsMd.default.arrayBuffer(unicodeString));
       }
       hmacMD5(data, key) {
-        return crypto6.createHmac("MD5", key).update(data).digest();
+        return crypto7.createHmac("MD5", key).update(data).digest();
       }
     }, _default3 = exports.default = NTLMResponsePayload;
     module.exports = NTLMResponsePayload;
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/errors.js
+// node_modules/tedious/lib/errors.js
 var require_errors2 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/errors.js"(exports) {
+  "node_modules/tedious/lib/errors.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39352,9 +39299,9 @@ var require_errors2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/always-encrypted/types.js
+// node_modules/tedious/lib/always-encrypted/types.js
 var require_types = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/always-encrypted/types.js"(exports) {
+  "node_modules/tedious/lib/always-encrypted/types.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39372,9 +39319,9 @@ var require_types = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/request.js
+// node_modules/tedious/lib/request.js
 var require_request2 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/request.js"(exports, module) {
+  "node_modules/tedious/lib/request.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39608,9 +39555,9 @@ var require_request2 = __commonJS({
           let parameter = this.parameters[i2];
           try {
             parameter.value = parameter.type.validate(parameter.value, collation);
-          } catch (error45) {
-            throw new _errors.RequestError("Validation failed for parameter '" + parameter.name + "'. " + error45.message, "EPARAM", {
-              cause: error45
+          } catch (error46) {
+            throw new _errors.RequestError("Validation failed for parameter '" + parameter.name + "'. " + error46.message, "EPARAM", {
+              cause: error46
             });
           }
         }
@@ -39651,9 +39598,9 @@ var require_request2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/all-headers.js
+// node_modules/tedious/lib/all-headers.js
 var require_all_headers = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/all-headers.js"(exports) {
+  "node_modules/tedious/lib/all-headers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39673,9 +39620,9 @@ var require_all_headers = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/rpcrequest-payload.js
+// node_modules/tedious/lib/rpcrequest-payload.js
 var require_rpcrequest_payload = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/rpcrequest-payload.js"(exports, module) {
+  "node_modules/tedious/lib/rpcrequest-payload.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39720,9 +39667,9 @@ var require_rpcrequest_payload = __commonJS({
         (type.id & 48) === 32 && (parameter.length ? param.length = parameter.length : type.resolveLength && (param.length = type.resolveLength(parameter))), parameter.precision ? param.precision = parameter.precision : type.resolvePrecision && (param.precision = type.resolvePrecision(parameter)), parameter.scale ? param.scale = parameter.scale : type.resolveScale && (param.scale = type.resolveScale(parameter)), this.collation && (param.collation = this.collation), yield type.generateTypeInfo(param, this.options), yield type.generateParameterLength(param, this.options);
         try {
           yield* type.generateParameterData(param, this.options);
-        } catch (error45) {
+        } catch (error46) {
           throw new _errors.InputError(`Input parameter '${parameter.name}' could not be validated`, {
-            cause: error45
+            cause: error46
           });
         }
       }
@@ -39731,9 +39678,9 @@ var require_rpcrequest_payload = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/sqlbatch-payload.js
+// node_modules/tedious/lib/sqlbatch-payload.js
 var require_sqlbatch_payload = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/sqlbatch-payload.js"(exports, module) {
+  "node_modules/tedious/lib/sqlbatch-payload.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39766,9 +39713,9 @@ var require_sqlbatch_payload = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/native-duplexpair@1.0.0/node_modules/native-duplexpair/index.js
+// node_modules/native-duplexpair/index.js
 var require_native_duplexpair = __commonJS({
-  "../../node_modules/.pnpm/native-duplexpair@1.0.0/node_modules/native-duplexpair/index.js"(exports, module) {
+  "node_modules/native-duplexpair/index.js"(exports, module) {
     "use strict";
     var Duplex = __require("stream").Duplex, kCallback = Symbol("Callback"), kOtherSide = Symbol("Other"), DuplexSocket = class extends Duplex {
       static {
@@ -39799,9 +39746,9 @@ var require_native_duplexpair = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/message.js
+// node_modules/tedious/lib/message.js
 var require_message = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/message.js"(exports, module) {
+  "node_modules/tedious/lib/message.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -39822,9 +39769,9 @@ var require_message = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/primordials.js
+// node_modules/readable-stream/lib/ours/primordials.js
 var require_primordials = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/primordials.js"(exports, module) {
+  "node_modules/readable-stream/lib/ours/primordials.js"(exports, module) {
     "use strict";
     var AggregateError2 = class extends Error {
       static {
@@ -39942,9 +39889,9 @@ var require_primordials = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/util/inspect.js
+// node_modules/readable-stream/lib/ours/util/inspect.js
 var require_inspect2 = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/util/inspect.js"(exports, module) {
+  "node_modules/readable-stream/lib/ours/util/inspect.js"(exports, module) {
     "use strict";
     module.exports = {
       format(format, ...args) {
@@ -39977,9 +39924,9 @@ var require_inspect2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/errors.js
+// node_modules/readable-stream/lib/ours/errors.js
 var require_errors3 = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/errors.js"(exports, module) {
+  "node_modules/readable-stream/lib/ours/errors.js"(exports, module) {
     "use strict";
     var { format, inspect } = require_inspect2(), { AggregateError: CustomAggregateError } = require_primordials(), AggregateError2 = globalThis.AggregateError || CustomAggregateError, kIsNodeError = Symbol("kIsNodeError"), kTypes = [
       "string",
@@ -40236,9 +40183,9 @@ var require_errors3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/event-target-shim@5.0.1/node_modules/event-target-shim/dist/event-target-shim.js
+// node_modules/event-target-shim/dist/event-target-shim.js
 var require_event_target_shim = __commonJS({
-  "../../node_modules/.pnpm/event-target-shim@5.0.1/node_modules/event-target-shim/dist/event-target-shim.js"(exports, module) {
+  "node_modules/event-target-shim/dist/event-target-shim.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var privateData = /* @__PURE__ */ new WeakMap(), wrappers = /* @__PURE__ */ new WeakMap();
@@ -40710,9 +40657,9 @@ var require_event_target_shim = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/abort-controller@3.0.0/node_modules/abort-controller/dist/abort-controller.js
+// node_modules/abort-controller/dist/abort-controller.js
 var require_abort_controller = __commonJS({
-  "../../node_modules/.pnpm/abort-controller@3.0.0/node_modules/abort-controller/dist/abort-controller.js"(exports, module) {
+  "node_modules/abort-controller/dist/abort-controller.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var eventTargetShim = require_event_target_shim(), AbortSignal2 = class extends eventTargetShim.EventTarget {
@@ -40800,9 +40747,9 @@ var require_abort_controller = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/util.js
+// node_modules/readable-stream/lib/ours/util.js
 var require_util2 = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/util.js"(exports, module) {
+  "node_modules/readable-stream/lib/ours/util.js"(exports, module) {
     "use strict";
     var bufferModule = __require("buffer"), { format, inspect } = require_inspect2(), {
       codes: { ERR_INVALID_ARG_TYPE }
@@ -40902,9 +40849,9 @@ var require_util2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/validators.js
+// node_modules/readable-stream/lib/internal/validators.js
 var require_validators = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/validators.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/validators.js"(exports, module) {
     "use strict";
     var {
       ArrayIsArray,
@@ -41128,16 +41075,16 @@ var require_validators = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/process@0.11.10/node_modules/process/index.js
+// node_modules/process/index.js
 var require_process = __commonJS({
-  "../../node_modules/.pnpm/process@0.11.10/node_modules/process/index.js"(exports, module) {
+  "node_modules/process/index.js"(exports, module) {
     module.exports = global.process;
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/utils.js
+// node_modules/readable-stream/lib/internal/streams/utils.js
 var require_utils6 = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/utils.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/utils.js"(exports, module) {
     "use strict";
     var { SymbolAsyncIterator, SymbolIterator, SymbolFor } = require_primordials(), kIsDestroyed = SymbolFor("nodejs.stream.destroyed"), kIsErrored = SymbolFor("nodejs.stream.errored"), kIsReadable = SymbolFor("nodejs.stream.readable"), kIsWritable = SymbolFor("nodejs.stream.writable"), kIsDisturbed = SymbolFor("nodejs.stream.disturbed"), kIsClosedPromise = SymbolFor("nodejs.webstream.isClosedPromise"), kControllerErrorFunction = SymbolFor("nodejs.webstream.controllerErrorFunction");
     function isReadableNodeStream(obj, strict = !1) {
@@ -41309,9 +41256,9 @@ var require_utils6 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/end-of-stream.js
+// node_modules/readable-stream/lib/internal/streams/end-of-stream.js
 var require_end_of_stream = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/end-of-stream.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/end-of-stream.js"(exports, module) {
     "use strict";
     var process9 = require_process(), { AbortError, codes } = require_errors3(), { ERR_INVALID_ARG_TYPE, ERR_STREAM_PREMATURE_CLOSE } = codes, { kEmptyObject, once } = require_util2(), { validateAbortSignal, validateFunction, validateObject, validateBoolean } = require_validators(), { Promise: Promise2, PromisePrototypeThen, SymbolDispose } = require_primordials(), {
       isClosed,
@@ -41435,9 +41382,9 @@ var require_end_of_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/destroy.js
+// node_modules/readable-stream/lib/internal/streams/destroy.js
 var require_destroy = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/destroy.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/destroy.js"(exports, module) {
     "use strict";
     var process9 = require_process(), {
       aggregateTwoErrors,
@@ -41556,9 +41503,9 @@ var require_destroy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/legacy.js
+// node_modules/readable-stream/lib/internal/streams/legacy.js
 var require_legacy = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/legacy.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/legacy.js"(exports, module) {
     "use strict";
     var { ArrayIsArray, ObjectSetPrototypeOf } = require_primordials(), { EventEmitter: EE } = __require("events");
     function Stream(opts) {
@@ -41607,9 +41554,9 @@ var require_legacy = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/add-abort-signal.js
+// node_modules/readable-stream/lib/internal/streams/add-abort-signal.js
 var require_add_abort_signal = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/add-abort-signal.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/add-abort-signal.js"(exports, module) {
     "use strict";
     var { SymbolDispose } = require_primordials(), { AbortError, codes } = require_errors3(), { isNodeStream, isWebStream, kControllerErrorFunction } = require_utils6(), eos = require_end_of_stream(), { ERR_INVALID_ARG_TYPE } = codes, addAbortListener, validateAbortSignal = /* @__PURE__ */ __name((signal, name) => {
       if (typeof signal != "object" || !("aborted" in signal))
@@ -41648,9 +41595,9 @@ var require_add_abort_signal = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/buffer_list.js
+// node_modules/readable-stream/lib/internal/streams/buffer_list.js
 var require_buffer_list = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/buffer_list.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/buffer_list.js"(exports, module) {
     "use strict";
     var { StringPrototypeSlice, SymbolIterator, TypedArrayPrototypeSet, Uint8Array: Uint8Array2 } = require_primordials(), { Buffer: Buffer3 } = __require("buffer"), { inspect } = require_util2();
     module.exports = class {
@@ -41755,9 +41702,9 @@ var require_buffer_list = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/state.js
+// node_modules/readable-stream/lib/internal/streams/state.js
 var require_state3 = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/state.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/state.js"(exports, module) {
     "use strict";
     var { MathFloor, NumberIsInteger } = require_primordials(), { validateInteger } = require_validators(), { ERR_INVALID_ARG_VALUE } = require_errors3().codes, defaultHighWaterMarkBytes = 16 * 1024, defaultHighWaterMarkObjectMode = 16;
     function highWaterMarkFrom(options, isDuplex, duplexKey) {
@@ -41792,9 +41739,9 @@ var require_state3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/string_decoder@1.3.0/node_modules/string_decoder/lib/string_decoder.js
+// node_modules/string_decoder/lib/string_decoder.js
 var require_string_decoder = __commonJS({
-  "../../node_modules/.pnpm/string_decoder@1.3.0/node_modules/string_decoder/lib/string_decoder.js"(exports) {
+  "node_modules/string_decoder/lib/string_decoder.js"(exports) {
     "use strict";
     var Buffer3 = require_safe_buffer().Buffer, isEncoding = Buffer3.isEncoding || function(encoding) {
       switch (encoding = "" + encoding, encoding && encoding.toLowerCase()) {
@@ -41969,9 +41916,9 @@ var require_string_decoder = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/from.js
+// node_modules/readable-stream/lib/internal/streams/from.js
 var require_from = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/from.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/from.js"(exports, module) {
     "use strict";
     var process9 = require_process(), { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = require_primordials(), { Buffer: Buffer3 } = __require("buffer"), { ERR_INVALID_ARG_TYPE, ERR_STREAM_NULL_VALUES } = require_errors3().codes;
     function from(Readable2, iterable, opts) {
@@ -41999,18 +41946,18 @@ var require_from = __commonJS({
       }), reading = !1;
       readable._read = function() {
         reading || (reading = !0, next());
-      }, readable._destroy = function(error45, cb) {
+      }, readable._destroy = function(error46, cb) {
         PromisePrototypeThen(
-          close(error45),
-          () => process9.nextTick(cb, error45),
+          close(error46),
+          () => process9.nextTick(cb, error46),
           // nextTick is here in case cb throws
-          (e2) => process9.nextTick(cb, e2 || error45)
+          (e2) => process9.nextTick(cb, e2 || error46)
         );
       };
-      async function close(error45) {
-        let hadError = error45 != null, hasThrow = typeof iterator.throw == "function";
+      async function close(error46) {
+        let hadError = error46 != null, hasThrow = typeof iterator.throw == "function";
         if (hadError && hasThrow) {
-          let { value, done } = await iterator.throw(error45);
+          let { value, done } = await iterator.throw(error46);
           if (await value, done)
             return;
         }
@@ -42047,9 +41994,9 @@ var require_from = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/readable.js
+// node_modules/readable-stream/lib/internal/streams/readable.js
 var require_readable = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/readable.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/readable.js"(exports, module) {
     "use strict";
     var process9 = require_process(), {
       ArrayPrototypeIndexOf,
@@ -42154,8 +42101,8 @@ var require_readable = __commonJS({
       this.destroy(err);
     };
     Readable2.prototype[SymbolAsyncDispose] = function() {
-      let error45;
-      return this.destroyed || (error45 = this.readableEnded ? null : new AbortError(), this.destroy(error45)), new Promise2((resolve, reject) => eos(this, (err) => err && err !== error45 ? reject(err) : resolve(null)));
+      let error46;
+      return this.destroyed || (error46 = this.readableEnded ? null : new AbortError(), this.destroy(error46)), new Promise2((resolve, reject) => eos(this, (err) => err && err !== error46 ? reject(err) : resolve(null)));
     };
     Readable2.prototype.push = function(chunk, encoding) {
       return readableAddChunk(this, chunk, encoding, !1);
@@ -42430,13 +42377,13 @@ var require_readable = __commonJS({
         this === stream2 ? (callback(), callback = nop) : callback = resolve;
       }
       __name(next, "next"), stream2.on("readable", next);
-      let error45, cleanup = eos(
+      let error46, cleanup = eos(
         stream2,
         {
           writable: !1
         },
         (err) => {
-          error45 = err ? aggregateTwoErrors(error45, err) : null, callback(), callback = nop;
+          error46 = err ? aggregateTwoErrors(error46, err) : null, callback(), callback = nop;
         }
       );
       try {
@@ -42445,17 +42392,17 @@ var require_readable = __commonJS({
           if (chunk !== null)
             yield chunk;
           else {
-            if (error45)
-              throw error45;
-            if (error45 === null)
+            if (error46)
+              throw error46;
+            if (error46 === null)
               return;
             await new Promise2(next);
           }
         }
       } catch (err) {
-        throw error45 = aggregateTwoErrors(error45, err), error45;
+        throw error46 = aggregateTwoErrors(error46, err), error46;
       } finally {
-        (error45 || options?.destroyOnReturn !== !1) && (error45 === void 0 || stream2._readableState.autoDestroy) ? destroyImpl.destroyer(stream2, null) : (stream2.off("readable", next), cleanup());
+        (error46 || options?.destroyOnReturn !== !1) && (error46 === void 0 || stream2._readableState.autoDestroy) ? destroyImpl.destroyer(stream2, null) : (stream2.off("readable", next), cleanup());
       }
     }
     __name(createAsyncIterator, "createAsyncIterator");
@@ -42635,9 +42582,9 @@ var require_readable = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/writable.js
+// node_modules/readable-stream/lib/internal/streams/writable.js
 var require_writable = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/writable.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/writable.js"(exports, module) {
     "use strict";
     var process9 = require_process(), {
       ArrayPrototypeSlice,
@@ -43028,9 +42975,9 @@ var require_writable = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/duplexify.js
+// node_modules/readable-stream/lib/internal/streams/duplexify.js
 var require_duplexify = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/duplexify.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/duplexify.js"(exports, module) {
     var process9 = require_process(), bufferModule = __require("buffer"), {
       isReadable,
       isWritable,
@@ -43271,9 +43218,9 @@ var require_duplexify = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/duplex.js
+// node_modules/readable-stream/lib/internal/streams/duplex.js
 var require_duplex = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/duplex.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/duplex.js"(exports, module) {
     "use strict";
     var {
       ObjectDefineProperties,
@@ -43362,9 +43309,9 @@ var require_duplex = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/transform.js
+// node_modules/readable-stream/lib/internal/streams/transform.js
 var require_transform = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/transform.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/transform.js"(exports, module) {
     "use strict";
     var { ObjectSetPrototypeOf, Symbol: Symbol2 } = require_primordials();
     module.exports = Transform;
@@ -43426,9 +43373,9 @@ var require_transform = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/passthrough.js
+// node_modules/readable-stream/lib/internal/streams/passthrough.js
 var require_passthrough = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/passthrough.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/passthrough.js"(exports, module) {
     "use strict";
     var { ObjectSetPrototypeOf } = require_primordials();
     module.exports = PassThrough;
@@ -43446,9 +43393,9 @@ var require_passthrough = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/pipeline.js
+// node_modules/readable-stream/lib/internal/streams/pipeline.js
 var require_pipeline4 = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/pipeline.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/pipeline.js"(exports, module) {
     var process9 = require_process(), { ArrayIsArray, Promise: Promise2, SymbolAsyncIterator, SymbolDispose } = require_primordials(), eos = require_end_of_stream(), { once } = require_util2(), destroyImpl = require_destroy(), Duplex = require_duplex(), {
       aggregateTwoErrors,
       codes: {
@@ -43509,14 +43456,14 @@ var require_pipeline4 = __commonJS({
     }
     __name(fromReadable, "fromReadable");
     async function pumpToNode(iterable, writable, finish, { end }) {
-      let error45, onresolve = null, resume = /* @__PURE__ */ __name((err) => {
-        if (err && (error45 = err), onresolve) {
+      let error46, onresolve = null, resume = /* @__PURE__ */ __name((err) => {
+        if (err && (error46 = err), onresolve) {
           let callback = onresolve;
           onresolve = null, callback();
         }
       }, "resume"), wait = /* @__PURE__ */ __name(() => new Promise2((resolve, reject) => {
-        error45 ? reject(error45) : onresolve = /* @__PURE__ */ __name(() => {
-          error45 ? reject(error45) : resolve();
+        error46 ? reject(error46) : onresolve = /* @__PURE__ */ __name(() => {
+          error46 ? reject(error46) : resolve();
         }, "onresolve");
       }), "wait");
       writable.on("drain", resume);
@@ -43533,7 +43480,7 @@ var require_pipeline4 = __commonJS({
           writable.write(chunk) || await wait();
         end && (writable.end(), await wait()), finish();
       } catch (err) {
-        finish(error45 !== err ? aggregateTwoErrors(error45, err) : err);
+        finish(error46 !== err ? aggregateTwoErrors(error46, err) : err);
       } finally {
         cleanup(), writable.off("drain", resume);
       }
@@ -43571,17 +43518,17 @@ var require_pipeline4 = __commonJS({
       __name(abort, "abort"), addAbortListener = addAbortListener || require_util2().addAbortListener;
       let disposable;
       outerSignal && (disposable = addAbortListener(outerSignal, abort));
-      let error45, value, destroys = [], finishCount = 0;
+      let error46, value, destroys = [], finishCount = 0;
       function finish(err) {
         finishImpl(err, --finishCount === 0);
       }
       __name(finish, "finish");
       function finishImpl(err, final) {
         var _disposable;
-        if (err && (!error45 || error45.code === "ERR_STREAM_PREMATURE_CLOSE") && (error45 = err), !(!error45 && !final)) {
+        if (err && (!error46 || error46.code === "ERR_STREAM_PREMATURE_CLOSE") && (error46 = err), !(!error46 && !final)) {
           for (; destroys.length; )
-            destroys.shift()(error45);
-          (_disposable = disposable) === null || _disposable === void 0 || _disposable[SymbolDispose](), ac.abort(), final && (error45 || lastStreamCleanup.forEach((fn) => fn()), process9.nextTick(callback, error45, value));
+            destroys.shift()(error46);
+          (_disposable = disposable) === null || _disposable === void 0 || _disposable[SymbolDispose](), ac.abort(), final && (error46 || lastStreamCleanup.forEach((fn) => fn()), process9.nextTick(callback, error46, value));
         }
       }
       __name(finishImpl, "finishImpl");
@@ -43740,9 +43687,9 @@ var require_pipeline4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/compose.js
+// node_modules/readable-stream/lib/internal/streams/compose.js
 var require_compose = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/compose.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/compose.js"(exports, module) {
     "use strict";
     var { pipeline } = require_pipeline4(), Duplex = require_duplex(), { destroyer } = require_destroy(), {
       isNodeStream,
@@ -43869,9 +43816,9 @@ var require_compose = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/operators.js
+// node_modules/readable-stream/lib/internal/streams/operators.js
 var require_operators = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/internal/streams/operators.js"(exports, module) {
+  "node_modules/readable-stream/lib/internal/streams/operators.js"(exports, module) {
     "use strict";
     var AbortController2 = globalThis.AbortController || require_abort_controller().AbortController, {
       codes: { ERR_INVALID_ARG_VALUE, ERR_INVALID_ARG_TYPE, ERR_MISSING_ARGS, ERR_OUT_OF_RANGE },
@@ -44148,9 +44095,9 @@ var require_operators = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/stream/promises.js
+// node_modules/readable-stream/lib/stream/promises.js
 var require_promises = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/stream/promises.js"(exports, module) {
+  "node_modules/readable-stream/lib/stream/promises.js"(exports, module) {
     "use strict";
     var { ArrayPrototypePop, Promise: Promise2 } = require_primordials(), { isIterable, isNodeStream, isWebStream } = require_utils6(), { pipelineImpl: pl } = require_pipeline4(), { finished } = require_end_of_stream();
     require_stream();
@@ -44181,9 +44128,9 @@ var require_promises = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/stream.js
+// node_modules/readable-stream/lib/stream.js
 var require_stream = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/stream.js"(exports, module) {
+  "node_modules/readable-stream/lib/stream.js"(exports, module) {
     "use strict";
     var { Buffer: Buffer3 } = __require("buffer"), { ObjectDefineProperty, ObjectKeys, ReflectApply } = require_primordials(), {
       promisify: { custom: customPromisify }
@@ -44284,9 +44231,9 @@ var require_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/index.js
+// node_modules/readable-stream/lib/ours/index.js
 var require_ours = __commonJS({
-  "../../node_modules/.pnpm/readable-stream@4.7.0/node_modules/readable-stream/lib/ours/index.js"(exports, module) {
+  "node_modules/readable-stream/lib/ours/index.js"(exports, module) {
     "use strict";
     var Stream = __require("stream");
     if (Stream && process.env.READABLE_STREAM === "disable") {
@@ -44312,9 +44259,9 @@ var require_ours = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/inherits@2.0.4/node_modules/inherits/inherits_browser.js
+// node_modules/inherits/inherits_browser.js
 var require_inherits_browser = __commonJS({
-  "../../node_modules/.pnpm/inherits@2.0.4/node_modules/inherits/inherits_browser.js"(exports, module) {
+  "node_modules/inherits/inherits_browser.js"(exports, module) {
     typeof Object.create == "function" ? module.exports = /* @__PURE__ */ __name(function(ctor, superCtor) {
       superCtor && (ctor.super_ = superCtor, ctor.prototype = Object.create(superCtor.prototype, {
         constructor: {
@@ -44335,9 +44282,9 @@ var require_inherits_browser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/inherits@2.0.4/node_modules/inherits/inherits.js
+// node_modules/inherits/inherits.js
 var require_inherits = __commonJS({
-  "../../node_modules/.pnpm/inherits@2.0.4/node_modules/inherits/inherits.js"(exports, module) {
+  "node_modules/inherits/inherits.js"(exports, module) {
     try {
       if (util2 = __require("util"), typeof util2.inherits != "function") throw "";
       module.exports = util2.inherits;
@@ -44348,9 +44295,9 @@ var require_inherits = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/bl@6.1.3/node_modules/bl/BufferList.js
+// node_modules/bl/BufferList.js
 var require_BufferList = __commonJS({
-  "../../node_modules/.pnpm/bl@6.1.3/node_modules/bl/BufferList.js"(exports, module) {
+  "node_modules/bl/BufferList.js"(exports, module) {
     "use strict";
     var { Buffer: Buffer3 } = __require("buffer"), symbol2 = Symbol.for("BufferList");
     function BufferList(buf) {
@@ -44551,9 +44498,9 @@ var require_BufferList = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/bl@6.1.3/node_modules/bl/bl.js
+// node_modules/bl/bl.js
 var require_bl = __commonJS({
-  "../../node_modules/.pnpm/bl@6.1.3/node_modules/bl/bl.js"(exports, module) {
+  "node_modules/bl/bl.js"(exports, module) {
     "use strict";
     var DuplexStream = require_ours().Duplex, inherits = require_inherits(), BufferList = require_BufferList();
     function BufferListStream(callback) {
@@ -44602,9 +44549,9 @@ var require_bl = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/incoming-message-stream.js
+// node_modules/tedious/lib/incoming-message-stream.js
 var require_incoming_message_stream = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/incoming-message-stream.js"(exports, module) {
+  "node_modules/tedious/lib/incoming-message-stream.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -44668,9 +44615,9 @@ var require_incoming_message_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/outgoing-message-stream.js
+// node_modules/tedious/lib/outgoing-message-stream.js
 var require_outgoing_message_stream = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/outgoing-message-stream.js"(exports, module) {
+  "node_modules/tedious/lib/outgoing-message-stream.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -44719,9 +44666,9 @@ var require_outgoing_message_stream = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/message-io.js
+// node_modules/tedious/lib/message-io.js
 var require_message_io = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/message-io.js"(exports, module) {
+  "node_modules/tedious/lib/message-io.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -44829,9 +44776,9 @@ var require_message_io = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/collation.js
+// node_modules/tedious/lib/collation.js
 var require_collation = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/collation.js"(exports) {
+  "node_modules/tedious/lib/collation.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45163,9 +45110,9 @@ var require_collation = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/null.js
+// node_modules/tedious/lib/data-types/null.js
 var require_null = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/null.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/null.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45195,9 +45142,9 @@ var require_null = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/intn.js
+// node_modules/tedious/lib/data-types/intn.js
 var require_intn = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/intn.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/intn.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45227,9 +45174,9 @@ var require_intn = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/tinyint.js
+// node_modules/tedious/lib/data-types/tinyint.js
 var require_tinyint = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/tinyint.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/tinyint.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45273,9 +45220,9 @@ var require_tinyint = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/bitn.js
+// node_modules/tedious/lib/data-types/bitn.js
 var require_bitn = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/bitn.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/bitn.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45305,9 +45252,9 @@ var require_bitn = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/bit.js
+// node_modules/tedious/lib/data-types/bit.js
 var require_bit = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/bit.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/bit.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45342,9 +45289,9 @@ var require_bit = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/smallint.js
+// node_modules/tedious/lib/data-types/smallint.js
 var require_smallint = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/smallint.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/smallint.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45388,9 +45335,9 @@ var require_smallint = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/int.js
+// node_modules/tedious/lib/data-types/int.js
 var require_int = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/int.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/int.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45434,9 +45381,9 @@ var require_int = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetimen.js
+// node_modules/tedious/lib/data-types/datetimen.js
 var require_datetimen = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetimen.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/datetimen.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45466,9 +45413,9 @@ var require_datetimen = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/smalldatetime.js
+// node_modules/tedious/lib/data-types/smalldatetime.js
 var require_smalldatetime = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/smalldatetime.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/smalldatetime.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45516,9 +45463,9 @@ var require_smalldatetime = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/floatn.js
+// node_modules/tedious/lib/data-types/floatn.js
 var require_floatn = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/floatn.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/floatn.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45548,9 +45495,9 @@ var require_floatn = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/real.js
+// node_modules/tedious/lib/data-types/real.js
 var require_real = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/real.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/real.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45592,9 +45539,9 @@ var require_real = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/moneyn.js
+// node_modules/tedious/lib/data-types/moneyn.js
 var require_moneyn = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/moneyn.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/moneyn.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45624,9 +45571,9 @@ var require_moneyn = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/money.js
+// node_modules/tedious/lib/data-types/money.js
 var require_money = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/money.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/money.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -45670,9 +45617,9 @@ var require_money = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@js-joda+core@5.6.5/node_modules/@js-joda/core/dist/js-joda.js
+// node_modules/@js-joda/core/dist/js-joda.js
 var require_js_joda = __commonJS({
-  "../../node_modules/.pnpm/@js-joda+core@5.6.5/node_modules/@js-joda/core/dist/js-joda.js"(exports, module) {
+  "node_modules/@js-joda/core/dist/js-joda.js"(exports, module) {
     (function(global2, factory) {
       typeof exports == "object" && typeof module < "u" ? factory(exports) : typeof define == "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis < "u" ? globalThis : global2 || self, factory(global2.JSJoda = {}));
     })(exports, (function(exports2) {
@@ -45728,9 +45675,9 @@ Caused by: ` + cause.stack + `
         return self2;
       }
       __name(_assertThisInitialized, "_assertThisInitialized");
-      function assert2(assertion, msg, error45) {
+      function assert2(assertion, msg, error46) {
         if (!assertion)
-          throw error45 ? new error45(msg) : new Error(msg);
+          throw error46 ? new error46(msg) : new Error(msg);
       }
       __name(assert2, "assert");
       function requireNonNull(value, parameterName) {
@@ -51714,9 +51661,9 @@ Caused by: ` + cause.stack + `
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetime.js
+// node_modules/tedious/lib/data-types/datetime.js
 var require_datetime = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetime.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/datetime.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -51774,9 +51721,9 @@ var require_datetime = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/float.js
+// node_modules/tedious/lib/data-types/float.js
 var require_float = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/float.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/float.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -51818,9 +51765,9 @@ var require_float = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/decimaln.js
+// node_modules/tedious/lib/data-types/decimaln.js
 var require_decimaln = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/decimaln.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/decimaln.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -51850,9 +51797,9 @@ var require_decimaln = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/decimal.js
+// node_modules/tedious/lib/data-types/decimal.js
 var require_decimal = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/decimal.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/decimal.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -51916,9 +51863,9 @@ var require_decimal = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/numericn.js
+// node_modules/tedious/lib/data-types/numericn.js
 var require_numericn = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/numericn.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/numericn.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -51948,9 +51895,9 @@ var require_numericn = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/numeric.js
+// node_modules/tedious/lib/data-types/numeric.js
 var require_numeric = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/numeric.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/numeric.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -52014,9 +51961,9 @@ var require_numeric = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/smallmoney.js
+// node_modules/tedious/lib/data-types/smallmoney.js
 var require_smallmoney = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/smallmoney.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/smallmoney.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -52060,9 +52007,9 @@ var require_smallmoney = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/bigint.js
+// node_modules/tedious/lib/data-types/bigint.js
 var require_bigint = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/bigint.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/bigint.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -52104,9 +52051,9 @@ var require_bigint = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/image.js
+// node_modules/tedious/lib/data-types/image.js
 var require_image = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/image.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/image.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -52148,9 +52095,9 @@ var require_image = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/safer-buffer@2.1.2/node_modules/safer-buffer/safer.js
+// node_modules/safer-buffer/safer.js
 var require_safer = __commonJS({
-  "../../node_modules/.pnpm/safer-buffer@2.1.2/node_modules/safer-buffer/safer.js"(exports, module) {
+  "node_modules/safer-buffer/safer.js"(exports, module) {
     "use strict";
     var buffer = __require("buffer"), Buffer3 = buffer.Buffer, safer = {}, key;
     for (key in buffer)
@@ -52186,9 +52133,9 @@ var require_safer = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/lib/bom-handling.js
+// node_modules/iconv-lite/lib/bom-handling.js
 var require_bom_handling = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/lib/bom-handling.js"(exports) {
+  "node_modules/iconv-lite/lib/bom-handling.js"(exports) {
     "use strict";
     var BOMChar = "\uFEFF";
     exports.PrependBOM = PrependBOMWrapper;
@@ -52217,9 +52164,9 @@ var require_bom_handling = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/internal.js
+// node_modules/iconv-lite/encodings/internal.js
 var require_internal4 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/internal.js"(exports, module) {
+  "node_modules/iconv-lite/encodings/internal.js"(exports, module) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     module.exports = {
@@ -52305,9 +52252,9 @@ var require_internal4 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/utf32.js
+// node_modules/iconv-lite/encodings/utf32.js
 var require_utf32 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/utf32.js"(exports) {
+  "node_modules/iconv-lite/encodings/utf32.js"(exports) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     exports._utf32 = Utf32Codec;
@@ -52444,9 +52391,9 @@ var require_utf32 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/utf16.js
+// node_modules/iconv-lite/encodings/utf16.js
 var require_utf16 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/utf16.js"(exports) {
+  "node_modules/iconv-lite/encodings/utf16.js"(exports) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     exports.utf16be = Utf16BECodec;
@@ -52546,9 +52493,9 @@ var require_utf16 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/utf7.js
+// node_modules/iconv-lite/encodings/utf7.js
 var require_utf7 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/utf7.js"(exports) {
+  "node_modules/iconv-lite/encodings/utf7.js"(exports) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     exports.utf7 = Utf7Codec;
@@ -52662,9 +52609,9 @@ var require_utf7 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/sbcs-codec.js
+// node_modules/iconv-lite/encodings/sbcs-codec.js
 var require_sbcs_codec = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/sbcs-codec.js"(exports) {
+  "node_modules/iconv-lite/encodings/sbcs-codec.js"(exports) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     exports._sbcs = SBCSCodec;
@@ -52711,9 +52658,9 @@ var require_sbcs_codec = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/sbcs-data.js
+// node_modules/iconv-lite/encodings/sbcs-data.js
 var require_sbcs_data = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/sbcs-data.js"(exports, module) {
+  "node_modules/iconv-lite/encodings/sbcs-data.js"(exports, module) {
     "use strict";
     module.exports = {
       // Not supported by iconv, not sure why.
@@ -52864,9 +52811,9 @@ var require_sbcs_data = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/sbcs-data-generated.js
+// node_modules/iconv-lite/encodings/sbcs-data-generated.js
 var require_sbcs_data_generated = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/sbcs-data-generated.js"(exports, module) {
+  "node_modules/iconv-lite/encodings/sbcs-data-generated.js"(exports, module) {
     "use strict";
     module.exports = {
       437: "cp437",
@@ -53324,9 +53271,9 @@ var require_sbcs_data_generated = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/dbcs-codec.js
+// node_modules/iconv-lite/encodings/dbcs-codec.js
 var require_dbcs_codec = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/dbcs-codec.js"(exports) {
+  "node_modules/iconv-lite/encodings/dbcs-codec.js"(exports) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     exports._dbcs = DBCSCodec;
@@ -53583,9 +53530,9 @@ var require_dbcs_codec = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/shiftjis.json
+// node_modules/iconv-lite/encodings/tables/shiftjis.json
 var require_shiftjis = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/shiftjis.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/shiftjis.json"(exports, module) {
     module.exports = [
       ["0", "\0", 128],
       ["a1", "｡", 62],
@@ -53714,9 +53661,9 @@ var require_shiftjis = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/eucjp.json
+// node_modules/iconv-lite/encodings/tables/eucjp.json
 var require_eucjp = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/eucjp.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/eucjp.json"(exports, module) {
     module.exports = [
       ["0", "\0", 127],
       ["8ea1", "｡", 62],
@@ -53902,9 +53849,9 @@ var require_eucjp = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/cp936.json
+// node_modules/iconv-lite/encodings/tables/cp936.json
 var require_cp936 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/cp936.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/cp936.json"(exports, module) {
     module.exports = [
       ["0", "\0", 127, "€"],
       ["8140", "丂丄丅丆丏丒丗丟丠両丣並丩丮丯丱丳丵丷丼乀乁乂乄乆乊乑乕乗乚乛乢乣乤乥乧乨乪", 5, "乲乴", 9, "乿", 6, "亇亊"],
@@ -54172,9 +54119,9 @@ var require_cp936 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/gbk-added.json
+// node_modules/iconv-lite/encodings/tables/gbk-added.json
 var require_gbk_added = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/gbk-added.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/gbk-added.json"(exports, module) {
     module.exports = [
       ["a140", "", 62],
       ["a180", "", 32],
@@ -54234,16 +54181,16 @@ var require_gbk_added = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/gb18030-ranges.json
+// node_modules/iconv-lite/encodings/tables/gb18030-ranges.json
 var require_gb18030_ranges = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/gb18030-ranges.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/gb18030-ranges.json"(exports, module) {
     module.exports = { uChars: [128, 165, 169, 178, 184, 216, 226, 235, 238, 244, 248, 251, 253, 258, 276, 284, 300, 325, 329, 334, 364, 463, 465, 467, 469, 471, 473, 475, 477, 506, 594, 610, 712, 716, 730, 930, 938, 962, 970, 1026, 1104, 1106, 8209, 8215, 8218, 8222, 8231, 8241, 8244, 8246, 8252, 8365, 8452, 8454, 8458, 8471, 8482, 8556, 8570, 8596, 8602, 8713, 8720, 8722, 8726, 8731, 8737, 8740, 8742, 8748, 8751, 8760, 8766, 8777, 8781, 8787, 8802, 8808, 8816, 8854, 8858, 8870, 8896, 8979, 9322, 9372, 9548, 9588, 9616, 9622, 9634, 9652, 9662, 9672, 9676, 9680, 9702, 9735, 9738, 9793, 9795, 11906, 11909, 11913, 11917, 11928, 11944, 11947, 11951, 11956, 11960, 11964, 11979, 12284, 12292, 12312, 12319, 12330, 12351, 12436, 12447, 12535, 12543, 12586, 12842, 12850, 12964, 13200, 13215, 13218, 13253, 13263, 13267, 13270, 13384, 13428, 13727, 13839, 13851, 14617, 14703, 14801, 14816, 14964, 15183, 15471, 15585, 16471, 16736, 17208, 17325, 17330, 17374, 17623, 17997, 18018, 18212, 18218, 18301, 18318, 18760, 18811, 18814, 18820, 18823, 18844, 18848, 18872, 19576, 19620, 19738, 19887, 40870, 59244, 59336, 59367, 59413, 59417, 59423, 59431, 59437, 59443, 59452, 59460, 59478, 59493, 63789, 63866, 63894, 63976, 63986, 64016, 64018, 64021, 64025, 64034, 64037, 64042, 65074, 65093, 65107, 65112, 65127, 65132, 65375, 65510, 65536], gbChars: [0, 36, 38, 45, 50, 81, 89, 95, 96, 100, 103, 104, 105, 109, 126, 133, 148, 172, 175, 179, 208, 306, 307, 308, 309, 310, 311, 312, 313, 341, 428, 443, 544, 545, 558, 741, 742, 749, 750, 805, 819, 820, 7922, 7924, 7925, 7927, 7934, 7943, 7944, 7945, 7950, 8062, 8148, 8149, 8152, 8164, 8174, 8236, 8240, 8262, 8264, 8374, 8380, 8381, 8384, 8388, 8390, 8392, 8393, 8394, 8396, 8401, 8406, 8416, 8419, 8424, 8437, 8439, 8445, 8482, 8485, 8496, 8521, 8603, 8936, 8946, 9046, 9050, 9063, 9066, 9076, 9092, 9100, 9108, 9111, 9113, 9131, 9162, 9164, 9218, 9219, 11329, 11331, 11334, 11336, 11346, 11361, 11363, 11366, 11370, 11372, 11375, 11389, 11682, 11686, 11687, 11692, 11694, 11714, 11716, 11723, 11725, 11730, 11736, 11982, 11989, 12102, 12336, 12348, 12350, 12384, 12393, 12395, 12397, 12510, 12553, 12851, 12962, 12973, 13738, 13823, 13919, 13933, 14080, 14298, 14585, 14698, 15583, 15847, 16318, 16434, 16438, 16481, 16729, 17102, 17122, 17315, 17320, 17402, 17418, 17859, 17909, 17911, 17915, 17916, 17936, 17939, 17961, 18664, 18703, 18814, 18962, 19043, 33469, 33470, 33471, 33484, 33485, 33490, 33497, 33501, 33505, 33513, 33520, 33536, 33550, 37845, 37921, 37948, 38029, 38038, 38064, 38065, 38066, 38069, 38075, 38076, 38078, 39108, 39109, 39113, 39114, 39115, 39116, 39265, 39394, 189e3] };
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/cp949.json
+// node_modules/iconv-lite/encodings/tables/cp949.json
 var require_cp949 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/cp949.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/cp949.json"(exports, module) {
     module.exports = [
       ["0", "\0", 127],
       ["8141", "갂갃갅갆갋", 4, "갘갞갟갡갢갣갥", 6, "갮갲갳갴"],
@@ -54520,9 +54467,9 @@ var require_cp949 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/cp950.json
+// node_modules/iconv-lite/encodings/tables/cp950.json
 var require_cp950 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/cp950.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/cp950.json"(exports, module) {
     module.exports = [
       ["0", "\0", 127],
       ["a140", "　，、。．‧；：？！︰…‥﹐﹑﹒·﹔﹕﹖﹗｜–︱—︳╴︴﹏（）︵︶｛｝︷︸〔〕︹︺【】︻︼《》︽︾〈〉︿﹀「」﹁﹂『』﹃﹄﹙﹚"],
@@ -54703,9 +54650,9 @@ var require_cp950 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/big5-added.json
+// node_modules/iconv-lite/encodings/tables/big5-added.json
 var require_big5_added = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/tables/big5-added.json"(exports, module) {
+  "node_modules/iconv-lite/encodings/tables/big5-added.json"(exports, module) {
     module.exports = [
       ["8740", "䏰䰲䘃䖦䕸𧉧䵷䖳𧲱䳢𧳅㮕䜶䝄䱇䱀𤊿𣘗𧍒𦺋𧃒䱗𪍑䝏䗚䲅𧱬䴇䪤䚡𦬣爥𥩔𡩣𣸆𣽡晍囻"],
       ["8767", "綕夝𨮹㷴霴𧯯寛𡵞媤㘥𩺰嫑宷峼杮薓𩥅瑡璝㡵𡵓𣚞𦀡㻬"],
@@ -54831,9 +54778,9 @@ var require_big5_added = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/dbcs-data.js
+// node_modules/iconv-lite/encodings/dbcs-data.js
 var require_dbcs_data = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/dbcs-data.js"(exports, module) {
+  "node_modules/iconv-lite/encodings/dbcs-data.js"(exports, module) {
     "use strict";
     module.exports = {
       // == Japanese/ShiftJIS ====================================================
@@ -55078,9 +55025,9 @@ var require_dbcs_data = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/index.js
+// node_modules/iconv-lite/encodings/index.js
 var require_encodings = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/encodings/index.js"(exports, module) {
+  "node_modules/iconv-lite/encodings/index.js"(exports, module) {
     "use strict";
     var modules = [
       require_internal4(),
@@ -55102,9 +55049,9 @@ var require_encodings = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/lib/streams.js
+// node_modules/iconv-lite/lib/streams.js
 var require_streams = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/lib/streams.js"(exports, module) {
+  "node_modules/iconv-lite/lib/streams.js"(exports, module) {
     "use strict";
     var Buffer3 = require_safer().Buffer;
     module.exports = function(stream_module) {
@@ -55174,9 +55121,9 @@ var require_streams = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/lib/index.js
+// node_modules/iconv-lite/lib/index.js
 var require_lib3 = __commonJS({
-  "../../node_modules/.pnpm/iconv-lite@0.6.3/node_modules/iconv-lite/lib/index.js"(exports, module) {
+  "node_modules/iconv-lite/lib/index.js"(exports, module) {
     "use strict";
     var Buffer3 = require_safer().Buffer, bomHandling = require_bom_handling(), iconv = module.exports;
     iconv.encodings = null;
@@ -55257,9 +55204,9 @@ var require_lib3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/text.js
+// node_modules/tedious/lib/data-types/text.js
 var require_text = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/text.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/text.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55313,9 +55260,9 @@ var require_text = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/guid-parser.js
+// node_modules/tedious/lib/guid-parser.js
 var require_guid_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/guid-parser.js"(exports) {
+  "node_modules/tedious/lib/guid-parser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55347,9 +55294,9 @@ var require_guid_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/uniqueidentifier.js
+// node_modules/tedious/lib/data-types/uniqueidentifier.js
 var require_uniqueidentifier = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/uniqueidentifier.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/uniqueidentifier.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55388,9 +55335,9 @@ var require_uniqueidentifier = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/ntext.js
+// node_modules/tedious/lib/data-types/ntext.js
 var require_ntext = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/ntext.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/ntext.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55433,9 +55380,9 @@ var require_ntext = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/varbinary.js
+// node_modules/tedious/lib/data-types/varbinary.js
 var require_varbinary = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/varbinary.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/varbinary.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55498,9 +55445,9 @@ var require_varbinary = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/varchar.js
+// node_modules/tedious/lib/data-types/varchar.js
 var require_varchar = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/varchar.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/varchar.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55567,9 +55514,9 @@ var require_varchar = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/binary.js
+// node_modules/tedious/lib/data-types/binary.js
 var require_binary = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/binary.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/binary.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55613,9 +55560,9 @@ var require_binary = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/char.js
+// node_modules/tedious/lib/data-types/char.js
 var require_char = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/char.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/char.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55670,9 +55617,9 @@ var require_char = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/nvarchar.js
+// node_modules/tedious/lib/data-types/nvarchar.js
 var require_nvarchar = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/nvarchar.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/nvarchar.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55743,9 +55690,9 @@ var require_nvarchar = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/nchar.js
+// node_modules/tedious/lib/data-types/nchar.js
 var require_nchar = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/nchar.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/nchar.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55800,9 +55747,9 @@ var require_nchar = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/xml.js
+// node_modules/tedious/lib/data-types/xml.js
 var require_xml = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/xml.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/xml.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55832,9 +55779,9 @@ var require_xml = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/time.js
+// node_modules/tedious/lib/data-types/time.js
 var require_time = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/time.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/time.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55910,9 +55857,9 @@ var require_time = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/date.js
+// node_modules/tedious/lib/data-types/date.js
 var require_date = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/date.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/date.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -55956,9 +55903,9 @@ var require_date = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetime2.js
+// node_modules/tedious/lib/data-types/datetime2.js
 var require_datetime2 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetime2.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/datetime2.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56043,9 +55990,9 @@ var require_datetime2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetimeoffset.js
+// node_modules/tedious/lib/data-types/datetimeoffset.js
 var require_datetimeoffset = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/datetimeoffset.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/datetimeoffset.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56130,9 +56077,9 @@ var require_datetimeoffset = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/udt.js
+// node_modules/tedious/lib/data-types/udt.js
 var require_udt = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/udt.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/udt.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56162,9 +56109,9 @@ var require_udt = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/tvp.js
+// node_modules/tedious/lib/data-types/tvp.js
 var require_tvp = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/tvp.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/tvp.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56215,9 +56162,9 @@ var require_tvp = __commonJS({
             let column = columns[k2], value = row[k2], paramValue;
             try {
               paramValue = column.type.validate(value, parameter.collation);
-            } catch (error45) {
+            } catch (error46) {
               throw new _errors.InputError(`TVP column '${column.name}' has invalid data at row index ${i2}`, {
-                cause: error45
+                cause: error46
               });
             }
             let param = {
@@ -56247,9 +56194,9 @@ var require_tvp = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/sql-variant.js
+// node_modules/tedious/lib/data-types/sql-variant.js
 var require_sql_variant = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-types/sql-variant.js"(exports, module) {
+  "node_modules/tedious/lib/data-types/sql-variant.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56279,9 +56226,9 @@ var require_sql_variant = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-type.js
+// node_modules/tedious/lib/data-type.js
 var require_data_type = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/data-type.js"(exports) {
+  "node_modules/tedious/lib/data-type.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56368,9 +56315,9 @@ var require_data_type = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/helpers.js
+// node_modules/tedious/lib/token/helpers.js
 var require_helpers3 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/helpers.js"(exports) {
+  "node_modules/tedious/lib/token/helpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56558,9 +56505,9 @@ var require_helpers3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/metadata-parser.js
+// node_modules/tedious/lib/metadata-parser.js
 var require_metadata_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/metadata-parser.js"(exports, module) {
+  "node_modules/tedious/lib/metadata-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -56916,9 +56863,9 @@ var require_metadata_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/colmetadata-token-parser.js
+// node_modules/tedious/lib/token/colmetadata-token-parser.js
 var require_colmetadata_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/colmetadata-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/colmetadata-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57032,9 +56979,9 @@ var require_colmetadata_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/done-token-parser.js
+// node_modules/tedious/lib/token/done-token-parser.js
 var require_done_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/done-token-parser.js"(exports) {
+  "node_modules/tedious/lib/token/done-token-parser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57103,9 +57050,9 @@ var require_done_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/env-change-token-parser.js
+// node_modules/tedious/lib/token/env-change-token-parser.js
 var require_env_change_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/env-change-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/env-change-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57267,9 +57214,9 @@ var require_env_change_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/infoerror-token-parser.js
+// node_modules/tedious/lib/token/infoerror-token-parser.js
 var require_infoerror_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/infoerror-token-parser.js"(exports) {
+  "node_modules/tedious/lib/token/infoerror-token-parser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57348,9 +57295,9 @@ var require_infoerror_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/fedauth-info-parser.js
+// node_modules/tedious/lib/token/fedauth-info-parser.js
 var require_fedauth_info_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/fedauth-info-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/fedauth-info-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57408,9 +57355,9 @@ var require_fedauth_info_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/feature-ext-ack-parser.js
+// node_modules/tedious/lib/token/feature-ext-ack-parser.js
 var require_feature_ext_ack_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/feature-ext-ack-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/feature-ext-ack-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57457,9 +57404,9 @@ var require_feature_ext_ack_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/loginack-token-parser.js
+// node_modules/tedious/lib/token/loginack-token-parser.js
 var require_loginack_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/loginack-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/loginack-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57528,9 +57475,9 @@ var require_loginack_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/order-token-parser.js
+// node_modules/tedious/lib/token/order-token-parser.js
 var require_order_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/order-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/order-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57560,9 +57507,9 @@ var require_order_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/returnstatus-token-parser.js
+// node_modules/tedious/lib/token/returnstatus-token-parser.js
 var require_returnstatus_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/returnstatus-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/returnstatus-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -57582,9 +57529,9 @@ var require_returnstatus_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/value-parser.js
+// node_modules/tedious/lib/value-parser.js
 var require_value_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/value-parser.js"(exports, module) {
+  "node_modules/tedious/lib/value-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58214,9 +58161,9 @@ var require_value_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/returnvalue-token-parser.js
+// node_modules/tedious/lib/token/returnvalue-token-parser.js
 var require_returnvalue_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/returnvalue-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/returnvalue-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58307,9 +58254,9 @@ var require_returnvalue_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/row-token-parser.js
+// node_modules/tedious/lib/token/row-token-parser.js
 var require_row_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/row-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/row-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58389,9 +58336,9 @@ var require_row_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/nbcrow-token-parser.js
+// node_modules/tedious/lib/token/nbcrow-token-parser.js
 var require_nbcrow_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/nbcrow-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/nbcrow-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58488,9 +58435,9 @@ var require_nbcrow_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/sspi-token-parser.js
+// node_modules/tedious/lib/token/sspi-token-parser.js
 var require_sspi_token_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/sspi-token-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/sspi-token-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58518,9 +58465,9 @@ var require_sspi_token_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/stream-parser.js
+// node_modules/tedious/lib/token/stream-parser.js
 var require_stream_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/stream-parser.js"(exports, module) {
+  "node_modules/tedious/lib/token/stream-parser.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58756,9 +58703,9 @@ var require_stream_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/token-stream-parser.js
+// node_modules/tedious/lib/token/token-stream-parser.js
 var require_token_stream_parser = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/token-stream-parser.js"(exports) {
+  "node_modules/tedious/lib/token/token-stream-parser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58793,9 +58740,9 @@ var require_token_stream_parser = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/transaction.js
+// node_modules/tedious/lib/transaction.js
 var require_transaction2 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/transaction.js"(exports) {
+  "node_modules/tedious/lib/transaction.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -58900,9 +58847,9 @@ var require_transaction2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/connector.js
+// node_modules/tedious/lib/connector.js
 var require_connector = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/connector.js"(exports) {
+  "node_modules/tedious/lib/connector.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -59006,9 +58953,9 @@ var require_connector = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/library.js
+// node_modules/tedious/lib/library.js
 var require_library = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/library.js"(exports) {
+  "node_modules/tedious/lib/library.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -59018,9 +58965,9 @@ var require_library = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/ntlm.js
+// node_modules/tedious/lib/ntlm.js
 var require_ntlm = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/ntlm.js"(exports) {
+  "node_modules/tedious/lib/ntlm.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -59070,9 +59017,9 @@ var require_ntlm = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/bulk-load-payload.js
+// node_modules/tedious/lib/bulk-load-payload.js
 var require_bulk_load_payload = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/bulk-load-payload.js"(exports) {
+  "node_modules/tedious/lib/bulk-load-payload.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -59096,9 +59043,9 @@ var require_bulk_load_payload = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/special-stored-procedure.js
+// node_modules/tedious/lib/special-stored-procedure.js
 var require_special_stored_procedure = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/special-stored-procedure.js"(exports, module) {
+  "node_modules/tedious/lib/special-stored-procedure.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -59125,9 +59072,9 @@ var require_special_stored_procedure = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/package.json
+// node_modules/tedious/package.json
 var require_package2 = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/package.json"(exports, module) {
+  "node_modules/tedious/package.json"(exports, module) {
     module.exports = {
       author: "Mike D Pilsbury <mike.pilsbury@gmail.com>",
       contributors: [
@@ -59273,9 +59220,9 @@ var require_package2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/handler.js
+// node_modules/tedious/lib/token/handler.js
 var require_handler = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/token/handler.js"(exports) {
+  "node_modules/tedious/lib/token/handler.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -59449,8 +59396,8 @@ var require_handler = __commonJS({
       }
       onErrorMessage(token) {
         this.connection.emit("errorMessage", token);
-        let error45 = new _errors.ConnectionError(token.message, "ELOGIN");
-        this.connection.transientErrorLookup.isTransientError(token.number) && this.connection.curTransientRetryCount !== this.connection.config.options.maxRetriesOnTransientErrors && (error45.isTransient = !0), this.connection.loginError = error45;
+        let error46 = new _errors.ConnectionError(token.message, "ELOGIN");
+        this.connection.transientErrorLookup.isTransientError(token.number) && this.connection.curTransientRetryCount !== this.connection.config.options.maxRetriesOnTransientErrors && (error46.isTransient = !0), this.connection.loginError = error46;
       }
       onSSPI(token) {
         token.ntlmpacket && (this.connection.ntlmpacket = token.ntlmpacket, this.connection.ntlmpacketBuffer = token.ntlmpacketBuffer);
@@ -59517,8 +59464,8 @@ var require_handler = __commonJS({
       }
       onErrorMessage(token) {
         if (this.connection.emit("errorMessage", token), !this.request.canceled) {
-          let error45 = new _errors.RequestError(token.message, "EREQUEST");
-          error45.number = token.number, error45.state = token.state, error45.class = token.class, error45.serverName = token.serverName, error45.procName = token.procName, error45.lineNumber = token.lineNumber, this.errors.push(error45), this.request.error = error45, this.request instanceof _request.default && this.errors.length > 1 && (this.request.error = new AggregateError(this.errors));
+          let error46 = new _errors.RequestError(token.message, "EREQUEST");
+          error46.number = token.number, error46.state = token.state, error46.class = token.class, error46.serverName = token.serverName, error46.procName = token.procName, error46.lineNumber = token.lineNumber, this.errors.push(error46), this.request.error = error46, this.request instanceof _request.default && this.errors.length > 1 && (this.request.error = new AggregateError(this.errors));
         }
       }
       onDatabaseChange(token) {
@@ -59601,9 +59548,9 @@ var require_handler = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/connection.js
+// node_modules/tedious/lib/connection.js
 var require_connection = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/connection.js"(exports, module) {
+  "node_modules/tedious/lib/connection.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -60366,8 +60313,8 @@ var require_connection = __commonJS({
         return new _tokenStreamParser.Parser(message, this.debug, handler, this.config.options);
       }
       socketHandlingForSendPreLogin(socket) {
-        socket.on("error", (error45) => {
-          this.socketError(error45);
+        socket.on("error", (error46) => {
+          this.socketError(error46);
         }), socket.on("close", () => {
           this.socketClose();
         }), socket.on("end", () => {
@@ -60543,27 +60490,27 @@ var require_connection = __commonJS({
       /**
        * @private
        */
-      socketError(error45) {
+      socketError(error46) {
         if (this.state === this.STATE.CONNECTING || this.state === this.STATE.SENT_TLSSSLNEGOTIATION) {
-          let hostPostfix = this.config.options.port ? `:${this.config.options.port}` : `\\${this.config.options.instanceName}`, server = this.routingData ? this.routingData.server : this.config.server, port = this.routingData ? `:${this.routingData.port}` : hostPostfix, routingMessage = this.routingData ? ` (redirected from ${this.config.server}${hostPostfix})` : "", message = `Failed to connect to ${server}${port}${routingMessage} - ${error45.message}`;
+          let hostPostfix = this.config.options.port ? `:${this.config.options.port}` : `\\${this.config.options.instanceName}`, server = this.routingData ? this.routingData.server : this.config.server, port = this.routingData ? `:${this.routingData.port}` : hostPostfix, routingMessage = this.routingData ? ` (redirected from ${this.config.server}${hostPostfix})` : "", message = `Failed to connect to ${server}${port}${routingMessage} - ${error46.message}`;
           this.debug.log(message), this.emit("connect", new _errors.ConnectionError(message, "ESOCKET", {
-            cause: error45
+            cause: error46
           }));
         } else {
-          let message = `Connection lost - ${error45.message}`;
+          let message = `Connection lost - ${error46.message}`;
           this.debug.log(message), this.emit("error", new _errors.ConnectionError(message, "ESOCKET", {
-            cause: error45
+            cause: error46
           }));
         }
-        this.dispatchEvent("socketError", error45);
+        this.dispatchEvent("socketError", error46);
       }
       /**
        * @private
        */
       socketEnd() {
         if (this.debug.log("socket ended"), this.state !== this.STATE.FINAL) {
-          let error45 = new Error("socket hang up");
-          error45.code = "ECONNRESET", this.socketError(error45);
+          let error46 = new Error("socket hang up");
+          error46.code = "ECONNRESET", this.socketError(error46);
         }
       }
       /**
@@ -60711,9 +60658,9 @@ var require_connection = __commonJS({
       execSql(request) {
         try {
           request.validateParameters(this.databaseCollation);
-        } catch (error45) {
-          request.error = error45, process.nextTick(() => {
-            this.debug.log(error45.message), request.callback(error45);
+        } catch (error46) {
+          request.error = error46, process.nextTick(() => {
+            this.debug.log(error46.message), request.callback(error46);
           });
           return;
         }
@@ -60796,9 +60743,9 @@ var require_connection = __commonJS({
         } else bulkLoad.streamingMode || bulkLoad.rowToPacketTransform.end();
         let onCancel = /* @__PURE__ */ __name(() => {
           request.cancel();
-        }, "onCancel"), payload = new _bulkLoadPayload.BulkLoadPayload(bulkLoad), request = new _request.default(bulkLoad.getBulkInsertSql(), (error45) => {
-          if (bulkLoad.removeListener("cancel", onCancel), error45) {
-            error45.code === "UNKNOWN" && (error45.message += " This is likely because the schema of the BulkLoad does not match the schema of the table you are attempting to insert into."), bulkLoad.error = error45, bulkLoad.callback(error45);
+        }, "onCancel"), payload = new _bulkLoadPayload.BulkLoadPayload(bulkLoad), request = new _request.default(bulkLoad.getBulkInsertSql(), (error46) => {
+          if (bulkLoad.removeListener("cancel", onCancel), error46) {
+            error46.code === "UNKNOWN" && (error46.message += " This is likely because the schema of the BulkLoad does not match the schema of the table you are attempting to insert into."), bulkLoad.error = error46, bulkLoad.callback(error46);
             return;
           }
           this.makeRequest(bulkLoad, _packet.TYPE.BULK_LOAD, payload);
@@ -60893,9 +60840,9 @@ var require_connection = __commonJS({
               value: parameter.type.validate(parameters ? parameters[parameter.name] : null, this.databaseCollation)
             });
           }
-        } catch (error45) {
-          request.error = error45, process.nextTick(() => {
-            this.debug.log(error45.message), request.callback(error45);
+        } catch (error46) {
+          request.error = error46, process.nextTick(() => {
+            this.debug.log(error46.message), request.callback(error46);
           });
           return;
         }
@@ -60909,9 +60856,9 @@ var require_connection = __commonJS({
       callProcedure(request) {
         try {
           request.validateParameters(this.databaseCollation);
-        } catch (error45) {
-          request.error = error45, process.nextTick(() => {
-            this.debug.log(error45.message), request.callback(error45);
+        } catch (error46) {
+          request.error = error46, process.nextTick(() => {
+            this.debug.log(error46.message), request.callback(error46);
           });
           return;
         }
@@ -61064,8 +61011,8 @@ var require_connection = __commonJS({
             });
           });
           let payloadStream = _stream.Readable.from(payload);
-          payloadStream.once("error", (error45) => {
-            payloadStream.unpipe(message), request.error ??= error45, message.ignore = !0, message.end();
+          payloadStream.once("error", (error46) => {
+            payloadStream.unpipe(message), request.error ??= error46, message.ignore = !0, message.end();
           }), payloadStream.pipe(message);
         }
       }
@@ -61111,8 +61058,8 @@ var require_connection = __commonJS({
         }
       }
     };
-    function isTransientError(error45) {
-      return error45 instanceof AggregateError && (error45 = error45.errors[0]), error45 instanceof _errors.ConnectionError && !!error45.isTransient;
+    function isTransientError(error46) {
+      return error46 instanceof AggregateError && (error46 = error46.errors[0]), error46 instanceof _errors.ConnectionError && !!error46.isTransient;
     }
     __name(isTransientError, "isTransientError");
     var _default3 = exports.default = Connection;
@@ -61503,9 +61450,9 @@ var require_connection = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/tedious.js
+// node_modules/tedious/lib/tedious.js
 var require_tedious = __commonJS({
-  "../../node_modules/.pnpm/tedious@19.0.0/node_modules/tedious/lib/tedious.js"(exports) {
+  "node_modules/tedious/lib/tedious.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", {
       value: !0
@@ -61576,9 +61523,9 @@ var require_tedious = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/connection-pool.js
+// node_modules/mssql/lib/tedious/connection-pool.js
 var require_connection_pool2 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/connection-pool.js"(exports, module) {
+  "node_modules/mssql/lib/tedious/connection-pool.js"(exports, module) {
     "use strict";
     var tds = require_tedious(), debug = require_src()("mssql:tedi"), BaseConnectionPool = require_connection_pool(), { IDS } = require_utils2(), shared = require_shared(), ConnectionError = require_connection_error(), ConnectionPool = class extends BaseConnectionPool {
       static {
@@ -61664,9 +61611,9 @@ var require_connection_pool2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/transaction.js
+// node_modules/mssql/lib/tedious/transaction.js
 var require_transaction3 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/transaction.js"(exports, module) {
+  "node_modules/mssql/lib/tedious/transaction.js"(exports, module) {
     "use strict";
     var debug = require_src()("mssql:tedi"), BaseTransaction = require_transaction(), { IDS } = require_utils2(), TransactionError = require_transaction_error(), Transaction = class extends BaseTransaction {
       static {
@@ -61712,9 +61659,9 @@ var require_transaction3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/udt.js
+// node_modules/mssql/lib/udt.js
 var require_udt2 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/udt.js"(exports, module) {
+  "node_modules/mssql/lib/udt.js"(exports, module) {
     "use strict";
     var Point = class {
       static {
@@ -61846,9 +61793,9 @@ var require_udt2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/request.js
+// node_modules/mssql/lib/tedious/request.js
 var require_request3 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/request.js"(exports, module) {
+  "node_modules/mssql/lib/tedious/request.js"(exports, module) {
     "use strict";
     var tds = require_tedious(), debug = require_src()("mssql:tedi"), BaseRequest = require_request(), RequestError2 = require_request_error(), { IDS, objectHasProperty } = require_utils2(), { TYPES, DECLARATIONS, declare, cast } = require_datatypes(), Table = require_table(), { PARSERS: UDT } = require_udt2(), { valueHandler } = require_shared(), JSON_COLUMN_ID = "JSON_F52E2B61-18A1-11d1-B105-00805F49916B", XML_COLUMN_ID = "XML_F52E2B61-18A1-11d1-B105-00805F49916B", N_TYPES = {
       BitN: 104,
@@ -62121,11 +62068,11 @@ var require_request3 = __commonJS({
             }, connection.on("infoMessage", errorHandlers.infoMessage = handleInfo), connection.on("errorMessage", errorHandlers.errorMessage = handleError.bind(null, !1, connection)), connection.on("error", errorHandlers.error = handleError.bind(null, !0, connection));
             let done = /* @__PURE__ */ __name((err3, rowCount) => {
               err3 && (!errors.length || errors.length && err3.message !== errors[errors.length - 1].message) && (err3 = new RequestError2(err3, "EREQUEST"), this.stream && this.emit("error", err3), errors.push(err3)), delete this._cancel;
-              let error45;
-              if (errors.length && !this.stream && (error45 = errors.pop(), error45.precedingErrors = errors), !hasReturned) {
+              let error46;
+              if (errors.length && !this.stream && (error46 = errors.pop(), error46.precedingErrors = errors), !hasReturned) {
                 for (let event in errorHandlers)
                   connection.removeListener(event, errorHandlers[event]);
-                hasReturned = !0, this.stream ? callbackWithRelease(null, rowCount) : callbackWithRelease(error45, rowCount);
+                hasReturned = !0, this.stream ? callbackWithRelease(null, rowCount) : callbackWithRelease(error46, rowCount);
               }
             }, "done"), bulk = connection.newBulkLoad(table.path, options, done);
             for (let col of table.columns)
@@ -62191,11 +62138,11 @@ var require_request3 = __commonJS({
                 }
               }
               delete this._cancel;
-              let error45;
-              if (errors.length && !this.stream && (error45 = errors.pop(), error45.precedingErrors = errors), !hasReturned) {
+              let error46;
+              if (errors.length && !this.stream && (error46 = errors.pop(), error46.precedingErrors = errors), !hasReturned) {
                 for (let event in errorHandlers)
                   connection.removeListener(event, errorHandlers[event]);
-                this.parent.release(connection), hasReturned = !0, error45 ? debug("request(%d): failed", IDS.get(this), error45) : debug("request(%d): completed", IDS.get(this)), this.stream ? callback(null, null, output, rowsAffected, recordsetcolumns) : callback(error45, recordsets, output, rowsAffected, recordsetcolumns);
+                this.parent.release(connection), hasReturned = !0, error46 ? debug("request(%d): failed", IDS.get(this), error46) : debug("request(%d): completed", IDS.get(this)), this.stream ? callback(null, null, output, rowsAffected, recordsetcolumns) : callback(error46, recordsets, output, rowsAffected, recordsetcolumns);
               }
             });
             this._setCurrentRequest(req), req.on("columnMetadata", (metadata) => {
@@ -62289,8 +62236,8 @@ var require_request3 = __commonJS({
               }
             try {
               connection[this._isBatch ? "execSqlBatch" : "execSql"](req);
-            } catch (error45) {
-              handleError(!0, connection, error45);
+            } catch (error46) {
+              handleError(!0, connection, error46);
             }
           });
         });
@@ -62341,11 +62288,11 @@ var require_request3 = __commonJS({
             }
             let req = new tds.Request(procedure, (err3) => {
               err3 && (!errors.length || errors.length && err3.message !== errors[errors.length - 1].message) && (err3 = new RequestError2(err3, "EREQUEST"), this.stream && this.emit("error", err3), errors.push(err3)), delete this._cancel;
-              let error45;
-              if (errors.length && !this.stream && (error45 = errors.pop(), error45.precedingErrors = errors), !hasReturned) {
+              let error46;
+              if (errors.length && !this.stream && (error46 = errors.pop(), error46.precedingErrors = errors), !hasReturned) {
                 for (let event in errorHandlers)
                   connection.removeListener(event, errorHandlers[event]);
-                this.parent.release(connection), hasReturned = !0, error45 ? debug("request(%d): failed", IDS.get(this), error45) : debug("request(%d): complete", IDS.get(this)), this.stream ? callback(null, null, output, returnValue, rowsAffected, recordsetcolumns) : callback(error45, recordsets, output, returnValue, rowsAffected, recordsetcolumns);
+                this.parent.release(connection), hasReturned = !0, error46 ? debug("request(%d): failed", IDS.get(this), error46) : debug("request(%d): complete", IDS.get(this)), this.stream ? callback(null, null, output, returnValue, rowsAffected, recordsetcolumns) : callback(error46, recordsets, output, returnValue, rowsAffected, recordsetcolumns);
               }
             });
             this._setCurrentRequest(req), req.on("columnMetadata", (metadata) => {
@@ -62415,9 +62362,9 @@ var require_request3 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/index.js
+// node_modules/mssql/lib/tedious/index.js
 var require_tedious2 = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/lib/tedious/index.js"(exports, module) {
+  "node_modules/mssql/lib/tedious/index.js"(exports, module) {
     "use strict";
     var base = require_base(), ConnectionPool = require_connection_pool2(), Transaction = require_transaction3(), Request3 = require_request3();
     module.exports = Object.assign({
@@ -62446,15 +62393,15 @@ var require_tedious2 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/index.js
+// node_modules/mssql/index.js
 var require_mssql = __commonJS({
-  "../../node_modules/.pnpm/mssql@12.0.0/node_modules/mssql/index.js"(exports, module) {
+  "node_modules/mssql/index.js"(exports, module) {
     "use strict";
     module.exports = require_tedious2();
   }
 });
 
-// ../../node_modules/.pnpm/commander@12.1.0/node_modules/commander/esm.mjs
+// node_modules/commander/esm.mjs
 var import_index = __toESM(require_commander(), 1), {
   program,
   createCommand,
@@ -62470,7 +62417,7 @@ var import_index = __toESM(require_commander(), 1), {
   Help
 } = import_index.default;
 
-// ../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/core.mjs
+// node_modules/consola/dist/core.mjs
 var LogLevels = {
   silent: Number.NEGATIVE_INFINITY,
   fatal: 0,
@@ -62871,7 +62818,7 @@ function createConsola(options = {}) {
 }
 __name(createConsola, "createConsola");
 
-// ../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/shared/consola.DRwqZj3T.mjs
+// node_modules/consola/dist/shared/consola.DRwqZj3T.mjs
 import { formatWithOptions } from "node:util";
 import { sep } from "node:path";
 function parseStack(stack, message) {
@@ -62940,10 +62887,10 @@ ${indent}`);
   }
 };
 
-// ../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/index.mjs
+// node_modules/consola/dist/index.mjs
 import g$1 from "node:process";
 
-// ../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/shared/consola.DXBYu-KD.mjs
+// node_modules/consola/dist/shared/consola.DXBYu-KD.mjs
 import * as tty from "node:tty";
 var {
   env = {},
@@ -63158,7 +63105,7 @@ function box(text, _opts = {}) {
 }
 __name(box, "box");
 
-// ../../node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/index.mjs
+// node_modules/consola/dist/index.mjs
 var r2 = /* @__PURE__ */ Object.create(null), i = /* @__PURE__ */ __name((e2) => globalThis.process?.env || import.meta.env || globalThis.Deno?.env.toObject() || globalThis.__env__ || (e2 ? r2 : globalThis), "i"), o2 = new Proxy(r2, { get(e2, s2) {
   return i()[s2] ?? r2[s2];
 }, has(e2, s2) {
@@ -63388,7 +63335,7 @@ var consola = createConsola2();
 // src/main.ts
 var import_dotenv = __toESM(require_main(), 1);
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/external.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/external.js
 var external_exports = {};
 __export(external_exports, {
   BRAND: () => BRAND,
@@ -63500,7 +63447,7 @@ __export(external_exports, {
   void: () => voidType
 });
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/helpers/util.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/helpers/util.js
 var util;
 (function(util2) {
   util2.assertEqual = (_3) => {
@@ -63590,7 +63537,7 @@ var ZodParsedType = util.arrayToEnum([
   }
 }, "getParsedType");
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/ZodError.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/ZodError.js
 var ZodIssueCode = util.arrayToEnum([
   "invalid_type",
   "invalid_literal",
@@ -63627,8 +63574,8 @@ var ZodIssueCode = util.arrayToEnum([
   format(_mapper) {
     let mapper = _mapper || function(issue2) {
       return issue2.message;
-    }, fieldErrors = { _errors: [] }, processError = /* @__PURE__ */ __name((error45) => {
-      for (let issue2 of error45.issues)
+    }, fieldErrors = { _errors: [] }, processError = /* @__PURE__ */ __name((error46) => {
+      for (let issue2 of error46.issues)
         if (issue2.code === "invalid_union")
           issue2.unionErrors.map(processError);
         else if (issue2.code === "invalid_return_type")
@@ -63676,7 +63623,7 @@ var ZodIssueCode = util.arrayToEnum([
 };
 ZodError.create = (issues) => new ZodError(issues);
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/locales/en.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/locales/en.js
 var errorMap = /* @__PURE__ */ __name((issue2, _ctx) => {
   let message;
   switch (issue2.code) {
@@ -63734,7 +63681,7 @@ var errorMap = /* @__PURE__ */ __name((issue2, _ctx) => {
   return { message };
 }, "errorMap"), en_default = errorMap;
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/errors.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/errors.js
 var overrideErrorMap = en_default;
 function setErrorMap(map2) {
   overrideErrorMap = map2;
@@ -63745,7 +63692,7 @@ function getErrorMap() {
 }
 __name(getErrorMap, "getErrorMap");
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/helpers/parseUtil.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = /* @__PURE__ */ __name((params) => {
   let { data, path: path2, errorMaps, issueData } = params, fullPath = [...path2, ...issueData.path || []], fullIssue = {
     ...issueData,
@@ -63832,13 +63779,13 @@ var ParseStatus = class _ParseStatus {
   status: "aborted"
 }), DIRTY = /* @__PURE__ */ __name((value) => ({ status: "dirty", value }), "DIRTY"), OK = /* @__PURE__ */ __name((value) => ({ status: "valid", value }), "OK"), isAborted = /* @__PURE__ */ __name((x2) => x2.status === "aborted", "isAborted"), isDirty = /* @__PURE__ */ __name((x2) => x2.status === "dirty", "isDirty"), isValid = /* @__PURE__ */ __name((x2) => x2.status === "valid", "isValid"), isAsync = /* @__PURE__ */ __name((x2) => typeof Promise < "u" && x2 instanceof Promise, "isAsync");
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/helpers/errorUtil.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/helpers/errorUtil.js
 var errorUtil;
 (function(errorUtil2) {
   errorUtil2.errToObj = (message) => typeof message == "string" ? { message } : message || {}, errorUtil2.toString = (message) => typeof message == "string" ? message : message?.message;
 })(errorUtil || (errorUtil = {}));
 
-// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/types.js
+// node_modules/@modelcontextprotocol/sdk/node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
   static {
     __name(this, "ParseInputLazyPath");
@@ -63859,8 +63806,8 @@ var ParseInputLazyPath = class {
     get error() {
       if (this._error)
         return this._error;
-      let error45 = new ZodError(ctx.common.issues);
-      return this._error = error45, this._error;
+      let error46 = new ZodError(ctx.common.issues);
+      return this._error = error46, this._error;
     }
   };
 }, "handleResult");
@@ -65884,26 +65831,26 @@ var ZodFunction = class _ZodFunction extends ZodType {
         expected: ZodParsedType.function,
         received: ctx.parsedType
       }), INVALID;
-    function makeArgsIssue(args, error45) {
+    function makeArgsIssue(args, error46) {
       return makeIssue({
         data: args,
         path: ctx.path,
         errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, getErrorMap(), en_default].filter((x2) => !!x2),
         issueData: {
           code: ZodIssueCode.invalid_arguments,
-          argumentsError: error45
+          argumentsError: error46
         }
       });
     }
     __name(makeArgsIssue, "makeArgsIssue");
-    function makeReturnsIssue(returns, error45) {
+    function makeReturnsIssue(returns, error46) {
       return makeIssue({
         data: returns,
         path: ctx.path,
         errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, getErrorMap(), en_default].filter((x2) => !!x2),
         issueData: {
           code: ZodIssueCode.invalid_return_type,
-          returnTypeError: error45
+          returnTypeError: error46
         }
       });
     }
@@ -65912,11 +65859,11 @@ var ZodFunction = class _ZodFunction extends ZodType {
     if (this._def.returns instanceof ZodPromise) {
       let me = this;
       return OK(async function(...args) {
-        let error45 = new ZodError([]), parsedArgs = await me._def.args.parseAsync(args, params).catch((e2) => {
-          throw error45.addIssue(makeArgsIssue(args, e2)), error45;
+        let error46 = new ZodError([]), parsedArgs = await me._def.args.parseAsync(args, params).catch((e2) => {
+          throw error46.addIssue(makeArgsIssue(args, e2)), error46;
         }), result = await Reflect.apply(fn, this, parsedArgs);
         return await me._def.returns._def.type.parseAsync(result, params).catch((e2) => {
-          throw error45.addIssue(makeReturnsIssue(result, e2)), error45;
+          throw error46.addIssue(makeReturnsIssue(result, e2)), error46;
         });
       });
     } else {
@@ -66462,14 +66409,9 @@ var instanceOfType = /* @__PURE__ */ __name((cls, params = {
 };
 var NEVER = INVALID;
 
-// ../../node_modules/.pnpm/@modelcontextprotocol+sdk@1.18.2/node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
+// node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
 var LATEST_PROTOCOL_VERSION = "2025-06-18";
-var SUPPORTED_PROTOCOL_VERSIONS = [
-  LATEST_PROTOCOL_VERSION,
-  "2025-03-26",
-  "2024-11-05",
-  "2024-10-07"
-], JSONRPC_VERSION = "2.0", ProgressTokenSchema = external_exports.union([external_exports.string(), external_exports.number().int()]), CursorSchema = external_exports.string(), RequestMetaSchema = external_exports.object({
+var SUPPORTED_PROTOCOL_VERSIONS = [LATEST_PROTOCOL_VERSION, "2025-03-26", "2024-11-05", "2024-10-07"], JSONRPC_VERSION = "2.0", ProgressTokenSchema = external_exports.union([external_exports.string(), external_exports.number().int()]), CursorSchema = external_exports.string(), RequestMetaSchema = external_exports.object({
   /**
    * If specified, the caller is requesting out-of-band progress notifications for this request (as represented by notifications/progress). The value of this parameter is an opaque token that will be attached to any subsequent notifications. The receiver is not obligated to provide these notifications.
    */
@@ -66524,12 +66466,7 @@ var JSONRPCErrorSchema = external_exports.object({
      */
     data: external_exports.optional(external_exports.unknown())
   })
-}).strict(), isJSONRPCError = /* @__PURE__ */ __name((value) => JSONRPCErrorSchema.safeParse(value).success, "isJSONRPCError"), JSONRPCMessageSchema = external_exports.union([
-  JSONRPCRequestSchema,
-  JSONRPCNotificationSchema,
-  JSONRPCResponseSchema,
-  JSONRPCErrorSchema
-]), EmptyResultSchema = ResultSchema.strict(), CancelledNotificationSchema = NotificationSchema.extend({
+}).strict(), isJSONRPCError = /* @__PURE__ */ __name((value) => JSONRPCErrorSchema.safeParse(value).success, "isJSONRPCError"), JSONRPCMessageSchema = external_exports.union([JSONRPCRequestSchema, JSONRPCNotificationSchema, JSONRPCResponseSchema, JSONRPCErrorSchema]), EmptyResultSchema = ResultSchema.strict(), CancelledNotificationSchema = NotificationSchema.extend({
   method: external_exports.literal("notifications/cancelled"),
   params: BaseNotificationParamsSchema.extend({
     /**
@@ -66553,37 +66490,44 @@ var JSONRPCErrorSchema = external_exports.object({
    */
   mimeType: external_exports.optional(external_exports.string()),
   /**
-   * Optional string specifying icon dimensions (e.g., "48x48 96x96").
+   * Optional array of strings that specify sizes at which the icon can be used.
+   * Each string should be in WxH format (e.g., `"48x48"`, `"96x96"`) or `"any"` for scalable formats like SVG.
+   *
+   * If not provided, the client should assume that the icon can be used at any size.
    */
-  sizes: external_exports.optional(external_exports.string())
+  sizes: external_exports.optional(external_exports.array(external_exports.string()))
+}).passthrough(), IconsSchema = external_exports.object({
+  /**
+   * Optional set of sized icons that the client can display in a user interface.
+   *
+   * Clients that support rendering icons MUST support at least the following MIME types:
+   * - `image/png` - PNG images (safe, universal compatibility)
+   * - `image/jpeg` (and `image/jpg`) - JPEG images (safe, universal compatibility)
+   *
+   * Clients that support rendering icons SHOULD also support:
+   * - `image/svg+xml` - SVG images (scalable but requires security precautions)
+   * - `image/webp` - WebP images (modern, efficient format)
+   */
+  icons: external_exports.array(IconSchema).optional()
 }).passthrough(), BaseMetadataSchema = external_exports.object({
   /** Intended for programmatic or logical use, but used as a display name in past specs or fallback */
   name: external_exports.string(),
   /**
-  * Intended for UI and end-user contexts — optimized to be human-readable and easily understood,
-  * even by those unfamiliar with domain-specific terminology.
-  *
-  * If not provided, the name should be used for display (except for Tool,
-  * where `annotations.title` should be given precedence over using `name`,
-  * if present).
-  */
+   * Intended for UI and end-user contexts — optimized to be human-readable and easily understood,
+   * even by those unfamiliar with domain-specific terminology.
+   *
+   * If not provided, the name should be used for display (except for Tool,
+   * where `annotations.title` should be given precedence over using `name`,
+   * if present).
+   */
   title: external_exports.optional(external_exports.string())
 }).passthrough(), ImplementationSchema = BaseMetadataSchema.extend({
   version: external_exports.string(),
   /**
    * An optional URL of the website for this implementation.
    */
-  websiteUrl: external_exports.optional(external_exports.string()),
-  /**
-   * An optional list of icons for this implementation.
-   * This can be used by clients to display the implementation in a user interface.
-   * Each icon should have a `kind` property that specifies whether it is a data representation or a URL source, a `src` property that points to the icon file or data representation, and may also include a `mimeType` and `sizes` property.
-   * The `mimeType` property should be a valid MIME type for the icon file, such as "image/png" or "image/svg+xml".
-   * The `sizes` property should be a string that specifies one or more sizes at which the icon file can be used, such as "48x48" or "any" for scalable formats like SVG.
-   * The `sizes` property is optional, and if not provided, the client should assume that the icon can be used at any size.
-   */
-  icons: external_exports.optional(external_exports.array(IconSchema))
-}), ClientCapabilitiesSchema = external_exports.object({
+  websiteUrl: external_exports.optional(external_exports.string())
+}).merge(IconsSchema), ClientCapabilitiesSchema = external_exports.object({
   /**
    * Experimental, non-standard capabilities that the client supports.
    */
@@ -66758,15 +66702,11 @@ var PingRequestSchema = RequestSchema.extend({
    */
   mimeType: external_exports.optional(external_exports.string()),
   /**
-   * An optional list of icons for this resource.
-   */
-  icons: external_exports.optional(external_exports.array(IconSchema)),
-  /**
    * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
    * for notes on _meta usage.
    */
   _meta: external_exports.optional(external_exports.object({}).passthrough())
-}), ResourceTemplateSchema = BaseMetadataSchema.extend({
+}).merge(IconsSchema), ResourceTemplateSchema = BaseMetadataSchema.extend({
   /**
    * A URI template (according to RFC 6570) that can be used to construct resource URIs.
    */
@@ -66786,7 +66726,7 @@ var PingRequestSchema = RequestSchema.extend({
    * for notes on _meta usage.
    */
   _meta: external_exports.optional(external_exports.object({}).passthrough())
-}), ListResourcesRequestSchema = PaginatedRequestSchema.extend({
+}).merge(IconsSchema), ListResourcesRequestSchema = PaginatedRequestSchema.extend({
   method: external_exports.literal("resources/list")
 }), ListResourcesResultSchema = PaginatedResultSchema.extend({
   resources: external_exports.array(ResourceSchema)
@@ -66853,15 +66793,11 @@ var PingRequestSchema = RequestSchema.extend({
    */
   arguments: external_exports.optional(external_exports.array(PromptArgumentSchema)),
   /**
-   * An optional list of icons for this prompt.
-   */
-  icons: external_exports.optional(external_exports.array(IconSchema)),
-  /**
    * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
    * for notes on _meta usage.
    */
   _meta: external_exports.optional(external_exports.object({}).passthrough())
-}), ListPromptsRequestSchema = PaginatedRequestSchema.extend({
+}).merge(IconsSchema), ListPromptsRequestSchema = PaginatedRequestSchema.extend({
   method: external_exports.literal("prompts/list")
 }), ListPromptsResultSchema = PaginatedResultSchema.extend({
   prompts: external_exports.array(PromptSchema)
@@ -67010,15 +66946,11 @@ var PingRequestSchema = RequestSchema.extend({
    */
   annotations: external_exports.optional(ToolAnnotationsSchema),
   /**
-   * An optional list of icons for this tool.
-   */
-  icons: external_exports.optional(external_exports.array(IconSchema)),
-  /**
    * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
    * for notes on _meta usage.
    */
   _meta: external_exports.optional(external_exports.object({}).passthrough())
-}), ListToolsRequestSchema = PaginatedRequestSchema.extend({
+}).merge(IconsSchema), ListToolsRequestSchema = PaginatedRequestSchema.extend({
   method: external_exports.literal("tools/list")
 }), ListToolsResultSchema = PaginatedResultSchema.extend({
   tools: external_exports.array(ToolSchema)
@@ -67061,16 +66993,7 @@ var PingRequestSchema = RequestSchema.extend({
   })
 }), ToolListChangedNotificationSchema = NotificationSchema.extend({
   method: external_exports.literal("notifications/tools/list_changed")
-}), LoggingLevelSchema = external_exports.enum([
-  "debug",
-  "info",
-  "notice",
-  "warning",
-  "error",
-  "critical",
-  "alert",
-  "emergency"
-]), SetLevelRequestSchema = RequestSchema.extend({
+}), LoggingLevelSchema = external_exports.enum(["debug", "info", "notice", "warning", "error", "critical", "alert", "emergency"]), SetLevelRequestSchema = RequestSchema.extend({
   method: external_exports.literal("logging/setLevel"),
   params: BaseRequestParamsSchema.extend({
     /**
@@ -67156,11 +67079,7 @@ var PingRequestSchema = RequestSchema.extend({
    */
   stopReason: external_exports.optional(external_exports.enum(["endTurn", "stopSequence", "maxTokens"]).or(external_exports.string())),
   role: external_exports.enum(["user", "assistant"]),
-  content: external_exports.discriminatedUnion("type", [
-    TextContentSchema,
-    ImageContentSchema,
-    AudioContentSchema
-  ])
+  content: external_exports.discriminatedUnion("type", [TextContentSchema, ImageContentSchema, AudioContentSchema])
 }), BooleanSchemaSchema = external_exports.object({
   type: external_exports.literal("boolean"),
   title: external_exports.optional(external_exports.string()),
@@ -67185,12 +67104,7 @@ var PingRequestSchema = RequestSchema.extend({
   description: external_exports.optional(external_exports.string()),
   enum: external_exports.array(external_exports.string()),
   enumNames: external_exports.optional(external_exports.array(external_exports.string()))
-}).passthrough(), PrimitiveSchemaDefinitionSchema = external_exports.union([
-  BooleanSchemaSchema,
-  StringSchemaSchema,
-  NumberSchemaSchema,
-  EnumSchemaSchema
-]), ElicitRequestSchema = RequestSchema.extend({
+}).passthrough(), PrimitiveSchemaDefinitionSchema = external_exports.union([BooleanSchemaSchema, StringSchemaSchema, NumberSchemaSchema, EnumSchemaSchema]), ElicitRequestSchema = RequestSchema.extend({
   method: external_exports.literal("elicitation/create"),
   params: BaseRequestParamsSchema.extend({
     /**
@@ -67306,17 +67220,7 @@ var PromptReferenceSchema = external_exports.object({
   ProgressNotificationSchema,
   InitializedNotificationSchema,
   RootsListChangedNotificationSchema
-]), ClientResultSchema = external_exports.union([
-  EmptyResultSchema,
-  CreateMessageResultSchema,
-  ElicitResultSchema,
-  ListRootsResultSchema
-]), ServerRequestSchema = external_exports.union([
-  PingRequestSchema,
-  CreateMessageRequestSchema,
-  ElicitRequestSchema,
-  ListRootsRequestSchema
-]), ServerNotificationSchema = external_exports.union([
+]), ClientResultSchema = external_exports.union([EmptyResultSchema, CreateMessageResultSchema, ElicitResultSchema, ListRootsResultSchema]), ServerRequestSchema = external_exports.union([PingRequestSchema, CreateMessageRequestSchema, ElicitRequestSchema, ListRootsRequestSchema]), ServerNotificationSchema = external_exports.union([
   CancelledNotificationSchema,
   ProgressNotificationSchema,
   LoggingMessageNotificationSchema,
@@ -67344,7 +67248,7 @@ var PromptReferenceSchema = external_exports.object({
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/http-exception.js
+// node_modules/hono/dist/http-exception.js
 var HTTPException = class extends Error {
   static {
     __name(this, "HTTPException");
@@ -67364,7 +67268,7 @@ var HTTPException = class extends Error {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/utils/stream.js
+// node_modules/hono/dist/utils/stream.js
 var StreamingApi = class {
   static {
     __name(this, "StreamingApi");
@@ -67423,7 +67327,7 @@ var StreamingApi = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/utils/html.js
+// node_modules/hono/dist/utils/html.js
 var HtmlEscapedCallbackPhase = {
   Stringify: 1,
   BeforeStream: 2,
@@ -67446,7 +67350,7 @@ var resolveCallback = /* @__PURE__ */ __name(async (str, phase, preserveCallback
   return preserveCallbacks ? raw(await resStr, callbacks) : resStr;
 }, "resolveCallback");
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/helper/streaming/sse.js
+// node_modules/hono/dist/helper/streaming/sse.js
 var SSEStreamingApi = class extends StreamingApi {
   static {
     __name(this, "SSEStreamingApi");
@@ -67470,10 +67374,10 @@ var SSEStreamingApi = class extends StreamingApi {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/request/constants.js
+// node_modules/hono/dist/request/constants.js
 var GET_MATCH_RESULT = Symbol();
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/utils/body.js
+// node_modules/hono/dist/utils/body.js
 var parseBody = /* @__PURE__ */ __name(async (request, options = /* @__PURE__ */ Object.create(null)) => {
   let { all = !1, dot = !1 } = options, contentType = (request instanceof HonoRequest ? request.raw.headers : request.headers).get("Content-Type");
   return contentType?.startsWith("multipart/form-data") || contentType?.startsWith("application/x-www-form-urlencoded") ? parseFormData(request, { all, dot }) : {};
@@ -67501,7 +67405,7 @@ var handleParsingAllValues = /* @__PURE__ */ __name((form, key, value) => {
   });
 }, "handleParsingNestedValues");
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/utils/url.js
+// node_modules/hono/dist/utils/url.js
 var splitPath = /* @__PURE__ */ __name((path2) => {
   let paths = path2.split("/");
   return paths[0] === "" && paths.shift(), paths;
@@ -67510,9 +67414,9 @@ var splitPath = /* @__PURE__ */ __name((path2) => {
   return replaceGroupMarks(paths, groups);
 }, "splitRoutingPath"), extractGroupsFromPath = /* @__PURE__ */ __name((path2) => {
   let groups = [];
-  return path2 = path2.replace(/\{[^}]+\}/g, (match, index) => {
+  return path2 = path2.replace(/\{[^}]+\}/g, (match2, index) => {
     let mark = `@${index}`;
-    return groups.push([mark, match]), mark;
+    return groups.push([mark, match2]), mark;
   }), { groups, path: path2 };
 }, "extractGroupsFromPath"), replaceGroupMarks = /* @__PURE__ */ __name((paths, groups) => {
   for (let i2 = groups.length - 1; i2 >= 0; i2--) {
@@ -67527,21 +67431,21 @@ var splitPath = /* @__PURE__ */ __name((path2) => {
 }, "replaceGroupMarks"), patternCache = {}, getPattern = /* @__PURE__ */ __name((label, next) => {
   if (label === "*")
     return "*";
-  let match = label.match(/^\:([^\{\}]+)(?:\{(.+)\})?$/);
-  if (match) {
+  let match2 = label.match(/^\:([^\{\}]+)(?:\{(.+)\})?$/);
+  if (match2) {
     let cacheKey2 = `${label}#${next}`;
-    return patternCache[cacheKey2] || (match[2] ? patternCache[cacheKey2] = next && next[0] !== ":" && next[0] !== "*" ? [cacheKey2, match[1], new RegExp(`^${match[2]}(?=/${next})`)] : [label, match[1], new RegExp(`^${match[2]}$`)] : patternCache[cacheKey2] = [label, match[1], !0]), patternCache[cacheKey2];
+    return patternCache[cacheKey2] || (match2[2] ? patternCache[cacheKey2] = next && next[0] !== ":" && next[0] !== "*" ? [cacheKey2, match2[1], new RegExp(`^${match2[2]}(?=/${next})`)] : [label, match2[1], new RegExp(`^${match2[2]}$`)] : patternCache[cacheKey2] = [label, match2[1], !0]), patternCache[cacheKey2];
   }
   return null;
 }, "getPattern"), tryDecode = /* @__PURE__ */ __name((str, decoder) => {
   try {
     return decoder(str);
   } catch {
-    return str.replace(/(?:%[0-9A-Fa-f]{2})+/g, (match) => {
+    return str.replace(/(?:%[0-9A-Fa-f]{2})+/g, (match2) => {
       try {
-        return decoder(match);
+        return decoder(match2);
       } catch {
-        return match;
+        return match2;
       }
     });
   }
@@ -67609,7 +67513,7 @@ var getPathNoStrict = /* @__PURE__ */ __name((request) => {
   return key ? results[key] : results;
 }, "_getQueryParam"), getQueryParam = _getQueryParam, getQueryParams = /* @__PURE__ */ __name((url2, key) => _getQueryParam(url2, key, !0), "getQueryParams"), decodeURIComponent_ = decodeURIComponent;
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/request.js
+// node_modules/hono/dist/request.js
 var tryDecodeURIComponent = /* @__PURE__ */ __name((str) => tryDecode(str, decodeURIComponent_), "tryDecodeURIComponent"), HonoRequest = class {
   static {
     __name(this, "HonoRequest");
@@ -67703,7 +67607,7 @@ var tryDecodeURIComponent = /* @__PURE__ */ __name((str) => tryDecode(str, decod
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/context.js
+// node_modules/hono/dist/context.js
 var TEXT_PLAIN = "text/plain; charset=UTF-8", setDefaultContentType = /* @__PURE__ */ __name((contentType, headers) => ({
   "Content-Type": contentType,
   ...headers
@@ -67828,7 +67732,7 @@ var TEXT_PLAIN = "text/plain; charset=UTF-8", setDefaultContentType = /* @__PURE
   notFound = /* @__PURE__ */ __name(() => (this.#notFoundHandler ??= () => new Response(), this.#notFoundHandler(this)), "notFound");
 };
 
-// ../../node_modules/.pnpm/@hono+mcp@0.1.4_@modelcontextprotocol+sdk@1.18.2_hono@4.9.9/node_modules/@hono/mcp/dist/index.js
+// node_modules/@hono/mcp/dist/index.js
 var isOldBunVersion2 = /* @__PURE__ */ __name(() => {
   let version3 = typeof Bun < "u" ? Bun.version : void 0;
   if (version3 === void 0)
@@ -67959,14 +67863,14 @@ var isOldBunVersion2 = /* @__PURE__ */ __name(() => {
           });
         });
       });
-    } catch (error45) {
-      throw error45 instanceof HTTPException ? error45 : (this.onerror?.(error45), new HTTPException(400, {
+    } catch (error46) {
+      throw error46 instanceof HTTPException ? error46 : (this.onerror?.(error46), new HTTPException(400, {
         res: Response.json({
           jsonrpc: "2.0",
           error: {
             code: -32700,
             message: "Parse error",
-            data: String(error45)
+            data: String(error46)
           },
           id: null
         })
@@ -68073,14 +67977,14 @@ var isOldBunVersion2 = /* @__PURE__ */ __name(() => {
           });
         });
       }
-    } catch (error45) {
-      throw error45 instanceof HTTPException ? error45 : (this.onerror?.(error45), new HTTPException(400, {
+    } catch (error46) {
+      throw error46 instanceof HTTPException ? error46 : (this.onerror?.(error46), new HTTPException(400, {
         res: Response.json({
           jsonrpc: "2.0",
           error: {
             code: -32700,
             message: "Parse error",
-            data: String(error45)
+            data: String(error46)
           },
           id: null
         })
@@ -68221,7 +68125,7 @@ var isOldBunVersion2 = /* @__PURE__ */ __name(() => {
   }
 };
 
-// ../../node_modules/.pnpm/@hono+node-server@1.19.3_hono@4.9.9/node_modules/@hono/node-server/dist/index.mjs
+// node_modules/@hono/node-server/dist/index.mjs
 import { createServer as createServerHTTP } from "http";
 import { Http2ServerRequest as Http2ServerRequest2 } from "http2";
 import { Http2ServerRequest } from "http2";
@@ -68279,8 +68183,8 @@ var RequestError = class extends Error {
             reader ||= Readable.toWeb(incoming).getReader();
             let { done, value } = await reader.read();
             done ? controller.close() : controller.enqueue(value);
-          } catch (error45) {
-            controller.error(error45);
+          } catch (error46) {
+            controller.error(error46);
           }
         }
       });
@@ -68422,13 +68326,15 @@ async function readWithoutBlocking(readPromise) {
 }
 __name(readWithoutBlocking, "readWithoutBlocking");
 function writeFromReadableStreamDefaultReader(reader, writable, currentReadPromise) {
-  let handleError = /* @__PURE__ */ __name(() => {
-  }, "handleError");
-  return writable.on("error", handleError), (currentReadPromise ?? reader.read()).then(flow, handleStreamError), reader.closed.finally(() => {
-    writable.off("error", handleError);
+  let cancel = /* @__PURE__ */ __name((error46) => {
+    reader.cancel(error46).catch(() => {
+    });
+  }, "cancel");
+  return writable.on("close", cancel), writable.on("error", cancel), (currentReadPromise ?? reader.read()).then(flow, handleStreamError), reader.closed.finally(() => {
+    writable.off("close", cancel), writable.off("error", cancel);
   });
-  function handleStreamError(error45) {
-    error45 && writable.destroy(error45);
+  function handleStreamError(error46) {
+    error46 && writable.destroy(error46);
   }
   __name(handleStreamError, "handleStreamError");
   function onDrain() {
@@ -68585,7 +68491,7 @@ var outgoingEnded = Symbol("outgoingEnded"), handleRequestError = /* @__PURE__ *
   }), server;
 }, "serve");
 
-// ../../node_modules/.pnpm/@modelcontextprotocol+sdk@1.18.2/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
+// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
 var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
   static {
     __name(this, "Protocol");
@@ -68618,7 +68524,10 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
       return !1;
     let totalElapsed = Date.now() - info.startTime;
     if (info.maxTotalTimeout && totalElapsed >= info.maxTotalTimeout)
-      throw this._timeoutInfo.delete(messageId), new McpError(ErrorCode.RequestTimeout, "Maximum total timeout exceeded", { maxTotalTimeout: info.maxTotalTimeout, totalElapsed });
+      throw this._timeoutInfo.delete(messageId), new McpError(ErrorCode.RequestTimeout, "Maximum total timeout exceeded", {
+        maxTotalTimeout: info.maxTotalTimeout,
+        totalElapsed
+      });
     return clearTimeout(info.timeoutId), info.timeoutId = setTimeout(info.onTimeout, info.timeout), !0;
   }
   _cleanupTimeout(messageId) {
@@ -68638,8 +68547,8 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
       _onclose?.(), this._onclose();
     };
     let _onerror = (_b = this.transport) === null || _b === void 0 ? void 0 : _b.onerror;
-    this._transport.onerror = (error45) => {
-      _onerror?.(error45), this._onerror(error45);
+    this._transport.onerror = (error46) => {
+      _onerror?.(error46), this._onerror(error46);
     };
     let _onmessage = (_c = this._transport) === null || _c === void 0 ? void 0 : _c.onmessage;
     this._transport.onmessage = (message, extra) => {
@@ -68650,18 +68559,18 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
     var _a;
     let responseHandlers = this._responseHandlers;
     this._responseHandlers = /* @__PURE__ */ new Map(), this._progressHandlers.clear(), this._pendingDebouncedNotifications.clear(), this._transport = void 0, (_a = this.onclose) === null || _a === void 0 || _a.call(this);
-    let error45 = new McpError(ErrorCode.ConnectionClosed, "Connection closed");
+    let error46 = new McpError(ErrorCode.ConnectionClosed, "Connection closed");
     for (let handler of responseHandlers.values())
-      handler(error45);
+      handler(error46);
   }
-  _onerror(error45) {
+  _onerror(error46) {
     var _a;
-    (_a = this.onerror) === null || _a === void 0 || _a.call(this, error45);
+    (_a = this.onerror) === null || _a === void 0 || _a.call(this, error46);
   }
   _onnotification(notification) {
     var _a;
     let handler = (_a = this._notificationHandlers.get(notification.method)) !== null && _a !== void 0 ? _a : this.fallbackNotificationHandler;
-    handler !== void 0 && Promise.resolve().then(() => handler(notification)).catch((error45) => this._onerror(new Error(`Uncaught error in notification handler: ${error45}`)));
+    handler !== void 0 && Promise.resolve().then(() => handler(notification)).catch((error46) => this._onerror(new Error(`Uncaught error in notification handler: ${error46}`)));
   }
   _onrequest(request, extra) {
     var _a, _b;
@@ -68674,7 +68583,7 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
           code: ErrorCode.MethodNotFound,
           message: "Method not found"
         }
-      }).catch((error45) => this._onerror(new Error(`Failed to send an error response: ${error45}`)));
+      }).catch((error46) => this._onerror(new Error(`Failed to send an error response: ${error46}`)));
       return;
     }
     let abortController = new AbortController();
@@ -68696,18 +68605,18 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
           jsonrpc: "2.0",
           id: request.id
         });
-    }, (error45) => {
+    }, (error46) => {
       var _a2;
       if (!abortController.signal.aborted)
         return capturedTransport?.send({
           jsonrpc: "2.0",
           id: request.id,
           error: {
-            code: Number.isSafeInteger(error45.code) ? error45.code : ErrorCode.InternalError,
-            message: (_a2 = error45.message) !== null && _a2 !== void 0 ? _a2 : "Internal error"
+            code: Number.isSafeInteger(error46.code) ? error46.code : ErrorCode.InternalError,
+            message: (_a2 = error46.message) !== null && _a2 !== void 0 ? _a2 : "Internal error"
           }
         });
-    }).catch((error45) => this._onerror(new Error(`Failed to send response: ${error45}`))).finally(() => {
+    }).catch((error46) => this._onerror(new Error(`Failed to send response: ${error46}`))).finally(() => {
       this._requestHandlerAbortControllers.delete(request.id);
     });
   }
@@ -68721,8 +68630,8 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
     if (timeoutInfo && responseHandler && timeoutInfo.resetTimeoutOnProgress)
       try {
         this._resetTimeout(messageId);
-      } catch (error45) {
-        responseHandler(error45);
+      } catch (error46) {
+        responseHandler(error46);
         return;
       }
     handler(params);
@@ -68736,8 +68645,8 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
     if (this._responseHandlers.delete(messageId), this._progressHandlers.delete(messageId), this._cleanupTimeout(messageId), isJSONRPCResponse(response))
       handler(response);
     else {
-      let error45 = new McpError(response.error.code, response.error.message, response.error.data);
-      handler(error45);
+      let error46 = new McpError(response.error.code, response.error.message, response.error.data);
+      handler(error46);
     }
   }
   get transport() {
@@ -68785,7 +68694,7 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
             requestId: messageId,
             reason: String(reason)
           }
-        }, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error45) => this._onerror(new Error(`Failed to send cancellation: ${error45}`))), reject(reason);
+        }, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error46) => this._onerror(new Error(`Failed to send cancellation: ${error46}`))), reject(reason);
       }, "cancel");
       this._responseHandlers.set(messageId, (response) => {
         var _a2;
@@ -68795,8 +68704,8 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
           try {
             let result = resultSchema.parse(response.result);
             resolve(result);
-          } catch (error45) {
-            reject(error45);
+          } catch (error46) {
+            reject(error46);
           }
         }
       }), (_d = options?.signal) === null || _d === void 0 || _d.addEventListener("abort", () => {
@@ -68804,8 +68713,8 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
         cancel((_a2 = options?.signal) === null || _a2 === void 0 ? void 0 : _a2.reason);
       });
       let timeout = (_e = options?.timeout) !== null && _e !== void 0 ? _e : DEFAULT_REQUEST_TIMEOUT_MSEC, timeoutHandler = /* @__PURE__ */ __name(() => cancel(new McpError(ErrorCode.RequestTimeout, "Request timed out", { timeout })), "timeoutHandler");
-      this._setupTimeout(messageId, timeout, options?.maxTotalTimeout, timeoutHandler, (_f = options?.resetTimeoutOnProgress) !== null && _f !== void 0 ? _f : !1), this._transport.send(jsonrpcRequest, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error45) => {
-        this._cleanupTimeout(messageId), reject(error45);
+      this._setupTimeout(messageId, timeout, options?.maxTotalTimeout, timeoutHandler, (_f = options?.resetTimeoutOnProgress) !== null && _f !== void 0 ? _f : !1), this._transport.send(jsonrpcRequest, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error46) => {
+        this._cleanupTimeout(messageId), reject(error46);
       });
     });
   }
@@ -68827,7 +68736,7 @@ var DEFAULT_REQUEST_TIMEOUT_MSEC = 6e4, Protocol = class {
           ...notification,
           jsonrpc: "2.0"
         };
-        (_a2 = this._transport) === null || _a2 === void 0 || _a2.send(jsonrpcNotification2, options).catch((error45) => this._onerror(error45));
+        (_a2 = this._transport) === null || _a2 === void 0 || _a2.send(jsonrpcNotification2, options).catch((error46) => this._onerror(error46));
       });
       return;
     }
@@ -68879,7 +68788,7 @@ function mergeCapabilities(base, additional) {
 }
 __name(mergeCapabilities, "mergeCapabilities");
 
-// ../../node_modules/.pnpm/@modelcontextprotocol+sdk@1.18.2/node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js
 var import_ajv = __toESM(require_ajv(), 1);
 var Server = class extends Protocol {
   static {
@@ -69024,8 +68933,8 @@ var Server = class extends Protocol {
         let ajv = new import_ajv.default(), validate3 = ajv.compile(params.requestedSchema);
         if (!validate3(result.content))
           throw new McpError(ErrorCode.InvalidParams, `Elicitation response content does not match requested schema: ${ajv.errorsText(validate3.errors)}`);
-      } catch (error45) {
-        throw error45 instanceof McpError ? error45 : new McpError(ErrorCode.InternalError, `Error validating elicitation response: ${error45}`);
+      } catch (error46) {
+        throw error46 instanceof McpError ? error46 : new McpError(ErrorCode.InternalError, `Error validating elicitation response: ${error46}`);
       }
     return result;
   }
@@ -69062,10 +68971,10 @@ var Server = class extends Protocol {
   }
 };
 
-// ../../node_modules/.pnpm/@modelcontextprotocol+sdk@1.18.2/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
 import process2 from "node:process";
 
-// ../../node_modules/.pnpm/@modelcontextprotocol+sdk@1.18.2/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
+// node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
 var ReadBuffer = class {
   static {
     __name(this, "ReadBuffer");
@@ -69097,7 +69006,7 @@ function serializeMessage(message) {
 }
 __name(serializeMessage, "serializeMessage");
 
-// ../../node_modules/.pnpm/@modelcontextprotocol+sdk@1.18.2/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
 var StdioServerTransport = class {
   static {
     __name(this, "StdioServerTransport");
@@ -69105,9 +69014,9 @@ var StdioServerTransport = class {
   constructor(_stdin = process2.stdin, _stdout = process2.stdout) {
     this._stdin = _stdin, this._stdout = _stdout, this._readBuffer = new ReadBuffer(), this._started = !1, this._ondata = (chunk) => {
       this._readBuffer.append(chunk), this.processReadBuffer();
-    }, this._onerror = (error45) => {
+    }, this._onerror = (error46) => {
       var _a;
-      (_a = this.onerror) === null || _a === void 0 || _a.call(this, error45);
+      (_a = this.onerror) === null || _a === void 0 || _a.call(this, error46);
     };
   }
   /**
@@ -69125,8 +69034,8 @@ var StdioServerTransport = class {
         if (message === null)
           break;
         (_a = this.onmessage) === null || _a === void 0 || _a.call(this, message);
-      } catch (error45) {
-        (_b = this.onerror) === null || _b === void 0 || _b.call(this, error45);
+      } catch (error46) {
+        (_b = this.onerror) === null || _b === void 0 || _b.call(this, error46);
       }
   }
   async close() {
@@ -69141,7 +69050,7 @@ var StdioServerTransport = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/compose.js
+// node_modules/hono/dist/compose.js
 var compose = /* @__PURE__ */ __name((middleware, onError, onNotFound) => (context, next) => {
   let index = -1;
   return dispatch(0);
@@ -69165,17 +69074,17 @@ var compose = /* @__PURE__ */ __name((middleware, onError, onNotFound) => (conte
   }
 }, "compose");
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router.js
+// node_modules/hono/dist/router.js
 var METHOD_NAME_ALL = "ALL", METHOD_NAME_ALL_LOWERCASE = "all", METHODS = ["get", "post", "put", "delete", "options", "patch"], MESSAGE_MATCHER_IS_ALREADY_BUILT = "Can not add a route since the matcher is already built.", UnsupportedPathError = class extends Error {
   static {
     __name(this, "UnsupportedPathError");
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/utils/constants.js
+// node_modules/hono/dist/utils/constants.js
 var COMPOSED_HANDLER = "__COMPOSED_HANDLER";
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/hono-base.js
+// node_modules/hono/dist/hono-base.js
 var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 404), "notFoundHandler"), errorHandler = /* @__PURE__ */ __name((err, c3) => {
   if ("getResponse" in err) {
     let res = err.getResponse();
@@ -69334,7 +69243,24 @@ var notFoundHandler = /* @__PURE__ */ __name((c3) => c3.text("404 Not Found", 40
   }, "fire");
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router/reg-exp-router/node.js
+// node_modules/hono/dist/router/reg-exp-router/matcher.js
+var emptyParam = [];
+function match(method, path2) {
+  let matchers = this.buildAllMatchers(), match2 = /* @__PURE__ */ __name((method2, path22) => {
+    let matcher = matchers[method2] || matchers[METHOD_NAME_ALL], staticMatch = matcher[2][path22];
+    if (staticMatch)
+      return staticMatch;
+    let match3 = path22.match(matcher[0]);
+    if (!match3)
+      return [[], emptyParam];
+    let index = match3.indexOf("", 1);
+    return [matcher[1][index], match3];
+  }, "match2");
+  return this.match = match2, match2(method, path2);
+}
+__name(match, "match");
+
+// node_modules/hono/dist/router/reg-exp-router/node.js
 var LABEL_REG_EXP_STR = "[^/]+", ONLY_WILDCARD_REG_EXP_STR = ".*", TAIL_WILDCARD_REG_EXP_STR = "(?:|/.*)", PATH_ERROR = Symbol(), regExpMetaChars = new Set(".\\+*[^]$()");
 function compareKey(a2, b2) {
   return a2.length === 1 ? b2.length === 1 ? a2 < b2 ? -1 : 1 : -1 : b2.length === 1 || a2 === ONLY_WILDCARD_REG_EXP_STR || a2 === TAIL_WILDCARD_REG_EXP_STR ? 1 : b2 === ONLY_WILDCARD_REG_EXP_STR || b2 === TAIL_WILDCARD_REG_EXP_STR ? -1 : a2 === LABEL_REG_EXP_STR ? 1 : b2 === LABEL_REG_EXP_STR ? -1 : a2.length === b2.length ? a2 < b2 ? -1 : 1 : b2.length - a2.length;
@@ -69391,7 +69317,7 @@ var Node = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router/reg-exp-router/trie.js
+// node_modules/hono/dist/router/reg-exp-router/trie.js
 var Trie = class {
   static {
     __name(this, "Trie");
@@ -69428,8 +69354,8 @@ var Trie = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router/reg-exp-router/router.js
-var emptyParam = [], nullMatcher = [/^$/, [], /* @__PURE__ */ Object.create(null)], wildcardRegExpCache = /* @__PURE__ */ Object.create(null);
+// node_modules/hono/dist/router/reg-exp-router/router.js
+var nullMatcher = [/^$/, [], /* @__PURE__ */ Object.create(null)], wildcardRegExpCache = /* @__PURE__ */ Object.create(null);
 function buildWildcardRegExp(path2) {
   return wildcardRegExpCache[path2] ??= new RegExp(
     path2 === "*" ? "" : `^${path2.replace(
@@ -69539,25 +69465,12 @@ var RegExpRouter = class {
       });
     }
   }
-  match(method, path2) {
-    clearWildcardRegExpCache();
-    let matchers = this.#buildAllMatchers();
-    return this.match = (method2, path22) => {
-      let matcher = matchers[method2] || matchers[METHOD_NAME_ALL], staticMatch = matcher[2][path22];
-      if (staticMatch)
-        return staticMatch;
-      let match = path22.match(matcher[0]);
-      if (!match)
-        return [[], emptyParam];
-      let index = match.indexOf("", 1);
-      return [matcher[1][index], match];
-    }, this.match(method, path2);
-  }
-  #buildAllMatchers() {
+  match = match;
+  buildAllMatchers() {
     let matchers = /* @__PURE__ */ Object.create(null);
     return Object.keys(this.#routes).concat(Object.keys(this.#middleware)).forEach((method) => {
       matchers[method] ||= this.#buildMatcher(method);
-    }), this.#middleware = this.#routes = void 0, matchers;
+    }), this.#middleware = this.#routes = void 0, clearWildcardRegExpCache(), matchers;
   }
   #buildMatcher(method) {
     let routes = [], hasOwnRoute = method === METHOD_NAME_ALL;
@@ -69570,7 +69483,7 @@ var RegExpRouter = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router/smart-router/router.js
+// node_modules/hono/dist/router/smart-router/router.js
 var SmartRouter = class {
   static {
     __name(this, "SmartRouter");
@@ -69615,7 +69528,7 @@ var SmartRouter = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router/trie-router/node.js
+// node_modules/hono/dist/router/trie-router/node.js
 var emptyParams = /* @__PURE__ */ Object.create(null), Node2 = class {
   static {
     __name(this, "Node");
@@ -69707,7 +69620,7 @@ var emptyParams = /* @__PURE__ */ Object.create(null), Node2 = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/router/trie-router/router.js
+// node_modules/hono/dist/router/trie-router/router.js
 var TrieRouter = class {
   static {
     __name(this, "TrieRouter");
@@ -69731,7 +69644,7 @@ var TrieRouter = class {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/hono.js
+// node_modules/hono/dist/hono.js
 var Hono2 = class extends Hono {
   static {
     __name(this, "Hono");
@@ -69743,7 +69656,7 @@ var Hono2 = class extends Hono {
   }
 };
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/middleware/cors/index.js
+// node_modules/hono/dist/middleware/cors/index.js
 var cors = /* @__PURE__ */ __name((options) => {
   let opts = {
     ...{
@@ -69783,7 +69696,7 @@ var cors = /* @__PURE__ */ __name((options) => {
   }, "cors2");
 }, "cors");
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/utils/color.js
+// node_modules/hono/dist/utils/color.js
 function getColorEnabled() {
   let { process: process9, Deno: Deno2 } = globalThis;
   return !(typeof Deno2?.noColor == "boolean" ? Deno2.noColor : process9 !== void 0 ? "NO_COLOR" in process9?.env : !1);
@@ -69801,7 +69714,7 @@ async function getColorEnabledAsync() {
 }
 __name(getColorEnabledAsync, "getColorEnabledAsync");
 
-// ../../node_modules/.pnpm/hono@4.9.9/node_modules/hono/dist/middleware/logger/index.js
+// node_modules/hono/dist/middleware/logger/index.js
 var humanize = /* @__PURE__ */ __name((times) => {
   let [delimiter, separator] = [",", "."];
   return times.map((v2) => v2.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + delimiter)).join(separator);
@@ -69847,8 +69760,7 @@ function getMssqlConfig() {
     port: 1433,
     encrypt: !1,
     command: process.env.MSSQL_COMMAND || "execute_sql",
-    windowsAuth: !1,
-    accessMode: process.env.MSSQL_ACCESS_MODE?.toLowerCase() === "readonly" ? "readonly" : "readwrite"
+    windowsAuth: !1
   }, port = process.env.MSSQL_PORT;
   if (port)
     try {
@@ -69865,23 +69777,21 @@ function getMssqlConfig() {
   } else if (!config2.user || !config2.password || !config2.database)
     throw logger2.error("Missing required database configuration. Please check environment variables:"), logger2.error("MSSQL_USER, MSSQL_PASSWORD, and MSSQL_DATABASE are required"), new Error("Missing required database configuration");
   return useWindowsAuth ? logger2.info(
-    `Database config: ${config2.server}:${config2.port}/${config2.database} using Windows Authentication (${config2.accessMode} mode)`
+    `Database config: ${config2.server}:${config2.port}/${config2.database} using Windows Authentication (READ-ONLY mode)`
   ) : logger2.info(
-    `Database config: ${config2.server}:${config2.port}/${config2.database} as ${config2.user} (${config2.accessMode} mode)`
+    `Database config: ${config2.server}:${config2.port}/${config2.database} as ${config2.user} (READ-ONLY mode)`
   ), config2;
 }
 __name(getMssqlConfig, "getMssqlConfig");
 function isReadOnlyQuery(query) {
-  let cleanQuery = query.replace(/--.*$/gm, "").trim().toUpperCase();
-  return cleanQuery ? [
-    "SELECT",
-    "WITH",
-    // CTEs that start with WITH
-    "SHOW",
-    "DESCRIBE",
-    "EXPLAIN",
-    "DESC"
-  ].some((op) => cleanQuery.startsWith(op)) : !1;
+  let decodedQuery = query;
+  try {
+    decodedQuery = decodeURIComponent(decodedQuery);
+  } catch {
+  }
+  decodedQuery = decodedQuery.normalize("NFKC");
+  let cleanQuery = decodedQuery.replace(/--.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "").replace(/\\/g, "").trim().toUpperCase();
+  return cleanQuery ? /\b(DROP|TRUNCATE|ALTER|CREATE|INSERT|UPDATE|DELETE|MERGE|GRANT|REVOKE|DENY|EXEC|EXECUTE|SP_EXECUTESQL|XP_CMDSHELL|OPENROWSET|OPENQUERY|OPENDATASOURCE|BULK|INTO|BACKUP|RESTORE|UNION)\b|;\s*(DROP|TRUNCATE|ALTER|INSERT|UPDATE|DELETE|CREATE|EXEC)|0X[0-9A-F]+/i.test(cleanQuery) ? (consola.level >= 0 && logger2.warn("Dangerous pattern detected in query"), !1) : /0X[0-9A-F]{8,}/i.test(cleanQuery) ? (consola.level >= 0 && logger2.warn("Hex-encoded content detected - potential bypass attempt"), !1) : /^(SELECT|WITH|SHOW|DESCRIBE|EXPLAIN|DESC)\b/.test(cleanQuery) ? !0 : (consola.level >= 0 && logger2.warn(`Query does not start with allowed read-only operation: ${cleanQuery.substring(0, 50)}`), !1) : (consola.level >= 0 && logger2.warn("Empty query after sanitization"), !1);
 }
 __name(isReadOnlyQuery, "isReadOnlyQuery");
 function validateTableName(tableName) {
@@ -69892,16 +69802,44 @@ function validateTableName(tableName) {
 }
 __name(validateTableName, "validateTableName");
 
+// src/utils/csv.ts
+function formatCSV(results, warningMessage) {
+  if (!results || results.length === 0)
+    return "";
+  let columns = Object.keys(results[0]), needsQuotingRegex = /[,"\n\r]/, lines = [columns.join(",")];
+  for (let row of results) {
+    let cells = columns.map((col) => {
+      let value = row[col];
+      if (value == null) return "";
+      let strValue = String(value);
+      return needsQuotingRegex.test(strValue) ? `"${strValue.replace(/"/g, '""')}"` : strValue;
+    });
+    lines.push(cells.join(","));
+  }
+  let resultText = lines.join(`
+`);
+  return warningMessage && (resultText += warningMessage), resultText;
+}
+__name(formatCSV, "formatCSV");
+
 // src/MssqlResources.ts
-var logger3 = consola.withTag("mssql-resources"), MssqlResources = {
+var logger3 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, resourceCache = null, RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || "100", 10), MssqlResources = {
   async getResourceDefinitions(pool) {
+    let now = Date.now();
+    if (resourceCache && now - resourceCache.timestamp < CACHE_TTL_MS) {
+      if (consola.level >= 0) {
+        let cacheAgeSeconds = Math.round((now - resourceCache.timestamp) / 1e3);
+        logger3.debug(`Returning cached resources (age: ${cacheAgeSeconds}s)`);
+      }
+      return resourceCache.resources;
+    }
     try {
       let results = await pool.query(`
         SELECT TABLE_NAME
         FROM INFORMATION_SCHEMA.TABLES
         WHERE TABLE_TYPE = 'BASE TABLE'
       `);
-      consola.level >= 0 && logger3.info(`Found ${results.length} tables`);
+      consola.level >= 0 && logger3.info(`Found ${results.length} tables (cache updated)`);
       let resources = [];
       for (let table of results) {
         let tableName = table.TABLE_NAME || table.table_name;
@@ -69912,9 +69850,12 @@ var logger3 = consola.withTag("mssql-resources"), MssqlResources = {
           description: `Data in table: ${tableName}`
         });
       }
-      return resources;
-    } catch (error45) {
-      return consola.level >= 0 && logger3.error("Failed to list resources:", error45), [];
+      return resourceCache = {
+        resources,
+        timestamp: now
+      }, resources;
+    } catch (error46) {
+      return consola.level >= 0 && logger3.error("Failed to list resources:", error46), resourceCache ? (consola.level >= 0 && logger3.warn("Returning stale cache due to error"), resourceCache.resources) : [];
     }
   },
   async handleResource(uri, pool) {
@@ -69924,27 +69865,33 @@ var logger3 = consola.withTag("mssql-resources"), MssqlResources = {
     if (!tableName)
       throw new Error(`Invalid URI format: ${uri}`);
     try {
-      let safeTableName = validateTableName(tableName), results = await pool.query(`SELECT TOP 100 * FROM ${safeTableName}`);
+      let safeTableName = validateTableName(tableName), results = await pool.query(`SELECT TOP ${RESOURCE_DATA_LIMIT} * FROM ${safeTableName}`);
       if (results.length === 0)
         return {
           uri,
           mimeType: "text/plain",
           text: `No data found in table: ${tableName}`
         };
-      let columns = Object.keys(results[0]), csvRows = results.map((row) => columns.map((col) => String(row[col] ?? "")).join(",")), resultText = [columns.join(","), ...csvRows].join(`
-`);
+      let paginationWarning = "";
+      results.length === RESOURCE_DATA_LIMIT && (paginationWarning = `
+
+⚠️ Note: Showing first ${RESOURCE_DATA_LIMIT} rows only. Set MSSQL_RESOURCE_LIMIT environment variable to adjust.`);
+      let resultText = formatCSV(results, paginationWarning);
       return {
         uri,
         mimeType: "text/plain",
         text: resultText
       };
-    } catch (error45) {
-      throw consola.level >= 0 && logger3.error(`Database error reading resource ${uri}:`, error45), new Error(`Database error: ${error45 instanceof Error ? error45.message : "Unknown error"}`);
+    } catch (error46) {
+      throw consola.level >= 0 && logger3.error("Database error reading resource:", uri, error46), new Error(`Database error: ${error46 instanceof Error ? error46.message : "Unknown error"}`);
     }
   }
 };
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/external.js
+// src/MssqlTools.ts
+import crypto3 from "node:crypto";
+
+// node_modules/zod/v4/classic/external.js
 var external_exports2 = {};
 __export(external_exports2, {
   $brand: () => $brand,
@@ -70174,7 +70121,7 @@ __export(external_exports2, {
   xid: () => xid2
 });
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/index.js
+// node_modules/zod/v4/core/index.js
 var core_exports2 = {};
 __export(core_exports2, {
   $ZodAny: () => $ZodAny,
@@ -70438,7 +70385,7 @@ __export(core_exports2, {
   version: () => version
 });
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/core.js
+// node_modules/zod/v4/core/core.js
 var NEVER2 = Object.freeze({
   status: "aborted"
 });
@@ -70495,7 +70442,7 @@ function config(newConfig) {
 }
 __name(config, "config");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/util.js
+// node_modules/zod/v4/core/util.js
 var util_exports = {};
 __export(util_exports, {
   BIGINT_FORMAT_RANGES: () => BIGINT_FORMAT_RANGES,
@@ -70614,8 +70561,8 @@ __name(cleanRegex, "cleanRegex");
 function floatSafeRemainder2(val, step) {
   let valDecCount = (val.toString().split(".")[1] || "").length, stepString = step.toString(), stepDecCount = (stepString.split(".")[1] || "").length;
   if (stepDecCount === 0 && /\d?e-\d?/.test(stepString)) {
-    let match = stepString.match(/\d?e-(\d?)/);
-    match?.[1] && (stepDecCount = Number.parseInt(match[1]));
+    let match2 = stepString.match(/\d?e-(\d?)/);
+    match2?.[1] && (stepDecCount = Number.parseInt(match2[1]));
   }
   let decCount = valDecCount > stepDecCount ? valDecCount : stepDecCount, valInt = Number.parseInt(val.toFixed(decCount).replace(".", "")), stepInt = Number.parseInt(step.toFixed(decCount).replace(".", ""));
   return valInt % stepInt / 10 ** decCount;
@@ -71043,7 +70990,7 @@ var Class = class {
   }
 };
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/errors.js
+// node_modules/zod/v4/core/errors.js
 var initializer = /* @__PURE__ */ __name((inst, def) => {
   inst.name = "$ZodError", Object.defineProperty(inst, "_zod", {
     value: inst._zod,
@@ -71056,18 +71003,16 @@ var initializer = /* @__PURE__ */ __name((inst, def) => {
     enumerable: !1
   });
 }, "initializer"), $ZodError = $constructor("$ZodError", initializer), $ZodRealError = $constructor("$ZodError", initializer, { Parent: Error });
-function flattenError(error45, mapper = (issue2) => issue2.message) {
+function flattenError(error46, mapper = (issue2) => issue2.message) {
   let fieldErrors = {}, formErrors = [];
-  for (let sub of error45.issues)
+  for (let sub of error46.issues)
     sub.path.length > 0 ? (fieldErrors[sub.path[0]] = fieldErrors[sub.path[0]] || [], fieldErrors[sub.path[0]].push(mapper(sub))) : formErrors.push(mapper(sub));
   return { formErrors, fieldErrors };
 }
 __name(flattenError, "flattenError");
-function formatError(error45, _mapper) {
-  let mapper = _mapper || function(issue2) {
-    return issue2.message;
-  }, fieldErrors = { _errors: [] }, processError = /* @__PURE__ */ __name((error46) => {
-    for (let issue2 of error46.issues)
+function formatError(error46, mapper = (issue2) => issue2.message) {
+  let fieldErrors = { _errors: [] }, processError = /* @__PURE__ */ __name((error47) => {
+    for (let issue2 of error47.issues)
       if (issue2.code === "invalid_union" && issue2.errors.length)
         issue2.errors.map((issues) => processError({ issues }));
       else if (issue2.code === "invalid_key")
@@ -71084,15 +71029,13 @@ function formatError(error45, _mapper) {
         }
       }
   }, "processError");
-  return processError(error45), fieldErrors;
+  return processError(error46), fieldErrors;
 }
 __name(formatError, "formatError");
-function treeifyError(error45, _mapper) {
-  let mapper = _mapper || function(issue2) {
-    return issue2.message;
-  }, result = { errors: [] }, processError = /* @__PURE__ */ __name((error46, path2 = []) => {
+function treeifyError(error46, mapper = (issue2) => issue2.message) {
+  let result = { errors: [] }, processError = /* @__PURE__ */ __name((error47, path2 = []) => {
     var _a, _b;
-    for (let issue2 of error46.issues)
+    for (let issue2 of error47.issues)
       if (issue2.code === "invalid_union" && issue2.errors.length)
         issue2.errors.map((issues) => processError({ issues }, issue2.path));
       else if (issue2.code === "invalid_key")
@@ -71112,7 +71055,7 @@ function treeifyError(error45, _mapper) {
         }
       }
   }, "processError");
-  return processError(error45), result;
+  return processError(error46), result;
 }
 __name(treeifyError, "treeifyError");
 function toDotPath(_path) {
@@ -71122,8 +71065,8 @@ function toDotPath(_path) {
   return segs.join("");
 }
 __name(toDotPath, "toDotPath");
-function prettifyError(error45) {
-  let lines = [], issues = [...error45.issues].sort((a2, b2) => (a2.path ?? []).length - (b2.path ?? []).length);
+function prettifyError(error46) {
+  let lines = [], issues = [...error46.issues].sort((a2, b2) => (a2.path ?? []).length - (b2.path ?? []).length);
   for (let issue2 of issues)
     lines.push(`✖ ${issue2.message}`), issue2.path?.length && lines.push(`  → at ${toDotPath(issue2.path)}`);
   return lines.join(`
@@ -71131,7 +71074,7 @@ function prettifyError(error45) {
 }
 __name(prettifyError, "prettifyError");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/parse.js
+// node_modules/zod/v4/core/parse.js
 var _parse = /* @__PURE__ */ __name((_Err) => (schema, value, _ctx, _params) => {
   let ctx = _ctx ? Object.assign(_ctx, { async: !1 }) : { async: !1 }, result = schema._zod.run({ value, issues: [] }, ctx);
   if (result instanceof Promise)
@@ -71176,7 +71119,7 @@ var _parse = /* @__PURE__ */ __name((_Err) => (schema, value, _ctx, _params) => 
   return _safeParseAsync(_Err)(schema, value, ctx);
 }, "_safeEncodeAsync"), safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync($ZodRealError), _safeDecodeAsync = /* @__PURE__ */ __name((_Err) => async (schema, value, _ctx) => _safeParseAsync(_Err)(schema, value, _ctx), "_safeDecodeAsync"), safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync($ZodRealError);
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/regexes.js
+// node_modules/zod/v4/core/regexes.js
 var regexes_exports = {};
 __export(regexes_exports, {
   base64: () => base64,
@@ -71275,7 +71218,7 @@ function fixedBase64url(length) {
 __name(fixedBase64url, "fixedBase64url");
 var md5_hex = /^[0-9a-fA-F]{32}$/, md5_base64 = /* @__PURE__ */ fixedBase64(22, "=="), md5_base64url = /* @__PURE__ */ fixedBase64url(22), sha1_hex = /^[0-9a-fA-F]{40}$/, sha1_base64 = /* @__PURE__ */ fixedBase64(27, "="), sha1_base64url = /* @__PURE__ */ fixedBase64url(27), sha256_hex = /^[0-9a-fA-F]{64}$/, sha256_base64 = /* @__PURE__ */ fixedBase64(43, "="), sha256_base64url = /* @__PURE__ */ fixedBase64url(43), sha384_hex = /^[0-9a-fA-F]{96}$/, sha384_base64 = /* @__PURE__ */ fixedBase64(64, ""), sha384_base64url = /* @__PURE__ */ fixedBase64url(64), sha512_hex = /^[0-9a-fA-F]{128}$/, sha512_base64 = /* @__PURE__ */ fixedBase64(86, "=="), sha512_base64url = /* @__PURE__ */ fixedBase64url(86);
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/checks.js
+// node_modules/zod/v4/core/checks.js
 var $ZodCheck = /* @__PURE__ */ $constructor("$ZodCheck", (inst, def) => {
   var _a;
   inst._zod ?? (inst._zod = {}), inst._zod.def = def, (_a = inst._zod).onattach ?? (_a.onattach = []);
@@ -71665,7 +71608,7 @@ var $ZodCheckProperty = /* @__PURE__ */ $constructor("$ZodCheckProperty", (inst,
   };
 });
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/doc.js
+// node_modules/zod/v4/core/doc.js
 var Doc = class {
   static {
     __name(this, "Doc");
@@ -71693,14 +71636,14 @@ var Doc = class {
   }
 };
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/versions.js
+// node_modules/zod/v4/core/versions.js
 var version = {
   major: 4,
   minor: 1,
-  patch: 9
+  patch: 12
 };
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/schemas.js
+// node_modules/zod/v4/core/schemas.js
 var $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
   var _a;
   inst ?? (inst = {}), inst._zod.def = def, inst._zod.bag = inst._zod.bag || {}, inst._zod.version = version;
@@ -72185,7 +72128,17 @@ function handleCatchall(proms, input, payload, ctx, def, inst) {
 }
 __name(handleCatchall, "handleCatchall");
 var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
-  $ZodType.init(inst, def);
+  if ($ZodType.init(inst, def), !Object.getOwnPropertyDescriptor(def, "shape")?.get) {
+    let sh = def.shape;
+    Object.defineProperty(def, "shape", {
+      get: /* @__PURE__ */ __name(() => {
+        let newSh = { ...sh };
+        return Object.defineProperty(def, "shape", {
+          value: newSh
+        }), newSh;
+      }, "get")
+    });
+  }
   let _normalized = cached(() => normalizeDef(def));
   defineLazy(inst._zod, "propValues", () => {
     let shape = def.shape, propValues = {};
@@ -72865,12 +72818,13 @@ function handleRefineResult(result, payload, input, inst) {
 }
 __name(handleRefineResult, "handleRefineResult");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/index.js
+// node_modules/zod/v4/locales/index.js
 var locales_exports = {};
 __export(locales_exports, {
   ar: () => ar_default,
   az: () => az_default,
   be: () => be_default,
+  bg: () => bg_default,
   ca: () => ca_default,
   cs: () => cs_default,
   da: () => da_default,
@@ -72916,7 +72870,7 @@ __export(locales_exports, {
   zhTW: () => zh_TW_default
 });
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ar.js
+// node_modules/zod/v4/locales/ar.js
 var error = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "حرف", verb: "أن يحوي" },
@@ -72928,7 +72882,7 @@ var error = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -72976,7 +72930,7 @@ var error = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `مدخلات غير مقبولة: يفترض إدخال ${issue2.expected}، ولكن تم إدخال ${parsedType7(issue2.input)}`;
+        return `مدخلات غير مقبولة: يفترض إدخال ${issue2.expected}، ولكن تم إدخال ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `مدخلات غير مقبولة: يفترض إدخال ${stringifyPrimitive(issue2.values[0])}` : `اختيار غير مقبول: يتوقع انتقاء أحد هذه الخيارات: ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73013,7 +72967,7 @@ function ar_default() {
 }
 __name(ar_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/az.js
+// node_modules/zod/v4/locales/az.js
 var error2 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "simvol", verb: "olmalıdır" },
@@ -73025,7 +72979,7 @@ var error2 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73073,7 +73027,7 @@ var error2 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Yanlış dəyər: gözlənilən ${issue2.expected}, daxil olan ${parsedType7(issue2.input)}`;
+        return `Yanlış dəyər: gözlənilən ${issue2.expected}, daxil olan ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Yanlış dəyər: gözlənilən ${stringifyPrimitive(issue2.values[0])}` : `Yanlış seçim: aşağıdakılardan biri olmalıdır: ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73110,7 +73064,7 @@ function az_default() {
 }
 __name(az_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/be.js
+// node_modules/zod/v4/locales/be.js
 function getBelarusianPlural(count, one, few, many) {
   let absCount = Math.abs(count), lastDigit = absCount % 10, lastTwoDigits = absCount % 100;
   return lastTwoDigits >= 11 && lastTwoDigits <= 19 ? many : lastDigit === 1 ? one : lastDigit >= 2 && lastDigit <= 4 ? few : many;
@@ -73155,7 +73109,7 @@ var error3 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73203,7 +73157,7 @@ var error3 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Няправільны ўвод: чакаўся ${issue2.expected}, атрымана ${parsedType7(issue2.input)}`;
+        return `Няправільны ўвод: чакаўся ${issue2.expected}, атрымана ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Няправільны ўвод: чакалася ${stringifyPrimitive(issue2.values[0])}` : `Няправільны варыянт: чакаўся адзін з ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73248,8 +73202,114 @@ function be_default() {
 }
 __name(be_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ca.js
-var error4 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/bg.js
+var parsedType = /* @__PURE__ */ __name((data) => {
+  let t2 = typeof data;
+  switch (t2) {
+    case "number":
+      return Number.isNaN(data) ? "NaN" : "число";
+    case "object": {
+      if (Array.isArray(data))
+        return "масив";
+      if (data === null)
+        return "null";
+      if (Object.getPrototypeOf(data) !== Object.prototype && data.constructor)
+        return data.constructor.name;
+    }
+  }
+  return t2;
+}, "parsedType"), error4 = /* @__PURE__ */ __name(() => {
+  let Sizable = {
+    string: { unit: "символа", verb: "да съдържа" },
+    file: { unit: "байта", verb: "да съдържа" },
+    array: { unit: "елемента", verb: "да съдържа" },
+    set: { unit: "елемента", verb: "да съдържа" }
+  };
+  function getSizing(origin) {
+    return Sizable[origin] ?? null;
+  }
+  __name(getSizing, "getSizing");
+  let Nouns = {
+    regex: "вход",
+    email: "имейл адрес",
+    url: "URL",
+    emoji: "емоджи",
+    uuid: "UUID",
+    uuidv4: "UUIDv4",
+    uuidv6: "UUIDv6",
+    nanoid: "nanoid",
+    guid: "GUID",
+    cuid: "cuid",
+    cuid2: "cuid2",
+    ulid: "ULID",
+    xid: "XID",
+    ksuid: "KSUID",
+    datetime: "ISO време",
+    date: "ISO дата",
+    time: "ISO време",
+    duration: "ISO продължителност",
+    ipv4: "IPv4 адрес",
+    ipv6: "IPv6 адрес",
+    cidrv4: "IPv4 диапазон",
+    cidrv6: "IPv6 диапазон",
+    base64: "base64-кодиран низ",
+    base64url: "base64url-кодиран низ",
+    json_string: "JSON низ",
+    e164: "E.164 номер",
+    jwt: "JWT",
+    template_literal: "вход"
+  };
+  return (issue2) => {
+    switch (issue2.code) {
+      case "invalid_type":
+        return `Невалиден вход: очакван ${issue2.expected}, получен ${parsedType(issue2.input)}`;
+      case "invalid_value":
+        return issue2.values.length === 1 ? `Невалиден вход: очакван ${stringifyPrimitive(issue2.values[0])}` : `Невалидна опция: очаквано едно от ${joinValues(issue2.values, "|")}`;
+      case "too_big": {
+        let adj = issue2.inclusive ? "<=" : "<", sizing = getSizing(issue2.origin);
+        return sizing ? `Твърде голямо: очаква се ${issue2.origin ?? "стойност"} да съдържа ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "елемента"}` : `Твърде голямо: очаква се ${issue2.origin ?? "стойност"} да бъде ${adj}${issue2.maximum.toString()}`;
+      }
+      case "too_small": {
+        let adj = issue2.inclusive ? ">=" : ">", sizing = getSizing(issue2.origin);
+        return sizing ? `Твърде малко: очаква се ${issue2.origin} да съдържа ${adj}${issue2.minimum.toString()} ${sizing.unit}` : `Твърде малко: очаква се ${issue2.origin} да бъде ${adj}${issue2.minimum.toString()}`;
+      }
+      case "invalid_format": {
+        let _issue = issue2;
+        if (_issue.format === "starts_with")
+          return `Невалиден низ: трябва да започва с "${_issue.prefix}"`;
+        if (_issue.format === "ends_with")
+          return `Невалиден низ: трябва да завършва с "${_issue.suffix}"`;
+        if (_issue.format === "includes")
+          return `Невалиден низ: трябва да включва "${_issue.includes}"`;
+        if (_issue.format === "regex")
+          return `Невалиден низ: трябва да съвпада с ${_issue.pattern}`;
+        let invalid_adj = "Невалиден";
+        return _issue.format === "emoji" && (invalid_adj = "Невалидно"), _issue.format === "datetime" && (invalid_adj = "Невалидно"), _issue.format === "date" && (invalid_adj = "Невалидна"), _issue.format === "time" && (invalid_adj = "Невалидно"), _issue.format === "duration" && (invalid_adj = "Невалидна"), `${invalid_adj} ${Nouns[_issue.format] ?? issue2.format}`;
+      }
+      case "not_multiple_of":
+        return `Невалидно число: трябва да бъде кратно на ${issue2.divisor}`;
+      case "unrecognized_keys":
+        return `Неразпознат${issue2.keys.length > 1 ? "и" : ""} ключ${issue2.keys.length > 1 ? "ове" : ""}: ${joinValues(issue2.keys, ", ")}`;
+      case "invalid_key":
+        return `Невалиден ключ в ${issue2.origin}`;
+      case "invalid_union":
+        return "Невалиден вход";
+      case "invalid_element":
+        return `Невалидна стойност в ${issue2.origin}`;
+      default:
+        return "Невалиден вход";
+    }
+  };
+}, "error");
+function bg_default() {
+  return {
+    localeError: error4()
+  };
+}
+__name(bg_default, "default");
+
+// node_modules/zod/v4/locales/ca.js
+var error5 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "caràcters", verb: "contenir" },
     file: { unit: "bytes", verb: "contenir" },
@@ -73260,7 +73320,7 @@ var error4 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73308,7 +73368,7 @@ var error4 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Tipus invàlid: s'esperava ${issue2.expected}, s'ha rebut ${parsedType7(issue2.input)}`;
+        return `Tipus invàlid: s'esperava ${issue2.expected}, s'ha rebut ${parsedType8(issue2.input)}`;
       // return `Tipus invàlid: s'esperava ${issue.expected}, s'ha rebut ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Valor invàlid: s'esperava ${stringifyPrimitive(issue2.values[0])}` : `Opció invàlida: s'esperava una de ${joinValues(issue2.values, " o ")}`;
@@ -73342,13 +73402,13 @@ var error4 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ca_default() {
   return {
-    localeError: error4()
+    localeError: error5()
   };
 }
 __name(ca_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/cs.js
-var error5 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/cs.js
+var error6 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "znaků", verb: "mít" },
     file: { unit: "bajtů", verb: "mít" },
@@ -73359,7 +73419,7 @@ var error5 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73419,7 +73479,7 @@ var error5 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Neplatný vstup: očekáváno ${issue2.expected}, obdrženo ${parsedType7(issue2.input)}`;
+        return `Neplatný vstup: očekáváno ${issue2.expected}, obdrženo ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Neplatný vstup: očekáváno ${stringifyPrimitive(issue2.values[0])}` : `Neplatná možnost: očekávána jedna z hodnot ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73451,13 +73511,13 @@ var error5 = /* @__PURE__ */ __name(() => {
 }, "error");
 function cs_default() {
   return {
-    localeError: error5()
+    localeError: error6()
   };
 }
 __name(cs_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/da.js
-var error6 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/da.js
+var error7 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "tegn", verb: "havde" },
     file: { unit: "bytes", verb: "havde" },
@@ -73480,7 +73540,7 @@ var error6 = /* @__PURE__ */ __name(() => {
     return TypeNames[type] ?? type;
   }
   __name(getTypeName, "getTypeName");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73522,7 +73582,7 @@ var error6 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Ugyldigt input: forventede ${getTypeName(issue2.expected)}, fik ${getTypeName(parsedType7(issue2.input))}`;
+        return `Ugyldigt input: forventede ${getTypeName(issue2.expected)}, fik ${getTypeName(parsedType8(issue2.input))}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Ugyldig værdi: forventede ${stringifyPrimitive(issue2.values[0])}` : `Ugyldigt valg: forventede en af følgende ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73554,13 +73614,13 @@ var error6 = /* @__PURE__ */ __name(() => {
 }, "error");
 function da_default() {
   return {
-    localeError: error6()
+    localeError: error7()
   };
 }
 __name(da_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/de.js
-var error7 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/de.js
+var error8 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "Zeichen", verb: "zu haben" },
     file: { unit: "Bytes", verb: "zu haben" },
@@ -73571,7 +73631,7 @@ var error7 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73619,7 +73679,7 @@ var error7 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Ungültige Eingabe: erwartet ${issue2.expected}, erhalten ${parsedType7(issue2.input)}`;
+        return `Ungültige Eingabe: erwartet ${issue2.expected}, erhalten ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Ungültige Eingabe: erwartet ${stringifyPrimitive(issue2.values[0])}` : `Ungültige Option: erwartet eine von ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73651,13 +73711,13 @@ var error7 = /* @__PURE__ */ __name(() => {
 }, "error");
 function de_default() {
   return {
-    localeError: error7()
+    localeError: error8()
   };
 }
 __name(de_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/en.js
-var parsedType = /* @__PURE__ */ __name((data) => {
+// node_modules/zod/v4/locales/en.js
+var parsedType2 = /* @__PURE__ */ __name((data) => {
   let t2 = typeof data;
   switch (t2) {
     case "number":
@@ -73672,7 +73732,7 @@ var parsedType = /* @__PURE__ */ __name((data) => {
     }
   }
   return t2;
-}, "parsedType"), error8 = /* @__PURE__ */ __name(() => {
+}, "parsedType"), error9 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "characters", verb: "to have" },
     file: { unit: "bytes", verb: "to have" },
@@ -73716,7 +73776,7 @@ var parsedType = /* @__PURE__ */ __name((data) => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Invalid input: expected ${issue2.expected}, received ${parsedType(issue2.input)}`;
+        return `Invalid input: expected ${issue2.expected}, received ${parsedType2(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Invalid input: expected ${stringifyPrimitive(issue2.values[0])}` : `Invalid option: expected one of ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73748,13 +73808,13 @@ var parsedType = /* @__PURE__ */ __name((data) => {
 }, "error");
 function en_default2() {
   return {
-    localeError: error8()
+    localeError: error9()
   };
 }
 __name(en_default2, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/eo.js
-var parsedType2 = /* @__PURE__ */ __name((data) => {
+// node_modules/zod/v4/locales/eo.js
+var parsedType3 = /* @__PURE__ */ __name((data) => {
   let t2 = typeof data;
   switch (t2) {
     case "number":
@@ -73769,7 +73829,7 @@ var parsedType2 = /* @__PURE__ */ __name((data) => {
     }
   }
   return t2;
-}, "parsedType"), error9 = /* @__PURE__ */ __name(() => {
+}, "parsedType"), error10 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "karaktrojn", verb: "havi" },
     file: { unit: "bajtojn", verb: "havi" },
@@ -73813,7 +73873,7 @@ var parsedType2 = /* @__PURE__ */ __name((data) => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Nevalida enigo: atendiĝis ${issue2.expected}, riceviĝis ${parsedType2(issue2.input)}`;
+        return `Nevalida enigo: atendiĝis ${issue2.expected}, riceviĝis ${parsedType3(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Nevalida enigo: atendiĝis ${stringifyPrimitive(issue2.values[0])}` : `Nevalida opcio: atendiĝis unu el ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -73845,13 +73905,13 @@ var parsedType2 = /* @__PURE__ */ __name((data) => {
 }, "error");
 function eo_default() {
   return {
-    localeError: error9()
+    localeError: error10()
   };
 }
 __name(eo_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/es.js
-var error10 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/es.js
+var error11 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "caracteres", verb: "tener" },
     file: { unit: "bytes", verb: "tener" },
@@ -73891,7 +73951,7 @@ var error10 = /* @__PURE__ */ __name(() => {
     return TypeNames[type] ?? type;
   }
   __name(getTypeName, "getTypeName");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -73933,7 +73993,7 @@ var error10 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Entrada inválida: se esperaba ${getTypeName(issue2.expected)}, recibido ${getTypeName(parsedType7(issue2.input))}`;
+        return `Entrada inválida: se esperaba ${getTypeName(issue2.expected)}, recibido ${getTypeName(parsedType8(issue2.input))}`;
       // return `Entrada inválida: se esperaba ${issue.expected}, recibido ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Entrada inválida: se esperaba ${stringifyPrimitive(issue2.values[0])}` : `Opción inválida: se esperaba una de ${joinValues(issue2.values, "|")}`;
@@ -73966,13 +74026,13 @@ var error10 = /* @__PURE__ */ __name(() => {
 }, "error");
 function es_default() {
   return {
-    localeError: error10()
+    localeError: error11()
   };
 }
 __name(es_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/fa.js
-var error11 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/fa.js
+var error12 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "کاراکتر", verb: "داشته باشد" },
     file: { unit: "بایت", verb: "داشته باشد" },
@@ -73983,7 +74043,7 @@ var error11 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74031,7 +74091,7 @@ var error11 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `ورودی نامعتبر: می‌بایست ${issue2.expected} می‌بود، ${parsedType7(issue2.input)} دریافت شد`;
+        return `ورودی نامعتبر: می‌بایست ${issue2.expected} می‌بود، ${parsedType8(issue2.input)} دریافت شد`;
       case "invalid_value":
         return issue2.values.length === 1 ? `ورودی نامعتبر: می‌بایست ${stringifyPrimitive(issue2.values[0])} می‌بود` : `گزینه نامعتبر: می‌بایست یکی از ${joinValues(issue2.values, "|")} می‌بود`;
       case "too_big": {
@@ -74063,13 +74123,13 @@ var error11 = /* @__PURE__ */ __name(() => {
 }, "error");
 function fa_default() {
   return {
-    localeError: error11()
+    localeError: error12()
   };
 }
 __name(fa_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/fi.js
-var error12 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/fi.js
+var error13 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "merkkiä", subject: "merkkijonon" },
     file: { unit: "tavua", subject: "tiedoston" },
@@ -74084,7 +74144,7 @@ var error12 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74132,7 +74192,7 @@ var error12 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Virheellinen tyyppi: odotettiin ${issue2.expected}, oli ${parsedType7(issue2.input)}`;
+        return `Virheellinen tyyppi: odotettiin ${issue2.expected}, oli ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Virheellinen syöte: täytyy olla ${stringifyPrimitive(issue2.values[0])}` : `Virheellinen valinta: täytyy olla yksi seuraavista: ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -74164,13 +74224,13 @@ var error12 = /* @__PURE__ */ __name(() => {
 }, "error");
 function fi_default() {
   return {
-    localeError: error12()
+    localeError: error13()
   };
 }
 __name(fi_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/fr.js
-var error13 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/fr.js
+var error14 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "caractères", verb: "avoir" },
     file: { unit: "octets", verb: "avoir" },
@@ -74181,7 +74241,7 @@ var error13 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74229,7 +74289,7 @@ var error13 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Entrée invalide : ${issue2.expected} attendu, ${parsedType7(issue2.input)} reçu`;
+        return `Entrée invalide : ${issue2.expected} attendu, ${parsedType8(issue2.input)} reçu`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Entrée invalide : ${stringifyPrimitive(issue2.values[0])} attendu` : `Option invalide : une valeur parmi ${joinValues(issue2.values, "|")} attendue`;
       case "too_big": {
@@ -74261,13 +74321,13 @@ var error13 = /* @__PURE__ */ __name(() => {
 }, "error");
 function fr_default() {
   return {
-    localeError: error13()
+    localeError: error14()
   };
 }
 __name(fr_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/fr-CA.js
-var error14 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/fr-CA.js
+var error15 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "caractères", verb: "avoir" },
     file: { unit: "octets", verb: "avoir" },
@@ -74278,7 +74338,7 @@ var error14 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74326,7 +74386,7 @@ var error14 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Entrée invalide : attendu ${issue2.expected}, reçu ${parsedType7(issue2.input)}`;
+        return `Entrée invalide : attendu ${issue2.expected}, reçu ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Entrée invalide : attendu ${stringifyPrimitive(issue2.values[0])}` : `Option invalide : attendu l'une des valeurs suivantes ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -74358,13 +74418,13 @@ var error14 = /* @__PURE__ */ __name(() => {
 }, "error");
 function fr_CA_default() {
   return {
-    localeError: error14()
+    localeError: error15()
   };
 }
 __name(fr_CA_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/he.js
-var error15 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/he.js
+var error16 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "אותיות", verb: "לכלול" },
     file: { unit: "בייטים", verb: "לכלול" },
@@ -74375,7 +74435,7 @@ var error15 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74423,7 +74483,7 @@ var error15 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `קלט לא תקין: צריך ${issue2.expected}, התקבל ${parsedType7(issue2.input)}`;
+        return `קלט לא תקין: צריך ${issue2.expected}, התקבל ${parsedType8(issue2.input)}`;
       // return `Invalid input: expected ${issue.expected}, received ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `קלט לא תקין: צריך ${stringifyPrimitive(issue2.values[0])}` : `קלט לא תקין: צריך אחת מהאפשרויות  ${joinValues(issue2.values, "|")}`;
@@ -74456,13 +74516,13 @@ var error15 = /* @__PURE__ */ __name(() => {
 }, "error");
 function he_default() {
   return {
-    localeError: error15()
+    localeError: error16()
   };
 }
 __name(he_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/hu.js
-var error16 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/hu.js
+var error17 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "karakter", verb: "legyen" },
     file: { unit: "byte", verb: "legyen" },
@@ -74473,7 +74533,7 @@ var error16 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74521,7 +74581,7 @@ var error16 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Érvénytelen bemenet: a várt érték ${issue2.expected}, a kapott érték ${parsedType7(issue2.input)}`;
+        return `Érvénytelen bemenet: a várt érték ${issue2.expected}, a kapott érték ${parsedType8(issue2.input)}`;
       // return `Invalid input: expected ${issue.expected}, received ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Érvénytelen bemenet: a várt érték ${stringifyPrimitive(issue2.values[0])}` : `Érvénytelen opció: valamelyik érték várt ${joinValues(issue2.values, "|")}`;
@@ -74554,13 +74614,13 @@ var error16 = /* @__PURE__ */ __name(() => {
 }, "error");
 function hu_default() {
   return {
-    localeError: error16()
+    localeError: error17()
   };
 }
 __name(hu_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/id.js
-var error17 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/id.js
+var error18 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "karakter", verb: "memiliki" },
     file: { unit: "byte", verb: "memiliki" },
@@ -74571,7 +74631,7 @@ var error17 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74619,7 +74679,7 @@ var error17 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Input tidak valid: diharapkan ${issue2.expected}, diterima ${parsedType7(issue2.input)}`;
+        return `Input tidak valid: diharapkan ${issue2.expected}, diterima ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Input tidak valid: diharapkan ${stringifyPrimitive(issue2.values[0])}` : `Pilihan tidak valid: diharapkan salah satu dari ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -74651,13 +74711,13 @@ var error17 = /* @__PURE__ */ __name(() => {
 }, "error");
 function id_default() {
   return {
-    localeError: error17()
+    localeError: error18()
   };
 }
 __name(id_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/is.js
-var parsedType3 = /* @__PURE__ */ __name((data) => {
+// node_modules/zod/v4/locales/is.js
+var parsedType4 = /* @__PURE__ */ __name((data) => {
   let t2 = typeof data;
   switch (t2) {
     case "number":
@@ -74672,7 +74732,7 @@ var parsedType3 = /* @__PURE__ */ __name((data) => {
     }
   }
   return t2;
-}, "parsedType"), error18 = /* @__PURE__ */ __name(() => {
+}, "parsedType"), error19 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "stafi", verb: "að hafa" },
     file: { unit: "bæti", verb: "að hafa" },
@@ -74716,7 +74776,7 @@ var parsedType3 = /* @__PURE__ */ __name((data) => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Rangt gildi: Þú slóst inn ${parsedType3(issue2.input)} þar sem á að vera ${issue2.expected}`;
+        return `Rangt gildi: Þú slóst inn ${parsedType4(issue2.input)} þar sem á að vera ${issue2.expected}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Rangt gildi: gert ráð fyrir ${stringifyPrimitive(issue2.values[0])}` : `Ógilt val: má vera eitt af eftirfarandi ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -74748,13 +74808,13 @@ var parsedType3 = /* @__PURE__ */ __name((data) => {
 }, "error");
 function is_default() {
   return {
-    localeError: error18()
+    localeError: error19()
   };
 }
 __name(is_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/it.js
-var error19 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/it.js
+var error20 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "caratteri", verb: "avere" },
     file: { unit: "byte", verb: "avere" },
@@ -74765,7 +74825,7 @@ var error19 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74813,7 +74873,7 @@ var error19 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Input non valido: atteso ${issue2.expected}, ricevuto ${parsedType7(issue2.input)}`;
+        return `Input non valido: atteso ${issue2.expected}, ricevuto ${parsedType8(issue2.input)}`;
       // return `Input non valido: atteso ${issue.expected}, ricevuto ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Input non valido: atteso ${stringifyPrimitive(issue2.values[0])}` : `Opzione non valida: atteso uno tra ${joinValues(issue2.values, "|")}`;
@@ -74846,13 +74906,13 @@ var error19 = /* @__PURE__ */ __name(() => {
 }, "error");
 function it_default() {
   return {
-    localeError: error19()
+    localeError: error20()
   };
 }
 __name(it_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ja.js
-var error20 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ja.js
+var error21 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "文字", verb: "である" },
     file: { unit: "バイト", verb: "である" },
@@ -74863,7 +74923,7 @@ var error20 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -74911,7 +74971,7 @@ var error20 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `無効な入力: ${issue2.expected}が期待されましたが、${parsedType7(issue2.input)}が入力されました`;
+        return `無効な入力: ${issue2.expected}が期待されましたが、${parsedType8(issue2.input)}が入力されました`;
       case "invalid_value":
         return issue2.values.length === 1 ? `無効な入力: ${stringifyPrimitive(issue2.values[0])}が期待されました` : `無効な選択: ${joinValues(issue2.values, "、")}のいずれかである必要があります`;
       case "too_big": {
@@ -74943,13 +75003,13 @@ var error20 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ja_default() {
   return {
-    localeError: error20()
+    localeError: error21()
   };
 }
 __name(ja_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ka.js
-var parsedType4 = /* @__PURE__ */ __name((data) => {
+// node_modules/zod/v4/locales/ka.js
+var parsedType5 = /* @__PURE__ */ __name((data) => {
   let t2 = typeof data;
   switch (t2) {
     case "number":
@@ -74971,7 +75031,7 @@ var parsedType4 = /* @__PURE__ */ __name((data) => {
     symbol: "symbol",
     function: "ფუნქცია"
   }[t2] ?? t2;
-}, "parsedType"), error21 = /* @__PURE__ */ __name(() => {
+}, "parsedType"), error22 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "სიმბოლო", verb: "უნდა შეიცავდეს" },
     file: { unit: "ბაიტი", verb: "უნდა შეიცავდეს" },
@@ -75015,7 +75075,7 @@ var parsedType4 = /* @__PURE__ */ __name((data) => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `არასწორი შეყვანა: მოსალოდნელი ${issue2.expected}, მიღებული ${parsedType4(issue2.input)}`;
+        return `არასწორი შეყვანა: მოსალოდნელი ${issue2.expected}, მიღებული ${parsedType5(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `არასწორი შეყვანა: მოსალოდნელი ${stringifyPrimitive(issue2.values[0])}` : `არასწორი ვარიანტი: მოსალოდნელია ერთ-ერთი ${joinValues(issue2.values, "|")}-დან`;
       case "too_big": {
@@ -75047,13 +75107,13 @@ var parsedType4 = /* @__PURE__ */ __name((data) => {
 }, "error");
 function ka_default() {
   return {
-    localeError: error21()
+    localeError: error22()
   };
 }
 __name(ka_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/km.js
-var error22 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/km.js
+var error23 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "តួអក្សរ", verb: "គួរមាន" },
     file: { unit: "បៃ", verb: "គួរមាន" },
@@ -75064,7 +75124,7 @@ var error22 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75112,7 +75172,7 @@ var error22 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `ទិន្នន័យបញ្ចូលមិនត្រឹមត្រូវ៖ ត្រូវការ ${issue2.expected} ប៉ុន្តែទទួលបាន ${parsedType7(issue2.input)}`;
+        return `ទិន្នន័យបញ្ចូលមិនត្រឹមត្រូវ៖ ត្រូវការ ${issue2.expected} ប៉ុន្តែទទួលបាន ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `ទិន្នន័យបញ្ចូលមិនត្រឹមត្រូវ៖ ត្រូវការ ${stringifyPrimitive(issue2.values[0])}` : `ជម្រើសមិនត្រឹមត្រូវ៖ ត្រូវជាមួយក្នុងចំណោម ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -75144,19 +75204,19 @@ var error22 = /* @__PURE__ */ __name(() => {
 }, "error");
 function km_default() {
   return {
-    localeError: error22()
+    localeError: error23()
   };
 }
 __name(km_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/kh.js
+// node_modules/zod/v4/locales/kh.js
 function kh_default() {
   return km_default();
 }
 __name(kh_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ko.js
-var error23 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ko.js
+var error24 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "문자", verb: "to have" },
     file: { unit: "바이트", verb: "to have" },
@@ -75167,7 +75227,7 @@ var error23 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75215,7 +75275,7 @@ var error23 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `잘못된 입력: 예상 타입은 ${issue2.expected}, 받은 타입은 ${parsedType7(issue2.input)}입니다`;
+        return `잘못된 입력: 예상 타입은 ${issue2.expected}, 받은 타입은 ${parsedType8(issue2.input)}입니다`;
       case "invalid_value":
         return issue2.values.length === 1 ? `잘못된 입력: 값은 ${stringifyPrimitive(issue2.values[0])} 이어야 합니다` : `잘못된 옵션: ${joinValues(issue2.values, "또는 ")} 중 하나여야 합니다`;
       case "too_big": {
@@ -75247,13 +75307,13 @@ var error23 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ko_default() {
   return {
-    localeError: error23()
+    localeError: error24()
   };
 }
 __name(ko_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/lt.js
-var parsedType5 = /* @__PURE__ */ __name((data) => parsedTypeFromType(typeof data, data), "parsedType"), parsedTypeFromType = /* @__PURE__ */ __name((t2, data = void 0) => {
+// node_modules/zod/v4/locales/lt.js
+var parsedType6 = /* @__PURE__ */ __name((data) => parsedTypeFromType(typeof data, data), "parsedType"), parsedTypeFromType = /* @__PURE__ */ __name((t2, data = void 0) => {
   switch (t2) {
     case "number":
       return Number.isNaN(data) ? "NaN" : "skaičius";
@@ -75283,7 +75343,7 @@ function getUnitTypeFromNumber(number4) {
   return last2 >= 11 && last2 <= 19 || last === 0 ? "many" : last === 1 ? "one" : "few";
 }
 __name(getUnitTypeFromNumber, "getUnitTypeFromNumber");
-var error24 = /* @__PURE__ */ __name(() => {
+var error25 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: {
       unit: {
@@ -75395,7 +75455,7 @@ var error24 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Gautas tipas ${parsedType5(issue2.input)}, o tikėtasi - ${parsedTypeFromType(issue2.expected)}`;
+        return `Gautas tipas ${parsedType6(issue2.input)}, o tikėtasi - ${parsedTypeFromType(issue2.expected)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Privalo būti ${stringifyPrimitive(issue2.values[0])}` : `Privalo būti vienas iš ${joinValues(issue2.values, "|")} pasirinkimų`;
       case "too_big": {
@@ -75435,13 +75495,13 @@ var error24 = /* @__PURE__ */ __name(() => {
 }, "error");
 function lt_default() {
   return {
-    localeError: error24()
+    localeError: error25()
   };
 }
 __name(lt_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/mk.js
-var error25 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/mk.js
+var error26 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "знаци", verb: "да имаат" },
     file: { unit: "бајти", verb: "да имаат" },
@@ -75452,7 +75512,7 @@ var error25 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75500,7 +75560,7 @@ var error25 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Грешен внес: се очекува ${issue2.expected}, примено ${parsedType7(issue2.input)}`;
+        return `Грешен внес: се очекува ${issue2.expected}, примено ${parsedType8(issue2.input)}`;
       // return `Invalid input: expected ${issue.expected}, received ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Invalid input: expected ${stringifyPrimitive(issue2.values[0])}` : `Грешана опција: се очекува една ${joinValues(issue2.values, "|")}`;
@@ -75533,13 +75593,13 @@ var error25 = /* @__PURE__ */ __name(() => {
 }, "error");
 function mk_default() {
   return {
-    localeError: error25()
+    localeError: error26()
   };
 }
 __name(mk_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ms.js
-var error26 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ms.js
+var error27 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "aksara", verb: "mempunyai" },
     file: { unit: "bait", verb: "mempunyai" },
@@ -75550,7 +75610,7 @@ var error26 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75598,7 +75658,7 @@ var error26 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Input tidak sah: dijangka ${issue2.expected}, diterima ${parsedType7(issue2.input)}`;
+        return `Input tidak sah: dijangka ${issue2.expected}, diterima ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Input tidak sah: dijangka ${stringifyPrimitive(issue2.values[0])}` : `Pilihan tidak sah: dijangka salah satu daripada ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -75630,13 +75690,13 @@ var error26 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ms_default() {
   return {
-    localeError: error26()
+    localeError: error27()
   };
 }
 __name(ms_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/nl.js
-var error27 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/nl.js
+var error28 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "tekens" },
     file: { unit: "bytes" },
@@ -75647,7 +75707,7 @@ var error27 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75695,7 +75755,7 @@ var error27 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Ongeldige invoer: verwacht ${issue2.expected}, ontving ${parsedType7(issue2.input)}`;
+        return `Ongeldige invoer: verwacht ${issue2.expected}, ontving ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Ongeldige invoer: verwacht ${stringifyPrimitive(issue2.values[0])}` : `Ongeldige optie: verwacht één van ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -75727,13 +75787,13 @@ var error27 = /* @__PURE__ */ __name(() => {
 }, "error");
 function nl_default() {
   return {
-    localeError: error27()
+    localeError: error28()
   };
 }
 __name(nl_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/no.js
-var error28 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/no.js
+var error29 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "tegn", verb: "å ha" },
     file: { unit: "bytes", verb: "å ha" },
@@ -75744,7 +75804,7 @@ var error28 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75792,7 +75852,7 @@ var error28 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Ugyldig input: forventet ${issue2.expected}, fikk ${parsedType7(issue2.input)}`;
+        return `Ugyldig input: forventet ${issue2.expected}, fikk ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Ugyldig verdi: forventet ${stringifyPrimitive(issue2.values[0])}` : `Ugyldig valg: forventet en av ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -75824,13 +75884,13 @@ var error28 = /* @__PURE__ */ __name(() => {
 }, "error");
 function no_default() {
   return {
-    localeError: error28()
+    localeError: error29()
   };
 }
 __name(no_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ota.js
-var error29 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ota.js
+var error30 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "harf", verb: "olmalıdır" },
     file: { unit: "bayt", verb: "olmalıdır" },
@@ -75841,7 +75901,7 @@ var error29 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75889,7 +75949,7 @@ var error29 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Fâsit giren: umulan ${issue2.expected}, alınan ${parsedType7(issue2.input)}`;
+        return `Fâsit giren: umulan ${issue2.expected}, alınan ${parsedType8(issue2.input)}`;
       // return `Fâsit giren: umulan ${issue.expected}, alınan ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Fâsit giren: umulan ${stringifyPrimitive(issue2.values[0])}` : `Fâsit tercih: mûteberler ${joinValues(issue2.values, "|")}`;
@@ -75922,13 +75982,13 @@ var error29 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ota_default() {
   return {
-    localeError: error29()
+    localeError: error30()
   };
 }
 __name(ota_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ps.js
-var error30 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ps.js
+var error31 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "توکي", verb: "ولري" },
     file: { unit: "بایټس", verb: "ولري" },
@@ -75939,7 +75999,7 @@ var error30 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -75987,7 +76047,7 @@ var error30 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `ناسم ورودي: باید ${issue2.expected} وای, مګر ${parsedType7(issue2.input)} ترلاسه شو`;
+        return `ناسم ورودي: باید ${issue2.expected} وای, مګر ${parsedType8(issue2.input)} ترلاسه شو`;
       case "invalid_value":
         return issue2.values.length === 1 ? `ناسم ورودي: باید ${stringifyPrimitive(issue2.values[0])} وای` : `ناسم انتخاب: باید یو له ${joinValues(issue2.values, "|")} څخه وای`;
       case "too_big": {
@@ -76019,13 +76079,13 @@ var error30 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ps_default() {
   return {
-    localeError: error30()
+    localeError: error31()
   };
 }
 __name(ps_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/pl.js
-var error31 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/pl.js
+var error32 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "znaków", verb: "mieć" },
     file: { unit: "bajtów", verb: "mieć" },
@@ -76036,7 +76096,7 @@ var error31 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76084,7 +76144,7 @@ var error31 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Nieprawidłowe dane wejściowe: oczekiwano ${issue2.expected}, otrzymano ${parsedType7(issue2.input)}`;
+        return `Nieprawidłowe dane wejściowe: oczekiwano ${issue2.expected}, otrzymano ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Nieprawidłowe dane wejściowe: oczekiwano ${stringifyPrimitive(issue2.values[0])}` : `Nieprawidłowa opcja: oczekiwano jednej z wartości ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76116,13 +76176,13 @@ var error31 = /* @__PURE__ */ __name(() => {
 }, "error");
 function pl_default() {
   return {
-    localeError: error31()
+    localeError: error32()
   };
 }
 __name(pl_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/pt.js
-var error32 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/pt.js
+var error33 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "caracteres", verb: "ter" },
     file: { unit: "bytes", verb: "ter" },
@@ -76133,7 +76193,7 @@ var error32 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76181,7 +76241,7 @@ var error32 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Tipo inválido: esperado ${issue2.expected}, recebido ${parsedType7(issue2.input)}`;
+        return `Tipo inválido: esperado ${issue2.expected}, recebido ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Entrada inválida: esperado ${stringifyPrimitive(issue2.values[0])}` : `Opção inválida: esperada uma das ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76213,18 +76273,18 @@ var error32 = /* @__PURE__ */ __name(() => {
 }, "error");
 function pt_default() {
   return {
-    localeError: error32()
+    localeError: error33()
   };
 }
 __name(pt_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ru.js
+// node_modules/zod/v4/locales/ru.js
 function getRussianPlural(count, one, few, many) {
   let absCount = Math.abs(count), lastDigit = absCount % 10, lastTwoDigits = absCount % 100;
   return lastTwoDigits >= 11 && lastTwoDigits <= 19 ? many : lastDigit === 1 ? one : lastDigit >= 2 && lastDigit <= 4 ? few : many;
 }
 __name(getRussianPlural, "getRussianPlural");
-var error33 = /* @__PURE__ */ __name(() => {
+var error34 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: {
       unit: {
@@ -76263,7 +76323,7 @@ var error33 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76311,7 +76371,7 @@ var error33 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Неверный ввод: ожидалось ${issue2.expected}, получено ${parsedType7(issue2.input)}`;
+        return `Неверный ввод: ожидалось ${issue2.expected}, получено ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Неверный ввод: ожидалось ${stringifyPrimitive(issue2.values[0])}` : `Неверный вариант: ожидалось одно из ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76351,13 +76411,13 @@ var error33 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ru_default() {
   return {
-    localeError: error33()
+    localeError: error34()
   };
 }
 __name(ru_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/sl.js
-var error34 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/sl.js
+var error35 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "znakov", verb: "imeti" },
     file: { unit: "bajtov", verb: "imeti" },
@@ -76368,7 +76428,7 @@ var error34 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76416,7 +76476,7 @@ var error34 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Neveljaven vnos: pričakovano ${issue2.expected}, prejeto ${parsedType7(issue2.input)}`;
+        return `Neveljaven vnos: pričakovano ${issue2.expected}, prejeto ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Neveljaven vnos: pričakovano ${stringifyPrimitive(issue2.values[0])}` : `Neveljavna možnost: pričakovano eno izmed ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76448,13 +76508,13 @@ var error34 = /* @__PURE__ */ __name(() => {
 }, "error");
 function sl_default() {
   return {
-    localeError: error34()
+    localeError: error35()
   };
 }
 __name(sl_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/sv.js
-var error35 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/sv.js
+var error36 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "tecken", verb: "att ha" },
     file: { unit: "bytes", verb: "att ha" },
@@ -76465,7 +76525,7 @@ var error35 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76513,7 +76573,7 @@ var error35 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Ogiltig inmatning: förväntat ${issue2.expected}, fick ${parsedType7(issue2.input)}`;
+        return `Ogiltig inmatning: förväntat ${issue2.expected}, fick ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Ogiltig inmatning: förväntat ${stringifyPrimitive(issue2.values[0])}` : `Ogiltigt val: förväntade en av ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76545,13 +76605,13 @@ var error35 = /* @__PURE__ */ __name(() => {
 }, "error");
 function sv_default() {
   return {
-    localeError: error35()
+    localeError: error36()
   };
 }
 __name(sv_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ta.js
-var error36 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ta.js
+var error37 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "எழுத்துக்கள்", verb: "கொண்டிருக்க வேண்டும்" },
     file: { unit: "பைட்டுகள்", verb: "கொண்டிருக்க வேண்டும்" },
@@ -76562,7 +76622,7 @@ var error36 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76610,7 +76670,7 @@ var error36 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `தவறான உள்ளீடு: எதிர்பார்க்கப்பட்டது ${issue2.expected}, பெறப்பட்டது ${parsedType7(issue2.input)}`;
+        return `தவறான உள்ளீடு: எதிர்பார்க்கப்பட்டது ${issue2.expected}, பெறப்பட்டது ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `தவறான உள்ளீடு: எதிர்பார்க்கப்பட்டது ${stringifyPrimitive(issue2.values[0])}` : `தவறான விருப்பம்: எதிர்பார்க்கப்பட்டது ${joinValues(issue2.values, "|")} இல் ஒன்று`;
       case "too_big": {
@@ -76642,13 +76702,13 @@ var error36 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ta_default() {
   return {
-    localeError: error36()
+    localeError: error37()
   };
 }
 __name(ta_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/th.js
-var error37 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/th.js
+var error38 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "ตัวอักษร", verb: "ควรมี" },
     file: { unit: "ไบต์", verb: "ควรมี" },
@@ -76659,7 +76719,7 @@ var error37 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76707,7 +76767,7 @@ var error37 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `ประเภทข้อมูลไม่ถูกต้อง: ควรเป็น ${issue2.expected} แต่ได้รับ ${parsedType7(issue2.input)}`;
+        return `ประเภทข้อมูลไม่ถูกต้อง: ควรเป็น ${issue2.expected} แต่ได้รับ ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `ค่าไม่ถูกต้อง: ควรเป็น ${stringifyPrimitive(issue2.values[0])}` : `ตัวเลือกไม่ถูกต้อง: ควรเป็นหนึ่งใน ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76739,13 +76799,13 @@ var error37 = /* @__PURE__ */ __name(() => {
 }, "error");
 function th_default() {
   return {
-    localeError: error37()
+    localeError: error38()
   };
 }
 __name(th_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/tr.js
-var parsedType6 = /* @__PURE__ */ __name((data) => {
+// node_modules/zod/v4/locales/tr.js
+var parsedType7 = /* @__PURE__ */ __name((data) => {
   let t2 = typeof data;
   switch (t2) {
     case "number":
@@ -76760,7 +76820,7 @@ var parsedType6 = /* @__PURE__ */ __name((data) => {
     }
   }
   return t2;
-}, "parsedType"), error38 = /* @__PURE__ */ __name(() => {
+}, "parsedType"), error39 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "karakter", verb: "olmalı" },
     file: { unit: "bayt", verb: "olmalı" },
@@ -76804,7 +76864,7 @@ var parsedType6 = /* @__PURE__ */ __name((data) => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Geçersiz değer: beklenen ${issue2.expected}, alınan ${parsedType6(issue2.input)}`;
+        return `Geçersiz değer: beklenen ${issue2.expected}, alınan ${parsedType7(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Geçersiz değer: beklenen ${stringifyPrimitive(issue2.values[0])}` : `Geçersiz seçenek: aşağıdakilerden biri olmalı: ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -76836,13 +76896,13 @@ var parsedType6 = /* @__PURE__ */ __name((data) => {
 }, "error");
 function tr_default() {
   return {
-    localeError: error38()
+    localeError: error39()
   };
 }
 __name(tr_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/uk.js
-var error39 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/uk.js
+var error40 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "символів", verb: "матиме" },
     file: { unit: "байтів", verb: "матиме" },
@@ -76853,7 +76913,7 @@ var error39 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -76901,7 +76961,7 @@ var error39 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Неправильні вхідні дані: очікується ${issue2.expected}, отримано ${parsedType7(issue2.input)}`;
+        return `Неправильні вхідні дані: очікується ${issue2.expected}, отримано ${parsedType8(issue2.input)}`;
       // return `Неправильні вхідні дані: очікується ${issue.expected}, отримано ${util.getParsedType(issue.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Неправильні вхідні дані: очікується ${stringifyPrimitive(issue2.values[0])}` : `Неправильна опція: очікується одне з ${joinValues(issue2.values, "|")}`;
@@ -76934,19 +76994,19 @@ var error39 = /* @__PURE__ */ __name(() => {
 }, "error");
 function uk_default() {
   return {
-    localeError: error39()
+    localeError: error40()
   };
 }
 __name(uk_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ua.js
+// node_modules/zod/v4/locales/ua.js
 function ua_default() {
   return uk_default();
 }
 __name(ua_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/ur.js
-var error40 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/ur.js
+var error41 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "حروف", verb: "ہونا" },
     file: { unit: "بائٹس", verb: "ہونا" },
@@ -76957,7 +77017,7 @@ var error40 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -77005,7 +77065,7 @@ var error40 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `غلط ان پٹ: ${issue2.expected} متوقع تھا، ${parsedType7(issue2.input)} موصول ہوا`;
+        return `غلط ان پٹ: ${issue2.expected} متوقع تھا، ${parsedType8(issue2.input)} موصول ہوا`;
       case "invalid_value":
         return issue2.values.length === 1 ? `غلط ان پٹ: ${stringifyPrimitive(issue2.values[0])} متوقع تھا` : `غلط آپشن: ${joinValues(issue2.values, "|")} میں سے ایک متوقع تھا`;
       case "too_big": {
@@ -77037,13 +77097,13 @@ var error40 = /* @__PURE__ */ __name(() => {
 }, "error");
 function ur_default() {
   return {
-    localeError: error40()
+    localeError: error41()
   };
 }
 __name(ur_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/vi.js
-var error41 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/vi.js
+var error42 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "ký tự", verb: "có" },
     file: { unit: "byte", verb: "có" },
@@ -77054,7 +77114,7 @@ var error41 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -77102,7 +77162,7 @@ var error41 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Đầu vào không hợp lệ: mong đợi ${issue2.expected}, nhận được ${parsedType7(issue2.input)}`;
+        return `Đầu vào không hợp lệ: mong đợi ${issue2.expected}, nhận được ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Đầu vào không hợp lệ: mong đợi ${stringifyPrimitive(issue2.values[0])}` : `Tùy chọn không hợp lệ: mong đợi một trong các giá trị ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -77134,13 +77194,13 @@ var error41 = /* @__PURE__ */ __name(() => {
 }, "error");
 function vi_default() {
   return {
-    localeError: error41()
+    localeError: error42()
   };
 }
 __name(vi_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/zh-CN.js
-var error42 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/zh-CN.js
+var error43 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "字符", verb: "包含" },
     file: { unit: "字节", verb: "包含" },
@@ -77151,7 +77211,7 @@ var error42 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -77199,7 +77259,7 @@ var error42 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `无效输入：期望 ${issue2.expected}，实际接收 ${parsedType7(issue2.input)}`;
+        return `无效输入：期望 ${issue2.expected}，实际接收 ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `无效输入：期望 ${stringifyPrimitive(issue2.values[0])}` : `无效选项：期望以下之一 ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -77231,13 +77291,13 @@ var error42 = /* @__PURE__ */ __name(() => {
 }, "error");
 function zh_CN_default() {
   return {
-    localeError: error42()
+    localeError: error43()
   };
 }
 __name(zh_CN_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/zh-TW.js
-var error43 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/zh-TW.js
+var error44 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "字元", verb: "擁有" },
     file: { unit: "位元組", verb: "擁有" },
@@ -77248,7 +77308,7 @@ var error43 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -77296,7 +77356,7 @@ var error43 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `無效的輸入值：預期為 ${issue2.expected}，但收到 ${parsedType7(issue2.input)}`;
+        return `無效的輸入值：預期為 ${issue2.expected}，但收到 ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `無效的輸入值：預期為 ${stringifyPrimitive(issue2.values[0])}` : `無效的選項：預期為以下其中之一 ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -77328,13 +77388,13 @@ var error43 = /* @__PURE__ */ __name(() => {
 }, "error");
 function zh_TW_default() {
   return {
-    localeError: error43()
+    localeError: error44()
   };
 }
 __name(zh_TW_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/locales/yo.js
-var error44 = /* @__PURE__ */ __name(() => {
+// node_modules/zod/v4/locales/yo.js
+var error45 = /* @__PURE__ */ __name(() => {
   let Sizable = {
     string: { unit: "àmi", verb: "ní" },
     file: { unit: "bytes", verb: "ní" },
@@ -77345,7 +77405,7 @@ var error44 = /* @__PURE__ */ __name(() => {
     return Sizable[origin] ?? null;
   }
   __name(getSizing, "getSizing");
-  let parsedType7 = /* @__PURE__ */ __name((data) => {
+  let parsedType8 = /* @__PURE__ */ __name((data) => {
     let t2 = typeof data;
     switch (t2) {
       case "number":
@@ -77393,7 +77453,7 @@ var error44 = /* @__PURE__ */ __name(() => {
   return (issue2) => {
     switch (issue2.code) {
       case "invalid_type":
-        return `Ìbáwọlé aṣìṣe: a ní láti fi ${issue2.expected}, àmọ̀ a rí ${parsedType7(issue2.input)}`;
+        return `Ìbáwọlé aṣìṣe: a ní láti fi ${issue2.expected}, àmọ̀ a rí ${parsedType8(issue2.input)}`;
       case "invalid_value":
         return issue2.values.length === 1 ? `Ìbáwọlé aṣìṣe: a ní láti fi ${stringifyPrimitive(issue2.values[0])}` : `Àṣàyàn aṣìṣe: yan ọ̀kan lára ${joinValues(issue2.values, "|")}`;
       case "too_big": {
@@ -77425,12 +77485,12 @@ var error44 = /* @__PURE__ */ __name(() => {
 }, "error");
 function yo_default() {
   return {
-    localeError: error44()
+    localeError: error45()
   };
 }
 __name(yo_default, "default");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/registries.js
+// node_modules/zod/v4/core/registries.js
 var $output = Symbol("ZodOutput"), $input = Symbol("ZodInput"), $ZodRegistry = class {
   static {
     __name(this, "$ZodRegistry");
@@ -77474,7 +77534,7 @@ function registry() {
 __name(registry, "registry");
 var globalRegistry = /* @__PURE__ */ registry();
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/api.js
+// node_modules/zod/v4/core/api.js
 function _string(Class2, params) {
   return new Class2({
     type: "string",
@@ -78417,7 +78477,7 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 }
 __name(_stringFormat, "_stringFormat");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/to-json-schema.js
+// node_modules/zod/v4/core/to-json-schema.js
 var JSONSchemaGenerator = class {
   static {
     __name(this, "JSONSchemaGenerator");
@@ -78945,10 +79005,10 @@ function isTransforming(_schema, _ctx) {
 }
 __name(isTransforming, "isTransforming");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/core/json-schema.js
+// node_modules/zod/v4/core/json-schema.js
 var json_schema_exports = {};
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/iso.js
+// node_modules/zod/v4/classic/iso.js
 var iso_exports = {};
 __export(iso_exports, {
   ZodISODate: () => ZodISODate,
@@ -78989,7 +79049,7 @@ function duration2(params) {
 }
 __name(duration2, "duration");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/errors.js
+// node_modules/zod/v4/classic/errors.js
 var initializer2 = /* @__PURE__ */ __name((inst, issues) => {
   $ZodError.init(inst, issues), inst.name = "ZodError", Object.defineProperties(inst, {
     format: {
@@ -79023,20 +79083,16 @@ var initializer2 = /* @__PURE__ */ __name((inst, issues) => {
   Parent: Error
 });
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/parse.js
+// node_modules/zod/v4/classic/parse.js
 var parse2 = /* @__PURE__ */ _parse(ZodRealError), parseAsync2 = /* @__PURE__ */ _parseAsync(ZodRealError), safeParse2 = /* @__PURE__ */ _safeParse(ZodRealError), safeParseAsync2 = /* @__PURE__ */ _safeParseAsync(ZodRealError), encode2 = /* @__PURE__ */ _encode(ZodRealError), decode2 = /* @__PURE__ */ _decode(ZodRealError), encodeAsync2 = /* @__PURE__ */ _encodeAsync(ZodRealError), decodeAsync2 = /* @__PURE__ */ _decodeAsync(ZodRealError), safeEncode2 = /* @__PURE__ */ _safeEncode(ZodRealError), safeDecode2 = /* @__PURE__ */ _safeDecode(ZodRealError), safeEncodeAsync2 = /* @__PURE__ */ _safeEncodeAsync(ZodRealError), safeDecodeAsync2 = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/schemas.js
-var ZodType2 = /* @__PURE__ */ $constructor("ZodType", (inst, def) => ($ZodType.init(inst, def), inst.def = def, inst.type = def.type, Object.defineProperty(inst, "_def", { value: def }), inst.check = (...checks) => inst.clone(
-  {
-    ...def,
-    checks: [
-      ...def.checks ?? [],
-      ...checks.map((ch) => typeof ch == "function" ? { _zod: { check: ch, def: { check: "custom" }, onattach: [] } } : ch)
-    ]
-  }
-  // { parent: true }
-), inst.clone = (def2, params) => clone(inst, def2, params), inst.brand = () => inst, inst.register = ((reg, meta) => (reg.add(inst, meta), inst)), inst.parse = (data, params) => parse2(inst, data, params, { callee: inst.parse }), inst.safeParse = (data, params) => safeParse2(inst, data, params), inst.parseAsync = async (data, params) => parseAsync2(inst, data, params, { callee: inst.parseAsync }), inst.safeParseAsync = async (data, params) => safeParseAsync2(inst, data, params), inst.spa = inst.safeParseAsync, inst.encode = (data, params) => encode2(inst, data, params), inst.decode = (data, params) => decode2(inst, data, params), inst.encodeAsync = async (data, params) => encodeAsync2(inst, data, params), inst.decodeAsync = async (data, params) => decodeAsync2(inst, data, params), inst.safeEncode = (data, params) => safeEncode2(inst, data, params), inst.safeDecode = (data, params) => safeDecode2(inst, data, params), inst.safeEncodeAsync = async (data, params) => safeEncodeAsync2(inst, data, params), inst.safeDecodeAsync = async (data, params) => safeDecodeAsync2(inst, data, params), inst.refine = (check2, params) => inst.check(refine(check2, params)), inst.superRefine = (refinement) => inst.check(superRefine(refinement)), inst.overwrite = (fn) => inst.check(_overwrite(fn)), inst.optional = () => optional(inst), inst.nullable = () => nullable(inst), inst.nullish = () => optional(nullable(inst)), inst.nonoptional = (params) => nonoptional(inst, params), inst.array = () => array(inst), inst.or = (arg) => union([inst, arg]), inst.and = (arg) => intersection(inst, arg), inst.transform = (tx) => pipe(inst, transform(tx)), inst.default = (def2) => _default2(inst, def2), inst.prefault = (def2) => prefault(inst, def2), inst.catch = (params) => _catch2(inst, params), inst.pipe = (target) => pipe(inst, target), inst.readonly = () => readonly(inst), inst.describe = (description) => {
+// node_modules/zod/v4/classic/schemas.js
+var ZodType2 = /* @__PURE__ */ $constructor("ZodType", (inst, def) => ($ZodType.init(inst, def), inst.def = def, inst.type = def.type, Object.defineProperty(inst, "_def", { value: def }), inst.check = (...checks) => inst.clone(util_exports.mergeDefs(def, {
+  checks: [
+    ...def.checks ?? [],
+    ...checks.map((ch) => typeof ch == "function" ? { _zod: { check: ch, def: { check: "custom" }, onattach: [] } } : ch)
+  ]
+})), inst.clone = (def2, params) => clone(inst, def2, params), inst.brand = () => inst, inst.register = ((reg, meta) => (reg.add(inst, meta), inst)), inst.parse = (data, params) => parse2(inst, data, params, { callee: inst.parse }), inst.safeParse = (data, params) => safeParse2(inst, data, params), inst.parseAsync = async (data, params) => parseAsync2(inst, data, params, { callee: inst.parseAsync }), inst.safeParseAsync = async (data, params) => safeParseAsync2(inst, data, params), inst.spa = inst.safeParseAsync, inst.encode = (data, params) => encode2(inst, data, params), inst.decode = (data, params) => decode2(inst, data, params), inst.encodeAsync = async (data, params) => encodeAsync2(inst, data, params), inst.decodeAsync = async (data, params) => decodeAsync2(inst, data, params), inst.safeEncode = (data, params) => safeEncode2(inst, data, params), inst.safeDecode = (data, params) => safeDecode2(inst, data, params), inst.safeEncodeAsync = async (data, params) => safeEncodeAsync2(inst, data, params), inst.safeDecodeAsync = async (data, params) => safeDecodeAsync2(inst, data, params), inst.refine = (check2, params) => inst.check(refine(check2, params)), inst.superRefine = (refinement) => inst.check(superRefine(refinement)), inst.overwrite = (fn) => inst.check(_overwrite(fn)), inst.optional = () => optional(inst), inst.nullable = () => nullable(inst), inst.nullish = () => optional(nullable(inst)), inst.nonoptional = (params) => nonoptional(inst, params), inst.array = () => array(inst), inst.or = (arg) => union([inst, arg]), inst.and = (arg) => intersection(inst, arg), inst.transform = (tx) => pipe(inst, transform(tx)), inst.default = (def2) => _default2(inst, def2), inst.prefault = (def2) => prefault(inst, def2), inst.catch = (params) => _catch2(inst, params), inst.pipe = (target) => pipe(inst, target), inst.readonly = () => readonly(inst), inst.describe = (description) => {
   let cl = inst.clone();
   return globalRegistry.add(cl, { description }), cl;
 }, Object.defineProperty(inst, "description", {
@@ -79372,9 +79428,7 @@ var ZodObject2 = /* @__PURE__ */ $constructor("ZodObject", (inst, def) => {
 function object(shape, params) {
   let def = {
     type: "object",
-    get shape() {
-      return util_exports.assignProp(this, "shape", shape ? util_exports.objectClone(shape) : {}), this.shape;
-    },
+    shape: shape ?? {},
     ...util_exports.normalizeParams(params)
   };
   return new ZodObject2(def);
@@ -79383,9 +79437,7 @@ __name(object, "object");
 function strictObject(shape, params) {
   return new ZodObject2({
     type: "object",
-    get shape() {
-      return util_exports.assignProp(this, "shape", util_exports.objectClone(shape)), this.shape;
-    },
+    shape,
     catchall: never(),
     ...util_exports.normalizeParams(params)
   });
@@ -79394,9 +79446,7 @@ __name(strictObject, "strictObject");
 function looseObject(shape, params) {
   return new ZodObject2({
     type: "object",
-    get shape() {
-      return util_exports.assignProp(this, "shape", util_exports.objectClone(shape)), this.shape;
-    },
+    shape,
     catchall: unknown(),
     ...util_exports.normalizeParams(params)
   });
@@ -79809,7 +79859,7 @@ function preprocess(fn, schema) {
 }
 __name(preprocess, "preprocess");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/compat.js
+// node_modules/zod/v4/classic/compat.js
 var ZodIssueCode2 = {
   invalid_type: "invalid_type",
   too_big: "too_big",
@@ -79836,7 +79886,7 @@ __name(getErrorMap2, "getErrorMap");
 var ZodFirstPartyTypeKind2;
 ZodFirstPartyTypeKind2 || (ZodFirstPartyTypeKind2 = {});
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/coerce.js
+// node_modules/zod/v4/classic/coerce.js
 var coerce_exports = {};
 __export(coerce_exports, {
   bigint: () => bigint3,
@@ -79866,82 +79916,569 @@ function date4(params) {
 }
 __name(date4, "date");
 
-// ../../node_modules/.pnpm/zod@4.1.9/node_modules/zod/v4/classic/external.js
+// node_modules/zod/v4/classic/external.js
 config(en_default2());
 
 // src/MssqlTools.ts
-var logger4 = consola.withTag("mssql-tools"), ExecuteSqlInputSchema = external_exports2.object({
+var logger4 = consola.withTag("mssql-tools"), MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || "10000", 10), WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || "5000", 10), QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || "60000", 10), QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || "100", 10), queryCache = /* @__PURE__ */ new Map(), TABLES_CACHE_TTL_MS = parseInt(process.env.MSSQL_TABLES_CACHE_TTL || "1800000", 10), SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || "7200000", 10), FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || "14400000", 10), RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || "14400000", 10), COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || "7200000", 10), INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_INDEXES_CACHE_TTL || "14400000", 10), SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || "200", 10), FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || "100", 10), RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || "100", 10), COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || "100", 10), INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_INDEXES_CACHE_SIZE || "200", 10), listTablesCache = /* @__PURE__ */ new Map(), tableSchemaCache = /* @__PURE__ */ new Map(), foreignKeysCache = /* @__PURE__ */ new Map(), relationshipsCache = /* @__PURE__ */ new Map(), columnsCache = /* @__PURE__ */ new Map(), indexesCache = /* @__PURE__ */ new Map(), versionCache = null;
+function getCacheKey(query) {
+  let normalizedQuery = query.trim().toLowerCase().replace(/\s+/g, " ");
+  return crypto3.createHash("sha256").update(normalizedQuery, "utf8").digest("hex");
+}
+__name(getCacheKey, "getCacheKey");
+function cleanExpiredEntry(key) {
+  let entry = queryCache.get(key);
+  return entry && Date.now() - entry.timestamp > QUERY_CACHE_TTL_MS ? (queryCache.delete(key), !0) : !1;
+}
+__name(cleanExpiredEntry, "cleanExpiredEntry");
+function enforceCacheSizeLimit() {
+  if (queryCache.size > QUERY_CACHE_MAX_SIZE) {
+    let entries = Array.from(queryCache.entries()).sort(
+      (a2, b2) => a2[1].lastAccessed - b2[1].lastAccessed
+    ), entriesToDelete = queryCache.size - QUERY_CACHE_MAX_SIZE;
+    for (let i2 = 0; i2 < entriesToDelete; i2++)
+      queryCache.delete(entries[i2][0]);
+    consola.level >= 0 && logger4.debug(`LRU eviction: removed ${entriesToDelete} least recently used entries`);
+  }
+}
+__name(enforceCacheSizeLimit, "enforceCacheSizeLimit");
+function cleanExpiredToolEntry(cache, key, ttlMs) {
+  let entry = cache.get(key);
+  return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
+}
+__name(cleanExpiredToolEntry, "cleanExpiredToolEntry");
+function enforceToolCacheSizeLimit(cache, maxSize, cacheName) {
+  if (cache.size > maxSize) {
+    let entries = Array.from(cache.entries()).sort(
+      (a2, b2) => a2[1].lastAccessed - b2[1].lastAccessed
+    ), entriesToDelete = cache.size - maxSize;
+    for (let i2 = 0; i2 < entriesToDelete; i2++)
+      cache.delete(entries[i2][0]);
+    consola.level >= 0 && logger4.debug(`${cacheName} LRU eviction: removed ${entriesToDelete} least recently used entries`);
+  }
+}
+__name(enforceToolCacheSizeLimit, "enforceToolCacheSizeLimit");
+function getFromToolCache(cache, key, ttlMs) {
+  if (!cleanExpiredToolEntry(cache, key, ttlMs)) {
+    let entry = cache.get(key);
+    if (entry)
+      return entry.lastAccessed = Date.now(), entry.result;
+  }
+  return null;
+}
+__name(getFromToolCache, "getFromToolCache");
+function setInToolCache(cache, key, result, maxSize, cacheName) {
+  let now = Date.now();
+  cache.set(key, {
+    result,
+    timestamp: now,
+    lastAccessed: now
+  }), enforceToolCacheSizeLimit(cache, maxSize, cacheName);
+}
+__name(setInToolCache, "setInToolCache");
+var ExecuteSqlInputSchema = external_exports2.object({
   query: external_exports2.string().min(1).describe("The SQL query to execute")
-}), GetVersionInputSchema = external_exports2.object({}), MssqlTools = {
+}), GetVersionInputSchema = external_exports2.object({}), ListTablesInputSchema = external_exports2.object({
+  schema_name: external_exports2.string().optional().describe('Optional schema name to filter tables (e.g., "dbo", "sys")')
+}), GetTableSchemaInputSchema = external_exports2.object({
+  table_name: external_exports2.string().min(1).describe("The name of the table to get schema information for"),
+  schema_name: external_exports2.string().optional().describe('Optional schema name (default: "dbo")')
+}), GetForeignKeysInputSchema = external_exports2.object({
+  table_name: external_exports2.string().optional().describe("Optional table name to filter foreign keys for a specific table"),
+  schema_name: external_exports2.string().optional().describe("Optional schema name to filter foreign keys (default: all schemas)")
+}), SearchColumnsInputSchema = external_exports2.object({
+  column_name: external_exports2.string().min(1).describe("The column name to search for (supports partial matching with LIKE pattern)"),
+  schema_name: external_exports2.string().optional().describe("Optional schema name to limit search scope")
+}), GetTableRelationshipsInputSchema = external_exports2.object({
+  table_name: external_exports2.string().min(1).describe("The name of the table to get relationships for"),
+  schema_name: external_exports2.string().optional().describe('Optional schema name (default: "dbo")')
+}), GetTableIndexesInputSchema = external_exports2.object({
+  table_name: external_exports2.string().min(1).describe("The name of the table to get indexes for"),
+  schema_name: external_exports2.string().optional().describe('Optional schema name (default: "dbo")')
+}), MssqlTools = {
   getToolDefinitions() {
     return [
       {
         name: "exec_sql_csv",
-        description: "Execute an SQL query on the SQL Server and return results in CSV format",
-        inputSchema: external_exports2.toJSONSchema(ExecuteSqlInputSchema)
-      },
-      {
-        name: "exec_sql_json",
-        description: "Execute an SQL query on the SQL Server and return results in JSON format",
+        description: "Execute a READ-ONLY SQL query on the SQL Server and return results in CSV format. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are allowed. Write operations (INSERT, UPDATE, DELETE, DROP, etc.) are strictly prohibited.",
         inputSchema: external_exports2.toJSONSchema(ExecuteSqlInputSchema)
       },
       {
         name: "get_version",
         description: "Get the SQL Server version information",
         inputSchema: external_exports2.toJSONSchema(GetVersionInputSchema)
+      },
+      {
+        name: "list_tables",
+        description: "List all tables and views in the database with their schema, type (TABLE/VIEW), row count, and size information. Optionally filter by schema name.",
+        inputSchema: external_exports2.toJSONSchema(ListTablesInputSchema)
+      },
+      {
+        name: "get_table_schema",
+        description: "Get detailed schema information for a specific table including column names, data types, nullability, default values, and constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE). Also shows computed columns with their expressions.",
+        inputSchema: external_exports2.toJSONSchema(GetTableSchemaInputSchema)
+      },
+      {
+        name: "get_foreign_keys",
+        description: "Get all foreign key relationships in the database with detailed constraint information. Optionally filter by table or schema.",
+        inputSchema: external_exports2.toJSONSchema(GetForeignKeysInputSchema)
+      },
+      {
+        name: "search_columns",
+        description: "Search for columns by name across all tables in the database. Supports partial matching with LIKE patterns (use % as wildcard).",
+        inputSchema: external_exports2.toJSONSchema(SearchColumnsInputSchema)
+      },
+      {
+        name: "get_table_relationships",
+        description: "Get all parent and child table relationships for a specific table, showing foreign key connections.",
+        inputSchema: external_exports2.toJSONSchema(GetTableRelationshipsInputSchema)
+      },
+      {
+        name: "get_table_indexes",
+        description: "Get all indexes for a specific table including index type, columns, uniqueness, and whether it is a primary key. Essential for performance troubleshooting.",
+        inputSchema: external_exports2.toJSONSchema(GetTableIndexesInputSchema)
       }
     ];
   },
   async handleTool(name, args, pool) {
     if (name === "get_version")
       return this.handleGetVersion(pool);
-    if (name === "exec_sql_csv" || name === "exec_sql_json") {
-      let format = name === "exec_sql_csv" ? "csv" : "json";
-      return this.handleExecuteSql(args, pool, format);
-    }
+    if (name === "list_tables")
+      return this.handleListTables(args, pool);
+    if (name === "get_table_schema")
+      return this.handleGetTableSchema(args, pool);
+    if (name === "get_foreign_keys")
+      return this.handleGetForeignKeys(args, pool);
+    if (name === "search_columns")
+      return this.handleSearchColumns(args, pool);
+    if (name === "get_table_relationships")
+      return this.handleGetTableRelationships(args, pool);
+    if (name === "get_table_indexes")
+      return this.handleGetTableIndexes(args, pool);
+    if (name === "exec_sql_csv")
+      return this.handleExecuteSql(args, pool);
     throw new Error(`Unknown tool: ${name}`);
   },
   async handleGetVersion(pool) {
-    try {
-      return {
+    if (versionCache !== null)
+      return consola.level >= 0 && logger4.debug("Returning cached SQL Server version"), {
         content: [
           {
             type: "text",
-            text: (await pool.query("SELECT @@VERSION AS version"))[0]?.version || "Unknown"
+            text: versionCache + `
+
+📋 (Cached result)`
           }
         ]
       };
-    } catch (error45) {
-      return consola.level >= 0 && logger4.error("Error getting SQL Server version:", error45), {
+    try {
+      let version3 = (await pool.query("SELECT @@VERSION AS version"))[0]?.version || "Unknown";
+      return versionCache = version3, consola.level >= 0 && logger4.info("SQL Server version cached"), {
         content: [
           {
             type: "text",
-            text: `Error getting version: ${error45 instanceof Error ? error45.message : "Unknown error"}`
+            text: version3
+          }
+        ]
+      };
+    } catch (error46) {
+      return consola.level >= 0 && logger4.error("Error getting SQL Server version:", error46), {
+        content: [
+          {
+            type: "text",
+            text: `Error getting version: ${error46 instanceof Error ? error46.message : "Unknown error"}`
           }
         ]
       };
     }
   },
-  async handleExecuteSql(args, pool, format) {
+  async handleListTables(args, pool) {
     try {
-      let query = ExecuteSqlInputSchema.parse(args).query, useReadOnlyTransaction = getMssqlConfig().accessMode === "readonly";
-      if (useReadOnlyTransaction && !isReadOnlyQuery(query))
+      let schemaFilter = ListTablesInputSchema.parse(args).schema_name, cacheKey2 = schemaFilter || "_all_schemas_", cachedResult2 = getFromToolCache(listTablesCache, cacheKey2, TABLES_CACHE_TTL_MS);
+      if (cachedResult2 !== null)
+        return consola.level >= 0 && logger4.debug(`Returning cached list_tables result for key: ${cacheKey2}`), {
+          content: [
+            {
+              type: "text",
+              text: cachedResult2 + `
+
+📋 (Cached result)`
+            }
+          ]
+        };
+      consola.level >= 0 && logger4.info(`Listing tables and views${schemaFilter ? ` for schema: ${schemaFilter}` : " (all schemas)"}`);
+      let query = "SELECT t.TABLE_SCHEMA AS [Schema], t.TABLE_NAME AS [Name], t.TABLE_TYPE AS [Type], COALESCE(p.rows, 0) AS [RowCount], COALESCE(CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS DECIMAL(18,2)), 0.00) AS [SizeMB] FROM INFORMATION_SCHEMA.TABLES t LEFT JOIN sys.tables st ON t.TABLE_NAME = st.name AND t.TABLE_SCHEMA = SCHEMA_NAME(st.schema_id) LEFT JOIN sys.indexes i ON st.object_id = i.object_id AND i.index_id <= 1 LEFT JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id LEFT JOIN sys.allocation_units a ON p.partition_id = a.container_id WHERE t.TABLE_TYPE IN ('BASE TABLE', 'VIEW')";
+      schemaFilter && (query += ` AND t.TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`), query += " GROUP BY t.TABLE_SCHEMA, t.TABLE_NAME, t.TABLE_TYPE, p.rows ORDER BY t.TABLE_SCHEMA, t.TABLE_TYPE, t.TABLE_NAME";
+      try {
+        let results = await pool.query(query);
+        if (!results || results.length === 0)
+          return {
+            content: [
+              {
+                type: "text",
+                text: schemaFilter ? `No tables or views found in schema: ${schemaFilter}` : "No tables or views found in database"
+              }
+            ]
+          };
+        let csvText = formatCSV(results), now = Date.now();
+        return listTablesCache.set(cacheKey2, {
+          result: csvText,
+          timestamp: now,
+          lastAccessed: now
+        }), consola.level >= 0 && logger4.info(`Found ${results.length} table(s)/view(s) - result cached`), {
+          content: [
+            {
+              type: "text",
+              text: csvText
+            }
+          ]
+        };
+      } catch (error46) {
+        return consola.level >= 0 && logger4.error("Error executing query:", error46), {
+          content: [
+            {
+              type: "text",
+              text: `Error listing tables and views: ${error46 instanceof Error ? error46.message : "Unknown error"}`
+            }
+          ]
+        };
+      }
+    } catch (validationError) {
+      return consola.level >= 0 && logger4.error("Invalid input arguments:", validationError), {
+        content: [
+          {
+            type: "text",
+            text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : "Unknown validation error"}`
+          }
+        ]
+      };
+    }
+  },
+  async handleGetTableSchema(args, pool) {
+    try {
+      let validatedArgs = GetTableSchemaInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(tableSchemaCache, cacheKey2, SCHEMA_CACHE_TTL_MS);
+      if (cachedResult2 !== null)
+        return consola.level >= 0 && logger4.debug(`Returning cached table schema for: ${schemaName}.${tableName}`), {
+          content: [
+            {
+              type: "text",
+              text: cachedResult2 + `
+
+📋 (Cached result)`
+            }
+          ]
+        };
+      consola.level >= 0 && logger4.info(`Getting schema for table: ${schemaName}.${tableName}`);
+      let query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], CASE WHEN uq.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [UniqueKey], CASE WHEN cc.column_id IS NOT NULL THEN 'YES' ELSE 'NO' END AS [Computed], cc.definition AS [ComputedExpression], c.ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'UNIQUE') uq ON c.TABLE_SCHEMA = uq.TABLE_SCHEMA AND c.TABLE_NAME = uq.TABLE_NAME AND c.COLUMN_NAME = uq.COLUMN_NAME LEFT JOIN sys.computed_columns cc ON cc.object_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND cc.name = c.COLUMN_NAME WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
+      try {
+        let results = await pool.query(query);
+        if (!results || results.length === 0)
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Table not found: ${schemaName}.${tableName}`
+              }
+            ]
+          };
+        let csvText = formatCSV(results);
+        return setInToolCache(tableSchemaCache, cacheKey2, csvText, SCHEMA_CACHE_MAX_SIZE, "table_schema"), consola.level >= 0 && logger4.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`), {
+          content: [
+            {
+              type: "text",
+              text: csvText
+            }
+          ]
+        };
+      } catch (error46) {
+        return consola.level >= 0 && logger4.error("Error executing query:", error46), {
+          content: [
+            {
+              type: "text",
+              text: `Error getting table schema: ${error46 instanceof Error ? error46.message : "Unknown error"}`
+            }
+          ]
+        };
+      }
+    } catch (validationError) {
+      return consola.level >= 0 && logger4.error("Invalid input arguments:", validationError), {
+        content: [
+          {
+            type: "text",
+            text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : "Unknown validation error"}`
+          }
+        ]
+      };
+    }
+  },
+  async handleGetForeignKeys(args, pool) {
+    try {
+      let validatedArgs = GetForeignKeysInputSchema.parse(args), tableFilter = validatedArgs.table_name, schemaFilter = validatedArgs.schema_name, cacheKey2 = `${schemaFilter || "_all_"}:${tableFilter || "_all_"}`, cachedResult2 = getFromToolCache(foreignKeysCache, cacheKey2, FK_CACHE_TTL_MS);
+      if (cachedResult2 !== null)
+        return consola.level >= 0 && logger4.debug(`Returning cached foreign keys for: ${cacheKey2}`), {
+          content: [
+            {
+              type: "text",
+              text: cachedResult2 + `
+
+📋 (Cached result)`
+            }
+          ]
+        };
+      consola.level >= 0 && logger4.info(`Getting foreign keys${tableFilter ? ` for table: ${tableFilter}` : " (all tables)"}${schemaFilter ? ` in schema: ${schemaFilter}` : ""}`);
+      let query = "SELECT fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.parent_object_id) AS [ParentSchema], OBJECT_NAME(fk.parent_object_id) AS [ParentTable], COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS [ParentColumn], OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS [ReferencedSchema], OBJECT_NAME(fk.referenced_object_id) AS [ReferencedTable], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [ReferencedColumn], CASE fk.delete_referential_action WHEN 0 THEN 'NO ACTION' WHEN 1 THEN 'CASCADE' WHEN 2 THEN 'SET NULL' WHEN 3 THEN 'SET DEFAULT' END AS [OnDelete], CASE fk.update_referential_action WHEN 0 THEN 'NO ACTION' WHEN 1 THEN 'CASCADE' WHEN 2 THEN 'SET NULL' WHEN 3 THEN 'SET DEFAULT' END AS [OnUpdate] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE 1=1";
+      schemaFilter && (query += ` AND OBJECT_SCHEMA_NAME(fk.parent_object_id) = '${schemaFilter.replace(/'/g, "''")}'`), tableFilter && (query += ` AND OBJECT_NAME(fk.parent_object_id) = '${tableFilter.replace(/'/g, "''")}'`), query += " ORDER BY [ParentSchema], [ParentTable], [ConstraintName]";
+      try {
+        let results = await pool.query(query);
+        if (!results || results.length === 0)
+          return {
+            content: [
+              {
+                type: "text",
+                text: tableFilter ? `No foreign keys found for table: ${tableFilter}` : "No foreign keys found in database"
+              }
+            ]
+          };
+        let csvText = formatCSV(results);
+        return setInToolCache(foreignKeysCache, cacheKey2, csvText, FK_CACHE_MAX_SIZE, "foreign_keys"), consola.level >= 0 && logger4.info(`Found ${results.length} foreign key(s) - result cached`), {
+          content: [
+            {
+              type: "text",
+              text: csvText
+            }
+          ]
+        };
+      } catch (error46) {
+        return consola.level >= 0 && logger4.error("Error executing query:", error46), {
+          content: [
+            {
+              type: "text",
+              text: `Error getting foreign keys: ${error46 instanceof Error ? error46.message : "Unknown error"}`
+            }
+          ]
+        };
+      }
+    } catch (validationError) {
+      return consola.level >= 0 && logger4.error("Invalid input arguments:", validationError), {
+        content: [
+          {
+            type: "text",
+            text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : "Unknown validation error"}`
+          }
+        ]
+      };
+    }
+  },
+  async handleSearchColumns(args, pool) {
+    try {
+      let validatedArgs = SearchColumnsInputSchema.parse(args), columnName = validatedArgs.column_name, schemaFilter = validatedArgs.schema_name, normalizedColumn = columnName.toLowerCase().trim(), cacheKey2 = `${schemaFilter || "_all_"}:${normalizedColumn}`, cachedResult2 = getFromToolCache(columnsCache, cacheKey2, COLUMNS_CACHE_TTL_MS);
+      if (cachedResult2 !== null)
+        return consola.level >= 0 && logger4.debug(`Returning cached column search for: ${cacheKey2}`), {
+          content: [
+            {
+              type: "text",
+              text: cachedResult2 + `
+
+📋 (Cached result)`
+            }
+          ]
+        };
+      consola.level >= 0 && logger4.info(`Searching for column: ${columnName}${schemaFilter ? ` in schema: ${schemaFilter}` : ""}`);
+      let query = "SELECT TABLE_SCHEMA AS [Schema], TABLE_NAME AS [Table], COLUMN_NAME AS [Column], DATA_TYPE AS [DataType], CHARACTER_MAXIMUM_LENGTH AS [MaxLength], IS_NULLABLE AS [Nullable], ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE '%" + columnName.replace(/'/g, "''") + "%'";
+      schemaFilter && (query += ` AND TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`), query += " ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION";
+      try {
+        let results = await pool.query(query);
+        if (!results || results.length === 0)
+          return {
+            content: [
+              {
+                type: "text",
+                text: `No columns found matching: ${columnName}`
+              }
+            ]
+          };
+        let csvText = formatCSV(results);
+        return setInToolCache(columnsCache, cacheKey2, csvText, COLUMNS_CACHE_MAX_SIZE, "search_columns"), consola.level >= 0 && logger4.info(`Found ${results.length} column(s) matching: ${columnName} - result cached`), {
+          content: [
+            {
+              type: "text",
+              text: csvText
+            }
+          ]
+        };
+      } catch (error46) {
+        return consola.level >= 0 && logger4.error("Error executing query:", error46), {
+          content: [
+            {
+              type: "text",
+              text: `Error searching columns: ${error46 instanceof Error ? error46.message : "Unknown error"}`
+            }
+          ]
+        };
+      }
+    } catch (validationError) {
+      return consola.level >= 0 && logger4.error("Invalid input arguments:", validationError), {
+        content: [
+          {
+            type: "text",
+            text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : "Unknown validation error"}`
+          }
+        ]
+      };
+    }
+  },
+  async handleGetTableRelationships(args, pool) {
+    try {
+      let validatedArgs = GetTableRelationshipsInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(relationshipsCache, cacheKey2, RELATIONSHIPS_CACHE_TTL_MS);
+      if (cachedResult2 !== null)
+        return consola.level >= 0 && logger4.debug(`Returning cached table relationships for: ${schemaName}.${tableName}`), {
+          content: [
+            {
+              type: "text",
+              text: cachedResult2 + `
+
+📋 (Cached result)`
+            }
+          ]
+        };
+      consola.level >= 0 && logger4.info(`Getting relationships for table: ${schemaName}.${tableName}`);
+      let query = `SELECT 'PARENT' AS [RelationType], fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS [RelatedSchema], OBJECT_NAME(fk.referenced_object_id) AS [RelatedTable], COL_NAME(fkc.parent_column_id, fkc.parent_column_id) AS [ThisColumn], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [RelatedColumn] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE OBJECT_SCHEMA_NAME(fk.parent_object_id) = '${schemaName.replace(/'/g, "''")}' AND OBJECT_NAME(fk.parent_object_id) = '${tableName.replace(/'/g, "''")}' UNION ALL SELECT 'CHILD' AS [RelationType], fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.parent_object_id) AS [RelatedSchema], OBJECT_NAME(fk.parent_object_id) AS [RelatedTable], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [ThisColumn], COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS [RelatedColumn] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE OBJECT_SCHEMA_NAME(fk.referenced_object_id) = '${schemaName.replace(/'/g, "''")}' AND OBJECT_NAME(fk.referenced_object_id) = '${tableName.replace(/'/g, "''")}' ORDER BY [RelationType], [RelatedSchema], [RelatedTable]`;
+      try {
+        let results = await pool.query(query);
+        if (!results || results.length === 0)
+          return {
+            content: [
+              {
+                type: "text",
+                text: `No relationships found for table: ${schemaName}.${tableName}`
+              }
+            ]
+          };
+        let csvText = formatCSV(results);
+        return setInToolCache(relationshipsCache, cacheKey2, csvText, RELATIONSHIPS_CACHE_MAX_SIZE, "table_relationships"), consola.level >= 0 && logger4.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName} - result cached`), {
+          content: [
+            {
+              type: "text",
+              text: csvText
+            }
+          ]
+        };
+      } catch (error46) {
+        return consola.level >= 0 && logger4.error("Error executing query:", error46), {
+          content: [
+            {
+              type: "text",
+              text: `Error getting table relationships: ${error46 instanceof Error ? error46.message : "Unknown error"}`
+            }
+          ]
+        };
+      }
+    } catch (validationError) {
+      return consola.level >= 0 && logger4.error("Invalid input arguments:", validationError), {
+        content: [
+          {
+            type: "text",
+            text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : "Unknown validation error"}`
+          }
+        ]
+      };
+    }
+  },
+  async handleGetTableIndexes(args, pool) {
+    try {
+      let validatedArgs = GetTableIndexesInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(indexesCache, cacheKey2, INDEXES_CACHE_TTL_MS);
+      if (cachedResult2 !== null)
+        return consola.level >= 0 && logger4.debug(`Returning cached indexes for: ${schemaName}.${tableName}`), {
+          content: [
+            {
+              type: "text",
+              text: cachedResult2 + `
+
+📋 (Cached result)`
+            }
+          ]
+        };
+      consola.level >= 0 && logger4.info(`Getting indexes for table: ${schemaName}.${tableName}`);
+      let query = `SELECT i.name AS [IndexName], i.type_desc AS [IndexType], CASE WHEN i.is_unique = 1 THEN 'YES' ELSE 'NO' END AS [IsUnique], CASE WHEN i.is_primary_key = 1 THEN 'YES' ELSE 'NO' END AS [IsPrimaryKey], c.name AS [ColumnName], ic.key_ordinal AS [KeyOrdinal], CASE WHEN ic.is_included_column = 1 THEN 'YES' ELSE 'NO' END AS [IsIncluded] FROM sys.indexes i INNER JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id INNER JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id INNER JOIN sys.tables t ON i.object_id = t.object_id WHERE SCHEMA_NAME(t.schema_id) = '${schemaName.replace(/'/g, "''")}' AND t.name = '${tableName.replace(/'/g, "''")}' ORDER BY i.name, ic.key_ordinal`;
+      try {
+        let results = await pool.query(query);
+        if (!results || results.length === 0)
+          return {
+            content: [
+              {
+                type: "text",
+                text: `No indexes found for table: ${schemaName}.${tableName}`
+              }
+            ]
+          };
+        let csvText = formatCSV(results);
+        return setInToolCache(indexesCache, cacheKey2, csvText, INDEXES_CACHE_MAX_SIZE, "table_indexes"), consola.level >= 0 && logger4.info(`Found ${results.length} index column(s) for table ${schemaName}.${tableName} - result cached`), {
+          content: [
+            {
+              type: "text",
+              text: csvText
+            }
+          ]
+        };
+      } catch (error46) {
+        return consola.level >= 0 && logger4.error("Error executing query:", error46), {
+          content: [
+            {
+              type: "text",
+              text: `Error getting table indexes: ${error46 instanceof Error ? error46.message : "Unknown error"}`
+            }
+          ]
+        };
+      }
+    } catch (validationError) {
+      return consola.level >= 0 && logger4.error("Invalid input arguments:", validationError), {
+        content: [
+          {
+            type: "text",
+            text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : "Unknown validation error"}`
+          }
+        ]
+      };
+    }
+  },
+  async handleExecuteSql(args, pool) {
+    try {
+      let query = ExecuteSqlInputSchema.parse(args).query;
+      if (!isReadOnlyQuery(query))
         return {
           content: [
             {
               type: "text",
-              text: "Error: Write operations are not allowed in read-only mode. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are permitted. This query was blocked before execution."
+              text: "Error: This MCP server is READ-ONLY. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are permitted. Write operations (INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, etc.) are strictly prohibited and blocked before execution."
             }
           ]
         };
+      let cacheKey2 = getCacheKey(query), now = Date.now();
+      if (!cleanExpiredEntry(cacheKey2)) {
+        let cachedEntry = queryCache.get(cacheKey2);
+        if (cachedEntry) {
+          if (cachedEntry.lastAccessed = now, consola.level >= 0) {
+            let cacheAgeSeconds = Math.round((now - cachedEntry.timestamp) / 1e3);
+            logger4.debug(`Returning cached query result (age: ${cacheAgeSeconds}s)`);
+          }
+          return {
+            content: [
+              {
+                type: "text",
+                text: cachedEntry.result + `
+
+📋 (Cached result)`
+              }
+            ]
+          };
+        }
+      }
       if (consola.level >= 0) {
-        let mode = useReadOnlyTransaction ? "readonly" : "transactional";
-        logger4.info(
-          `Executing SQL query (${format}, ${mode}): ${query.substring(0, 100)}${query.length > 100 ? "..." : ""}`
-        );
+        let truncatedQuery = query.length > 100 ? query.substring(0, 100) + "..." : query;
+        logger4.info(`Executing READ-ONLY SQL query: ${truncatedQuery}`);
       }
       try {
-        let results = useReadOnlyTransaction ? await pool.query(query) : await pool.queryWithTransaction(query, !1);
+        let results = await pool.query(query);
         if (!results || results.length === 0)
           return {
             content: [
@@ -79951,41 +80488,33 @@ var logger4 = consola.withTag("mssql-tools"), ExecuteSqlInputSchema = external_e
               }
             ]
           };
-        if (format === "json")
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(results, null, 2)
-              }
-            ]
-          };
-        {
-          let columns = Object.keys(results[0]), csvRows = results.map(
-            (row) => columns.map((col) => {
-              let value = row[col];
-              return value == null ? "" : typeof value == "string" && (value.includes(",") || value.includes('"') || value.includes(`
-`)) ? `"${value.replace(/"/g, '""')}"` : String(value);
-            }).join(",")
-          );
-          return {
-            content: [
-              {
-                type: "text",
-                text: [columns.join(","), ...csvRows].join(`
-`)
-              }
-            ]
-          };
-        }
-      } catch (error45) {
-        consola.level >= 0 && logger4.error(`Error executing SQL '${query}':`, error45);
-        let errorMessage = error45 instanceof Error ? error45.message : "Unknown error", isReadOnlyError = errorMessage.toLowerCase().includes("read only") || errorMessage.toLowerCase().includes("cannot execute") || errorMessage.toLowerCase().includes("not allowed");
-        return useReadOnlyTransaction && isReadOnlyError ? {
+        let resultCount = results.length, warningMessage = "";
+        resultCount > MAX_RESULT_ROWS ? (results = results.slice(0, MAX_RESULT_ROWS), warningMessage = `
+
+⚠️ WARNING: Result set truncated from ${resultCount} to ${MAX_RESULT_ROWS} rows. Consider adding LIMIT/TOP clause to your query for better performance.`, consola.level >= 0 && logger4.warn(`Large result set truncated: ${resultCount} rows -> ${MAX_RESULT_ROWS} rows`)) : resultCount > WARN_RESULT_ROWS && (warningMessage = `
+
+⚠️ Note: Large result set (${resultCount} rows). Consider using LIMIT/TOP for better performance.`, consola.level >= 0 && logger4.warn(`Large result set: ${resultCount} rows`));
+        let resultText = formatCSV(results, warningMessage);
+        return queryCache.set(cacheKey2, {
+          result: resultText,
+          timestamp: now,
+          lastAccessed: now
+        }), enforceCacheSizeLimit(), consola.level >= 0 && logger4.debug(`Query result cached (cache size: ${queryCache.size}/${QUERY_CACHE_MAX_SIZE})`), {
           content: [
             {
               type: "text",
-              text: `Error: Write operation blocked by read-only transaction. This query attempted to modify data, which is not allowed in read-only mode. Original error: ${errorMessage}`
+              text: resultText
+            }
+          ]
+        };
+      } catch (error46) {
+        consola.level >= 0 && logger4.error("Error executing READ-ONLY SQL:", query, error46);
+        let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lowerErrorMsg = errorMessage.toLowerCase();
+        return lowerErrorMsg.includes("read only") || lowerErrorMsg.includes("cannot execute") || lowerErrorMsg.includes("not allowed") || lowerErrorMsg.includes("insert") || lowerErrorMsg.includes("update") || lowerErrorMsg.includes("delete") ? {
+          content: [
+            {
+              type: "text",
+              text: `Error: Write operation blocked. This MCP server is READ-ONLY and does not allow data modifications. Original error: ${errorMessage}`
             }
           ]
         } : {
@@ -80013,14 +80542,15 @@ var logger4 = consola.withTag("mssql-tools"), ExecuteSqlInputSchema = external_e
 // src/server/connection.ts
 var import_mssql = __toESM(require_mssql(), 1);
 var logger5 = consola.withTag("mssql-connection");
-function createConnectionPool(config2) {
+async function createConnectionPool(config2) {
   let mssqlConfig = {
     server: config2.server,
     database: config2.database,
     port: config2.port,
     pool: {
       max: 10,
-      min: 0,
+      min: 2,
+      // PERFORMANCE: Keep minimum 2 connections warm to avoid reconnection overhead
       idleTimeoutMillis: 3e4
     },
     options: {
@@ -80036,45 +80566,20 @@ function createConnectionPool(config2) {
       throw new Error("Username and password are required for SQL authentication");
     mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, logger5.info(`Configured for SQL Authentication as user: ${config2.user}`);
   }
-  let pool = new import_mssql.default.ConnectionPool(mssqlConfig), isConnected = !1;
-  return config2.accessMode === "readonly" && logger5.info("Connection configured for read-only access mode"), {
+  let pool = new import_mssql.default.ConnectionPool(mssqlConfig);
+  return logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), await pool.connect(), logger5.debug("Connection pool connected eagerly (READ-ONLY mode)"), {
     async query(sqlQuery) {
-      isConnected || (await pool.connect(), isConnected = !0, logger5.debug("Connection pool connected"));
       try {
-        return (await pool.request().query(sqlQuery)).recordset;
-      } catch (error45) {
-        throw logger5.error("Query execution failed:", error45), error45;
-      }
-    },
-    async queryWithTransaction(sqlQuery, readOnly = !1) {
-      if (isConnected || (await pool.connect(), isConnected = !0, logger5.debug("Connection pool connected")), readOnly)
-        try {
-          let result = await pool.request().query(sqlQuery);
-          return consola.level >= 0 && logger5.debug("Executed read-only query (no explicit transaction to avoid nesting)"), result.recordset;
-        } catch (error45) {
-          logger5.error("Read-only query execution failed:", error45);
-          let errorMessage = error45 instanceof Error ? error45.message : "Unknown error", lower = errorMessage.toLowerCase();
-          throw lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter") ? new Error(`Read-only mode violation: Attempted write operation detected. ${errorMessage}`) : error45;
-        }
-      try {
-        let request = pool.request(), currentTranCount = (await request.query("SELECT @@TRANCOUNT as trancount")).recordset[0]?.trancount || 0, result;
-        if (currentTranCount > 0)
-          result = await request.query(sqlQuery), consola.level >= 0 && logger5.debug("Executed write query within existing transaction");
-        else {
-          let transactionQuery = `
-						BEGIN TRANSACTION;
-						${sqlQuery};
-						COMMIT TRANSACTION;
-					`;
-          result = await request.query(transactionQuery), consola.level >= 0 && logger5.debug("Executed write query with new transaction");
-        }
-        return result.recordset;
-      } catch (error45) {
-        throw logger5.error("Write transaction query execution failed:", error45), error45;
+        let result = await pool.request().query(sqlQuery);
+        return logger5.debug("Read-only query executed successfully"), result.recordset;
+      } catch (error46) {
+        logger5.error("Query execution failed:", error46);
+        let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lower = errorMessage.toLowerCase();
+        throw lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter") ? new Error(`READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`) : error46;
       }
     },
     async close() {
-      isConnected && (await pool.close(), isConnected = !1, logger5.info("Connection pool closed"));
+      await pool.close(), logger5.info("Connection pool closed");
     }
   };
 }
@@ -80090,6 +80595,7 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   httpServer;
   pool;
   config;
+  httpTransport;
   constructor(config2 = {}) {
     this.config = {
       port: config2.port ?? 3003,
@@ -80127,11 +80633,10 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   }
   async start() {
     let dbConfig = getMssqlConfig();
-    this.pool = createConnectionPool(dbConfig);
     try {
-      await this.pool.query("SELECT 1 AS test"), this.config.stdio || serverLogger.success("Database connection established successfully");
-    } catch (error45) {
-      throw this.config.stdio || serverLogger.error("Failed to connect to database:", error45), new Error(`Database connection failed: ${error45 instanceof Error ? error45.message : "Unknown error"}`);
+      this.pool = await createConnectionPool(dbConfig), this.config.stdio || serverLogger.success("Database connection established successfully");
+    } catch (error46) {
+      throw this.config.stdio || serverLogger.error("Failed to connect to database:", error46), new Error(`Database connection failed: ${error46 instanceof Error ? error46.message : "Unknown error"}`);
     }
     if (this.config.stdio) {
       let transport = new StdioServerTransport();
@@ -80149,10 +80654,7 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         service: "mssql-mcp-server",
         version: "1.0.0"
-      })), this.app.all("/mcp", async (c3) => {
-        let transport = new StreamableHTTPTransport();
-        return await this.server.connect(transport), transport.handleRequest(c3);
-      }), this.httpServer = serve({
+      })), this.httpTransport = new StreamableHTTPTransport(), await this.server.connect(this.httpTransport), this.app.all("/mcp", async (c3) => this.httpTransport.handleRequest(c3)), this.httpServer = serve({
         fetch: this.app.fetch,
         port: this.config.port,
         hostname: this.config.host
@@ -80182,15 +80684,15 @@ program2.name("mssql-mcp").description("Microsoft SQL Server MCP Server").versio
     }), process.on("SIGTERM", async () => {
       options.stdio || consola.info("Shutting down MSSQL MCP server..."), await server.stop(), process.exit(0);
     });
-  } catch (error45) {
-    consola.error("Failed to start MSSQL MCP server:", error45), process.exit(1);
+  } catch (error46) {
+    consola.error("Failed to start MSSQL MCP server:", error46), process.exit(1);
   }
 });
-process.on("unhandledRejection", (error45) => {
-  consola.error("Unhandled promise rejection:", error45), process.exit(1);
+process.on("unhandledRejection", (error46) => {
+  consola.error("Unhandled promise rejection:", error46), process.exit(1);
 });
-process.on("uncaughtException", (error45) => {
-  consola.error("Uncaught exception:", error45), process.exit(1);
+process.on("uncaughtException", (error46) => {
+  consola.error("Uncaught exception:", error46), process.exit(1);
 });
 program2.parse();
 process.argv.slice(2).length || program2.outputHelp();

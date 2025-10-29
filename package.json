@@ -31,6 +31,7 @@
     "@hono/mcp": "^0.1.4",
     "@hono/node-server": "^1.19.3",
     "@modelcontextprotocol/sdk": "^1.18.2",
+    "@types/mssql": "^9.1.8",
     "@types/node": "^22.0.0",
     "commander": "^12.1.0",
     "consola": "^3.2.3",
@@ -48,6 +49,7 @@
   "scripts": {
     "build": "node --loader ts-node/esm src/scripts/bundle.ts",
     "clean": "rm -rf dist",
-    "dev": "node --loader ts-node/esm src/main.ts"
+    "dev": "node --loader ts-node/esm src/main.ts",
+    "test:security": "node --loader ts-node/esm src/tests/security.test.ts"
   }
 }

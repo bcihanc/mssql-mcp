@@ -37,12 +37,14 @@ const SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || '7200
 const FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || '14400000', 10); // 4 hours
 const RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || '14400000', 10); // 4 hours
 const COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || '7200000', 10); // 2 hours
+const INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_INDEXES_CACHE_TTL || '14400000', 10); // 4 hours
 
 // Cache size limits
 const SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || '200', 10);
 const FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || '100', 10);
 const RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || '100', 10);
 const COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || '100', 10);
+const INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_INDEXES_CACHE_SIZE || '200', 10);
 
 // Cache instances for each tool
 const listTablesCache = new Map<string, ToolCacheEntry>();
@@ -50,6 +52,7 @@ const tableSchemaCache = new Map<string, ToolCacheEntry>();
 const foreignKeysCache = new Map<string, ToolCacheEntry>();
 const relationshipsCache = new Map<string, ToolCacheEntry>();
 const columnsCache = new Map<string, ToolCacheEntry>();
+const indexesCache = new Map<string, ToolCacheEntry>();
 
 // Static cache for SQL Server version (never changes during runtime)
 let versionCache: string | null = null;
@@ -190,6 +193,12 @@ const GetTableRelationshipsInputSchema = z.object({
 	schema_name: z.string().optional().describe('Optional schema name (default: "dbo")'),
 });
 
+// Zod schema for get table indexes
+const GetTableIndexesInputSchema = z.object({
+	table_name: z.string().min(1).describe('The name of the table to get indexes for'),
+	schema_name: z.string().optional().describe('Optional schema name (default: "dbo")'),
+});
+
 export const MssqlTools = {
 	getToolDefinitions(): Tool[] {
 		return [
@@ -205,12 +214,12 @@ export const MssqlTools = {
 			},
 			{
 				name: 'list_tables',
-				description: 'List all tables in the database with their schema, row count, and size information. Optionally filter by schema name.',
+				description: 'List all tables and views in the database with their schema, type (TABLE/VIEW), row count, and size information. Optionally filter by schema name.',
 				inputSchema: z.toJSONSchema(ListTablesInputSchema) as any,
 			},
 			{
 				name: 'get_table_schema',
-				description: 'Get detailed schema information for a specific table including column names, data types, nullability, default values, and constraints.',
+				description: 'Get detailed schema information for a specific table including column names, data types, nullability, default values, and constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE). Also shows computed columns with their expressions.',
 				inputSchema: z.toJSONSchema(GetTableSchemaInputSchema) as any,
 			},
 			{
@@ -227,6 +236,11 @@ export const MssqlTools = {
 				name: 'get_table_relationships',
 				description: 'Get all parent and child table relationships for a specific table, showing foreign key connections.',
 				inputSchema: z.toJSONSchema(GetTableRelationshipsInputSchema) as any,
+			},
+			{
+				name: 'get_table_indexes',
+				description: 'Get all indexes for a specific table including index type, columns, uniqueness, and whether it is a primary key. Essential for performance troubleshooting.',
+				inputSchema: z.toJSONSchema(GetTableIndexesInputSchema) as any,
 			},
 		];
 	},
@@ -254,6 +268,10 @@ export const MssqlTools = {
 
 		if (name === 'get_table_relationships') {
 			return this.handleGetTableRelationships(args, pool);
+		}
+
+		if (name === 'get_table_indexes') {
+			return this.handleGetTableIndexes(args, pool);
 		}
 
 		if (name === 'exec_sql_csv') {
@@ -338,16 +356,16 @@ export const MssqlTools = {
 			}
 
 			if (consola.level >= 0) {
-				logger.info(`Listing tables${schemaFilter ? ` for schema: ${schemaFilter}` : ' (all schemas)'}`);
+				logger.info(`Listing tables and views${schemaFilter ? ` for schema: ${schemaFilter}` : ' (all schemas)'}`);
 			}
 
-			let query = 'SELECT t.TABLE_SCHEMA AS [Schema], t.TABLE_NAME AS [Table], p.rows AS [RowCount], CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS DECIMAL(18,2)) AS [SizeMB] FROM INFORMATION_SCHEMA.TABLES t INNER JOIN sys.tables st ON t.TABLE_NAME = st.name INNER JOIN sys.indexes i ON st.object_id = i.object_id INNER JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id INNER JOIN sys.allocation_units a ON p.partition_id = a.container_id WHERE t.TABLE_TYPE = \'BASE TABLE\' AND i.index_id <= 1';
+			let query = 'SELECT t.TABLE_SCHEMA AS [Schema], t.TABLE_NAME AS [Name], t.TABLE_TYPE AS [Type], COALESCE(p.rows, 0) AS [RowCount], COALESCE(CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS DECIMAL(18,2)), 0.00) AS [SizeMB] FROM INFORMATION_SCHEMA.TABLES t LEFT JOIN sys.tables st ON t.TABLE_NAME = st.name AND t.TABLE_SCHEMA = SCHEMA_NAME(st.schema_id) LEFT JOIN sys.indexes i ON st.object_id = i.object_id AND i.index_id <= 1 LEFT JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id LEFT JOIN sys.allocation_units a ON p.partition_id = a.container_id WHERE t.TABLE_TYPE IN (\'BASE TABLE\', \'VIEW\')';
 
 			if (schemaFilter) {
 				query += ` AND t.TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`;
 			}
 
-			query += ' GROUP BY t.TABLE_SCHEMA, t.TABLE_NAME, p.rows ORDER BY t.TABLE_SCHEMA, t.TABLE_NAME';
+			query += ' GROUP BY t.TABLE_SCHEMA, t.TABLE_NAME, t.TABLE_TYPE, p.rows ORDER BY t.TABLE_SCHEMA, t.TABLE_TYPE, t.TABLE_NAME';
 
 			try {
 				const results = await pool.query(query);
@@ -358,8 +376,8 @@ export const MssqlTools = {
 							{
 								type: 'text',
 								text: schemaFilter
-									? `No tables found in schema: ${schemaFilter}`
-									: 'No tables found in database',
+									? `No tables or views found in schema: ${schemaFilter}`
+									: 'No tables or views found in database',
 							},
 						],
 					};
@@ -377,7 +395,7 @@ export const MssqlTools = {
 				});
 
 				if (consola.level >= 0) {
-					logger.info(`Found ${results.length} table(s) - result cached`);
+					logger.info(`Found ${results.length} table(s)/view(s) - result cached`);
 				}
 
 				return {
@@ -396,7 +414,7 @@ export const MssqlTools = {
 					content: [
 						{
 							type: 'text',
-							text: `Error listing tables: ${error instanceof Error ? error.message : 'Unknown error'}`,
+							text: `Error listing tables and views: ${error instanceof Error ? error.message : 'Unknown error'}`,
 						},
 					],
 				};
@@ -445,7 +463,7 @@ export const MssqlTools = {
 				logger.info(`Getting schema for table: ${schemaName}.${tableName}`);
 			}
 
-			const query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], c.ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
+			const query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], CASE WHEN uq.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [UniqueKey], CASE WHEN cc.column_id IS NOT NULL THEN 'YES' ELSE 'NO' END AS [Computed], cc.definition AS [ComputedExpression], c.ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'UNIQUE') uq ON c.TABLE_SCHEMA = uq.TABLE_SCHEMA AND c.TABLE_NAME = uq.TABLE_NAME AND c.COLUMN_NAME = uq.COLUMN_NAME LEFT JOIN sys.computed_columns cc ON cc.object_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND cc.name = c.COLUMN_NAME WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
 
 			try {
 				const results = await pool.query(query);
@@ -777,6 +795,96 @@ export const MssqlTools = {
 						{
 							type: 'text',
 							text: `Error getting table relationships: ${error instanceof Error ? error.message : 'Unknown error'}`,
+						},
+					],
+				};
+			}
+		} catch (validationError) {
+			if (consola.level >= 0) {
+				logger.error('Invalid input arguments:', validationError);
+			}
+			return {
+				content: [
+					{
+						type: 'text',
+						text: `Invalid arguments: ${validationError instanceof Error ? validationError.message : 'Unknown validation error'}`,
+					},
+				],
+			};
+		}
+	},
+
+	async handleGetTableIndexes(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const validatedArgs = GetTableIndexesInputSchema.parse(args);
+			const tableName = validatedArgs.table_name;
+			const schemaName = validatedArgs.schema_name || 'dbo';
+
+			// PERFORMANCE: Generate cache key based on schema and table name
+			const cacheKey = `${schemaName}:${tableName}`;
+
+			// Check cache first
+			const cachedResult = getFromToolCache(indexesCache, cacheKey, INDEXES_CACHE_TTL_MS);
+			if (cachedResult !== null) {
+				if (consola.level >= 0) {
+					logger.debug(`Returning cached indexes for: ${schemaName}.${tableName}`);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: cachedResult + '\n\n📋 (Cached result)',
+						},
+					],
+				};
+			}
+
+			if (consola.level >= 0) {
+				logger.info(`Getting indexes for table: ${schemaName}.${tableName}`);
+			}
+
+			const query = `SELECT i.name AS [IndexName], i.type_desc AS [IndexType], CASE WHEN i.is_unique = 1 THEN \'YES\' ELSE \'NO\' END AS [IsUnique], CASE WHEN i.is_primary_key = 1 THEN \'YES\' ELSE \'NO\' END AS [IsPrimaryKey], c.name AS [ColumnName], ic.key_ordinal AS [KeyOrdinal], CASE WHEN ic.is_included_column = 1 THEN \'YES\' ELSE \'NO\' END AS [IsIncluded] FROM sys.indexes i INNER JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id INNER JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id INNER JOIN sys.tables t ON i.object_id = t.object_id WHERE SCHEMA_NAME(t.schema_id) = '${schemaName.replace(/'/g, "''")}' AND t.name = '${tableName.replace(/'/g, "''")}' ORDER BY i.name, ic.key_ordinal`;
+
+			try {
+				const results = await pool.query(query);
+
+				if (!results || results.length === 0) {
+					return {
+						content: [
+							{
+								type: 'text',
+								text: `No indexes found for table: ${schemaName}.${tableName}`,
+							},
+						],
+					};
+				}
+
+				const csvText = formatCSV(results);
+
+				// PERFORMANCE: Cache the result with LRU eviction
+				setInToolCache(indexesCache, cacheKey, csvText, INDEXES_CACHE_MAX_SIZE, 'table_indexes');
+
+				if (consola.level >= 0) {
+					logger.info(`Found ${results.length} index column(s) for table ${schemaName}.${tableName} - result cached`);
+				}
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: csvText,
+						},
+					],
+				};
+			} catch (error) {
+				if (consola.level >= 0) {
+					logger.error('Error executing query:', error);
+				}
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Error getting table indexes: ${error instanceof Error ? error.message : 'Unknown error'}`,
 						},
 					],
 				};
