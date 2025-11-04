@@ -157,6 +157,10 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 				});
 
 				// FIRST: Check if this is a schema/syntax error (not a write operation)
+				// CRITICAL: This check MUST come BEFORE write operation check
+				// Reason: Error messages can contain both schema AND write keywords
+				// Example: "Invalid object name 'Users'. Cannot UPDATE column CreateTime."
+				//          ↑ Schema error (table doesn't exist), NOT a write operation
 				// These errors can contain keywords like "create" in column names (e.g., "CreateTime")
 				// and should NOT be treated as write operation violations
 				if (
@@ -165,6 +169,7 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 					|| lower.includes('incorrect syntax near')
 					|| lower.includes('could not find stored procedure')
 					|| lower.includes('must declare')
+					|| lower.includes('ambiguous column name')
 				) {
 					// This is a schema/syntax error, not a write operation - throw as-is
 					throw error;

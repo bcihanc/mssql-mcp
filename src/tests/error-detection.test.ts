@@ -8,12 +8,14 @@ function detectErrorType(errorMessage: string): 'schema' | 'write' | 'other' {
 	const lower = errorMessage.toLowerCase();
 
 	// FIRST: Check if this is a schema/syntax error
+	// CRITICAL: This check MUST come BEFORE write operation check
 	if (
 		lower.includes('invalid column name')
 		|| lower.includes('invalid object name')
 		|| lower.includes('incorrect syntax near')
 		|| lower.includes('could not find stored procedure')
 		|| lower.includes('must declare')
+		|| lower.includes('ambiguous column name')
 	) {
 		return 'schema';
 	}
@@ -100,6 +102,36 @@ const testCases = [
 		errorMessage: 'Connection timeout occurred.',
 		expectedType: 'other',
 		description: 'Should detect as other error',
+	},
+	{
+		name: 'Schema error - ambiguous column name with CREATE keyword',
+		errorMessage: "Ambiguous column name 'CreateDate'.",
+		expectedType: 'schema',
+		description: 'Should detect as schema error, NOT write operation',
+	},
+	{
+		name: 'Permission denied - SELECT operation',
+		errorMessage: "The SELECT permission was denied on the object 'RestrictedTable'.",
+		expectedType: 'other',
+		description: 'Should detect as other error, NOT write operation',
+	},
+	{
+		name: 'Multi-line error with CREATE keyword',
+		errorMessage: "Invalid object name 'Users'.\nCannot find column 'CreateTime'.",
+		expectedType: 'schema',
+		description: 'Should detect as schema error despite multiline format',
+	},
+	{
+		name: 'Schema error - ambiguous column with UPDATE keyword',
+		errorMessage: "Ambiguous column name 'UpdatedAt'.",
+		expectedType: 'schema',
+		description: 'Should detect as schema error, NOT write operation',
+	},
+	{
+		name: 'Schema error - ambiguous column with INSERT keyword',
+		errorMessage: "Ambiguous column name 'InsertedBy'.",
+		expectedType: 'schema',
+		description: 'Should detect as schema error, NOT write operation',
 	},
 ];
 
