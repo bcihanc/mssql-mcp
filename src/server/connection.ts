@@ -147,7 +147,7 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 					logger.error('Query execution failed:', error);
 				}
 
-				// Check if this looks like a write operation that was blocked
+				// Get error message for analysis
 				const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 				const lower = errorMessage.toLowerCase();
 
@@ -156,6 +156,21 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 					query: sqlQuery.substring(0, 200),
 				});
 
+				// FIRST: Check if this is a schema/syntax error (not a write operation)
+				// These errors can contain keywords like "create" in column names (e.g., "CreateTime")
+				// and should NOT be treated as write operation violations
+				if (
+					lower.includes('invalid column name')
+					|| lower.includes('invalid object name')
+					|| lower.includes('incorrect syntax near')
+					|| lower.includes('could not find stored procedure')
+					|| lower.includes('must declare')
+				) {
+					// This is a schema/syntax error, not a write operation - throw as-is
+					throw error;
+				}
+
+				// SECOND: Check if this looks like a write operation that was blocked
 				if (
 					lower.includes('insert')
 					|| lower.includes('update')
@@ -170,6 +185,7 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 					throw new Error(writeError);
 				}
 
+				// Other errors: throw as-is
 				throw error;
 			}
 		},

@@ -80702,7 +80702,9 @@ async function createConnectionPool(config2) {
         if (fileLogger.error("Query execution failed", {
           errorMessage,
           query: sqlQuery.substring(0, 200)
-        }), lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter")) {
+        }), lower.includes("invalid column name") || lower.includes("invalid object name") || lower.includes("incorrect syntax near") || lower.includes("could not find stored procedure") || lower.includes("must declare"))
+          throw error46;
+        if (lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter")) {
           let writeError = `READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`;
           throw fileLogger.error(writeError), new Error(writeError);
         }
