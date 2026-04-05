@@ -1,9 +1,9 @@
 {
-  "name": "@wener/mssql-mcp",
+  "name": "@bcihanc/mssql-mcp",
   "version": "1.0.1",
   "type": "module",
   "description": "Microsoft SQL Server MCP (Model Context Protocol) server with SQL query execution and Windows Authentication support",
-  "author": "wener",
+  "author": "Cihan",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

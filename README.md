@@ -1,33 +1,39 @@
-# @wener/mssql-mcp
+# @bcihanc/mssql-mcp
 
 A secure, **READ-ONLY** Microsoft SQL Server MCP (Model Context Protocol) server that enables Claude Desktop to safely query SQL Server databases through natural language.
 
-[![npm version](https://badge.fury.io/js/%40wener%2Fmssql-mcp.svg)](https://www.npmjs.com/package/@wener/mssql-mcp)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
 ## 🚀 Quick Start
 
-### Install and Run with npx (Recommended)
+### Install and Run with npx from GitHub
 
 ```bash
-# Run directly without installation
-npx @wener/mssql-mcp --help
+# Run directly from GitHub (no installation required)
+npx -y github:bcihanc/mssql-mcp --help
 
 # Start with environment variables
-MSSQL_SERVER=localhost MSSQL_DATABASE=mydb MSSQL_USER=sa MSSQL_PASSWORD=password npx @wener/mssql-mcp --stdio
+MSSQL_SERVER=localhost MSSQL_DATABASE=mydb MSSQL_USER=sa MSSQL_PASSWORD=password npx -y github:bcihanc/mssql-mcp --stdio
 
-# Start with environment file
-npx @wener/mssql-mcp --env-file .env --stdio
+# Start with environment file (recommended)
+npx -y github:bcihanc/mssql-mcp --env-file .env --stdio
 ```
 
-### Global Installation
+### Clone and Run Locally
 
 ```bash
-# Install globally
-npm install -g @wener/mssql-mcp
+# Clone the repository
+git clone https://github.com/bcihanc/mssql-mcp.git
+cd mssql-mcp
 
-# Run from anywhere
-mssql-mcp --help
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Run
+node dist/main.mjs --env-file .env --stdio
 ```
 
 ## ✨ Features
@@ -67,20 +73,51 @@ MSSQL_ENCRYPT=false         # Set 'true' for Azure SQL (auto-enabled for *.datab
 
 Add to your `claude_desktop_config.json`:
 
+**Option 1: Run from GitHub (Recommended)**
 ```json
 {
   "mcpServers": {
     "mssql": {
       "command": "npx",
-      "args": ["@wener/mssql-mcp", "--env-file", "/path/to/your/.env", "--stdio"]
+      "args": ["-y", "github:bcihanc/mssql-mcp", "--env-file", "/path/to/your/.env", "--stdio"]
     }
   }
 }
 ```
 
-#### Windows (Recommended Configuration)
+**Option 2: Run from Local Clone**
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "node",
+      "args": [
+        "/path/to/mssql-mcp/dist/main.mjs",
+        "--stdio",
+        "--env-file",
+        "/path/to/your/.env"
+      ]
+    }
+  }
+}
+```
 
-**RECOMMENDED:** Use Node.js directly for better STDIO compatibility:
+#### Windows
+
+**Option 1: Run from GitHub (Recommended)**
+
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "npx",
+      "args": ["-y", "github:bcihanc/mssql-mcp", "--env-file", "C:/path/to/your/.env", "--stdio"]
+    }
+  }
+}
+```
+
+**Option 2: Run from Local Clone (Better STDIO compatibility)**
 
 ```json
 {
@@ -88,24 +125,11 @@ Add to your `claude_desktop_config.json`:
     "mssql": {
       "command": "node",
       "args": [
-        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@wener/mssql-mcp/dist/main.mjs",
+        "C:/path/to/mssql-mcp/dist/main.mjs",
         "--stdio",
         "--env-file",
         "C:/path/to/your/.env"
       ]
-    }
-  }
-}
-```
-
-**Alternative (using npx - may have STDIO issues on some systems):**
-
-```json
-{
-  "mcpServers": {
-    "mssql": {
-      "command": "npx",
-      "args": ["@wener/mssql-mcp", "--env-file", "C:/path/to/your/.env", "--stdio"]
     }
   }
 }
@@ -380,13 +404,21 @@ Claude will automatically:
 ### STDIO Mode (Claude Desktop)
 
 ```bash
-mssql-mcp --stdio --env-file .env
+# From GitHub
+npx -y github:bcihanc/mssql-mcp --stdio --env-file .env
+
+# From local clone
+node dist/main.mjs --stdio --env-file .env
 ```
 
 ### HTTP Mode (Development)
 
 ```bash
-mssql-mcp --port 3003 --host localhost --env-file .env
+# From GitHub
+npx -y github:bcihanc/mssql-mcp --port 3003 --host localhost --env-file .env
+
+# From local clone
+node dist/main.mjs --port 3003 --host localhost --env-file .env
 ```
 
 ### Command Options
@@ -403,8 +435,11 @@ mssql-mcp --port 3003 --host localhost --env-file .env
 ### Connection Issues
 
 ```bash
-# Test connection
-mssql-mcp --verbose --env-file .env
+# Test connection - from GitHub
+npx -y github:bcihanc/mssql-mcp --verbose --env-file .env
+
+# Test connection - from local clone
+node dist/main.mjs --verbose --env-file .env
 
 # Check SQL Server is running
 sqlcmd -S localhost -U sa -P yourpassword -Q "SELECT @@VERSION"
@@ -420,8 +455,11 @@ sqlcmd -S localhost -U sa -P yourpassword -Q "SELECT @@VERSION"
 ### Debug Mode
 
 ```bash
-# Enable verbose logging
-mssql-mcp --verbose --stdio --env-file .env
+# Enable verbose logging - from GitHub
+npx -y github:bcihanc/mssql-mcp --verbose --stdio --env-file .env
+
+# Enable verbose logging - from local clone
+node dist/main.mjs --verbose --stdio --env-file .env
 ```
 
 ## 📚 Example Databases
@@ -467,7 +505,7 @@ MIT License - feel free to use in personal and commercial projects.
 
 ## 🤝 Contributing
 
-Issues and feature requests are welcome on [GitHub](https://github.com/wenerme/wode).
+Issues and feature requests are welcome on [GitHub](https://github.com/bcihanc/mssql-mcp).
 
 ## 🔗 Related Projects
 

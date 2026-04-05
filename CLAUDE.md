@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-@wener/mssql-mcp is a **READ-ONLY** Model Context Protocol (MCP) server that enables AI assistants like Claude to safely query Microsoft SQL Server databases. The server provides read-only SQL query execution, database browsing, and schema inspection capabilities.
+@bcihanc/mssql-mcp is a **READ-ONLY** Model Context Protocol (MCP) server that enables AI assistants like Claude to safely query Microsoft SQL Server databases. The server provides read-only SQL query execution, database browsing, and schema inspection capabilities.
 
 **IMPORTANT: This MCP server is designed to be READ-ONLY by default. Write operations (INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, etc.) are strictly prohibited and blocked at multiple layers for security.**
 
@@ -58,7 +58,7 @@ The MCP server is fully compatible with Windows. Recent changes ensure cross-pla
     "mssql": {
       "command": "node",
       "args": [
-        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@wener/mssql-mcp/dist/main.mjs",
+        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@bcihanc/mssql-mcp/dist/main.mjs",
         "--stdio",
         "--env-file",
         "C:/path/to/your/.env"
@@ -74,7 +74,7 @@ The MCP server is fully compatible with Windows. Recent changes ensure cross-pla
   "mcpServers": {
     "mssql": {
       "command": "npx",
-      "args": ["@wener/mssql-mcp", "--env-file", "C:/path/to/your/.env", "--stdio"]
+      "args": ["@bcihanc/mssql-mcp", "--env-file", "C:/path/to/your/.env", "--stdio"]
     }
   }
 }
@@ -119,7 +119,7 @@ File logging is **automatically enabled** to help diagnose issues without interf
     "mssql": {
       "command": "node",
       "args": [
-        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@wener/mssql-mcp/dist/main.mjs",
+        "C:/Users/USERNAME/AppData/Roaming/npm/node_modules/@bcihanc/mssql-mcp/dist/main.mjs",
         "--stdio",
         "--env-file",
         "C:/path/to/your/.env"
@@ -161,7 +161,7 @@ File logging is **automatically enabled** to help diagnose issues without interf
 
 **Log File Location:**
 - **Default**: `logs/` subdirectory in project root
-  - Global install: `%APPDATA%\npm\node_modules\@wener\mssql-mcp\logs\mssql-mcp-*.log`
+  - Global install: `%APPDATA%\npm\node_modules\@bcihanc\mssql-mcp\logs\mssql-mcp-*.log`
   - Local/dev: Your project directory (e.g., `C:\mcp\mssql-mcp\logs\mssql-mcp-*.log`)
 - **Custom**: Specified via `MSSQL_MCP_LOG_DIR`
 - **Filename format**: `logs/mssql-mcp-YYYY-MM-DDTHH-MM-SS-sssZ.log`
@@ -183,11 +183,11 @@ ls -lt logs/mssql-mcp-*.log | head -1
 If using global npm installation:
 ```bash
 # Windows (PowerShell)
-cd $env:APPDATA\npm\node_modules\@wener\mssql-mcp
+cd $env:APPDATA\npm\node_modules\@bcihanc\mssql-mcp
 Get-ChildItem logs\mssql-mcp-*.log | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 
 # macOS/Linux
-cd $(npm root -g)/@wener/mssql-mcp
+cd $(npm root -g)/@bcihanc/mssql-mcp
 ls -lt logs/mssql-mcp-*.log | head -1
 ```
 
@@ -536,7 +536,7 @@ Custom esbuild bundler ([src/scripts/bundle.ts](src/scripts/bundle.ts)):
 
 ## NPM Package
 
-- Package name: `@wener/mssql-mcp`
+- Package name: `@bcihanc/mssql-mcp`
 - Binary: `mssql-mcp` points to `dist/main.mjs`
-- Can be run with `npx @wener/mssql-mcp`
+- Can be run with `npx @bcihanc/mssql-mcp`
 - Published to npm with public access
