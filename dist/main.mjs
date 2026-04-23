@@ -6520,13 +6520,13 @@ var require_ajv = __commonJS({
     }
     __name(getMetaSchemaOptions, "getMetaSchemaOptions");
     function setLogger(self2) {
-      var logger7 = self2._opts.logger;
-      if (logger7 === !1)
+      var logger8 = self2._opts.logger;
+      if (logger8 === !1)
         self2.logger = { log: noop, warn: noop, error: noop };
       else {
-        if (logger7 === void 0 && (logger7 = console), !(typeof logger7 == "object" && logger7.log && logger7.warn && logger7.error))
+        if (logger8 === void 0 && (logger8 = console), !(typeof logger8 == "object" && logger8.log && logger8.warn && logger8.error))
           throw new Error("logger must implement log, warn and error methods");
-        self2.logger = logger7;
+        self2.logger = logger8;
       }
     }
     __name(setLogger, "setLogger");
@@ -11272,8 +11272,8 @@ var require_errors = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AuthenticationRequiredError = exports.AggregateAuthenticationError = exports.AggregateAuthenticationErrorName = exports.AuthenticationError = exports.AuthenticationErrorName = exports.CredentialUnavailableError = exports.CredentialUnavailableErrorName = void 0;
-    function isErrorResponse(errorResponse2) {
-      return errorResponse2 && typeof errorResponse2.error == "string" && typeof errorResponse2.error_description == "string";
+    function isErrorResponse(errorResponse3) {
+      return errorResponse3 && typeof errorResponse3.error == "string" && typeof errorResponse3.error_description == "string";
     }
     __name(isErrorResponse, "isErrorResponse");
     exports.CredentialUnavailableErrorName = "CredentialUnavailableError";
@@ -11300,23 +11300,23 @@ var require_errors = __commonJS({
        */
       errorResponse;
       constructor(statusCode, errorBody, options) {
-        let errorResponse2 = {
+        let errorResponse3 = {
           error: "unknown",
           errorDescription: "An unknown error occurred and no additional details are available."
         };
         if (isErrorResponse(errorBody))
-          errorResponse2 = convertOAuthErrorResponseToErrorResponse(errorBody);
+          errorResponse3 = convertOAuthErrorResponseToErrorResponse(errorBody);
         else if (typeof errorBody == "string")
           try {
             let oauthErrorResponse = JSON.parse(errorBody);
-            errorResponse2 = convertOAuthErrorResponseToErrorResponse(oauthErrorResponse);
+            errorResponse3 = convertOAuthErrorResponseToErrorResponse(oauthErrorResponse);
           } catch {
-            statusCode === 400 ? errorResponse2 = {
+            statusCode === 400 ? errorResponse3 = {
               error: "invalid_request",
               errorDescription: `The service indicated that the request was invalid.
 
 ${errorBody}`
-            } : errorResponse2 = {
+            } : errorResponse3 = {
               error: "unknown_error",
               errorDescription: `An unknown error has occurred. Response body:
 
@@ -11324,13 +11324,13 @@ ${errorBody}`
             };
           }
         else
-          errorResponse2 = {
+          errorResponse3 = {
             error: "unknown_error",
             errorDescription: "An unknown error occurred and no additional details are available."
           };
-        super(`${errorResponse2.error} Status code: ${statusCode}
+        super(`${errorResponse3.error} Status code: ${statusCode}
 More details:
-${errorResponse2.errorDescription},`, options), this.statusCode = statusCode, this.errorResponse = errorResponse2, this.name = exports.AuthenticationErrorName;
+${errorResponse3.errorDescription},`, options), this.statusCode = statusCode, this.errorResponse = errorResponse3, this.name = exports.AuthenticationErrorName;
       }
     };
     exports.AuthenticationError = AuthenticationError;
@@ -11536,24 +11536,24 @@ var require_logger = __commonJS({
           throw new Error(`Unknown log level '${level}'. Acceptable values: ${TYPESPEC_RUNTIME_LOG_LEVELS.join(",")}`);
         logLevel = level;
         let enabledNamespaces = [];
-        for (let logger7 of registeredLoggers)
-          shouldEnable(logger7) && enabledNamespaces.push(logger7.namespace);
+        for (let logger8 of registeredLoggers)
+          shouldEnable(logger8) && enabledNamespaces.push(logger8.namespace);
         debug_js_1.default.enable(enabledNamespaces.join(","));
       }
       __name(contextSetLogLevel, "contextSetLogLevel"), logLevelFromEnv && (isTypeSpecRuntimeLogLevel(logLevelFromEnv) ? contextSetLogLevel(logLevelFromEnv) : console.error(`${options.logLevelEnvVarName} set to unknown log level '${logLevelFromEnv}'; logging is not enabled. Acceptable values: ${TYPESPEC_RUNTIME_LOG_LEVELS.join(", ")}.`));
-      function shouldEnable(logger7) {
-        return !!(logLevel && levelMap[logger7.level] <= levelMap[logLevel]);
+      function shouldEnable(logger8) {
+        return !!(logLevel && levelMap[logger8.level] <= levelMap[logLevel]);
       }
       __name(shouldEnable, "shouldEnable");
       function createLogger(parent, level) {
-        let logger7 = Object.assign(parent.extend(level), {
+        let logger8 = Object.assign(parent.extend(level), {
           level
         });
-        if (patchLogMethod(parent, logger7), shouldEnable(logger7)) {
+        if (patchLogMethod(parent, logger8), shouldEnable(logger8)) {
           let enabledNamespaces = debug_js_1.default.disable();
-          debug_js_1.default.enable(enabledNamespaces + "," + logger7.namespace);
+          debug_js_1.default.enable(enabledNamespaces + "," + logger8.namespace);
         }
-        return registeredLoggers.add(logger7), logger7;
+        return registeredLoggers.add(logger8), logger8;
       }
       __name(createLogger, "createLogger");
       function contextGetLogLevel() {
@@ -13244,21 +13244,21 @@ var require_index_node_D8Iaiqq3 = __commonJS({
         InstanceDiscoveryMetadataAliases.add(alias);
       });
     });
-    function getAliasesFromStaticSources(staticAuthorityOptions, logger7) {
+    function getAliasesFromStaticSources(staticAuthorityOptions, logger8) {
       let staticAliases, canonicalAuthority = staticAuthorityOptions.canonicalAuthority;
       if (canonicalAuthority) {
         let authorityHost = new UrlString(canonicalAuthority).getUrlComponents().HostNameAndPort;
-        staticAliases = getAliasesFromMetadata(authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource.CONFIG, logger7) || getAliasesFromMetadata(authorityHost, InstanceDiscoveryMetadata.metadata, AuthorityMetadataSource.HARDCODED_VALUES, logger7) || staticAuthorityOptions.knownAuthorities;
+        staticAliases = getAliasesFromMetadata(authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource.CONFIG, logger8) || getAliasesFromMetadata(authorityHost, InstanceDiscoveryMetadata.metadata, AuthorityMetadataSource.HARDCODED_VALUES, logger8) || staticAuthorityOptions.knownAuthorities;
       }
       return staticAliases || [];
     }
     __name(getAliasesFromStaticSources, "getAliasesFromStaticSources");
-    function getAliasesFromMetadata(authorityHost, cloudDiscoveryMetadata, source, logger7) {
-      if (logger7?.trace(`getAliasesFromMetadata called with source: ${source}`), authorityHost && cloudDiscoveryMetadata) {
+    function getAliasesFromMetadata(authorityHost, cloudDiscoveryMetadata, source, logger8) {
+      if (logger8?.trace(`getAliasesFromMetadata called with source: ${source}`), authorityHost && cloudDiscoveryMetadata) {
         let metadata = getCloudDiscoveryMetadataFromNetworkResponse(cloudDiscoveryMetadata, authorityHost);
         if (metadata)
-          return logger7?.trace(`getAliasesFromMetadata: found cloud discovery metadata in ${source}, returning aliases`), metadata.aliases;
-        logger7?.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in ${source}`);
+          return logger8?.trace(`getAliasesFromMetadata: found cloud discovery metadata in ${source}, returning aliases`), metadata.aliases;
+        logger8?.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in ${source}`);
       }
       return null;
     }
@@ -13813,8 +13813,8 @@ var require_index_node_D8Iaiqq3 = __commonJS({
       "currRefreshCount",
       "expiredCacheRemovedCount",
       "upgradedCacheCount"
-    ]), invoke = /* @__PURE__ */ __name((callback, eventName, logger7, telemetryClient, correlationId) => (...args) => {
-      logger7.trace(`Executing function ${eventName}`);
+    ]), invoke = /* @__PURE__ */ __name((callback, eventName, logger8, telemetryClient, correlationId) => (...args) => {
+      logger8.trace(`Executing function ${eventName}`);
       let inProgressEvent = telemetryClient?.startMeasurement(eventName, correlationId);
       if (correlationId) {
         let eventCount = eventName + "CallCount";
@@ -13824,33 +13824,33 @@ var require_index_node_D8Iaiqq3 = __commonJS({
         let result = callback(...args);
         return inProgressEvent?.end({
           success: !0
-        }), logger7.trace(`Returning result from ${eventName}`), result;
+        }), logger8.trace(`Returning result from ${eventName}`), result;
       } catch (e2) {
-        logger7.trace(`Error occurred in ${eventName}`);
+        logger8.trace(`Error occurred in ${eventName}`);
         try {
-          logger7.trace(JSON.stringify(e2));
+          logger8.trace(JSON.stringify(e2));
         } catch {
-          logger7.trace("Unable to print error message.");
+          logger8.trace("Unable to print error message.");
         }
         throw inProgressEvent?.end({
           success: !1
         }, e2), e2;
       }
-    }, "invoke"), invokeAsync = /* @__PURE__ */ __name((callback, eventName, logger7, telemetryClient, correlationId) => (...args) => {
-      logger7.trace(`Executing function ${eventName}`);
+    }, "invoke"), invokeAsync = /* @__PURE__ */ __name((callback, eventName, logger8, telemetryClient, correlationId) => (...args) => {
+      logger8.trace(`Executing function ${eventName}`);
       let inProgressEvent = telemetryClient?.startMeasurement(eventName, correlationId);
       if (correlationId) {
         let eventCount = eventName + "CallCount";
         telemetryClient?.incrementFields({ [eventCount]: 1 }, correlationId);
       }
-      return telemetryClient?.setPreQueueTime(eventName, correlationId), callback(...args).then((response) => (logger7.trace(`Returning result from ${eventName}`), inProgressEvent?.end({
+      return telemetryClient?.setPreQueueTime(eventName, correlationId), callback(...args).then((response) => (logger8.trace(`Returning result from ${eventName}`), inProgressEvent?.end({
         success: !0
       }), response)).catch((e2) => {
-        logger7.trace(`Error occurred in ${eventName}`);
+        logger8.trace(`Error occurred in ${eventName}`);
         try {
-          logger7.trace(JSON.stringify(e2));
+          logger8.trace(JSON.stringify(e2));
         } catch {
-          logger7.trace("Unable to print error message.");
+          logger8.trace("Unable to print error message.");
         }
         throw inProgressEvent?.end({
           success: !1
@@ -13860,8 +13860,8 @@ var require_index_node_D8Iaiqq3 = __commonJS({
       static {
         __name(this, "RegionDiscovery");
       }
-      constructor(networkInterface, logger7, performanceClient, correlationId) {
-        this.networkInterface = networkInterface, this.logger = logger7, this.performanceClient = performanceClient, this.correlationId = correlationId;
+      constructor(networkInterface, logger8, performanceClient, correlationId) {
+        this.networkInterface = networkInterface, this.logger = logger8, this.performanceClient = performanceClient, this.correlationId = correlationId;
       }
       /**
        * Detect the region from the application's environment.
@@ -14096,12 +14096,12 @@ var require_index_node_D8Iaiqq3 = __commonJS({
       static {
         __name(this, "Authority");
       }
-      constructor(authority, networkInterface, cacheManager, authorityOptions, logger7, correlationId, performanceClient, managedIdentity) {
+      constructor(authority, networkInterface, cacheManager, authorityOptions, logger8, correlationId, performanceClient, managedIdentity) {
         this.canonicalAuthority = authority, this._canonicalAuthority.validateAsUri(), this.networkInterface = networkInterface, this.cacheManager = cacheManager, this.authorityOptions = authorityOptions, this.regionDiscoveryMetadata = {
           region_used: void 0,
           region_source: void 0,
           region_outcome: void 0
-        }, this.logger = logger7, this.performanceClient = performanceClient, this.correlationId = correlationId, this.managedIdentity = managedIdentity || !1, this.regionDiscovery = new RegionDiscovery(networkInterface, this.logger, this.performanceClient, this.correlationId);
+        }, this.logger = logger8, this.performanceClient = performanceClient, this.correlationId = correlationId, this.managedIdentity = managedIdentity || !1, this.regionDiscovery = new RegionDiscovery(networkInterface, this.logger, this.performanceClient, this.correlationId);
       }
       /**
        * Get {@link AuthorityType}
@@ -14646,11 +14646,11 @@ Error Description: ${typedError.message}`);
       };
     }
     __name(buildStaticAuthorityOptions, "buildStaticAuthorityOptions");
-    async function createDiscoveredInstance(authorityUri, networkClient, cacheManager, authorityOptions, logger7, correlationId, performanceClient) {
+    async function createDiscoveredInstance(authorityUri, networkClient, cacheManager, authorityOptions, logger8, correlationId, performanceClient) {
       performanceClient?.addQueueMeasurement(PerformanceEvents.AuthorityFactoryCreateDiscoveredInstance, correlationId);
-      let authorityUriFinal = Authority.transformCIAMAuthority(formatAuthorityUri(authorityUri)), acquireTokenAuthority = new Authority(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger7, correlationId, performanceClient);
+      let authorityUriFinal = Authority.transformCIAMAuthority(formatAuthorityUri(authorityUri)), acquireTokenAuthority = new Authority(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger8, correlationId, performanceClient);
       try {
-        return await invokeAsync(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), PerformanceEvents.AuthorityResolveEndpointsAsync, logger7, performanceClient, correlationId)(), acquireTokenAuthority;
+        return await invokeAsync(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), PerformanceEvents.AuthorityResolveEndpointsAsync, logger8, performanceClient, correlationId)(), acquireTokenAuthority;
       } catch {
         throw createClientAuthError(endpointResolutionError);
       }
@@ -15107,8 +15107,8 @@ Error Description: ${typedError.message}`);
       static {
         __name(this, "CacheManager");
       }
-      constructor(clientId, cryptoImpl, logger7, performanceClient, staticAuthorityOptions) {
-        this.clientId = clientId, this.cryptoImpl = cryptoImpl, this.commonLogger = logger7.clone(name, version3), this.staticAuthorityOptions = staticAuthorityOptions, this.performanceClient = performanceClient;
+      constructor(clientId, cryptoImpl, logger8, performanceClient, staticAuthorityOptions) {
+        this.clientId = clientId, this.cryptoImpl = cryptoImpl, this.commonLogger = logger8.clone(name, version3), this.staticAuthorityOptions = staticAuthorityOptions, this.performanceClient = performanceClient;
       }
       /**
        * Returns all the accounts in the cache that match the optional filter. If no filter is provided, all accounts are returned.
@@ -16479,7 +16479,7 @@ Error Description: ${typedError.message}`);
        * @param serverClientInfo
        * @param authType
        */
-      static generateHomeAccountId(serverClientInfo, authType, logger7, cryptoObj, idTokenClaims) {
+      static generateHomeAccountId(serverClientInfo, authType, logger8, cryptoObj, idTokenClaims) {
         if (!(authType === AuthorityType.Adfs || authType === AuthorityType.Dsts)) {
           if (serverClientInfo)
             try {
@@ -16488,7 +16488,7 @@ Error Description: ${typedError.message}`);
                 return `${clientInfo.uid}.${clientInfo.utid}`;
             } catch {
             }
-          logger7.warning("No client info in response");
+          logger8.warning("No client info in response");
         }
         return idTokenClaims?.sub || "";
       }
@@ -16637,9 +16637,9 @@ Error Description: ${typedError.message}`);
        * @param request
        * @returns
        */
-      async generateCnf(request, logger7) {
+      async generateCnf(request, logger8) {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.PopTokenGenerateCnf, request.correlationId);
-        let reqCnf = await invokeAsync(this.generateKid.bind(this), PerformanceEvents.PopTokenGenerateCnf, logger7, this.performanceClient, request.correlationId)(request), reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
+        let reqCnf = await invokeAsync(this.generateKid.bind(this), PerformanceEvents.PopTokenGenerateCnf, logger8, this.performanceClient, request.correlationId)(request), reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
         return {
           kid: reqCnf.kid,
           reqCnfString
@@ -16710,8 +16710,8 @@ Error Description: ${typedError.message}`);
       static {
         __name(this, "ResponseHandler");
       }
-      constructor(clientId, cacheStorage, cryptoObj, logger7, serializableCache, persistencePlugin, performanceClient) {
-        this.clientId = clientId, this.cacheStorage = cacheStorage, this.cryptoObj = cryptoObj, this.logger = logger7, this.serializableCache = serializableCache, this.persistencePlugin = persistencePlugin, this.performanceClient = performanceClient;
+      constructor(clientId, cacheStorage, cryptoObj, logger8, serializableCache, persistencePlugin, performanceClient) {
+        this.clientId = clientId, this.cacheStorage = cacheStorage, this.cryptoObj = cryptoObj, this.logger = logger8, this.serializableCache = serializableCache, this.persistencePlugin = persistencePlugin, this.performanceClient = performanceClient;
       }
       /**
        * Function which validates server authorization token response.
@@ -16877,8 +16877,8 @@ ${serverError}`);
         };
       }
     };
-    function buildAccountToCache(cacheStorage, authority, homeAccountId, base64Decode, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger7) {
-      logger7?.verbose("setCachedAccount called");
+    function buildAccountToCache(cacheStorage, authority, homeAccountId, base64Decode, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger8) {
+      logger8?.verbose("setCachedAccount called");
       let baseAccountKey = cacheStorage.getAccountKeys().find((accountKey) => accountKey.startsWith(homeAccountId)), cachedAccount = null;
       baseAccountKey && (cachedAccount = cacheStorage.getAccount(baseAccountKey, correlationId));
       let baseAccount = cachedAccount || AccountEntity.createAccount({
@@ -17188,7 +17188,7 @@ ${serverError}`);
       sendGetRequestAsync: /* @__PURE__ */ __name(() => Promise.reject(createClientAuthError(methodNotImplemented)), "sendGetRequestAsync"),
       sendPostRequestAsync: /* @__PURE__ */ __name(() => Promise.reject(createClientAuthError(methodNotImplemented)), "sendPostRequestAsync")
     };
-    function getStandardAuthorizeRequestParameters(authOptions, request, logger7, performanceClient) {
+    function getStandardAuthorizeRequestParameters(authOptions, request, logger8, performanceClient) {
       let correlationId = request.correlationId, parameters = /* @__PURE__ */ new Map();
       addClientId(parameters, request.embeddedClientId || request.extraQueryParameters?.[CLIENT_ID] || authOptions.clientId);
       let requestScopes = [
@@ -17197,39 +17197,39 @@ ${serverError}`);
       ];
       if (addScopes(parameters, requestScopes, !0, authOptions.authority.options.OIDCOptions?.defaultScopes), addRedirectUri(parameters, request.redirectUri), addCorrelationId(parameters, correlationId), addResponseMode(parameters, request.responseMode), addClientInfo(parameters), request.prompt && (addPrompt(parameters, request.prompt), performanceClient?.addFields({ prompt: request.prompt }, correlationId)), request.domainHint && (addDomainHint(parameters, request.domainHint), performanceClient?.addFields({ domainHintFromRequest: !0 }, correlationId)), request.prompt !== PromptValue.SELECT_ACCOUNT)
         if (request.sid && request.prompt === PromptValue.NONE)
-          logger7.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request"), addSid(parameters, request.sid), performanceClient?.addFields({ sidFromRequest: !0 }, correlationId);
+          logger8.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request"), addSid(parameters, request.sid), performanceClient?.addFields({ sidFromRequest: !0 }, correlationId);
         else if (request.account) {
           let accountSid = extractAccountSid(request.account), accountLoginHintClaim = extractLoginHint(request.account);
-          if (accountLoginHintClaim && request.domainHint && (logger7.warning('AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint'), accountLoginHintClaim = null), accountLoginHintClaim) {
-            logger7.verbose("createAuthCodeUrlQueryString: login_hint claim present on account"), addLoginHint(parameters, accountLoginHintClaim), performanceClient?.addFields({ loginHintFromClaim: !0 }, correlationId);
+          if (accountLoginHintClaim && request.domainHint && (logger8.warning('AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint'), accountLoginHintClaim = null), accountLoginHintClaim) {
+            logger8.verbose("createAuthCodeUrlQueryString: login_hint claim present on account"), addLoginHint(parameters, accountLoginHintClaim), performanceClient?.addFields({ loginHintFromClaim: !0 }, correlationId);
             try {
               let clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
               addCcsOid(parameters, clientInfo);
             } catch {
-              logger7.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
+              logger8.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
             }
           } else if (accountSid && request.prompt === PromptValue.NONE) {
-            logger7.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account"), addSid(parameters, accountSid), performanceClient?.addFields({ sidFromClaim: !0 }, correlationId);
+            logger8.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account"), addSid(parameters, accountSid), performanceClient?.addFields({ sidFromClaim: !0 }, correlationId);
             try {
               let clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
               addCcsOid(parameters, clientInfo);
             } catch {
-              logger7.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
+              logger8.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
             }
           } else if (request.loginHint)
-            logger7.verbose("createAuthCodeUrlQueryString: Adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint), performanceClient?.addFields({ loginHintFromRequest: !0 }, correlationId);
+            logger8.verbose("createAuthCodeUrlQueryString: Adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint), performanceClient?.addFields({ loginHintFromRequest: !0 }, correlationId);
           else if (request.account.username) {
-            logger7.verbose("createAuthCodeUrlQueryString: Adding login_hint from account"), addLoginHint(parameters, request.account.username), performanceClient?.addFields({ loginHintFromUpn: !0 }, correlationId);
+            logger8.verbose("createAuthCodeUrlQueryString: Adding login_hint from account"), addLoginHint(parameters, request.account.username), performanceClient?.addFields({ loginHintFromUpn: !0 }, correlationId);
             try {
               let clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
               addCcsOid(parameters, clientInfo);
             } catch {
-              logger7.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
+              logger8.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
             }
           }
-        } else request.loginHint && (logger7.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint), performanceClient?.addFields({ loginHintFromRequest: !0 }, correlationId));
+        } else request.loginHint && (logger8.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint), performanceClient?.addFields({ loginHintFromRequest: !0 }, correlationId));
       else
-        logger7.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints");
+        logger8.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints");
       return request.nonce && addNonce(parameters, request.nonce), request.state && addState(parameters, request.state), (request.claims || authOptions.clientCapabilities && authOptions.clientCapabilities.length > 0) && addClaims(parameters, request.claims, authOptions.clientCapabilities), request.embeddedClientId && addBrokerParameters(parameters, authOptions.clientId, authOptions.redirectUri), authOptions.instanceAware && (!request.extraQueryParameters || !Object.keys(request.extraQueryParameters).includes(INSTANCE_AWARE)) && addInstanceAware(parameters), parameters;
     }
     __name(getStandardAuthorizeRequestParameters, "getStandardAuthorizeRequestParameters");
@@ -17674,7 +17674,7 @@ var require_index_browser = __commonJS({
       return parent[childName] = context, parent;
     }
     __name(endContext, "endContext");
-    function addError(error46, logger7, event, stackMaxSize = 5) {
+    function addError(error46, logger8, event, stackMaxSize = 5) {
       if (error46 instanceof Error) {
         if (error46 instanceof indexNode.AuthError) {
           event.errorCode = error46.errorCode, event.subErrorCode = error46.subError, (error46 instanceof indexNode.ServerError || error46 instanceof indexNode.InteractionRequiredAuthError) && (event.serverErrorNo = error46.errorNo);
@@ -17683,14 +17683,14 @@ var require_index_browser = __commonJS({
           event.errorCode = error46.errorCode;
           return;
         } else if (event.errorStack?.length) {
-          logger7.trace("PerformanceClient.addErrorStack: Stack already exist", event.correlationId);
+          logger8.trace("PerformanceClient.addErrorStack: Stack already exist", event.correlationId);
           return;
         } else if (!error46.stack?.length) {
-          logger7.trace("PerformanceClient.addErrorStack: Input stack is empty", event.correlationId);
+          logger8.trace("PerformanceClient.addErrorStack: Input stack is empty", event.correlationId);
           return;
         }
       } else {
-        logger7.trace("PerformanceClient.addErrorStack: Input error is not instance of Error", event.correlationId);
+        logger8.trace("PerformanceClient.addErrorStack: Input error is not instance of Error", event.correlationId);
         return;
       }
       error46.stack && (event.errorStack = compactStack(error46.stack, stackMaxSize)), event.errorName = error46.name;
@@ -17749,8 +17749,8 @@ var require_index_browser = __commonJS({
        * @param {Set<String>} intFields integer fields to be truncated
        * @param {Map<string, string>} abbreviations event name abbreviations
        */
-      constructor(clientId, authority, logger7, libraryName, libraryVersion, applicationTelemetry, intFields, abbreviations) {
-        this.authority = authority, this.libraryName = libraryName, this.libraryVersion = libraryVersion, this.applicationTelemetry = applicationTelemetry, this.clientId = clientId, this.logger = logger7, this.callbacks = /* @__PURE__ */ new Map(), this.eventsByCorrelationId = /* @__PURE__ */ new Map(), this.eventStack = /* @__PURE__ */ new Map(), this.queueMeasurements = /* @__PURE__ */ new Map(), this.preQueueTimeByCorrelationId = /* @__PURE__ */ new Map(), this.intFields = intFields || /* @__PURE__ */ new Set();
+      constructor(clientId, authority, logger8, libraryName, libraryVersion, applicationTelemetry, intFields, abbreviations) {
+        this.authority = authority, this.libraryName = libraryName, this.libraryVersion = libraryVersion, this.applicationTelemetry = applicationTelemetry, this.clientId = clientId, this.logger = logger8, this.callbacks = /* @__PURE__ */ new Map(), this.eventsByCorrelationId = /* @__PURE__ */ new Map(), this.eventStack = /* @__PURE__ */ new Map(), this.queueMeasurements = /* @__PURE__ */ new Map(), this.preQueueTimeByCorrelationId = /* @__PURE__ */ new Map(), this.intFields = intFields || /* @__PURE__ */ new Set();
         for (let item of indexNode.IntFields)
           this.intFields.add(item);
         this.abbreviations = abbreviations || /* @__PURE__ */ new Map();
@@ -22253,21 +22253,21 @@ var require_msal_node = __commonJS({
         InstanceDiscoveryMetadataAliases.add(alias);
       });
     });
-    function getAliasesFromStaticSources(staticAuthorityOptions, logger7) {
+    function getAliasesFromStaticSources(staticAuthorityOptions, logger8) {
       let staticAliases, canonicalAuthority = staticAuthorityOptions.canonicalAuthority;
       if (canonicalAuthority) {
         let authorityHost = new UrlString(canonicalAuthority).getUrlComponents().HostNameAndPort;
-        staticAliases = getAliasesFromMetadata(authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource.CONFIG, logger7) || getAliasesFromMetadata(authorityHost, InstanceDiscoveryMetadata.metadata, AuthorityMetadataSource.HARDCODED_VALUES, logger7) || staticAuthorityOptions.knownAuthorities;
+        staticAliases = getAliasesFromMetadata(authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource.CONFIG, logger8) || getAliasesFromMetadata(authorityHost, InstanceDiscoveryMetadata.metadata, AuthorityMetadataSource.HARDCODED_VALUES, logger8) || staticAuthorityOptions.knownAuthorities;
       }
       return staticAliases || [];
     }
     __name(getAliasesFromStaticSources, "getAliasesFromStaticSources");
-    function getAliasesFromMetadata(authorityHost, cloudDiscoveryMetadata, source, logger7) {
-      if (logger7?.trace(`getAliasesFromMetadata called with source: ${source}`), authorityHost && cloudDiscoveryMetadata) {
+    function getAliasesFromMetadata(authorityHost, cloudDiscoveryMetadata, source, logger8) {
+      if (logger8?.trace(`getAliasesFromMetadata called with source: ${source}`), authorityHost && cloudDiscoveryMetadata) {
         let metadata = getCloudDiscoveryMetadataFromNetworkResponse(cloudDiscoveryMetadata, authorityHost);
         if (metadata)
-          return logger7?.trace(`getAliasesFromMetadata: found cloud discovery metadata in ${source}, returning aliases`), metadata.aliases;
-        logger7?.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in ${source}`);
+          return logger8?.trace(`getAliasesFromMetadata: found cloud discovery metadata in ${source}, returning aliases`), metadata.aliases;
+        logger8?.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in ${source}`);
       }
       return null;
     }
@@ -22306,8 +22306,8 @@ var require_msal_node = __commonJS({
       static {
         __name(this, "CacheManager");
       }
-      constructor(clientId, cryptoImpl, logger7, performanceClient, staticAuthorityOptions) {
-        this.clientId = clientId, this.cryptoImpl = cryptoImpl, this.commonLogger = logger7.clone(name$1, version$1), this.staticAuthorityOptions = staticAuthorityOptions, this.performanceClient = performanceClient;
+      constructor(clientId, cryptoImpl, logger8, performanceClient, staticAuthorityOptions) {
+        this.clientId = clientId, this.cryptoImpl = cryptoImpl, this.commonLogger = logger8.clone(name$1, version$1), this.staticAuthorityOptions = staticAuthorityOptions, this.performanceClient = performanceClient;
       }
       /**
        * Returns all the accounts in the cache that match the optional filter. If no filter is provided, all accounts are returned.
@@ -23633,8 +23633,8 @@ var require_msal_node = __commonJS({
       return response.hasOwnProperty("error") && response.hasOwnProperty("error_description");
     }
     __name(isCloudInstanceDiscoveryErrorResponse, "isCloudInstanceDiscoveryErrorResponse");
-    var invoke = /* @__PURE__ */ __name((callback, eventName, logger7, telemetryClient, correlationId) => (...args) => {
-      logger7.trace(`Executing function ${eventName}`);
+    var invoke = /* @__PURE__ */ __name((callback, eventName, logger8, telemetryClient, correlationId) => (...args) => {
+      logger8.trace(`Executing function ${eventName}`);
       let inProgressEvent = telemetryClient?.startMeasurement(eventName, correlationId);
       if (correlationId) {
         let eventCount = eventName + "CallCount";
@@ -23644,33 +23644,33 @@ var require_msal_node = __commonJS({
         let result = callback(...args);
         return inProgressEvent?.end({
           success: !0
-        }), logger7.trace(`Returning result from ${eventName}`), result;
+        }), logger8.trace(`Returning result from ${eventName}`), result;
       } catch (e2) {
-        logger7.trace(`Error occurred in ${eventName}`);
+        logger8.trace(`Error occurred in ${eventName}`);
         try {
-          logger7.trace(JSON.stringify(e2));
+          logger8.trace(JSON.stringify(e2));
         } catch {
-          logger7.trace("Unable to print error message.");
+          logger8.trace("Unable to print error message.");
         }
         throw inProgressEvent?.end({
           success: !1
         }, e2), e2;
       }
-    }, "invoke"), invokeAsync = /* @__PURE__ */ __name((callback, eventName, logger7, telemetryClient, correlationId) => (...args) => {
-      logger7.trace(`Executing function ${eventName}`);
+    }, "invoke"), invokeAsync = /* @__PURE__ */ __name((callback, eventName, logger8, telemetryClient, correlationId) => (...args) => {
+      logger8.trace(`Executing function ${eventName}`);
       let inProgressEvent = telemetryClient?.startMeasurement(eventName, correlationId);
       if (correlationId) {
         let eventCount = eventName + "CallCount";
         telemetryClient?.incrementFields({ [eventCount]: 1 }, correlationId);
       }
-      return telemetryClient?.setPreQueueTime(eventName, correlationId), callback(...args).then((response) => (logger7.trace(`Returning result from ${eventName}`), inProgressEvent?.end({
+      return telemetryClient?.setPreQueueTime(eventName, correlationId), callback(...args).then((response) => (logger8.trace(`Returning result from ${eventName}`), inProgressEvent?.end({
         success: !0
       }), response)).catch((e2) => {
-        logger7.trace(`Error occurred in ${eventName}`);
+        logger8.trace(`Error occurred in ${eventName}`);
         try {
-          logger7.trace(JSON.stringify(e2));
+          logger8.trace(JSON.stringify(e2));
         } catch {
-          logger7.trace("Unable to print error message.");
+          logger8.trace("Unable to print error message.");
         }
         throw inProgressEvent?.end({
           success: !1
@@ -23681,8 +23681,8 @@ var require_msal_node = __commonJS({
       static {
         __name(this, "RegionDiscovery");
       }
-      constructor(networkInterface, logger7, performanceClient, correlationId) {
-        this.networkInterface = networkInterface, this.logger = logger7, this.performanceClient = performanceClient, this.correlationId = correlationId;
+      constructor(networkInterface, logger8, performanceClient, correlationId) {
+        this.networkInterface = networkInterface, this.logger = logger8, this.performanceClient = performanceClient, this.correlationId = correlationId;
       }
       /**
        * Detect the region from the application's environment.
@@ -23880,12 +23880,12 @@ var require_msal_node = __commonJS({
       static {
         __name(this, "Authority");
       }
-      constructor(authority, networkInterface, cacheManager, authorityOptions, logger7, correlationId, performanceClient, managedIdentity) {
+      constructor(authority, networkInterface, cacheManager, authorityOptions, logger8, correlationId, performanceClient, managedIdentity) {
         this.canonicalAuthority = authority, this._canonicalAuthority.validateAsUri(), this.networkInterface = networkInterface, this.cacheManager = cacheManager, this.authorityOptions = authorityOptions, this.regionDiscoveryMetadata = {
           region_used: void 0,
           region_source: void 0,
           region_outcome: void 0
-        }, this.logger = logger7, this.performanceClient = performanceClient, this.correlationId = correlationId, this.managedIdentity = managedIdentity || !1, this.regionDiscovery = new RegionDiscovery(networkInterface, this.logger, this.performanceClient, this.correlationId);
+        }, this.logger = logger8, this.performanceClient = performanceClient, this.correlationId = correlationId, this.managedIdentity = managedIdentity || !1, this.regionDiscovery = new RegionDiscovery(networkInterface, this.logger, this.performanceClient, this.correlationId);
       }
       /**
        * Get {@link AuthorityType}
@@ -24430,11 +24430,11 @@ Error Description: ${typedError.message}`);
       };
     }
     __name(buildStaticAuthorityOptions, "buildStaticAuthorityOptions");
-    async function createDiscoveredInstance(authorityUri, networkClient, cacheManager, authorityOptions, logger7, correlationId, performanceClient) {
+    async function createDiscoveredInstance(authorityUri, networkClient, cacheManager, authorityOptions, logger8, correlationId, performanceClient) {
       performanceClient?.addQueueMeasurement(PerformanceEvents.AuthorityFactoryCreateDiscoveredInstance, correlationId);
-      let authorityUriFinal = Authority.transformCIAMAuthority(formatAuthorityUri(authorityUri)), acquireTokenAuthority = new Authority(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger7, correlationId, performanceClient);
+      let authorityUriFinal = Authority.transformCIAMAuthority(formatAuthorityUri(authorityUri)), acquireTokenAuthority = new Authority(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger8, correlationId, performanceClient);
       try {
-        return await invokeAsync(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), PerformanceEvents.AuthorityResolveEndpointsAsync, logger7, performanceClient, correlationId)(), acquireTokenAuthority;
+        return await invokeAsync(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), PerformanceEvents.AuthorityResolveEndpointsAsync, logger8, performanceClient, correlationId)(), acquireTokenAuthority;
       } catch {
         throw createClientAuthError(endpointResolutionError);
       }
@@ -24705,7 +24705,7 @@ Error Description: ${typedError.message}`);
        * @param serverClientInfo
        * @param authType
        */
-      static generateHomeAccountId(serverClientInfo, authType, logger7, cryptoObj, idTokenClaims) {
+      static generateHomeAccountId(serverClientInfo, authType, logger8, cryptoObj, idTokenClaims) {
         if (!(authType === AuthorityType.Adfs || authType === AuthorityType.Dsts)) {
           if (serverClientInfo)
             try {
@@ -24714,7 +24714,7 @@ Error Description: ${typedError.message}`);
                 return `${clientInfo.uid}.${clientInfo.utid}`;
             } catch {
             }
-          logger7.warning("No client info in response");
+          logger8.warning("No client info in response");
         }
         return idTokenClaims?.sub || "";
       }
@@ -24866,9 +24866,9 @@ Error Description: ${typedError.message}`);
        * @param request
        * @returns
        */
-      async generateCnf(request, logger7) {
+      async generateCnf(request, logger8) {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.PopTokenGenerateCnf, request.correlationId);
-        let reqCnf = await invokeAsync(this.generateKid.bind(this), PerformanceEvents.PopTokenGenerateCnf, logger7, this.performanceClient, request.correlationId)(request), reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
+        let reqCnf = await invokeAsync(this.generateKid.bind(this), PerformanceEvents.PopTokenGenerateCnf, logger8, this.performanceClient, request.correlationId)(request), reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
         return {
           kid: reqCnf.kid,
           reqCnfString
@@ -24941,8 +24941,8 @@ Error Description: ${typedError.message}`);
       static {
         __name(this, "ResponseHandler");
       }
-      constructor(clientId, cacheStorage, cryptoObj, logger7, serializableCache, persistencePlugin, performanceClient) {
-        this.clientId = clientId, this.cacheStorage = cacheStorage, this.cryptoObj = cryptoObj, this.logger = logger7, this.serializableCache = serializableCache, this.persistencePlugin = persistencePlugin, this.performanceClient = performanceClient;
+      constructor(clientId, cacheStorage, cryptoObj, logger8, serializableCache, persistencePlugin, performanceClient) {
+        this.clientId = clientId, this.cacheStorage = cacheStorage, this.cryptoObj = cryptoObj, this.logger = logger8, this.serializableCache = serializableCache, this.persistencePlugin = persistencePlugin, this.performanceClient = performanceClient;
       }
       /**
        * Function which validates server authorization token response.
@@ -25108,8 +25108,8 @@ ${serverError}`);
         };
       }
     };
-    function buildAccountToCache(cacheStorage, authority, homeAccountId, base64Decode, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger7) {
-      logger7?.verbose("setCachedAccount called");
+    function buildAccountToCache(cacheStorage, authority, homeAccountId, base64Decode, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger8) {
+      logger8?.verbose("setCachedAccount called");
       let baseAccountKey = cacheStorage.getAccountKeys().find((accountKey) => accountKey.startsWith(homeAccountId)), cachedAccount = null;
       baseAccountKey && (cachedAccount = cacheStorage.getAccount(baseAccountKey, correlationId));
       let baseAccount = cachedAccount || AccountEntity.createAccount({
@@ -25415,7 +25415,7 @@ ${serverError}`);
         return ResponseHandler.generateAuthenticationResult(this.cryptoUtils, this.authority, cacheRecord, !0, request, idTokenClaims);
       }
     };
-    function getStandardAuthorizeRequestParameters(authOptions, request, logger7, performanceClient) {
+    function getStandardAuthorizeRequestParameters(authOptions, request, logger8, performanceClient) {
       let correlationId = request.correlationId, parameters = /* @__PURE__ */ new Map();
       addClientId(parameters, request.embeddedClientId || request.extraQueryParameters?.[CLIENT_ID] || authOptions.clientId);
       let requestScopes = [
@@ -25424,39 +25424,39 @@ ${serverError}`);
       ];
       if (addScopes(parameters, requestScopes, !0, authOptions.authority.options.OIDCOptions?.defaultScopes), addRedirectUri(parameters, request.redirectUri), addCorrelationId(parameters, correlationId), addResponseMode(parameters, request.responseMode), addClientInfo(parameters), request.prompt && addPrompt(parameters, request.prompt), request.domainHint && addDomainHint(parameters, request.domainHint), request.prompt !== PromptValue.SELECT_ACCOUNT)
         if (request.sid && request.prompt === PromptValue.NONE)
-          logger7.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request"), addSid(parameters, request.sid);
+          logger8.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request"), addSid(parameters, request.sid);
         else if (request.account) {
           let accountSid = extractAccountSid(request.account), accountLoginHintClaim = extractLoginHint(request.account);
-          if (accountLoginHintClaim && request.domainHint && (logger7.warning('AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint'), accountLoginHintClaim = null), accountLoginHintClaim) {
-            logger7.verbose("createAuthCodeUrlQueryString: login_hint claim present on account"), addLoginHint(parameters, accountLoginHintClaim);
+          if (accountLoginHintClaim && request.domainHint && (logger8.warning('AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint'), accountLoginHintClaim = null), accountLoginHintClaim) {
+            logger8.verbose("createAuthCodeUrlQueryString: login_hint claim present on account"), addLoginHint(parameters, accountLoginHintClaim);
             try {
               let clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
               addCcsOid(parameters, clientInfo);
             } catch {
-              logger7.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
+              logger8.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
             }
           } else if (accountSid && request.prompt === PromptValue.NONE) {
-            logger7.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account"), addSid(parameters, accountSid);
+            logger8.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account"), addSid(parameters, accountSid);
             try {
               let clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
               addCcsOid(parameters, clientInfo);
             } catch {
-              logger7.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
+              logger8.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
             }
           } else if (request.loginHint)
-            logger7.verbose("createAuthCodeUrlQueryString: Adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint);
+            logger8.verbose("createAuthCodeUrlQueryString: Adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint);
           else if (request.account.username) {
-            logger7.verbose("createAuthCodeUrlQueryString: Adding login_hint from account"), addLoginHint(parameters, request.account.username);
+            logger8.verbose("createAuthCodeUrlQueryString: Adding login_hint from account"), addLoginHint(parameters, request.account.username);
             try {
               let clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
               addCcsOid(parameters, clientInfo);
             } catch {
-              logger7.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
+              logger8.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header");
             }
           }
-        } else request.loginHint && (logger7.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint));
+        } else request.loginHint && (logger8.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request"), addLoginHint(parameters, request.loginHint), addCcsUpn(parameters, request.loginHint));
       else
-        logger7.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints");
+        logger8.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints");
       return request.nonce && addNonce(parameters, request.nonce), request.state && addState(parameters, request.state), (request.claims || authOptions.clientCapabilities && authOptions.clientCapabilities.length > 0) && addClaims(parameters, request.claims, authOptions.clientCapabilities), request.embeddedClientId && addBrokerParameters(parameters, authOptions.clientId, authOptions.redirectUri), authOptions.instanceAware && (!request.extraQueryParameters || !Object.keys(request.extraQueryParameters).includes(INSTANCE_AWARE)) && addInstanceAware(parameters), parameters;
     }
     __name(getStandardAuthorizeRequestParameters, "getStandardAuthorizeRequestParameters");
@@ -26437,8 +26437,8 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "NodeStorage");
       }
-      constructor(logger7, clientId, cryptoImpl, staticAuthorityOptions) {
-        super(clientId, cryptoImpl, logger7, new msalCommon.StubPerformanceClient(), staticAuthorityOptions), this.cache = {}, this.changeEmitters = [], this.logger = logger7;
+      constructor(logger8, clientId, cryptoImpl, staticAuthorityOptions) {
+        super(clientId, cryptoImpl, logger8, new msalCommon.StubPerformanceClient(), staticAuthorityOptions), this.cache = {}, this.changeEmitters = [], this.logger = logger8;
       }
       /**
        * Queue up callbacks
@@ -26772,8 +26772,8 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "TokenCache");
       }
-      constructor(storage, logger7, cachePlugin) {
-        this.cacheHasChanged = !1, this.storage = storage, this.storage.registerChangeEmitter(this.handleChangeEvent.bind(this)), cachePlugin && (this.persistence = cachePlugin), this.logger = logger7;
+      constructor(storage, logger8, cachePlugin) {
+        this.cacheHasChanged = !1, this.storage = storage, this.storage.registerChangeEmitter(this.handleChangeEvent.bind(this)), cachePlugin && (this.persistence = cachePlugin), this.logger = logger8;
       }
       /**
        * Set to true if cache state has changed since last time serialize or writeToPersistence was called
@@ -27101,12 +27101,12 @@ Headers: ${JSON.stringify(headers)}`
         return clientAssertion && (addClientAssertion(parameters, await getClientAssertion(clientAssertion.assertion, this.config.authOptions.clientId, request.resourceRequestUri)), addClientAssertionType(parameters, clientAssertion.assertionType)), (!StringUtils.isEmptyObj(request.claims) || this.config.authOptions.clientCapabilities && this.config.authOptions.clientCapabilities.length > 0) && addClaims(parameters, request.claims, this.config.authOptions.clientCapabilities), this.config.systemOptions.preventCorsPreflight && request.username && addCcsUpn(parameters, request.username), mapToQueryString(parameters);
       }
     };
-    function getAuthCodeRequestUrl(config2, authority, request, logger7) {
+    function getAuthCodeRequestUrl(config2, authority, request, logger8) {
       let parameters = getStandardAuthorizeRequestParameters({
         ...config2.auth,
         authority,
         redirectUri: request.redirectUri || ""
-      }, request, logger7);
+      }, request, logger8);
       return addLibraryInfo(parameters, {
         sku: Constants.MSAL_SKU,
         version: version3,
@@ -27287,8 +27287,8 @@ Headers: ${JSON.stringify(headers)}`
        * Replaces the default logger set in configurations with new Logger with new configurations
        * @param logger - Logger instance
        */
-      setLogger(logger7) {
-        this.logger = logger7;
+      setLogger(logger8) {
+        this.logger = logger8;
       }
       /**
        * Builds the common configuration to be passed to the common component based on the platform configurarion
@@ -28122,8 +28122,8 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "HttpClientWithRetries");
       }
-      constructor(httpClientNoRetries, retryPolicy, logger7) {
-        this.httpClientNoRetries = httpClientNoRetries, this.retryPolicy = retryPolicy, this.logger = logger7;
+      constructor(httpClientNoRetries, retryPolicy, logger8) {
+        this.httpClientNoRetries = httpClientNoRetries, this.retryPolicy = retryPolicy, this.logger = logger8;
       }
       async sendNetworkRequestAsyncHelper(httpMethod, url2, options) {
         return httpMethod === HttpMethod.GET ? this.httpClientNoRetries.sendGetRequestAsync(url2, options) : this.httpClientNoRetries.sendPostRequestAsync(url2, options);
@@ -28152,8 +28152,8 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "BaseManagedIdentitySource");
       }
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
-        this.logger = logger7, this.nodeStorage = nodeStorage, this.networkClient = networkClient, this.cryptoProvider = cryptoProvider, this.disableInternalRetries = disableInternalRetries;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+        this.logger = logger8, this.nodeStorage = nodeStorage, this.networkClient = networkClient, this.cryptoProvider = cryptoProvider, this.disableInternalRetries = disableInternalRetries;
       }
       async getServerTokenResponseAsync(response, _networkClient, _networkRequest, _networkRequestOptions) {
         return this.getServerTokenResponse(response);
@@ -28209,11 +28209,11 @@ Headers: ${JSON.stringify(headers)}`
         }
       }
     };
-    BaseManagedIdentitySource.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger7) => {
+    BaseManagedIdentitySource.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger8) => {
       try {
         return new UrlString(envVariable).urlString;
       } catch {
-        throw logger7.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`), createManagedIdentityError(MsiEnvironmentVariableUrlMalformedErrorCodes[envVariableStringName]);
+        throw logger8.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`), createManagedIdentityError(MsiEnvironmentVariableUrlMalformedErrorCodes[envVariableStringName]);
       }
     };
     var LinearRetryStrategy = class {
@@ -28255,10 +28255,10 @@ Headers: ${JSON.stringify(headers)}`
       static get DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS() {
         return DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS;
       }
-      async pauseForRetry(httpStatusCode, currentRetry, logger7, retryAfterHeader) {
+      async pauseForRetry(httpStatusCode, currentRetry, logger8, retryAfterHeader) {
         if (DEFAULT_MANAGED_IDENTITY_HTTP_STATUS_CODES_TO_RETRY_ON.includes(httpStatusCode) && currentRetry < DEFAULT_MANAGED_IDENTITY_MAX_RETRIES) {
           let retryAfterDelay = this.linearRetryStrategy.calculateDelay(retryAfterHeader, _DefaultManagedIdentityRetryPolicy.DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS);
-          return logger7.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`), await new Promise((resolve) => setTimeout(resolve, retryAfterDelay)), !0;
+          return logger8.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`), await new Promise((resolve) => setTimeout(resolve, retryAfterDelay)), !0;
         }
         return !1;
       }
@@ -28283,19 +28283,19 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "AppService");
       }
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
-        super(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint, this.identityHeader = identityHeader;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
+        super(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint, this.identityHeader = identityHeader;
       }
       static getEnvironmentVariables() {
         let identityEndpoint = process.env[ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT], identityHeader = process.env[ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER];
         return [identityEndpoint, identityHeader];
       }
-      static tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+      static tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
         let [identityEndpoint, identityHeader] = _AppService.getEnvironmentVariables();
         if (!identityEndpoint || !identityHeader)
-          return logger7.info(`[Managed Identity] ${ManagedIdentitySourceNames.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' environment variables are not defined.`), null;
-        let validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.APP_SERVICE, logger7);
-        return logger7.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.APP_SERVICE} managed identity.`), new _AppService(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
+          return logger8.info(`[Managed Identity] ${ManagedIdentitySourceNames.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' environment variables are not defined.`), null;
+        let validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.APP_SERVICE, logger8);
+        return logger8.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.APP_SERVICE} managed identity.`), new _AppService(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
       }
       createRequest(resource, managedIdentityId) {
         let request = new ManagedIdentityRequestParameters(HttpMethod.GET, this.identityEndpoint);
@@ -28311,8 +28311,8 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "AzureArc");
       }
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
-        super(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
+        super(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint;
       }
       static getEnvironmentVariables() {
         let identityEndpoint = process.env[ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT], imdsEndpoint = process.env[ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT];
@@ -28325,19 +28325,19 @@ Headers: ${JSON.stringify(headers)}`
         }
         return [identityEndpoint, imdsEndpoint];
       }
-      static tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+      static tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
         let [identityEndpoint, imdsEndpoint] = _AzureArc.getEnvironmentVariables();
         if (!identityEndpoint || !imdsEndpoint)
-          return logger7.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is also unavailable through file detection.`), null;
+          return logger8.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is also unavailable through file detection.`), null;
         if (imdsEndpoint === HIMDS_EXECUTABLE_HELPER_STRING)
-          logger7.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`);
+          logger8.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`);
         else {
-          let validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger7);
-          validatedIdentityEndpoint.endsWith("/") && validatedIdentityEndpoint.slice(0, -1), _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger7), logger7.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`);
+          let validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger8);
+          validatedIdentityEndpoint.endsWith("/") && validatedIdentityEndpoint.slice(0, -1), _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger8), logger8.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`);
         }
         if (managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED)
           throw createManagedIdentityError(unableToCreateAzureArc);
-        return new _AzureArc(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint);
+        return new _AzureArc(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint);
       }
       createRequest(resource) {
         let request = new ManagedIdentityRequestParameters(HttpMethod.GET, this.identityEndpoint.replace("localhost", "127.0.0.1"));
@@ -28387,20 +28387,20 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "CloudShell");
       }
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint) {
-        super(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.msiEndpoint = msiEndpoint;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint) {
+        super(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.msiEndpoint = msiEndpoint;
       }
       static getEnvironmentVariables() {
         return [process.env[ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT]];
       }
-      static tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+      static tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
         let [msiEndpoint] = _CloudShell.getEnvironmentVariables();
         if (!msiEndpoint)
-          return logger7.info(`[Managed Identity] ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT} environment variable is not defined.`), null;
-        let validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.CLOUD_SHELL, logger7);
-        if (logger7.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity.`), managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED)
+          return logger8.info(`[Managed Identity] ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT} environment variable is not defined.`), null;
+        let validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.CLOUD_SHELL, logger8);
+        if (logger8.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity.`), managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED)
           throw createManagedIdentityError(unableToCreateCloudShell);
-        return new _CloudShell(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint);
+        return new _CloudShell(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint);
       }
       createRequest(resource) {
         let request = new ManagedIdentityRequestParameters(HttpMethod.POST, this.msiEndpoint);
@@ -28470,10 +28470,10 @@ Headers: ${JSON.stringify(headers)}`
        * @param retryAfterHeader - The value of the "retry-after" header from the response.
        * @returns A promise that resolves to a boolean indicating whether a retry should be attempted.
        */
-      async pauseForRetry(httpStatusCode, currentRetry, logger7) {
+      async pauseForRetry(httpStatusCode, currentRetry, logger8) {
         if (this._isNewRequest && (this._isNewRequest = !1, this.maxRetries = httpStatusCode === msalCommon.HttpStatus.GONE ? LINEAR_STRATEGY_NUM_RETRIES : EXPONENTIAL_STRATEGY_NUM_RETRIES), (HTTP_STATUS_400_CODES_FOR_EXPONENTIAL_STRATEGY.includes(httpStatusCode) || httpStatusCode >= msalCommon.HttpStatus.SERVER_ERROR_RANGE_START && httpStatusCode <= msalCommon.HttpStatus.SERVER_ERROR_RANGE_END && currentRetry < this.maxRetries) && currentRetry < this.maxRetries) {
           let retryAfterDelay = httpStatusCode === msalCommon.HttpStatus.GONE ? _ImdsRetryPolicy.HTTP_STATUS_GONE_RETRY_AFTER_MS : this.exponentialRetryStrategy.calculateDelay(currentRetry);
-          return logger7.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`), await new Promise((resolve) => setTimeout(resolve, retryAfterDelay)), !0;
+          return logger8.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`), await new Promise((resolve) => setTimeout(resolve, retryAfterDelay)), !0;
         }
         return !1;
       }
@@ -28490,8 +28490,8 @@ Headers: ${JSON.stringify(headers)}`
        * @param disableInternalRetries - Whether to disable internal retry logic.
        * @param identityEndpoint - The IMDS endpoint to use.
        */
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
-        super(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
+        super(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint;
       }
       /**
        * Attempts to create an Imds instance by determining the correct endpoint.
@@ -28505,9 +28505,9 @@ Headers: ${JSON.stringify(headers)}`
        * @param disableInternalRetries - Whether to disable internal retry logic.
        * @returns An instance of Imds configured with the appropriate endpoint.
        */
-      static tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+      static tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
         let validatedIdentityEndpoint;
-        return process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST] ? (logger7.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`), validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH}`, ManagedIdentitySourceNames.IMDS, logger7)) : (logger7.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames.IMDS}, using the default endpoint.`), validatedIdentityEndpoint = DEFAULT_IMDS_ENDPOINT), new _Imds(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, validatedIdentityEndpoint);
+        return process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST] ? (logger8.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`), validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH}`, ManagedIdentitySourceNames.IMDS, logger8)) : (logger8.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames.IMDS}, using the default endpoint.`), validatedIdentityEndpoint = DEFAULT_IMDS_ENDPOINT), new _Imds(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, validatedIdentityEndpoint);
       }
       /**
        * Creates a ManagedIdentityRequestParameters object for acquiring a token from IMDS.
@@ -28539,8 +28539,8 @@ Headers: ${JSON.stringify(headers)}`
        * @param identityEndpoint The Service Fabric managed identity endpoint
        * @param identityHeader The Service Fabric managed identity secret header
        */
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
-        super(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint, this.identityHeader = identityHeader;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
+        super(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.identityEndpoint = identityEndpoint, this.identityHeader = identityHeader;
       }
       /**
        * Retrieves the environment variables required for Service Fabric managed identity.
@@ -28560,12 +28560,12 @@ Headers: ${JSON.stringify(headers)}`
        * @param managedIdentityId Managed identity identifier
        * @returns A ServiceFabric instance if environment variables are set, otherwise null
        */
-      static tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+      static tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
         let [identityEndpoint, identityHeader, identityServerThumbprint] = _ServiceFabric.getEnvironmentVariables();
         if (!identityEndpoint || !identityHeader || !identityServerThumbprint)
-          return logger7.info(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`), null;
-        let validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.SERVICE_FABRIC, logger7);
-        return logger7.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity.`), managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED && logger7.warning(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`), new _ServiceFabric(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
+          return logger8.info(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`), null;
+        let validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.SERVICE_FABRIC, logger8);
+        return logger8.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity.`), managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED && logger8.warning(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`), new _ServiceFabric(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
       }
       /**
        * Creates the request parameters for acquiring a token from the Service Fabric cluster.
@@ -28581,19 +28581,19 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "MachineLearning");
       }
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret) {
-        super(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.msiEndpoint = msiEndpoint, this.secret = secret;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret) {
+        super(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries), this.msiEndpoint = msiEndpoint, this.secret = secret;
       }
       static getEnvironmentVariables() {
         let msiEndpoint = process.env[ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT], secret = process.env[ManagedIdentityEnvironmentVariableNames.MSI_SECRET];
         return [msiEndpoint, secret];
       }
-      static tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+      static tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
         let [msiEndpoint, secret] = _MachineLearning.getEnvironmentVariables();
         if (!msiEndpoint || !secret)
-          return logger7.info(`[Managed Identity] ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.MSI_SECRET}' environment variables are not defined.`), null;
-        let validatedMsiEndpoint = _MachineLearning.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.MACHINE_LEARNING, logger7);
-        return logger7.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity.`), new _MachineLearning(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret);
+          return logger8.info(`[Managed Identity] ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.MSI_SECRET}' environment variables are not defined.`), null;
+        let validatedMsiEndpoint = _MachineLearning.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.MACHINE_LEARNING, logger8);
+        return logger8.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity.`), new _MachineLearning(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret);
       }
       createRequest(resource, managedIdentityId) {
         let request = new ManagedIdentityRequestParameters(HttpMethod.GET, this.msiEndpoint);
@@ -28615,8 +28615,8 @@ Headers: ${JSON.stringify(headers)}`
       static {
         __name(this, "ManagedIdentityClient");
       }
-      constructor(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
-        this.logger = logger7, this.nodeStorage = nodeStorage, this.networkClient = networkClient, this.cryptoProvider = cryptoProvider, this.disableInternalRetries = disableInternalRetries;
+      constructor(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+        this.logger = logger8, this.nodeStorage = nodeStorage, this.networkClient = networkClient, this.cryptoProvider = cryptoProvider, this.disableInternalRetries = disableInternalRetries;
       }
       async sendManagedIdentityTokenRequest(managedIdentityRequest, managedIdentityId, fakeAuthority, refreshAccessToken) {
         return _ManagedIdentityClient.identitySource || (_ManagedIdentityClient.identitySource = this.selectManagedIdentitySource(this.logger, this.nodeStorage, this.networkClient, this.cryptoProvider, this.disableInternalRetries, managedIdentityId)), _ManagedIdentityClient.identitySource.acquireTokenWithManagedIdentity(managedIdentityRequest, managedIdentityId, fakeAuthority, refreshAccessToken);
@@ -28635,8 +28635,8 @@ Headers: ${JSON.stringify(headers)}`
        * Tries to create a managed identity source for all sources
        * @returns the managed identity Source
        */
-      selectManagedIdentitySource(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
-        let source = ServiceFabric.tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AppService.tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || MachineLearning.tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || CloudShell.tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AzureArc.tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || Imds.tryCreate(logger7, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      selectManagedIdentitySource(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+        let source = ServiceFabric.tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AppService.tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || MachineLearning.tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || CloudShell.tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AzureArc.tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || Imds.tryCreate(logger8, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         if (!source)
           throw createManagedIdentityError(unableToCreateSource);
         return source;
@@ -29399,9 +29399,9 @@ var require_utils3 = __commonJS({
     exports.msalToPublic = msalToPublic;
     exports.serializeAuthenticationRecord = serializeAuthenticationRecord;
     exports.deserializeAuthenticationRecord = deserializeAuthenticationRecord;
-    var errors_js_1 = require_errors(), logging_js_1 = require_logging(), constants_js_1 = require_constants(), core_util_1 = require_commonjs4(), abort_controller_1 = require_commonjs3(), msal_js_1 = require_msal(), logger7 = (0, logging_js_1.credentialLogger)("IdentityUtils"), LatestAuthenticationRecordVersion = "1.0";
+    var errors_js_1 = require_errors(), logging_js_1 = require_logging(), constants_js_1 = require_constants(), core_util_1 = require_commonjs4(), abort_controller_1 = require_commonjs3(), msal_js_1 = require_msal(), logger8 = (0, logging_js_1.credentialLogger)("IdentityUtils"), LatestAuthenticationRecordVersion = "1.0";
     function ensureValidMsalToken(scopes, msalToken, getTokenOptions) {
-      let error46 = /* @__PURE__ */ __name((message) => (logger7.getToken.info(message), new errors_js_1.AuthenticationRequiredError({
+      let error46 = /* @__PURE__ */ __name((message) => (logger8.getToken.info(message), new errors_js_1.AuthenticationRequiredError({
         scopes: Array.isArray(scopes) ? scopes : [scopes],
         getTokenOptions,
         message
@@ -29469,20 +29469,20 @@ var require_utils3 = __commonJS({
         let msalError = error46;
         switch (msalError.errorCode) {
           case "endpoints_resolution_error":
-            return logger7.info((0, logging_js_1.formatError)(scopes, error46.message)), new errors_js_1.CredentialUnavailableError(error46.message);
+            return logger8.info((0, logging_js_1.formatError)(scopes, error46.message)), new errors_js_1.CredentialUnavailableError(error46.message);
           case "device_code_polling_cancelled":
             return new abort_controller_1.AbortError("The authentication has been aborted by the caller.");
           case "consent_required":
           case "interaction_required":
           case "login_required":
-            logger7.info((0, logging_js_1.formatError)(scopes, `Authentication returned errorCode ${msalError.errorCode}`));
+            logger8.info((0, logging_js_1.formatError)(scopes, `Authentication returned errorCode ${msalError.errorCode}`));
             break;
           default:
-            logger7.info((0, logging_js_1.formatError)(scopes, `Failed to acquire token: ${error46.message}`));
+            logger8.info((0, logging_js_1.formatError)(scopes, `Failed to acquire token: ${error46.message}`));
             break;
         }
       }
-      return error46.name === "ClientConfigurationError" || error46.name === "BrowserConfigurationAuthError" || error46.name === "AbortError" || error46.name === "AuthenticationError" ? error46 : error46.name === "NativeAuthError" ? (logger7.info((0, logging_js_1.formatError)(scopes, `Error from the native broker: ${error46.message} with status code: ${error46.statusCode}`)), error46) : new errors_js_1.AuthenticationRequiredError({ scopes, getTokenOptions, message: error46.message });
+      return error46.name === "ClientConfigurationError" || error46.name === "BrowserConfigurationAuthError" || error46.name === "AbortError" || error46.name === "AuthenticationError" ? error46 : error46.name === "NativeAuthError" ? (logger8.info((0, logging_js_1.formatError)(scopes, `Error from the native broker: ${error46.message} with status code: ${error46.statusCode}`)), error46) : new errors_js_1.AuthenticationRequiredError({ scopes, getTokenOptions, message: error46.message });
     }
     __name(handleMsalError, "handleMsalError");
     function publicToMsal(account) {
@@ -30727,18 +30727,18 @@ var require_logPolicy = __commonJS({
     var log_js_1 = require_log2(), sanitizer_js_1 = require_sanitizer();
     exports.logPolicyName = "logPolicy";
     function logPolicy(options = {}) {
-      let logger7 = options.logger ?? log_js_1.logger.info, sanitizer = new sanitizer_js_1.Sanitizer({
+      let logger8 = options.logger ?? log_js_1.logger.info, sanitizer = new sanitizer_js_1.Sanitizer({
         additionalAllowedHeaderNames: options.additionalAllowedHeaderNames,
         additionalAllowedQueryParameters: options.additionalAllowedQueryParameters
       });
       return {
         name: exports.logPolicyName,
         async sendRequest(request, next) {
-          if (!logger7.enabled)
+          if (!logger8.enabled)
             return next(request);
-          logger7(`Request: ${sanitizer.sanitize(request)}`);
+          logger8(`Request: ${sanitizer.sanitize(request)}`);
           let response = await next(request);
-          return logger7(`Response status code: ${response.status}`), logger7(`Headers: ${sanitizer.sanitize(response.headers)}`), response;
+          return logger8(`Response status code: ${response.status}`), logger8(`Headers: ${sanitizer.sanitize(response.headers)}`), response;
         }
       };
     }
@@ -31007,7 +31007,7 @@ var require_retryPolicy = __commonJS({
     exports.retryPolicy = retryPolicy;
     var helpers_js_1 = require_helpers(), AbortError_js_1 = require_AbortError2(), logger_js_1 = require_logger(), constants_js_1 = require_constants3(), retryPolicyLogger = (0, logger_js_1.createClientLogger)("ts-http-runtime retryPolicy"), retryPolicyName = "retryPolicy";
     function retryPolicy(strategies, options = { maxRetries: constants_js_1.DEFAULT_RETRY_POLICY_COUNT }) {
-      let logger7 = options.logger || retryPolicyLogger;
+      let logger8 = options.logger || retryPolicyLogger;
       return {
         name: retryPolicyName,
         async sendRequest(request, next) {
@@ -31015,24 +31015,24 @@ var require_retryPolicy = __commonJS({
           retryRequest: for (; ; ) {
             retryCount += 1, response = void 0, responseError = void 0;
             try {
-              logger7.info(`Retry ${retryCount}: Attempting to send request`, request.requestId), response = await next(request), logger7.info(`Retry ${retryCount}: Received a response from request`, request.requestId);
+              logger8.info(`Retry ${retryCount}: Attempting to send request`, request.requestId), response = await next(request), logger8.info(`Retry ${retryCount}: Received a response from request`, request.requestId);
             } catch (e2) {
-              if (logger7.error(`Retry ${retryCount}: Received an error from request`, request.requestId), responseError = e2, !e2 || responseError.name !== "RestError")
+              if (logger8.error(`Retry ${retryCount}: Received an error from request`, request.requestId), responseError = e2, !e2 || responseError.name !== "RestError")
                 throw e2;
               response = responseError.response;
             }
             if (request.abortSignal?.aborted)
-              throw logger7.error(`Retry ${retryCount}: Request aborted.`), new AbortError_js_1.AbortError();
+              throw logger8.error(`Retry ${retryCount}: Request aborted.`), new AbortError_js_1.AbortError();
             if (retryCount >= (options.maxRetries ?? constants_js_1.DEFAULT_RETRY_POLICY_COUNT)) {
-              if (logger7.info(`Retry ${retryCount}: Maximum retries reached. Returning the last received response, or throwing the last received error.`), responseError)
+              if (logger8.info(`Retry ${retryCount}: Maximum retries reached. Returning the last received response, or throwing the last received error.`), responseError)
                 throw responseError;
               if (response)
                 return response;
               throw new Error("Maximum retries reached with no response or error to throw");
             }
-            logger7.info(`Retry ${retryCount}: Processing ${strategies.length} retry strategies.`);
+            logger8.info(`Retry ${retryCount}: Processing ${strategies.length} retry strategies.`);
             strategiesLoop: for (let strategy of strategies) {
-              let strategyLogger = strategy.logger || logger7;
+              let strategyLogger = strategy.logger || logger8;
               strategyLogger.info(`Retry ${retryCount}: Processing retry strategy ${strategy.name}.`);
               let modifiers = strategy.retry({
                 retryCount,
@@ -31056,9 +31056,9 @@ var require_retryPolicy = __commonJS({
               }
             }
             if (responseError)
-              throw logger7.info("None of the retry strategies could work with the received error. Throwing it."), responseError;
+              throw logger8.info("None of the retry strategies could work with the received error. Throwing it."), responseError;
             if (response)
-              return logger7.info("None of the retry strategies could work with the received response. Returning it."), response;
+              return logger8.info("None of the retry strategies could work with the received response. Returning it."), response;
           }
         }
       };
@@ -33524,7 +33524,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
     }
     __name(authorizeRequestOnCaeChallenge, "authorizeRequestOnCaeChallenge");
     function bearerTokenAuthenticationPolicy(options) {
-      let { credential, scopes, challengeCallbacks } = options, logger7 = options.logger || log_js_1.logger, callbacks = {
+      let { credential, scopes, challengeCallbacks } = options, logger8 = options.logger || log_js_1.logger, callbacks = {
         authorizeRequest: challengeCallbacks?.authorizeRequest?.bind(challengeCallbacks) ?? defaultAuthorizeRequest,
         authorizeRequestOnChallenge: challengeCallbacks?.authorizeRequestOnChallenge?.bind(challengeCallbacks)
       }, getAccessToken = credential ? (0, tokenCycler_js_1.createTokenCycler)(
@@ -33553,7 +33553,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
             scopes: Array.isArray(scopes) ? scopes : [scopes],
             request,
             getAccessToken,
-            logger: logger7
+            logger: logger8
           });
           let response, error46, shouldSendRequest;
           if ([response, error46] = await trySendRequest(request, next), isChallengeResponse(response)) {
@@ -33563,34 +33563,34 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
               try {
                 parsedClaim = atob(claims);
               } catch {
-                return logger7.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`), response;
+                return logger8.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`), response;
               }
               shouldSendRequest = await authorizeRequestOnCaeChallenge({
                 scopes: Array.isArray(scopes) ? scopes : [scopes],
                 response,
                 request,
                 getAccessToken,
-                logger: logger7
+                logger: logger8
               }, parsedClaim), shouldSendRequest && ([response, error46] = await trySendRequest(request, next));
             } else if (callbacks.authorizeRequestOnChallenge && (shouldSendRequest = await callbacks.authorizeRequestOnChallenge({
               scopes: Array.isArray(scopes) ? scopes : [scopes],
               request,
               response,
               getAccessToken,
-              logger: logger7
+              logger: logger8
             }), shouldSendRequest && ([response, error46] = await trySendRequest(request, next)), isChallengeResponse(response) && (claims = getCaeChallengeClaims(response.headers.get("WWW-Authenticate")), claims))) {
               let parsedClaim;
               try {
                 parsedClaim = atob(claims);
               } catch {
-                return logger7.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`), response;
+                return logger8.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`), response;
               }
               shouldSendRequest = await authorizeRequestOnCaeChallenge({
                 scopes: Array.isArray(scopes) ? scopes : [scopes],
                 response,
                 request,
                 getAccessToken,
-                logger: logger7
+                logger: logger8
               }, parsedClaim), shouldSendRequest && ([response, error46] = await trySendRequest(request, next));
             }
           }
@@ -33663,14 +33663,14 @@ var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
     }
     __name(sendAuthorizeRequest, "sendAuthorizeRequest");
     function auxiliaryAuthenticationHeaderPolicy(options) {
-      let { credentials, scopes } = options, logger7 = options.logger || log_js_1.logger, tokenCyclerMap = /* @__PURE__ */ new WeakMap();
+      let { credentials, scopes } = options, logger8 = options.logger || log_js_1.logger, tokenCyclerMap = /* @__PURE__ */ new WeakMap();
       return {
         name: exports.auxiliaryAuthenticationHeaderPolicyName,
         async sendRequest(request, next) {
           if (!request.url.toLowerCase().startsWith("https://"))
             throw new Error("Bearer token authentication for auxiliary header is not permitted for non-TLS protected (non-https) URLs.");
           if (!credentials || credentials.length === 0)
-            return logger7.info(`${exports.auxiliaryAuthenticationHeaderPolicyName} header will not be set due to empty credentials.`), next(request);
+            return logger8.info(`${exports.auxiliaryAuthenticationHeaderPolicyName} header will not be set due to empty credentials.`), next(request);
           let tokenPromises = [];
           for (let credential of credentials) {
             let getAccessToken = tokenCyclerMap.get(credential);
@@ -33678,11 +33678,11 @@ var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
               scopes: Array.isArray(scopes) ? scopes : [scopes],
               request,
               getAccessToken,
-              logger: logger7
+              logger: logger8
             }));
           }
           let auxiliaryTokens = (await Promise.all(tokenPromises)).filter((token) => !!token);
-          return auxiliaryTokens.length === 0 ? (logger7.warning(`None of the auxiliary tokens are valid. ${AUTHORIZATION_AUXILIARY_HEADER} header will not be set.`), next(request)) : (request.headers.set(AUTHORIZATION_AUXILIARY_HEADER, auxiliaryTokens.map((token) => `Bearer ${token}`).join(", ")), next(request));
+          return auxiliaryTokens.length === 0 ? (logger8.warning(`None of the auxiliary tokens are valid. ${AUTHORIZATION_AUXILIARY_HEADER} header will not be set.`), next(request)) : (request.headers.set(AUTHORIZATION_AUXILIARY_HEADER, auxiliaryTokens.map((token) => `Bearer ${token}`).join(", ")), next(request));
         }
       };
     }
@@ -34493,12 +34493,12 @@ var require_authorizeRequestOnClaimChallenge = __commonJS({
     }
     __name(parseCAEChallenge, "parseCAEChallenge");
     async function authorizeRequestOnClaimChallenge(onChallengeOptions) {
-      let { scopes, response } = onChallengeOptions, logger7 = onChallengeOptions.logger || log_js_1.logger, challenge = response.headers.get("WWW-Authenticate");
+      let { scopes, response } = onChallengeOptions, logger8 = onChallengeOptions.logger || log_js_1.logger, challenge = response.headers.get("WWW-Authenticate");
       if (!challenge)
-        return logger7.info("The WWW-Authenticate header was missing. Failed to perform the Continuous Access Evaluation authentication flow."), !1;
+        return logger8.info("The WWW-Authenticate header was missing. Failed to perform the Continuous Access Evaluation authentication flow."), !1;
       let parsedChallenge = (parseCAEChallenge(challenge) || []).find((x2) => x2.claims);
       if (!parsedChallenge)
-        return logger7.info('The WWW-Authenticate header was missing the necessary "claims" to perform the Continuous Access Evaluation authentication flow.'), !1;
+        return logger8.info('The WWW-Authenticate header was missing the necessary "claims" to perform the Continuous Access Evaluation authentication flow.'), !1;
       let accessToken = await onChallengeOptions.getAccessToken(parsedChallenge.scope ? [parsedChallenge.scope] : scopes, {
         claims: (0, base64_js_1.decodeStringToString)(parsedChallenge.claims)
       });
@@ -34927,11 +34927,11 @@ var require_processMultiTenantRequest = __commonJS({
       return `The current credential is not configured to acquire tokens for tenant ${tenantId}. To enable acquiring tokens for this tenant add it to the AdditionallyAllowedTenants on the credential options, or add "*" to AdditionallyAllowedTenants to allow acquiring tokens for any tenant.`;
     }
     __name(createConfigurationErrorMessage, "createConfigurationErrorMessage");
-    function processMultiTenantRequest(tenantId, getTokenOptions, additionallyAllowedTenantIds = [], logger7) {
+    function processMultiTenantRequest(tenantId, getTokenOptions, additionallyAllowedTenantIds = [], logger8) {
       let resolvedTenantId;
       if (process.env.AZURE_IDENTITY_DISABLE_MULTITENANTAUTH || tenantId === "adfs" ? resolvedTenantId = tenantId : resolvedTenantId = getTokenOptions?.tenantId ?? tenantId, tenantId && resolvedTenantId !== tenantId && !additionallyAllowedTenantIds.includes("*") && !additionallyAllowedTenantIds.some((t2) => t2.localeCompare(resolvedTenantId) === 0)) {
         let message = createConfigurationErrorMessage(resolvedTenantId);
-        throw logger7?.info(message), new errors_js_1.CredentialUnavailableError(message);
+        throw logger8?.info(message), new errors_js_1.CredentialUnavailableError(message);
       }
       return resolvedTenantId;
     }
@@ -34952,15 +34952,15 @@ var require_tenantIdUtils = __commonJS({
     Object.defineProperty(exports, "processMultiTenantRequest", { enumerable: !0, get: /* @__PURE__ */ __name(function() {
       return processMultiTenantRequest_js_1.processMultiTenantRequest;
     }, "get") });
-    function checkTenantId(logger7, tenantId) {
+    function checkTenantId(logger8, tenantId) {
       if (!tenantId.match(/^[0-9a-zA-Z-.]+$/)) {
         let error46 = new Error("Invalid tenant id provided. You can locate your tenant id by following the instructions listed here: https://learn.microsoft.com/partner-center/find-ids-and-domain-names.");
-        throw logger7.info((0, logging_js_1.formatError)("", error46)), error46;
+        throw logger8.info((0, logging_js_1.formatError)("", error46)), error46;
       }
     }
     __name(checkTenantId, "checkTenantId");
-    function resolveTenantId(logger7, tenantId, clientId) {
-      return tenantId ? (checkTenantId(logger7, tenantId), tenantId) : (clientId || (clientId = constants_js_1.DeveloperSignOnClientId), clientId !== constants_js_1.DeveloperSignOnClientId ? "common" : "organizations");
+    function resolveTenantId(logger8, tenantId, clientId) {
+      return tenantId ? (checkTenantId(logger8, tenantId), tenantId) : (clientId || (clientId = constants_js_1.DeveloperSignOnClientId), clientId !== constants_js_1.DeveloperSignOnClientId ? "common" : "organizations");
     }
     __name(resolveTenantId, "resolveTenantId");
     function resolveAdditionallyAllowedTenantIds(additionallyAllowedTenants) {
@@ -35741,7 +35741,7 @@ var require_clientCertificateCredential = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ClientCertificateCredential = void 0;
     exports.parseCertificate = parseCertificate;
-    var msalClient_js_1 = require_msalClient(), node_crypto_1 = __require("node:crypto"), tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), promises_1 = __require("node:fs/promises"), tracing_js_1 = require_tracing(), credentialName = "ClientCertificateCredential", logger7 = (0, logging_js_1.credentialLogger)(credentialName), ClientCertificateCredential = class {
+    var msalClient_js_1 = require_msalClient(), node_crypto_1 = __require("node:crypto"), tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), promises_1 = __require("node:fs/promises"), tracing_js_1 = require_tracing(), credentialName = "ClientCertificateCredential", logger8 = (0, logging_js_1.credentialLogger)(credentialName), ClientCertificateCredential = class {
       static {
         __name(this, "ClientCertificateCredential");
       }
@@ -35765,7 +35765,7 @@ var require_clientCertificateCredential = __commonJS({
           throw new Error(`${credentialName}: To avoid unexpected behaviors, providing both the contents of a PEM certificate and the path to a PEM certificate is forbidden. To troubleshoot, visit https://aka.ms/azsdk/js/identity/serviceprincipalauthentication/troubleshoot.`);
         this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger7,
+          logger: logger8,
           tokenCredentialOptions: options
         });
       }
@@ -35779,7 +35779,7 @@ var require_clientCertificateCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${credentialName}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = Array.isArray(scopes) ? scopes : [scopes], certificate = await this.buildClientCertificate();
           return this.msalClient.getTokenByClientCertificate(arrayScopes, certificate, newOptions);
         });
@@ -35834,10 +35834,10 @@ var require_scopeUtils = __commonJS({
       return Array.isArray(scopes) ? scopes : [scopes];
     }
     __name(ensureScopes, "ensureScopes");
-    function ensureValidScopeForDevTimeCreds(scope, logger7) {
+    function ensureValidScopeForDevTimeCreds(scope, logger8) {
       if (!scope.match(/^[0-9a-zA-Z-_.:/]+$/)) {
         let error46 = new Error("Invalid scope was specified by the user or calling client");
-        throw logger7.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
+        throw logger8.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
       }
     }
     __name(ensureValidScopeForDevTimeCreds, "ensureValidScopeForDevTimeCreds");
@@ -35854,7 +35854,7 @@ var require_clientSecretCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ClientSecretCredential = void 0;
-    var msalClient_js_1 = require_msalClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), logger7 = (0, logging_js_1.credentialLogger)("ClientSecretCredential"), ClientSecretCredential = class {
+    var msalClient_js_1 = require_msalClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), logger8 = (0, logging_js_1.credentialLogger)("ClientSecretCredential"), ClientSecretCredential = class {
       static {
         __name(this, "ClientSecretCredential");
       }
@@ -35881,7 +35881,7 @@ var require_clientSecretCredential = __commonJS({
           throw new errors_js_1.CredentialUnavailableError("ClientSecretCredential: clientSecret is a required parameter. To troubleshoot, visit https://aka.ms/azsdk/js/identity/serviceprincipalauthentication/troubleshoot.");
         this.clientSecret = clientSecret, this.tenantId = tenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger7,
+          logger: logger8,
           tokenCredentialOptions: options
         });
       }
@@ -35895,7 +35895,7 @@ var require_clientSecretCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = (0, scopeUtils_js_1.ensureScopes)(scopes);
           return this.msalClient.getTokenByClientSecret(arrayScopes, this.clientSecret, newOptions);
         });
@@ -35911,7 +35911,7 @@ var require_usernamePasswordCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.UsernamePasswordCredential = void 0;
-    var msalClient_js_1 = require_msalClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), logger7 = (0, logging_js_1.credentialLogger)("UsernamePasswordCredential"), UsernamePasswordCredential = class {
+    var msalClient_js_1 = require_msalClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), logger8 = (0, logging_js_1.credentialLogger)("UsernamePasswordCredential"), UsernamePasswordCredential = class {
       static {
         __name(this, "UsernamePasswordCredential");
       }
@@ -35959,7 +35959,7 @@ var require_usernamePasswordCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = (0, scopeUtils_js_1.ensureScopes)(scopes);
           return this.msalClient.getTokenByUsernamePassword(arrayScopes, this.username, this.password, newOptions);
         });
@@ -35992,10 +35992,10 @@ var require_environmentCredential = __commonJS({
       return (process.env.AZURE_ADDITIONALLY_ALLOWED_TENANTS ?? "").split(";");
     }
     __name(getAdditionallyAllowedTenants, "getAdditionallyAllowedTenants");
-    var credentialName = "EnvironmentCredential", logger7 = (0, logging_js_1.credentialLogger)(credentialName);
+    var credentialName = "EnvironmentCredential", logger8 = (0, logging_js_1.credentialLogger)(credentialName);
     function getSendCertificateChain() {
       let sendCertificateChain = (process.env.AZURE_CLIENT_SEND_CERTIFICATE_CHAIN ?? "").toLowerCase(), result = sendCertificateChain === "true" || sendCertificateChain === "1";
-      return logger7.verbose(`AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: ${process.env.AZURE_CLIENT_SEND_CERTIFICATE_CHAIN}; sendCertificateChain: ${result}`), result;
+      return logger8.verbose(`AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: ${process.env.AZURE_CLIENT_SEND_CERTIFICATE_CHAIN}; sendCertificateChain: ${result}`), result;
     }
     __name(getSendCertificateChain, "getSendCertificateChain");
     var EnvironmentCredential = class {
@@ -36030,19 +36030,19 @@ var require_environmentCredential = __commonJS({
        */
       constructor(options) {
         let assigned = (0, logging_js_1.processEnvVars)(exports.AllSupportedEnvironmentVariables).assigned.join(", ");
-        logger7.info(`Found the following environment variables: ${assigned}`);
+        logger8.info(`Found the following environment variables: ${assigned}`);
         let tenantId = process.env.AZURE_TENANT_ID, clientId = process.env.AZURE_CLIENT_ID, clientSecret = process.env.AZURE_CLIENT_SECRET, additionallyAllowedTenantIds = getAdditionallyAllowedTenants(), sendCertificateChain = getSendCertificateChain(), newOptions = { ...options, additionallyAllowedTenantIds, sendCertificateChain };
-        if (tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger7, tenantId), tenantId && clientId && clientSecret) {
-          logger7.info(`Invoking ClientSecretCredential with tenant ID: ${tenantId}, clientId: ${clientId} and clientSecret: [REDACTED]`), this._credential = new clientSecretCredential_js_1.ClientSecretCredential(tenantId, clientId, clientSecret, newOptions);
+        if (tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger8, tenantId), tenantId && clientId && clientSecret) {
+          logger8.info(`Invoking ClientSecretCredential with tenant ID: ${tenantId}, clientId: ${clientId} and clientSecret: [REDACTED]`), this._credential = new clientSecretCredential_js_1.ClientSecretCredential(tenantId, clientId, clientSecret, newOptions);
           return;
         }
         let certificatePath = process.env.AZURE_CLIENT_CERTIFICATE_PATH, certificatePassword = process.env.AZURE_CLIENT_CERTIFICATE_PASSWORD;
         if (tenantId && clientId && certificatePath) {
-          logger7.info(`Invoking ClientCertificateCredential with tenant ID: ${tenantId}, clientId: ${clientId} and certificatePath: ${certificatePath}`), this._credential = new clientCertificateCredential_js_1.ClientCertificateCredential(tenantId, clientId, { certificatePath, certificatePassword }, newOptions);
+          logger8.info(`Invoking ClientCertificateCredential with tenant ID: ${tenantId}, clientId: ${clientId} and certificatePath: ${certificatePath}`), this._credential = new clientCertificateCredential_js_1.ClientCertificateCredential(tenantId, clientId, { certificatePath, certificatePassword }, newOptions);
           return;
         }
         let username = process.env.AZURE_USERNAME, password = process.env.AZURE_PASSWORD;
-        tenantId && clientId && username && password && (logger7.info(`Invoking UsernamePasswordCredential with tenant ID: ${tenantId}, clientId: ${clientId} and username: ${username}`), logger7.warning("Environment is configured to use username and password authentication. This authentication method is deprecated, as it doesn't support multifactor authentication (MFA). Use a more secure credential. For more details, see https://aka.ms/azsdk/identity/mfa."), this._credential = new usernamePasswordCredential_js_1.UsernamePasswordCredential(tenantId, clientId, username, password, newOptions));
+        tenantId && clientId && username && password && (logger8.info(`Invoking UsernamePasswordCredential with tenant ID: ${tenantId}, clientId: ${clientId} and username: ${username}`), logger8.warning("Environment is configured to use username and password authentication. This authentication method is deprecated, as it doesn't support multifactor authentication (MFA). Use a more secure credential. For more details, see https://aka.ms/azsdk/identity/mfa."), this._credential = new usernamePasswordCredential_js_1.UsernamePasswordCredential(tenantId, clientId, username, password, newOptions));
       }
       /**
        * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -36055,13 +36055,13 @@ var require_environmentCredential = __commonJS({
           if (this._credential)
             try {
               let result = await this._credential.getToken(scopes, newOptions);
-              return logger7.getToken.info((0, logging_js_1.formatSuccess)(scopes)), result;
+              return logger8.getToken.info((0, logging_js_1.formatSuccess)(scopes)), result;
             } catch (err) {
               let authenticationError = new errors_js_1.AuthenticationError(400, {
                 error: `${credentialName} authentication failed. To troubleshoot, visit https://aka.ms/azsdk/js/identity/environmentcredential/troubleshoot.`,
                 error_description: err.message.toString().split("More details:").join("")
               });
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, authenticationError)), authenticationError;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, authenticationError)), authenticationError;
             }
           throw new errors_js_1.CredentialUnavailableError(`${credentialName} is unavailable. No underlying credential could be used. To troubleshoot, visit https://aka.ms/azsdk/js/identity/environmentcredential/troubleshoot.`);
         });
@@ -36106,7 +36106,7 @@ var require_imdsMsi = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.imdsMsi = void 0;
-    var core_rest_pipeline_1 = require_commonjs6(), core_util_1 = require_commonjs4(), logging_js_1 = require_logging(), utils_js_1 = require_utils5(), tracing_js_1 = require_tracing(), msiName = "ManagedIdentityCredential - IMDS", logger7 = (0, logging_js_1.credentialLogger)(msiName), imdsHost = "http://169.254.169.254", imdsEndpointPath = "/metadata/identity/oauth2/token";
+    var core_rest_pipeline_1 = require_commonjs6(), core_util_1 = require_commonjs4(), logging_js_1 = require_logging(), utils_js_1 = require_utils5(), tracing_js_1 = require_tracing(), msiName = "ManagedIdentityCredential - IMDS", logger8 = (0, logging_js_1.credentialLogger)(msiName), imdsHost = "http://169.254.169.254", imdsEndpointPath = "/metadata/identity/oauth2/token";
     function prepareInvalidRequestOptions(scopes) {
       if (!(0, utils_js_1.mapScopesToResource)(scopes))
         throw new Error(`${msiName}: Multiple scopes are not supported.`);
@@ -36127,7 +36127,7 @@ var require_imdsMsi = __commonJS({
       async isAvailable(options) {
         let { scopes, identityClient, getTokenOptions } = options, resource = (0, utils_js_1.mapScopesToResource)(scopes);
         if (!resource)
-          return logger7.info(`${msiName}: Unavailable. Multiple scopes are not supported.`), !1;
+          return logger8.info(`${msiName}: Unavailable. Multiple scopes are not supported.`), !1;
         if (process.env.AZURE_POD_IDENTITY_AUTHORITY_HOST)
           return !0;
         if (!identityClient)
@@ -36139,11 +36139,11 @@ var require_imdsMsi = __commonJS({
           request.timeout = updatedOptions.requestOptions?.timeout || 1e3, request.allowInsecureConnection = !0;
           let response;
           try {
-            logger7.info(`${msiName}: Pinging the Azure IMDS endpoint`), response = await identityClient.sendRequest(request);
+            logger8.info(`${msiName}: Pinging the Azure IMDS endpoint`), response = await identityClient.sendRequest(request);
           } catch (err) {
-            return (0, core_util_1.isError)(err) && logger7.verbose(`${msiName}: Caught error ${err.name}: ${err.message}`), logger7.info(`${msiName}: The Azure IMDS endpoint is unavailable`), !1;
+            return (0, core_util_1.isError)(err) && logger8.verbose(`${msiName}: Caught error ${err.name}: ${err.message}`), logger8.info(`${msiName}: The Azure IMDS endpoint is unavailable`), !1;
           }
-          return response.status === 403 && response.bodyAsText?.includes("unreachable") ? (logger7.info(`${msiName}: The Azure IMDS endpoint is unavailable`), logger7.info(`${msiName}: ${response.bodyAsText}`), !1) : (logger7.info(`${msiName}: The Azure IMDS endpoint is available`), !0);
+          return response.status === 403 && response.bodyAsText?.includes("unreachable") ? (logger8.info(`${msiName}: The Azure IMDS endpoint is unavailable`), logger8.info(`${msiName}: ${response.bodyAsText}`), !1) : (logger8.info(`${msiName}: The Azure IMDS endpoint is available`), !0);
         });
       }
     };
@@ -36156,7 +36156,7 @@ var require_clientAssertionCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ClientAssertionCredential = void 0;
-    var msalClient_js_1 = require_msalClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), logging_js_1 = require_logging(), tracing_js_1 = require_tracing(), logger7 = (0, logging_js_1.credentialLogger)("ClientAssertionCredential"), ClientAssertionCredential = class {
+    var msalClient_js_1 = require_msalClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), logging_js_1 = require_logging(), tracing_js_1 = require_tracing(), logger8 = (0, logging_js_1.credentialLogger)("ClientAssertionCredential"), ClientAssertionCredential = class {
       static {
         __name(this, "ClientAssertionCredential");
       }
@@ -36184,7 +36184,7 @@ var require_clientAssertionCredential = __commonJS({
           throw new errors_js_1.CredentialUnavailableError("ClientAssertionCredential: clientAssertion is a required parameter.");
         this.tenantId = tenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.options = options, this.getAssertion = getAssertion, this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger7,
+          logger: logger8,
           tokenCredentialOptions: this.options
         });
       }
@@ -36198,7 +36198,7 @@ var require_clientAssertionCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = Array.isArray(scopes) ? scopes : [scopes];
           return this.msalClient.getTokenByClientAssertion(arrayScopes, this.getAssertion, newOptions);
         });
@@ -36220,7 +36220,7 @@ var require_workloadIdentityCredential = __commonJS({
       "AZURE_CLIENT_ID",
       "AZURE_FEDERATED_TOKEN_FILE"
     ];
-    var logger7 = (0, logging_js_1.credentialLogger)(credentialName), WorkloadIdentityCredential = class {
+    var logger8 = (0, logging_js_1.credentialLogger)(credentialName), WorkloadIdentityCredential = class {
       static {
         __name(this, "WorkloadIdentityCredential");
       }
@@ -36235,9 +36235,9 @@ var require_workloadIdentityCredential = __commonJS({
        */
       constructor(options) {
         let assignedEnv = (0, logging_js_1.processEnvVars)(exports.SupportedWorkloadEnvironmentVariables).assigned.join(", ");
-        logger7.info(`Found the following environment variables: ${assignedEnv}`);
+        logger8.info(`Found the following environment variables: ${assignedEnv}`);
         let workloadIdentityCredentialOptions = options ?? {}, tenantId = workloadIdentityCredentialOptions.tenantId || process.env.AZURE_TENANT_ID, clientId = workloadIdentityCredentialOptions.clientId || process.env.AZURE_CLIENT_ID;
-        if (this.federatedTokenFilePath = workloadIdentityCredentialOptions.tokenFilePath || process.env.AZURE_FEDERATED_TOKEN_FILE, tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger7, tenantId), !clientId)
+        if (this.federatedTokenFilePath = workloadIdentityCredentialOptions.tokenFilePath || process.env.AZURE_FEDERATED_TOKEN_FILE, tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger8, tenantId), !clientId)
           throw new errors_js_1.CredentialUnavailableError(`${credentialName}: is unavailable. clientId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_CLIENT_ID".
         See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`);
         if (!tenantId)
@@ -36246,7 +36246,7 @@ var require_workloadIdentityCredential = __commonJS({
         if (!this.federatedTokenFilePath)
           throw new errors_js_1.CredentialUnavailableError(`${credentialName}: is unavailable. federatedTokenFilePath is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_FEDERATED_TOKEN_FILE".
         See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`);
-        logger7.info(`Invoking ClientAssertionCredential with tenant ID: ${tenantId}, clientId: ${workloadIdentityCredentialOptions.clientId} and federated token path: [REDACTED]`), this.client = new clientAssertionCredential_js_1.ClientAssertionCredential(tenantId, clientId, this.readFileContents.bind(this), options);
+        logger8.info(`Invoking ClientAssertionCredential with tenant ID: ${tenantId}, clientId: ${workloadIdentityCredentialOptions.clientId} and federated token path: [REDACTED]`), this.client = new clientAssertionCredential_js_1.ClientAssertionCredential(tenantId, clientId, this.readFileContents.bind(this), options);
       }
       /**
        * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -36263,9 +36263,9 @@ var require_workloadIdentityCredential = __commonJS({
       "AZURE_TENANT_ID",
       "AZURE_CLIENT_ID",
       "AZURE_FEDERATED_TOKEN_FILE". See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`;
-          throw logger7.info(errorMessage), new errors_js_1.CredentialUnavailableError(errorMessage);
+          throw logger8.info(errorMessage), new errors_js_1.CredentialUnavailableError(errorMessage);
         }
-        return logger7.info("Invoking getToken() of Client Assertion Credential"), this.client.getToken(scopes, options);
+        return logger8.info("Invoking getToken() of Client Assertion Credential"), this.client.getToken(scopes, options);
       }
       async readFileContents() {
         if (this.cacheDate !== void 0 && Date.now() - this.cacheDate >= 1e3 * 60 * 5 && (this.azureFederatedTokenFileContent = void 0), !this.federatedTokenFilePath)
@@ -36290,12 +36290,12 @@ var require_tokenExchangeMsi = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.tokenExchangeMsi = void 0;
-    var workloadIdentityCredential_js_1 = require_workloadIdentityCredential(), logging_js_1 = require_logging(), msiName = "ManagedIdentityCredential - Token Exchange", logger7 = (0, logging_js_1.credentialLogger)(msiName);
+    var workloadIdentityCredential_js_1 = require_workloadIdentityCredential(), logging_js_1 = require_logging(), msiName = "ManagedIdentityCredential - Token Exchange", logger8 = (0, logging_js_1.credentialLogger)(msiName);
     exports.tokenExchangeMsi = {
       name: "tokenExchangeMsi",
       async isAvailable(clientId) {
         let env2 = process.env, result = !!((clientId || env2.AZURE_CLIENT_ID) && env2.AZURE_TENANT_ID && process.env.AZURE_FEDERATED_TOKEN_FILE);
-        return result || logger7.info(`${msiName}: Unavailable. The environment variables needed are: AZURE_CLIENT_ID (or the client ID sent through the parameters), AZURE_TENANT_ID and AZURE_FEDERATED_TOKEN_FILE`), result;
+        return result || logger8.info(`${msiName}: Unavailable. The environment variables needed are: AZURE_CLIENT_ID (or the client ID sent through the parameters), AZURE_TENANT_ID and AZURE_FEDERATED_TOKEN_FILE`), result;
       },
       async getToken(configuration, getTokenOptions = {}) {
         let { scopes, clientId } = configuration, identityClientTokenCredentialOptions = {};
@@ -36317,7 +36317,7 @@ var require_managedIdentityCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.ManagedIdentityCredential = void 0;
-    var logger_1 = require_commonjs(), msal_node_1 = require_msal_node(), identityClient_js_1 = require_identityClient(), errors_js_1 = require_errors(), utils_js_1 = require_utils3(), imdsRetryPolicy_js_1 = require_imdsRetryPolicy(), logging_js_1 = require_logging(), tracing_js_1 = require_tracing(), imdsMsi_js_1 = require_imdsMsi(), tokenExchangeMsi_js_1 = require_tokenExchangeMsi(), utils_js_2 = require_utils5(), logger7 = (0, logging_js_1.credentialLogger)("ManagedIdentityCredential"), ManagedIdentityCredential = class {
+    var logger_1 = require_commonjs(), msal_node_1 = require_msal_node(), identityClient_js_1 = require_identityClient(), errors_js_1 = require_errors(), utils_js_1 = require_utils3(), imdsRetryPolicy_js_1 = require_imdsRetryPolicy(), logging_js_1 = require_logging(), tracing_js_1 = require_tracing(), imdsMsi_js_1 = require_imdsMsi(), tokenExchangeMsi_js_1 = require_tokenExchangeMsi(), utils_js_2 = require_utils5(), logger8 = (0, logging_js_1.credentialLogger)("ManagedIdentityCredential"), ManagedIdentityCredential = class {
       static {
         __name(this, "ManagedIdentityCredential");
       }
@@ -36362,7 +36362,7 @@ var require_managedIdentityCredential = __commonJS({
             loggerOptions: {
               logLevel: (0, utils_js_1.getMSALLogLevel)((0, logger_1.getLogLevel)()),
               piiLoggingEnabled: _options.loggingOptions?.enableUnsafeSupportLogging,
-              loggerCallback: (0, utils_js_1.defaultLoggerCallback)(logger7)
+              loggerCallback: (0, utils_js_1.defaultLoggerCallback)(logger8)
             }
           }
         }), this.isAvailableIdentityClient = new identityClient_js_1.IdentityClient({
@@ -36373,20 +36373,20 @@ var require_managedIdentityCredential = __commonJS({
         });
         let managedIdentitySource = this.managedIdentityApp.getManagedIdentitySource();
         if (managedIdentitySource === "CloudShell" && (this.clientId || this.resourceId || this.objectId))
-          throw logger7.warning(`CloudShell MSI detected with user-provided IDs - throwing. Received values: ${JSON.stringify({
+          throw logger8.warning(`CloudShell MSI detected with user-provided IDs - throwing. Received values: ${JSON.stringify({
             clientId: this.clientId,
             resourceId: this.resourceId,
             objectId: this.objectId
           })}.`), new errors_js_1.CredentialUnavailableError("ManagedIdentityCredential: Specifying a user-assigned managed identity is not supported for CloudShell at runtime. When using Managed Identity in CloudShell, omit the clientId, resourceId, and objectId parameters.");
         if (managedIdentitySource === "ServiceFabric" && (this.clientId || this.resourceId || this.objectId))
-          throw logger7.warning(`Service Fabric detected with user-provided IDs - throwing. Received values: ${JSON.stringify({
+          throw logger8.warning(`Service Fabric detected with user-provided IDs - throwing. Received values: ${JSON.stringify({
             clientId: this.clientId,
             resourceId: this.resourceId,
             objectId: this.objectId
           })}.`), new errors_js_1.CredentialUnavailableError(`ManagedIdentityCredential: ${utils_js_2.serviceFabricErrorMessage}`);
-        if (logger7.info(`Using ${managedIdentitySource} managed identity.`), providedIds.length === 1) {
+        if (logger8.info(`Using ${managedIdentitySource} managed identity.`), providedIds.length === 1) {
           let { key, value } = providedIds[0];
-          logger7.info(`${managedIdentitySource} with ${key}: ${value}`);
+          logger8.info(`${managedIdentitySource} with ${key}: ${value}`);
         }
       }
       /**
@@ -36399,15 +36399,15 @@ var require_managedIdentityCredential = __commonJS({
        *                TokenCredential implementation might make.
        */
       async getToken(scopes, options = {}) {
-        logger7.getToken.info("Using the MSAL provider for Managed Identity.");
+        logger8.getToken.info("Using the MSAL provider for Managed Identity.");
         let resource = (0, utils_js_2.mapScopesToResource)(scopes);
         if (!resource)
           throw new errors_js_1.CredentialUnavailableError(`ManagedIdentityCredential: Multiple scopes are not supported. Scopes: ${JSON.stringify(scopes)}`);
         return tracing_js_1.tracingClient.withSpan("ManagedIdentityCredential.getToken", options, async () => {
           try {
             let isTokenExchangeMsi = await tokenExchangeMsi_js_1.tokenExchangeMsi.isAvailable(this.clientId), identitySource = this.managedIdentityApp.getManagedIdentitySource(), isImdsMsi = identitySource === "DefaultToImds" || identitySource === "Imds";
-            if (logger7.getToken.info(`MSAL Identity source: ${identitySource}`), isTokenExchangeMsi) {
-              logger7.getToken.info("Using the token exchange managed identity.");
+            if (logger8.getToken.info(`MSAL Identity source: ${identitySource}`), isTokenExchangeMsi) {
+              logger8.getToken.info("Using the token exchange managed identity.");
               let result = await tokenExchangeMsi_js_1.tokenExchangeMsi.getToken({
                 scopes,
                 clientId: this.clientId,
@@ -36418,7 +36418,7 @@ var require_managedIdentityCredential = __commonJS({
               if (result === null)
                 throw new errors_js_1.CredentialUnavailableError("Attempted to use the token exchange managed identity, but received a null response.");
               return result;
-            } else if (isImdsMsi && this.sendProbeRequest && (logger7.getToken.info("Using the IMDS endpoint to probe for availability."), !await imdsMsi_js_1.imdsMsi.isAvailable({
+            } else if (isImdsMsi && this.sendProbeRequest && (logger8.getToken.info("Using the IMDS endpoint to probe for availability."), !await imdsMsi_js_1.imdsMsi.isAvailable({
               scopes,
               clientId: this.clientId,
               getTokenOptions: options,
@@ -36426,18 +36426,18 @@ var require_managedIdentityCredential = __commonJS({
               resourceId: this.resourceId
             })))
               throw new errors_js_1.CredentialUnavailableError("Attempted to use the IMDS endpoint, but it is not available.");
-            logger7.getToken.info("Calling into MSAL for managed identity token.");
+            logger8.getToken.info("Calling into MSAL for managed identity token.");
             let token = await this.managedIdentityApp.acquireToken({
               resource
             });
-            return this.ensureValidMsalToken(scopes, token, options), logger7.getToken.info((0, logging_js_1.formatSuccess)(scopes)), {
+            return this.ensureValidMsalToken(scopes, token, options), logger8.getToken.info((0, logging_js_1.formatSuccess)(scopes)), {
               expiresOnTimestamp: token.expiresOn.getTime(),
               token: token.accessToken,
               refreshAfterTimestamp: token.refreshOn?.getTime(),
               tokenType: "Bearer"
             };
           } catch (err) {
-            throw logger7.getToken.error((0, logging_js_1.formatError)(scopes, err)), err.name === "AuthenticationRequiredError" ? err : isNetworkError(err) ? new errors_js_1.CredentialUnavailableError(`ManagedIdentityCredential: Network unreachable. Message: ${err.message}`, { cause: err }) : new errors_js_1.CredentialUnavailableError(`ManagedIdentityCredential: Authentication failed. Message ${err.message}`, { cause: err });
+            throw logger8.getToken.error((0, logging_js_1.formatError)(scopes, err)), err.name === "AuthenticationRequiredError" ? err : isNetworkError(err) ? new errors_js_1.CredentialUnavailableError(`ManagedIdentityCredential: Network unreachable. Message: ${err.message}`, { cause: err }) : new errors_js_1.CredentialUnavailableError(`ManagedIdentityCredential: Authentication failed. Message ${err.message}`, { cause: err });
           }
         });
       }
@@ -36445,7 +36445,7 @@ var require_managedIdentityCredential = __commonJS({
        * Ensures the validity of the MSAL token
        */
       ensureValidMsalToken(scopes, msalToken, getTokenOptions) {
-        let createError = /* @__PURE__ */ __name((message) => (logger7.getToken.info(message), new errors_js_1.AuthenticationRequiredError({
+        let createError = /* @__PURE__ */ __name((message) => (logger8.getToken.info(message), new errors_js_1.AuthenticationRequiredError({
           scopes: Array.isArray(scopes) ? scopes : [scopes],
           getTokenOptions,
           message
@@ -36472,7 +36472,7 @@ var require_azureDeveloperCliCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureDeveloperCliCredential = exports.developerCliCredentialInternals = exports.azureDeveloperCliPublicErrorMessages = void 0;
-    var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports)), logging_js_1 = require_logging(), errors_js_1 = require_errors(), child_process_1 = tslib_1.__importDefault(__require("child_process")), tenantIdUtils_js_1 = require_tenantIdUtils(), tracing_js_1 = require_tracing(), scopeUtils_js_1 = require_scopeUtils(), logger7 = (0, logging_js_1.credentialLogger)("AzureDeveloperCliCredential");
+    var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports)), logging_js_1 = require_logging(), errors_js_1 = require_errors(), child_process_1 = tslib_1.__importDefault(__require("child_process")), tenantIdUtils_js_1 = require_tenantIdUtils(), tracing_js_1 = require_tracing(), scopeUtils_js_1 = require_scopeUtils(), logger8 = (0, logging_js_1.credentialLogger)("AzureDeveloperCliCredential");
     exports.azureDeveloperCliPublicErrorMessages = {
       notInstalled: "Azure Developer CLI couldn't be found. To mitigate this issue, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
       login: "Please run 'azd auth login' from a command prompt to authenticate before using this credential. For more information, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
@@ -36486,7 +36486,7 @@ var require_azureDeveloperCliCredential = __commonJS({
       getSafeWorkingDir() {
         if (process.platform === "win32") {
           let systemRoot = process.env.SystemRoot || process.env.SYSTEMROOT;
-          return systemRoot || (logger7.getToken.warning("The SystemRoot environment variable is not set. This may cause issues when using the Azure Developer CLI credential."), systemRoot = "C:\\Windows"), systemRoot;
+          return systemRoot || (logger8.getToken.warning("The SystemRoot environment variable is not set. This may cause issues when using the Azure Developer CLI credential."), systemRoot = "C:\\Windows"), systemRoot;
         } else
           return "/bin";
       },
@@ -36539,7 +36539,7 @@ var require_azureDeveloperCliCredential = __commonJS({
        * @param options - Options, to optionally allow multi-tenant requests.
        */
       constructor(options) {
-        options?.tenantId && ((0, tenantIdUtils_js_1.checkTenantId)(logger7, options?.tenantId), this.tenantId = options?.tenantId), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.timeout = options?.processTimeoutInMs;
+        options?.tenantId && ((0, tenantIdUtils_js_1.checkTenantId)(logger8, options?.tenantId), this.tenantId = options?.tenantId), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.timeout = options?.processTimeoutInMs;
       }
       /**
        * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -36551,29 +36551,29 @@ var require_azureDeveloperCliCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, options, this.additionallyAllowedTenantIds);
-        tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger7, tenantId);
+        tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger8, tenantId);
         let scopeList;
-        return typeof scopes == "string" ? scopeList = [scopes] : scopeList = scopes, logger7.getToken.info(`Using the scopes ${scopes}`), tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
+        return typeof scopes == "string" ? scopeList = [scopes] : scopeList = scopes, logger8.getToken.info(`Using the scopes ${scopes}`), tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
           try {
             scopeList.forEach((scope) => {
-              (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger7);
+              (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger8);
             });
             let obj = await exports.developerCliCredentialInternals.getAzdAccessToken(scopeList, tenantId, this.timeout, options.claims), isMFARequiredError = obj.stderr?.match("must use multi-factor authentication") || obj.stderr?.match("reauthentication required"), isNotLoggedInError = obj.stderr?.match("not logged in, run `azd login` to login") || obj.stderr?.match("not logged in, run `azd auth login` to login");
             if (obj.stderr?.match("azd:(.*)not found") || obj.stderr?.startsWith("'azd' is not recognized") || obj.error && obj.error.code === "ENOENT") {
               let error46 = new errors_js_1.CredentialUnavailableError(exports.azureDeveloperCliPublicErrorMessages.notInstalled);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             if (isNotLoggedInError) {
               let error46 = new errors_js_1.CredentialUnavailableError(exports.azureDeveloperCliPublicErrorMessages.login);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             if (isMFARequiredError) {
               let loginCmd = `azd auth login ${scopeList.reduce((previous, current) => previous.concat("--scope", current), []).join(" ")}`, error46 = new errors_js_1.CredentialUnavailableError(`${exports.azureDeveloperCliPublicErrorMessages.claim} ${loginCmd}`);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             try {
               let resp = JSON.parse(obj.stdout);
-              return logger7.getToken.info((0, logging_js_1.formatSuccess)(scopes)), {
+              return logger8.getToken.info((0, logging_js_1.formatSuccess)(scopes)), {
                 token: resp.token,
                 expiresOnTimestamp: new Date(resp.expiresOn).getTime(),
                 tokenType: "Bearer"
@@ -36583,7 +36583,7 @@ var require_azureDeveloperCliCredential = __commonJS({
             }
           } catch (err) {
             let error46 = err.name === "CredentialUnavailableError" ? err : new errors_js_1.CredentialUnavailableError(err.message || exports.azureDeveloperCliPublicErrorMessages.unknown);
-            throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+            throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
           }
         });
       }
@@ -36599,10 +36599,10 @@ var require_subscriptionUtils = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.checkSubscription = checkSubscription;
     var logging_js_1 = require_logging();
-    function checkSubscription(logger7, subscription) {
+    function checkSubscription(logger8, subscription) {
       if (!subscription.match(/^[0-9a-zA-Z-._ ]+$/)) {
         let error46 = new Error(`Subscription '${subscription}' contains invalid characters. If this is the name of a subscription, use its ID instead. You can locate your subscription by following the instructions listed here: https://learn.microsoft.com/azure/azure-portal/get-subscription-tenant-id`);
-        throw logger7.info((0, logging_js_1.formatError)("", error46)), error46;
+        throw logger8.info((0, logging_js_1.formatError)("", error46)), error46;
       }
     }
     __name(checkSubscription, "checkSubscription");
@@ -36615,7 +36615,7 @@ var require_azureCliCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzureCliCredential = exports.cliCredentialInternals = exports.azureCliPublicErrorMessages = void 0;
-    var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports)), tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), errors_js_1 = require_errors(), child_process_1 = tslib_1.__importDefault(__require("child_process")), tracing_js_1 = require_tracing(), subscriptionUtils_js_1 = require_subscriptionUtils(), logger7 = (0, logging_js_1.credentialLogger)("AzureCliCredential");
+    var tslib_1 = (init_tslib_es6(), __toCommonJS(tslib_es6_exports)), tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), errors_js_1 = require_errors(), child_process_1 = tslib_1.__importDefault(__require("child_process")), tracing_js_1 = require_tracing(), subscriptionUtils_js_1 = require_subscriptionUtils(), logger8 = (0, logging_js_1.credentialLogger)("AzureCliCredential");
     exports.azureCliPublicErrorMessages = {
       claim: "This credential doesn't support claims challenges. To authenticate with the required claims, please run the following command:",
       notInstalled: "Azure CLI could not be found. Please visit https://aka.ms/azure-cli for installation instructions and then, once installed, authenticate to your Azure account using 'az login'.",
@@ -36630,7 +36630,7 @@ var require_azureCliCredential = __commonJS({
       getSafeWorkingDir() {
         if (process.platform === "win32") {
           let systemRoot = process.env.SystemRoot || process.env.SYSTEMROOT;
-          return systemRoot || (logger7.getToken.warning("The SystemRoot environment variable is not set. This may cause issues when using the Azure CLI credential."), systemRoot = "C:\\Windows"), systemRoot;
+          return systemRoot || (logger8.getToken.warning("The SystemRoot environment variable is not set. This may cause issues when using the Azure CLI credential."), systemRoot = "C:\\Windows"), systemRoot;
         } else
           return "/bin";
       },
@@ -36679,7 +36679,7 @@ var require_azureCliCredential = __commonJS({
        * @param options - Options, to optionally allow multi-tenant requests.
        */
       constructor(options) {
-        options?.tenantId && ((0, tenantIdUtils_js_1.checkTenantId)(logger7, options?.tenantId), this.tenantId = options?.tenantId), options?.subscription && ((0, subscriptionUtils_js_1.checkSubscription)(logger7, options?.subscription), this.subscription = options?.subscription), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.timeout = options?.processTimeoutInMs;
+        options?.tenantId && ((0, tenantIdUtils_js_1.checkTenantId)(logger8, options?.tenantId), this.tenantId = options?.tenantId), options?.subscription && ((0, subscriptionUtils_js_1.checkSubscription)(logger8, options?.subscription), this.subscription = options?.subscription), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.timeout = options?.processTimeoutInMs;
       }
       /**
        * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -36695,30 +36695,30 @@ var require_azureCliCredential = __commonJS({
           let loginCmd = `az login --claims-challenge ${btoa(claimsValue)} --scope ${scope}`, tenantIdFromOptions = options.tenantId;
           tenantIdFromOptions && (loginCmd += ` --tenant ${tenantIdFromOptions}`);
           let error46 = new errors_js_1.CredentialUnavailableError(`${exports.azureCliPublicErrorMessages.claim} ${loginCmd}`);
-          throw logger7.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
+          throw logger8.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
         }
         let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, options, this.additionallyAllowedTenantIds);
-        return tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger7, tenantId), this.subscription && (0, subscriptionUtils_js_1.checkSubscription)(logger7, this.subscription), logger7.getToken.info(`Using the scope ${scope}`), tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
+        return tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger8, tenantId), this.subscription && (0, subscriptionUtils_js_1.checkSubscription)(logger8, this.subscription), logger8.getToken.info(`Using the scope ${scope}`), tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
           try {
-            (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger7);
+            (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger8);
             let resource = (0, scopeUtils_js_1.getScopeResource)(scope), obj = await exports.cliCredentialInternals.getAzureCliAccessToken(resource, tenantId, this.subscription, this.timeout), specificScope = obj.stderr?.match("(.*)az login --scope(.*)"), isLoginError = obj.stderr?.match("(.*)az login(.*)") && !specificScope;
             if (obj.stderr?.match("az:(.*)not found") || obj.stderr?.startsWith("'az' is not recognized")) {
               let error46 = new errors_js_1.CredentialUnavailableError(exports.azureCliPublicErrorMessages.notInstalled);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             if (isLoginError) {
               let error46 = new errors_js_1.CredentialUnavailableError(exports.azureCliPublicErrorMessages.login);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
             }
             try {
               let responseData = obj.stdout, response = this.parseRawResponse(responseData);
-              return logger7.getToken.info((0, logging_js_1.formatSuccess)(scopes)), response;
+              return logger8.getToken.info((0, logging_js_1.formatSuccess)(scopes)), response;
             } catch (e2) {
               throw obj.stderr ? new errors_js_1.CredentialUnavailableError(obj.stderr) : e2;
             }
           } catch (err) {
             let error46 = err.name === "CredentialUnavailableError" ? err : new errors_js_1.CredentialUnavailableError(err.message || exports.azureCliPublicErrorMessages.unknown);
-            throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
+            throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), error46;
           }
         });
       }
@@ -36735,7 +36735,7 @@ var require_azureCliCredential = __commonJS({
       parseRawResponse(rawResponse) {
         let response = JSON.parse(rawResponse), token = response.accessToken, expiresOnTimestamp = Number.parseInt(response.expires_on, 10) * 1e3;
         if (!isNaN(expiresOnTimestamp))
-          return logger7.getToken.info("expires_on is available and is valid, using it"), {
+          return logger8.getToken.info("expires_on is available and is valid, using it"), {
             token,
             expiresOnTimestamp,
             tokenType: "Bearer"
@@ -36784,7 +36784,7 @@ var require_azurePowerShellCredential = __commonJS({
     exports.AzurePowerShellCredential = exports.commandStack = exports.powerShellPublicErrorMessages = exports.powerShellErrors = void 0;
     exports.formatCommand = formatCommand;
     exports.parseJsonToken = parseJsonToken;
-    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), errors_js_1 = require_errors(), processUtils_js_1 = require_processUtils(), tracing_js_1 = require_tracing(), logger7 = (0, logging_js_1.credentialLogger)("AzurePowerShellCredential"), isWindows2 = process.platform === "win32";
+    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), errors_js_1 = require_errors(), processUtils_js_1 = require_processUtils(), tracing_js_1 = require_tracing(), logger8 = (0, logging_js_1.credentialLogger)("AzurePowerShellCredential"), isWindows2 = process.platform === "win32";
     function formatCommand(commandName) {
       return isWindows2 ? `${commandName}.exe` : commandName;
     }
@@ -36833,7 +36833,7 @@ var require_azurePowerShellCredential = __commonJS({
        * @param options - Options, to optionally allow multi-tenant requests.
        */
       constructor(options) {
-        options?.tenantId && ((0, tenantIdUtils_js_1.checkTenantId)(logger7, options?.tenantId), this.tenantId = options?.tenantId), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.timeout = options?.processTimeoutInMs;
+        options?.tenantId && ((0, tenantIdUtils_js_1.checkTenantId)(logger8, options?.tenantId), this.tenantId = options?.tenantId), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.timeout = options?.processTimeoutInMs;
       }
       /**
        * Gets the access token from Azure PowerShell
@@ -36915,14 +36915,14 @@ var require_azurePowerShellCredential = __commonJS({
             let loginCmd = `Connect-AzAccount -ClaimsChallenge ${btoa(claimsValue)}`, tenantIdFromOptions = options.tenantId;
             tenantIdFromOptions && (loginCmd += ` -Tenant ${tenantIdFromOptions}`);
             let error46 = new errors_js_1.CredentialUnavailableError(`${exports.powerShellPublicErrorMessages.claim} ${loginCmd}`);
-            throw logger7.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
+            throw logger8.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
           }
           let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, options, this.additionallyAllowedTenantIds);
-          tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger7, tenantId);
+          tenantId && (0, tenantIdUtils_js_1.checkTenantId)(logger8, tenantId);
           try {
-            (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger7), logger7.getToken.info(`Using the scope ${scope}`);
+            (0, scopeUtils_js_1.ensureValidScopeForDevTimeCreds)(scope, logger8), logger8.getToken.info(`Using the scope ${scope}`);
             let resource = (0, scopeUtils_js_1.getScopeResource)(scope), response = await this.getAzurePowerShellAccessToken(resource, tenantId, this.timeout);
-            return logger7.getToken.info((0, logging_js_1.formatSuccess)(scopes)), {
+            return logger8.getToken.info((0, logging_js_1.formatSuccess)(scopes)), {
               token: response.Token,
               expiresOnTimestamp: new Date(response.ExpiresOn).getTime(),
               tokenType: "Bearer"
@@ -36930,13 +36930,13 @@ var require_azurePowerShellCredential = __commonJS({
           } catch (err) {
             if (isNotInstalledError(err)) {
               let error47 = new errors_js_1.CredentialUnavailableError(exports.powerShellPublicErrorMessages.installed);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scope, error47)), error47;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scope, error47)), error47;
             } else if (isLoginError(err)) {
               let error47 = new errors_js_1.CredentialUnavailableError(exports.powerShellPublicErrorMessages.login);
-              throw logger7.getToken.info((0, logging_js_1.formatError)(scope, error47)), error47;
+              throw logger8.getToken.info((0, logging_js_1.formatError)(scope, error47)), error47;
             }
             let error46 = new errors_js_1.CredentialUnavailableError(`${err}. ${exports.powerShellPublicErrorMessages.troubleshoot}`);
-            throw logger7.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
+            throw logger8.getToken.info((0, logging_js_1.formatError)(scope, error46)), error46;
           }
         });
       }
@@ -36950,7 +36950,7 @@ var require_azurePowerShellCredential = __commonJS({
             try {
               let jsonContent = JSON.parse(item);
               if (jsonContent?.Token)
-                return resultWithoutToken = resultWithoutToken.replace(item, ""), resultWithoutToken && logger7.getToken.warning(resultWithoutToken), jsonContent;
+                return resultWithoutToken = resultWithoutToken.replace(item, ""), resultWithoutToken && logger8.getToken.warning(resultWithoutToken), jsonContent;
             } catch {
               continue;
             }
@@ -36969,7 +36969,7 @@ var require_visualStudioCodeCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.VisualStudioCodeCredential = void 0;
-    var logging_js_1 = require_logging(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), tenantIdUtils_js_2 = require_tenantIdUtils(), msalClient_js_1 = require_msalClient(), scopeUtils_js_1 = require_scopeUtils(), msalPlugins_js_1 = require_msalPlugins(), utils_js_1 = require_utils3(), promises_1 = __require("node:fs/promises"), CommonTenantId = "common", VSCodeClientId = "aebc6443-996d-45c2-90f0-388ff96faa56", logger7 = (0, logging_js_1.credentialLogger)("VisualStudioCodeCredential"), unsupportedTenantIds = {
+    var logging_js_1 = require_logging(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), tenantIdUtils_js_2 = require_tenantIdUtils(), msalClient_js_1 = require_msalClient(), scopeUtils_js_1 = require_scopeUtils(), msalPlugins_js_1 = require_msalPlugins(), utils_js_1 = require_utils3(), promises_1 = __require("node:fs/promises"), CommonTenantId = "common", VSCodeClientId = "aebc6443-996d-45c2-90f0-388ff96faa56", logger8 = (0, logging_js_1.credentialLogger)("VisualStudioCodeCredential"), unsupportedTenantIds = {
       adfs: "The VisualStudioCodeCredential does not support authentication with ADFS tenants."
     };
     function checkUnsupportedTenant(tenantId) {
@@ -36996,7 +36996,7 @@ var require_visualStudioCodeCredential = __commonJS({
        * @param options - Options for configuring the client which makes the authentication request.
        */
       constructor(options) {
-        this.options = options || {}, options && options.tenantId ? ((0, tenantIdUtils_js_2.checkTenantId)(logger7, options.tenantId), this.tenantId = options.tenantId) : this.tenantId = CommonTenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), checkUnsupportedTenant(this.tenantId);
+        this.options = options || {}, options && options.tenantId ? ((0, tenantIdUtils_js_2.checkTenantId)(logger8, options.tenantId), this.tenantId = options.tenantId) : this.tenantId = CommonTenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), checkUnsupportedTenant(this.tenantId);
       }
       /**
        * Runs preparations for any further getToken request:
@@ -37005,7 +37005,7 @@ var require_visualStudioCodeCredential = __commonJS({
        *   - Creates the MSAL client with the loaded plugin and authentication record.
        */
       async prepare(scopes) {
-        let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, this.options, this.additionallyAllowedTenantIds, logger7) || this.tenantId;
+        let tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, this.options, this.additionallyAllowedTenantIds, logger8) || this.tenantId;
         if (!(0, msalPlugins_js_1.hasVSCodePlugin)() || !msalPlugins_js_1.vsCodeAuthRecordPath)
           throw new errors_js_1.CredentialUnavailableError("Visual Studio Code Authentication is not available. Ensure you have have Azure Resources Extension installed in VS Code, signed into Azure via VS Code, installed the @azure/identity-vscode package, and properly configured the extension.");
         let authenticationRecord = await this.loadAuthRecord(msalPlugins_js_1.vsCodeAuthRecordPath, scopes);
@@ -37058,7 +37058,7 @@ var require_visualStudioCodeCredential = __commonJS({
           let authRecordContent = await (0, promises_1.readFile)(authRecordPath, { encoding: "utf8" });
           return (0, utils_js_1.deserializeAuthenticationRecord)(authRecordContent);
         } catch (error46) {
-          throw logger7.getToken.info((0, logging_js_1.formatError)(scopes, error46)), new errors_js_1.CredentialUnavailableError("Cannot load authentication record in Visual Studio Code. Ensure you have have Azure Resources Extension installed in VS Code, signed into Azure via VS Code, installed the @azure/identity-vscode package, and properly configured the extension.");
+          throw logger8.getToken.info((0, logging_js_1.formatError)(scopes, error46)), new errors_js_1.CredentialUnavailableError("Cannot load authentication record in Visual Studio Code. Ensure you have have Azure Resources Extension installed in VS Code, signed into Azure via VS Code, installed the @azure/identity-vscode package, and properly configured the extension.");
         }
       }
     };
@@ -37072,7 +37072,7 @@ var require_brokerCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.BrokerCredential = void 0;
-    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), constants_js_1 = require_constants(), errors_js_1 = require_errors(), logger7 = (0, logging_js_1.credentialLogger)("BrokerCredential"), BrokerCredential = class {
+    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), constants_js_1 = require_constants(), errors_js_1 = require_errors(), logger8 = (0, logging_js_1.credentialLogger)("BrokerCredential"), BrokerCredential = class {
       static {
         __name(this, "BrokerCredential");
       }
@@ -37088,11 +37088,11 @@ var require_brokerCredential = __commonJS({
        * @param options - Options for configuring the broker credential, including required broker options.
        */
       constructor(options) {
-        this.brokerTenantId = (0, tenantIdUtils_js_1.resolveTenantId)(logger7, options.tenantId), this.brokerAdditionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants);
+        this.brokerTenantId = (0, tenantIdUtils_js_1.resolveTenantId)(logger8, options.tenantId), this.brokerAdditionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants);
         let msalClientOptions = {
           ...options,
           tokenCredentialOptions: options,
-          logger: logger7,
+          logger: logger8,
           brokerOptions: {
             enabled: !0,
             parentWindowHandle: new Uint8Array(0),
@@ -37113,7 +37113,7 @@ var require_brokerCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.brokerTenantId, newOptions, this.brokerAdditionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.brokerTenantId, newOptions, this.brokerAdditionallyAllowedTenantIds, logger8);
           let arrayScopes = (0, scopeUtils_js_1.ensureScopes)(scopes);
           try {
             return this.brokerMsalClient.getBrokeredToken(arrayScopes, !0, {
@@ -37121,7 +37121,7 @@ var require_brokerCredential = __commonJS({
               disableAutomaticAuthentication: !0
             });
           } catch (e2) {
-            throw logger7.getToken.info((0, logging_js_1.formatError)(arrayScopes, e2)), new errors_js_1.CredentialUnavailableError("Failed to acquire token using broker authentication", { cause: e2 });
+            throw logger8.getToken.info((0, logging_js_1.formatError)(arrayScopes, e2)), new errors_js_1.CredentialUnavailableError("Failed to acquire token using broker authentication", { cause: e2 });
           }
         });
       }
@@ -37228,7 +37228,7 @@ var require_defaultAzureCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DefaultAzureCredential = exports.UnavailableDefaultCredential = void 0;
-    var chainedTokenCredential_js_1 = require_chainedTokenCredential(), logging_js_1 = require_logging(), defaultAzureCredentialFunctions_js_1 = require_defaultAzureCredentialFunctions(), logger7 = (0, logging_js_1.credentialLogger)("DefaultAzureCredential"), UnavailableDefaultCredential = class {
+    var chainedTokenCredential_js_1 = require_chainedTokenCredential(), logging_js_1 = require_logging(), defaultAzureCredentialFunctions_js_1 = require_defaultAzureCredentialFunctions(), logger8 = (0, logging_js_1.credentialLogger)("DefaultAzureCredential"), UnavailableDefaultCredential = class {
       static {
         __name(this, "UnavailableDefaultCredential");
       }
@@ -37238,7 +37238,7 @@ var require_defaultAzureCredential = __commonJS({
         this.credentialName = credentialName, this.credentialUnavailableErrorMessage = message;
       }
       getToken() {
-        return logger7.getToken.info(`Skipping ${this.credentialName}, reason: ${this.credentialUnavailableErrorMessage}`), Promise.resolve(null);
+        return logger8.getToken.info(`Skipping ${this.credentialName}, reason: ${this.credentialUnavailableErrorMessage}`), Promise.resolve(null);
       }
     };
     exports.UnavailableDefaultCredential = UnavailableDefaultCredential;
@@ -37292,7 +37292,7 @@ var require_defaultAzureCredential = __commonJS({
               break;
             default: {
               let errorMessage = `Invalid value for AZURE_TOKEN_CREDENTIALS = ${process.env.AZURE_TOKEN_CREDENTIALS}. Valid values are 'prod' or 'dev' or any of these credentials - ${validCredentialNames}.`;
-              throw logger7.warning(errorMessage), new Error(errorMessage);
+              throw logger8.warning(errorMessage), new Error(errorMessage);
             }
           }
         else
@@ -37301,7 +37301,7 @@ var require_defaultAzureCredential = __commonJS({
           try {
             return createCredentialFn(options ?? {});
           } catch (err) {
-            return logger7.warning(`Skipped ${createCredentialFn.name} because of an error creating the credential: ${err}`), new UnavailableDefaultCredential(createCredentialFn.name, err.message);
+            return logger8.warning(`Skipped ${createCredentialFn.name} because of an error creating the credential: ${err}`), new UnavailableDefaultCredential(createCredentialFn.name, err.message);
           }
         });
         super(...credentials);
@@ -37313,7 +37313,7 @@ var require_defaultAzureCredential = __commonJS({
         let missing = (Array.isArray(options.requiredEnvVars) ? options.requiredEnvVars : [options.requiredEnvVars]).filter((envVar) => !process.env[envVar]);
         if (missing.length > 0) {
           let errorMessage = `Required environment ${missing.length === 1 ? "variable" : "variables"} '${missing.join(", ")}' for DefaultAzureCredential ${missing.length === 1 ? "is" : "are"} not set or empty.`;
-          throw logger7.warning(errorMessage), new Error(errorMessage);
+          throw logger8.warning(errorMessage), new Error(errorMessage);
         }
       }
     }
@@ -37327,7 +37327,7 @@ var require_interactiveBrowserCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.InteractiveBrowserCredential = void 0;
-    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), constants_js_1 = require_constants(), logger7 = (0, logging_js_1.credentialLogger)("InteractiveBrowserCredential"), InteractiveBrowserCredential = class {
+    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), constants_js_1 = require_constants(), logger8 = (0, logging_js_1.credentialLogger)("InteractiveBrowserCredential"), InteractiveBrowserCredential = class {
       static {
         __name(this, "InteractiveBrowserCredential");
       }
@@ -37350,11 +37350,11 @@ var require_interactiveBrowserCredential = __commonJS({
        * @param options - Options for configuring the client which makes the authentication requests.
        */
       constructor(options) {
-        this.tenantId = (0, tenantIdUtils_js_1.resolveTenantId)(logger7, options.tenantId, options.clientId), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants);
+        this.tenantId = (0, tenantIdUtils_js_1.resolveTenantId)(logger8, options.tenantId, options.clientId), this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants);
         let msalClientOptions = {
           ...options,
           tokenCredentialOptions: options,
-          logger: logger7
+          logger: logger8
         }, ibcNodeOptions = options;
         if (this.browserCustomizationOptions = ibcNodeOptions.browserCustomizationOptions, this.loginHint = ibcNodeOptions.loginHint, ibcNodeOptions?.brokerOptions?.enabled)
           if (ibcNodeOptions?.brokerOptions?.parentWindowHandle)
@@ -37382,7 +37382,7 @@ var require_interactiveBrowserCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = (0, scopeUtils_js_1.ensureScopes)(scopes);
           return this.msalClient.getTokenByInteractiveRequest(arrayScopes, {
             ...newOptions,
@@ -37429,7 +37429,7 @@ var require_deviceCodeCredential = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.DeviceCodeCredential = void 0;
     exports.defaultDeviceCodePromptCallback = defaultDeviceCodePromptCallback;
-    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), constants_js_1 = require_constants(), logger7 = (0, logging_js_1.credentialLogger)("DeviceCodeCredential");
+    var tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), constants_js_1 = require_constants(), logger8 = (0, logging_js_1.credentialLogger)("DeviceCodeCredential");
     function defaultDeviceCodePromptCallback(deviceCodeInfo) {
       console.log(deviceCodeInfo.message);
     }
@@ -37467,10 +37467,10 @@ var require_deviceCodeCredential = __commonJS({
        */
       constructor(options) {
         this.tenantId = options?.tenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants);
-        let clientId = options?.clientId ?? constants_js_1.DeveloperSignOnClientId, tenantId = (0, tenantIdUtils_js_1.resolveTenantId)(logger7, options?.tenantId, clientId);
+        let clientId = options?.clientId ?? constants_js_1.DeveloperSignOnClientId, tenantId = (0, tenantIdUtils_js_1.resolveTenantId)(logger8, options?.tenantId, clientId);
         this.userPromptCallback = options?.userPromptCallback ?? defaultDeviceCodePromptCallback, this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger7,
+          logger: logger8,
           tokenCredentialOptions: options || {}
         }), this.disableAutomaticAuthentication = options?.disableAutomaticAuthentication;
       }
@@ -37488,7 +37488,7 @@ var require_deviceCodeCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = (0, scopeUtils_js_1.ensureScopes)(scopes);
           return this.msalClient.getTokenByDeviceCode(arrayScopes, this.userPromptCallback, {
             ...newOptions,
@@ -37528,7 +37528,7 @@ var require_azurePipelinesCredential = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AzurePipelinesCredential = void 0;
     exports.handleOidcResponse = handleOidcResponse;
-    var errors_js_1 = require_errors(), core_rest_pipeline_1 = require_commonjs6(), clientAssertionCredential_js_1 = require_clientAssertionCredential(), identityClient_js_1 = require_identityClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), credentialName = "AzurePipelinesCredential", logger7 = (0, logging_js_1.credentialLogger)(credentialName), OIDC_API_VERSION = "7.1", AzurePipelinesCredential = class {
+    var errors_js_1 = require_errors(), core_rest_pipeline_1 = require_commonjs6(), clientAssertionCredential_js_1 = require_clientAssertionCredential(), identityClient_js_1 = require_identityClient(), tenantIdUtils_js_1 = require_tenantIdUtils(), logging_js_1 = require_logging(), credentialName = "AzurePipelinesCredential", logger8 = (0, logging_js_1.credentialLogger)(credentialName), OIDC_API_VERSION = "7.1", AzurePipelinesCredential = class {
       static {
         __name(this, "AzurePipelinesCredential");
       }
@@ -37558,10 +37558,10 @@ var require_azurePipelinesCredential = __commonJS({
             "x-vss-e2eid",
             "x-msedge-ref"
           ]
-        }, this.identityClient = new identityClient_js_1.IdentityClient(options), (0, tenantIdUtils_js_1.checkTenantId)(logger7, tenantId), logger7.info(`Invoking AzurePipelinesCredential with tenant ID: ${tenantId}, client ID: ${clientId}, and service connection ID: ${serviceConnectionId}`), !process.env.SYSTEM_OIDCREQUESTURI)
+        }, this.identityClient = new identityClient_js_1.IdentityClient(options), (0, tenantIdUtils_js_1.checkTenantId)(logger8, tenantId), logger8.info(`Invoking AzurePipelinesCredential with tenant ID: ${tenantId}, client ID: ${clientId}, and service connection ID: ${serviceConnectionId}`), !process.env.SYSTEM_OIDCREQUESTURI)
           throw new errors_js_1.CredentialUnavailableError(`${credentialName}: is unavailable. Ensure that you're running this task in an Azure Pipeline, so that following missing system variable(s) can be defined- "SYSTEM_OIDCREQUESTURI"`);
         let oidcRequestUrl = `${process.env.SYSTEM_OIDCREQUESTURI}?api-version=${OIDC_API_VERSION}&serviceConnectionId=${serviceConnectionId}`;
-        logger7.info(`Invoking ClientAssertionCredential with tenant ID: ${tenantId}, client ID: ${clientId} and service connection ID: ${serviceConnectionId}`), this.clientAssertionCredential = new clientAssertionCredential_js_1.ClientAssertionCredential(tenantId, clientId, this.requestOidcToken.bind(this, oidcRequestUrl, systemAccessToken), options);
+        logger8.info(`Invoking ClientAssertionCredential with tenant ID: ${tenantId}, client ID: ${clientId} and service connection ID: ${serviceConnectionId}`), this.clientAssertionCredential = new clientAssertionCredential_js_1.ClientAssertionCredential(tenantId, clientId, this.requestOidcToken.bind(this, oidcRequestUrl, systemAccessToken), options);
       }
       /**
        * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -37580,9 +37580,9 @@ var require_azurePipelinesCredential = __commonJS({
       systemAccessToken,
       "SYSTEM_OIDCREQUESTURI".      
       See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`;
-          throw logger7.error(errorMessage), new errors_js_1.CredentialUnavailableError(errorMessage);
+          throw logger8.error(errorMessage), new errors_js_1.CredentialUnavailableError(errorMessage);
         }
-        return logger7.info("Invoking getToken() of Client Assertion Credential"), this.clientAssertionCredential.getToken(scopes, options);
+        return logger8.info("Invoking getToken() of Client Assertion Credential"), this.clientAssertionCredential.getToken(scopes, options);
       }
       /**
        *
@@ -37591,7 +37591,7 @@ var require_azurePipelinesCredential = __commonJS({
        * @returns OIDC token from Azure Pipelines
        */
       async requestOidcToken(oidcRequestUrl, systemAccessToken) {
-        logger7.info("Requesting OIDC token from Azure Pipelines..."), logger7.info(oidcRequestUrl);
+        logger8.info("Requesting OIDC token from Azure Pipelines..."), logger8.info(oidcRequestUrl);
         let request = (0, core_rest_pipeline_1.createPipelineRequest)({
           url: oidcRequestUrl,
           method: "POST",
@@ -37609,7 +37609,7 @@ var require_azurePipelinesCredential = __commonJS({
     function handleOidcResponse(response) {
       let text = response.bodyAsText;
       if (!text)
-        throw logger7.error(`${credentialName}: Authentication Failed. Received null token from OIDC request. Response status- ${response.status}. Complete response - ${JSON.stringify(response)}`), new errors_js_1.AuthenticationError(response.status, {
+        throw logger8.error(`${credentialName}: Authentication Failed. Received null token from OIDC request. Response status- ${response.status}. Complete response - ${JSON.stringify(response)}`), new errors_js_1.AuthenticationError(response.status, {
           error: `${credentialName}: Authentication Failed. Received null token from OIDC request.`,
           error_description: `${JSON.stringify(response)}. See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`
         });
@@ -37619,15 +37619,15 @@ var require_azurePipelinesCredential = __commonJS({
           return result.oidcToken;
         {
           let errorMessage = `${credentialName}: Authentication Failed. oidcToken field not detected in the response.`, errorDescription = "";
-          throw response.status !== 200 && (errorDescription = `Response body = ${text}. Response Headers ["x-vss-e2eid"] = ${response.headers.get("x-vss-e2eid")} and ["x-msedge-ref"] = ${response.headers.get("x-msedge-ref")}. See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`), logger7.error(errorMessage), logger7.error(errorDescription), new errors_js_1.AuthenticationError(response.status, {
+          throw response.status !== 200 && (errorDescription = `Response body = ${text}. Response Headers ["x-vss-e2eid"] = ${response.headers.get("x-vss-e2eid")} and ["x-msedge-ref"] = ${response.headers.get("x-msedge-ref")}. See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`), logger8.error(errorMessage), logger8.error(errorDescription), new errors_js_1.AuthenticationError(response.status, {
             error: errorMessage,
             error_description: errorDescription
           });
         }
       } catch (e2) {
         let errorDetails = `${credentialName}: Authentication Failed. oidcToken field not detected in the response.`;
-        throw logger7.error(`Response from service = ${text}, Response Headers ["x-vss-e2eid"] = ${response.headers.get("x-vss-e2eid")} 
-      and ["x-msedge-ref"] = ${response.headers.get("x-msedge-ref")}, error message = ${e2.message}`), logger7.error(errorDetails), new errors_js_1.AuthenticationError(response.status, {
+        throw logger8.error(`Response from service = ${text}, Response Headers ["x-vss-e2eid"] = ${response.headers.get("x-vss-e2eid")} 
+      and ["x-msedge-ref"] = ${response.headers.get("x-msedge-ref")}, error message = ${e2.message}`), logger8.error(errorDetails), new errors_js_1.AuthenticationError(response.status, {
           error: errorDetails,
           error_description: `Response = ${text}. Response headers ["x-vss-e2eid"] = ${response.headers.get("x-vss-e2eid")} and ["x-msedge-ref"] =  ${response.headers.get("x-msedge-ref")}. See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`
         });
@@ -37643,7 +37643,7 @@ var require_authorizationCodeCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.AuthorizationCodeCredential = void 0;
-    var tenantIdUtils_js_1 = require_tenantIdUtils(), tenantIdUtils_js_2 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), logger7 = (0, logging_js_1.credentialLogger)("AuthorizationCodeCredential"), AuthorizationCodeCredential = class {
+    var tenantIdUtils_js_1 = require_tenantIdUtils(), tenantIdUtils_js_2 = require_tenantIdUtils(), logging_js_1 = require_logging(), scopeUtils_js_1 = require_scopeUtils(), tracing_js_1 = require_tracing(), msalClient_js_1 = require_msalClient(), logger8 = (0, logging_js_1.credentialLogger)("AuthorizationCodeCredential"), AuthorizationCodeCredential = class {
       static {
         __name(this, "AuthorizationCodeCredential");
       }
@@ -37659,9 +37659,9 @@ var require_authorizationCodeCredential = __commonJS({
        * @internal
        */
       constructor(tenantId, clientId, clientSecretOrAuthorizationCode, authorizationCodeOrRedirectUri, redirectUriOrOptions, options) {
-        (0, tenantIdUtils_js_2.checkTenantId)(logger7, tenantId), this.clientSecret = clientSecretOrAuthorizationCode, typeof redirectUriOrOptions == "string" ? (this.authorizationCode = authorizationCodeOrRedirectUri, this.redirectUri = redirectUriOrOptions) : (this.authorizationCode = clientSecretOrAuthorizationCode, this.redirectUri = authorizationCodeOrRedirectUri, this.clientSecret = void 0, options = redirectUriOrOptions), this.tenantId = tenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, tenantId, {
+        (0, tenantIdUtils_js_2.checkTenantId)(logger8, tenantId), this.clientSecret = clientSecretOrAuthorizationCode, typeof redirectUriOrOptions == "string" ? (this.authorizationCode = authorizationCodeOrRedirectUri, this.redirectUri = redirectUriOrOptions) : (this.authorizationCode = clientSecretOrAuthorizationCode, this.redirectUri = authorizationCodeOrRedirectUri, this.clientSecret = void 0, options = redirectUriOrOptions), this.tenantId = tenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(options?.additionallyAllowedTenants), this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger7,
+          logger: logger8,
           tokenCredentialOptions: options ?? {}
         });
       }
@@ -37695,7 +37695,7 @@ var require_onBehalfOfCredential = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     exports.OnBehalfOfCredential = void 0;
-    var msalClient_js_1 = require_msalClient(), logging_js_1 = require_logging(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), node_crypto_1 = __require("node:crypto"), scopeUtils_js_1 = require_scopeUtils(), promises_1 = __require("node:fs/promises"), tracing_js_1 = require_tracing(), credentialName = "OnBehalfOfCredential", logger7 = (0, logging_js_1.credentialLogger)(credentialName), OnBehalfOfCredential = class {
+    var msalClient_js_1 = require_msalClient(), logging_js_1 = require_logging(), tenantIdUtils_js_1 = require_tenantIdUtils(), errors_js_1 = require_errors(), node_crypto_1 = __require("node:crypto"), scopeUtils_js_1 = require_scopeUtils(), promises_1 = __require("node:fs/promises"), tracing_js_1 = require_tracing(), credentialName = "OnBehalfOfCredential", logger8 = (0, logging_js_1.credentialLogger)(credentialName), OnBehalfOfCredential = class {
       static {
         __name(this, "OnBehalfOfCredential");
       }
@@ -37719,7 +37719,7 @@ var require_onBehalfOfCredential = __commonJS({
           throw new errors_js_1.CredentialUnavailableError(`${credentialName}: userAssertionToken is a required parameter. To troubleshoot, visit https://aka.ms/azsdk/js/identity/serviceprincipalauthentication/troubleshoot.`);
         this.certificatePath = certificatePath, this.clientSecret = clientSecret, this.userAssertionToken = userAssertionToken, this.sendCertificateChain = sendCertificateChain, this.clientAssertion = getAssertion, this.tenantId = tenantId, this.additionallyAllowedTenantIds = (0, tenantIdUtils_js_1.resolveAdditionallyAllowedTenantIds)(additionallyAllowedTenantIds), this.msalClient = (0, msalClient_js_1.createMsalClient)(clientId, this.tenantId, {
           ...options,
-          logger: logger7,
+          logger: logger8,
           tokenCredentialOptions: options
         });
       }
@@ -37732,7 +37732,7 @@ var require_onBehalfOfCredential = __commonJS({
        */
       async getToken(scopes, options = {}) {
         return tracing_js_1.tracingClient.withSpan(`${credentialName}.getToken`, options, async (newOptions) => {
-          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger7);
+          newOptions.tenantId = (0, tenantIdUtils_js_1.processMultiTenantRequest)(this.tenantId, newOptions, this.additionallyAllowedTenantIds, logger8);
           let arrayScopes = (0, scopeUtils_js_1.ensureScopes)(scopes);
           if (this.certificatePath) {
             let clientCertificate = await this.buildClientCertificate(this.certificatePath);
@@ -37756,7 +37756,7 @@ var require_onBehalfOfCredential = __commonJS({
             x5c: parts.x5c
           };
         } catch (error46) {
-          throw logger7.info((0, logging_js_1.formatError)("", error46)), error46;
+          throw logger8.info((0, logging_js_1.formatError)("", error46)), error46;
         }
       }
       async parseCertificate(configuration, sendCertificateChain) {
@@ -80328,9 +80328,205 @@ var logger4 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, reso
   }
 };
 
+// src/MssqlServerTools.ts
+var logger5 = consola.withTag("mssql-server-tools"), DATABASES_CACHE_TTL_MS = parseInt(process.env.MSSQL_DATABASES_CACHE_TTL || "1800000", 10), SCHEMAS_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMAS_CACHE_TTL || "7200000", 10), SCHEMAS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMAS_CACHE_SIZE || "50", 10), LINKED_SERVERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_TTL || "3600000", 10), SERVER_INFO_CACHE_TTL_MS = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_TTL || "300000", 10), databasesCache = /* @__PURE__ */ new Map(), schemasCache = /* @__PURE__ */ new Map(), linkedServersCache = /* @__PURE__ */ new Map(), serverInfoCache = /* @__PURE__ */ new Map();
+function cleanExpired2(cache, key, ttlMs) {
+  let entry = cache.get(key);
+  return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
+}
+__name(cleanExpired2, "cleanExpired");
+function enforceSizeLimit2(cache, maxSize, name) {
+  if (cache.size > maxSize) {
+    let entries = Array.from(cache.entries()).sort((a2, b2) => a2[1].lastAccessed - b2[1].lastAccessed), toDelete = cache.size - maxSize;
+    for (let i2 = 0; i2 < toDelete; i2++) cache.delete(entries[i2][0]);
+    consola.level >= 0 && logger5.debug(`${name} LRU eviction: removed ${toDelete} entries`);
+  }
+}
+__name(enforceSizeLimit2, "enforceSizeLimit");
+function getFromCache2(cache, key, ttlMs) {
+  if (!cleanExpired2(cache, key, ttlMs)) {
+    let entry = cache.get(key);
+    if (entry)
+      return entry.lastAccessed = Date.now(), entry.result;
+  }
+  return null;
+}
+__name(getFromCache2, "getFromCache");
+function setInCache2(cache, key, result, maxSize, name) {
+  let now = Date.now();
+  cache.set(key, { result, timestamp: now, lastAccessed: now }), enforceSizeLimit2(cache, maxSize, name);
+}
+__name(setInCache2, "setInCache");
+var ListDatabasesInputSchema = external_exports2.object({
+  include_system: external_exports2.boolean().optional().describe("Include system databases (master, tempdb, model, msdb). Default: false.")
+}), ListSchemasInputSchema = external_exports2.object({
+  database_name: external_exports2.string().optional().describe("Optional cross-database scope. Default: current database.")
+}), ListLinkedServersInputSchema = external_exports2.object({}), GetServerInfoInputSchema = external_exports2.object({}), TOOL_NAMES2 = /* @__PURE__ */ new Set([
+  "list_databases",
+  "list_schemas",
+  "list_linked_servers",
+  "get_server_info"
+]);
+function plainResponse2(text) {
+  return { content: [{ type: "text", text }] };
+}
+__name(plainResponse2, "plainResponse");
+function cachedResponse2(text) {
+  return { content: [{ type: "text", text: `${text}
+
+📋 (Cached result)` }] };
+}
+__name(cachedResponse2, "cachedResponse");
+function errorResponse2(prefix, error46) {
+  let msg = error46 instanceof Error ? error46.message : "Unknown error";
+  return { content: [{ type: "text", text: `${prefix}: ${msg}` }] };
+}
+__name(errorResponse2, "errorResponse");
+function isPermissionError(error46) {
+  let msg = error46 instanceof Error ? error46.message.toLowerCase() : "";
+  return msg.includes("permission") || msg.includes("denied") || msg.includes("not have permission");
+}
+__name(isPermissionError, "isPermissionError");
+var MssqlServerTools = {
+  canHandle(name) {
+    return TOOL_NAMES2.has(name);
+  },
+  getToolDefinitions() {
+    return [
+      {
+        name: "list_databases",
+        description: "List all databases on the SQL Server with id, name, state, recovery model, collation, create date, and compatibility level. Filters out system databases (master, tempdb, model, msdb) by default; pass include_system=true to include them.",
+        inputSchema: external_exports2.toJSONSchema(ListDatabasesInputSchema)
+      },
+      {
+        name: "list_schemas",
+        description: "List all schemas in a database with schema id, name, and owner. Supports cross-database via the optional database_name parameter (default: current database).",
+        inputSchema: external_exports2.toJSONSchema(ListSchemasInputSchema)
+      },
+      {
+        name: "list_linked_servers",
+        description: "List all linked servers configured on this SQL Server instance (sys.servers). Returns name, product, provider, data source, and remote login/data access flags. Excludes the local server (server_id = 0).",
+        inputSchema: external_exports2.toJSONSchema(ListLinkedServersInputSchema)
+      },
+      {
+        name: "get_server_info",
+        description: "Get SQL Server instance metadata: edition, product version, collation, machine name, server name, language, clustered/AlwaysOn flags, and full @@VERSION string. Optionally includes CPU count and memory if VIEW SERVER STATE permission is available (gracefully omitted if not).",
+        inputSchema: external_exports2.toJSONSchema(GetServerInfoInputSchema)
+      }
+    ];
+  },
+  async handleTool(name, args, pool) {
+    switch (name) {
+      case "list_databases":
+        return this.handleListDatabases(args, pool);
+      case "list_schemas":
+        return this.handleListSchemas(args, pool);
+      case "list_linked_servers":
+        return this.handleListLinkedServers(pool);
+      case "get_server_info":
+        return this.handleGetServerInfo(pool);
+    }
+    throw new Error(`Unknown tool: ${name}`);
+  },
+  async handleListDatabases(args, pool) {
+    try {
+      let v2 = ListDatabasesInputSchema.parse(args), cacheKey2 = v2.include_system ? "all" : "user", cached2 = getFromCache2(databasesCache, cacheKey2, DATABASES_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse2(cached2);
+      let query = `SELECT d.database_id, d.name AS database_name, d.state_desc, d.recovery_model_desc, d.collation_name, d.create_date, d.compatibility_level FROM sys.databases d ${v2.include_system ? "" : "WHERE d.database_id > 4"} ORDER BY d.name`;
+      consola.level >= 0 && logger5.info(`Listing databases (include_system=${!!v2.include_system})`);
+      let results = await pool.query(query);
+      if (!results || results.length === 0)
+        return plainResponse2("No databases found.");
+      let csv = formatCSV(results);
+      return setInCache2(databasesCache, cacheKey2, csv, 4, "list_databases"), plainResponse2(csv);
+    } catch (error46) {
+      return consola.level >= 0 && logger5.error("list_databases error:", error46), errorResponse2("Error listing databases", error46);
+    }
+  },
+  async handleListSchemas(args, pool) {
+    try {
+      let v2 = ListSchemasInputSchema.parse(args), dbPrefix = "", cacheKey2 = buildCacheKeyPrefix();
+      v2.database_name && (dbPrefix = `${validateDatabaseName(v2.database_name)}.`, cacheKey2 = buildCacheKeyPrefix(v2.database_name));
+      let cached2 = getFromCache2(schemasCache, cacheKey2, SCHEMAS_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse2(cached2);
+      let query = `SELECT s.schema_id, s.name AS schema_name, COALESCE(p.name, '<unknown>') AS owner_name FROM ${dbPrefix}sys.schemas s LEFT JOIN ${dbPrefix}sys.database_principals p ON s.principal_id = p.principal_id ORDER BY s.name`;
+      consola.level >= 0 && logger5.info(`Listing schemas in ${v2.database_name || "current DB"}`);
+      let results = await pool.query(query);
+      if (!results || results.length === 0)
+        return plainResponse2(`No schemas found in ${v2.database_name || "current database"}.`);
+      let csv = formatCSV(results);
+      return setInCache2(schemasCache, cacheKey2, csv, SCHEMAS_CACHE_MAX_SIZE, "list_schemas"), plainResponse2(csv);
+    } catch (error46) {
+      return consola.level >= 0 && logger5.error("list_schemas error:", error46), errorResponse2("Error listing schemas", error46);
+    }
+  },
+  async handleListLinkedServers(pool) {
+    try {
+      let cacheKey2 = "_singleton_", cached2 = getFromCache2(linkedServersCache, cacheKey2, LINKED_SERVERS_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse2(cached2);
+      let query = "SELECT s.server_id, s.name, s.product, s.provider, s.data_source, s.location, s.is_linked, s.is_remote_login_enabled, s.is_data_access_enabled, s.is_rpc_out_enabled, s.modify_date FROM master.sys.servers s WHERE s.server_id != 0 ORDER BY s.name";
+      consola.level >= 0 && logger5.info("Listing linked servers");
+      let results;
+      try {
+        results = await pool.query(query);
+      } catch (e2) {
+        if (isPermissionError(e2))
+          return plainResponse2(
+            "🔒 Cannot list linked servers — connection user lacks SELECT permission on master.sys.servers. Run: GRANT SELECT ON master.sys.servers TO [user]"
+          );
+        throw e2;
+      }
+      if (!results || results.length === 0)
+        return plainResponse2("No linked servers configured on this SQL Server instance.");
+      let csv = formatCSV(results);
+      return setInCache2(linkedServersCache, cacheKey2, csv, 1, "list_linked_servers"), plainResponse2(csv);
+    } catch (error46) {
+      return consola.level >= 0 && logger5.error("list_linked_servers error:", error46), errorResponse2("Error listing linked servers", error46);
+    }
+  },
+  async handleGetServerInfo(pool) {
+    try {
+      let cacheKey2 = "_singleton_", cached2 = getFromCache2(serverInfoCache, cacheKey2, SERVER_INFO_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse2(cached2);
+      let propsQuery = `SELECT
+				CAST(SERVERPROPERTY('ProductVersion') AS VARCHAR(128)) AS product_version,
+				CAST(SERVERPROPERTY('Edition') AS VARCHAR(256)) AS edition,
+				CAST(SERVERPROPERTY('ProductLevel') AS VARCHAR(64)) AS product_level,
+				CAST(SERVERPROPERTY('ProductUpdateLevel') AS VARCHAR(64)) AS product_update_level,
+				CAST(SERVERPROPERTY('Collation') AS VARCHAR(128)) AS collation,
+				CAST(SERVERPROPERTY('MachineName') AS VARCHAR(128)) AS machine_name,
+				CAST(SERVERPROPERTY('InstanceName') AS VARCHAR(128)) AS instance_name,
+				CAST(SERVERPROPERTY('IsClustered') AS INT) AS is_clustered,
+				CAST(SERVERPROPERTY('IsHadrEnabled') AS INT) AS is_alwayson_enabled,
+				CAST(SERVERPROPERTY('IsIntegratedSecurityOnly') AS INT) AS is_integrated_security_only,
+				@@SERVERNAME AS server_name,
+				@@LANGUAGE AS language,
+				@@SPID AS current_spid`;
+      consola.level >= 0 && logger5.info("Fetching server info (SERVERPROPERTY layer)");
+      let props = (await pool.query(propsQuery))[0] || {}, osInfo = null, osInfoError = null;
+      try {
+        osInfo = (await pool.query("SELECT cpu_count, hyperthread_ratio, physical_memory_kb / 1024 / 1024 AS physical_memory_gb, virtual_memory_kb / 1024 / 1024 AS virtual_memory_gb, sqlserver_start_time FROM sys.dm_os_sys_info"))[0] || null;
+      } catch (e2) {
+        isPermissionError(e2) ? osInfoError = "VIEW SERVER STATE permission required for cpu/memory/uptime — omitting." : osInfoError = `dm_os_sys_info error: ${e2 instanceof Error ? e2.message : "unknown"}`;
+      }
+      let merged = { ...props };
+      osInfo && Object.assign(merged, osInfo);
+      let csv = formatCSV([merged]), finalText = osInfoError ? `${csv}
+
+ℹ️ ${osInfoError}` : csv;
+      return setInCache2(serverInfoCache, cacheKey2, finalText, 1, "get_server_info"), plainResponse2(finalText);
+    } catch (error46) {
+      return consola.level >= 0 && logger5.error("get_server_info error:", error46), errorResponse2("Error fetching server info", error46);
+    }
+  },
+  clearCachesForTesting() {
+    databasesCache.clear(), schemasCache.clear(), linkedServersCache.clear(), serverInfoCache.clear();
+  }
+};
+
 // src/MssqlTools.ts
 import crypto3 from "node:crypto";
-var logger5 = consola.withTag("mssql-tools"), MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || "10000", 10), WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || "5000", 10), QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || "60000", 10), QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || "100", 10), queryCache = /* @__PURE__ */ new Map(), TABLES_CACHE_TTL_MS = parseInt(process.env.MSSQL_TABLES_CACHE_TTL || "1800000", 10), SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || "7200000", 10), FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || "14400000", 10), RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || "14400000", 10), COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || "7200000", 10), INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_INDEXES_CACHE_TTL || "14400000", 10), SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || "200", 10), FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || "100", 10), RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || "100", 10), COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || "100", 10), INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_INDEXES_CACHE_SIZE || "200", 10), listTablesCache = /* @__PURE__ */ new Map(), tableSchemaCache = /* @__PURE__ */ new Map(), foreignKeysCache = /* @__PURE__ */ new Map(), relationshipsCache = /* @__PURE__ */ new Map(), columnsCache = /* @__PURE__ */ new Map(), indexesCache = /* @__PURE__ */ new Map(), versionCache = null;
+var logger6 = consola.withTag("mssql-tools"), MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || "10000", 10), WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || "5000", 10), QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || "60000", 10), QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || "100", 10), queryCache = /* @__PURE__ */ new Map(), TABLES_CACHE_TTL_MS = parseInt(process.env.MSSQL_TABLES_CACHE_TTL || "1800000", 10), SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || "7200000", 10), FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || "14400000", 10), RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || "14400000", 10), COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || "7200000", 10), INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_INDEXES_CACHE_TTL || "14400000", 10), SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || "200", 10), FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || "100", 10), RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || "100", 10), COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || "100", 10), INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_INDEXES_CACHE_SIZE || "200", 10), listTablesCache = /* @__PURE__ */ new Map(), tableSchemaCache = /* @__PURE__ */ new Map(), foreignKeysCache = /* @__PURE__ */ new Map(), relationshipsCache = /* @__PURE__ */ new Map(), columnsCache = /* @__PURE__ */ new Map(), indexesCache = /* @__PURE__ */ new Map(), versionCache = null;
 function getCacheKey(query) {
   let normalizedQuery = query.trim().toLowerCase().replace(/\s+/g, " ");
   return crypto3.createHash("sha256").update(normalizedQuery, "utf8").digest("hex");
@@ -80348,7 +80544,7 @@ function enforceCacheSizeLimit() {
     ), entriesToDelete = queryCache.size - QUERY_CACHE_MAX_SIZE;
     for (let i2 = 0; i2 < entriesToDelete; i2++)
       queryCache.delete(entries[i2][0]);
-    consola.level >= 0 && logger5.debug(`LRU eviction: removed ${entriesToDelete} least recently used entries`);
+    consola.level >= 0 && logger6.debug(`LRU eviction: removed ${entriesToDelete} least recently used entries`);
   }
 }
 __name(enforceCacheSizeLimit, "enforceCacheSizeLimit");
@@ -80364,7 +80560,7 @@ function enforceToolCacheSizeLimit(cache, maxSize, cacheName) {
     ), entriesToDelete = cache.size - maxSize;
     for (let i2 = 0; i2 < entriesToDelete; i2++)
       cache.delete(entries[i2][0]);
-    consola.level >= 0 && logger5.debug(`${cacheName} LRU eviction: removed ${entriesToDelete} least recently used entries`);
+    consola.level >= 0 && logger6.debug(`${cacheName} LRU eviction: removed ${entriesToDelete} least recently used entries`);
   }
 }
 __name(enforceToolCacheSizeLimit, "enforceToolCacheSizeLimit");
@@ -80471,7 +80667,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleGetVersion(pool) {
     if (versionCache !== null)
-      return consola.level >= 0 && logger5.debug("Returning cached SQL Server version"), {
+      return consola.level >= 0 && logger6.debug("Returning cached SQL Server version"), {
         content: [
           {
             type: "text",
@@ -80483,7 +80679,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
       };
     try {
       let version3 = (await pool.query("SELECT @@VERSION AS version"))[0]?.version || "Unknown";
-      return versionCache = version3, consola.level >= 0 && logger5.info("SQL Server version cached"), {
+      return versionCache = version3, consola.level >= 0 && logger6.info("SQL Server version cached"), {
         content: [
           {
             type: "text",
@@ -80492,7 +80688,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         ]
       };
     } catch (error46) {
-      return consola.level >= 0 && logger5.error("Error getting SQL Server version:", error46), {
+      return consola.level >= 0 && logger6.error("Error getting SQL Server version:", error46), {
         content: [
           {
             type: "text",
@@ -80506,7 +80702,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
     try {
       let schemaFilter = ListTablesInputSchema.parse(args).schema_name, cacheKey2 = schemaFilter || "_all_schemas_", cachedResult2 = getFromToolCache(listTablesCache, cacheKey2, TABLES_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger5.debug(`Returning cached list_tables result for key: ${cacheKey2}`), {
+        return consola.level >= 0 && logger6.debug(`Returning cached list_tables result for key: ${cacheKey2}`), {
           content: [
             {
               type: "text",
@@ -80516,7 +80712,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      consola.level >= 0 && logger5.info(`Listing tables and views${schemaFilter ? ` for schema: ${schemaFilter}` : " (all schemas)"}`);
+      consola.level >= 0 && logger6.info(`Listing tables and views${schemaFilter ? ` for schema: ${schemaFilter}` : " (all schemas)"}`);
       let query = "SELECT t.TABLE_SCHEMA AS [Schema], t.TABLE_NAME AS [Name], t.TABLE_TYPE AS [Type], COALESCE(p.rows, 0) AS [RowCount], COALESCE(CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS DECIMAL(18,2)), 0.00) AS [SizeMB] FROM INFORMATION_SCHEMA.TABLES t LEFT JOIN sys.tables st ON t.TABLE_NAME = st.name AND t.TABLE_SCHEMA = SCHEMA_NAME(st.schema_id) LEFT JOIN sys.indexes i ON st.object_id = i.object_id AND i.index_id <= 1 LEFT JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id LEFT JOIN sys.allocation_units a ON p.partition_id = a.container_id WHERE t.TABLE_TYPE IN ('BASE TABLE', 'VIEW')";
       schemaFilter && (query += ` AND t.TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`), query += " GROUP BY t.TABLE_SCHEMA, t.TABLE_NAME, t.TABLE_TYPE, p.rows ORDER BY t.TABLE_SCHEMA, t.TABLE_TYPE, t.TABLE_NAME";
       try {
@@ -80535,7 +80731,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           result: csvText,
           timestamp: now,
           lastAccessed: now
-        }), consola.level >= 0 && logger5.info(`Found ${results.length} table(s)/view(s) - result cached`), {
+        }), consola.level >= 0 && logger6.info(`Found ${results.length} table(s)/view(s) - result cached`), {
           content: [
             {
               type: "text",
@@ -80544,7 +80740,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        return consola.level >= 0 && logger5.error("Error executing query:", error46), {
+        return consola.level >= 0 && logger6.error("Error executing query:", error46), {
           content: [
             {
               type: "text",
@@ -80554,7 +80750,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -80568,7 +80764,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
     try {
       let validatedArgs = GetTableSchemaInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(tableSchemaCache, cacheKey2, SCHEMA_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger5.debug(`Returning cached table schema for: ${schemaName}.${tableName}`), {
+        return consola.level >= 0 && logger6.debug(`Returning cached table schema for: ${schemaName}.${tableName}`), {
           content: [
             {
               type: "text",
@@ -80578,7 +80774,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      consola.level >= 0 && logger5.info(`Getting schema for table: ${schemaName}.${tableName}`);
+      consola.level >= 0 && logger6.info(`Getting schema for table: ${schemaName}.${tableName}`);
       let query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], CASE WHEN uq.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [UniqueKey], CASE WHEN cc.column_id IS NOT NULL THEN 'YES' ELSE 'NO' END AS [Computed], cc.definition AS [ComputedExpression], c.ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'UNIQUE') uq ON c.TABLE_SCHEMA = uq.TABLE_SCHEMA AND c.TABLE_NAME = uq.TABLE_NAME AND c.COLUMN_NAME = uq.COLUMN_NAME LEFT JOIN sys.computed_columns cc ON cc.object_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND cc.name = c.COLUMN_NAME WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
       try {
         let results = await pool.query(query);
@@ -80592,7 +80788,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(tableSchemaCache, cacheKey2, csvText, SCHEMA_CACHE_MAX_SIZE, "table_schema"), consola.level >= 0 && logger5.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`), {
+        return setInToolCache(tableSchemaCache, cacheKey2, csvText, SCHEMA_CACHE_MAX_SIZE, "table_schema"), consola.level >= 0 && logger6.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {
               type: "text",
@@ -80601,7 +80797,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        return consola.level >= 0 && logger5.error("Error executing query:", error46), {
+        return consola.level >= 0 && logger6.error("Error executing query:", error46), {
           content: [
             {
               type: "text",
@@ -80611,7 +80807,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -80625,7 +80821,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
     try {
       let validatedArgs = GetForeignKeysInputSchema.parse(args), tableFilter = validatedArgs.table_name, schemaFilter = validatedArgs.schema_name, cacheKey2 = `${schemaFilter || "_all_"}:${tableFilter || "_all_"}`, cachedResult2 = getFromToolCache(foreignKeysCache, cacheKey2, FK_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger5.debug(`Returning cached foreign keys for: ${cacheKey2}`), {
+        return consola.level >= 0 && logger6.debug(`Returning cached foreign keys for: ${cacheKey2}`), {
           content: [
             {
               type: "text",
@@ -80635,7 +80831,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      consola.level >= 0 && logger5.info(`Getting foreign keys${tableFilter ? ` for table: ${tableFilter}` : " (all tables)"}${schemaFilter ? ` in schema: ${schemaFilter}` : ""}`);
+      consola.level >= 0 && logger6.info(`Getting foreign keys${tableFilter ? ` for table: ${tableFilter}` : " (all tables)"}${schemaFilter ? ` in schema: ${schemaFilter}` : ""}`);
       let query = "SELECT fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.parent_object_id) AS [ParentSchema], OBJECT_NAME(fk.parent_object_id) AS [ParentTable], COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS [ParentColumn], OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS [ReferencedSchema], OBJECT_NAME(fk.referenced_object_id) AS [ReferencedTable], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [ReferencedColumn], CASE fk.delete_referential_action WHEN 0 THEN 'NO ACTION' WHEN 1 THEN 'CASCADE' WHEN 2 THEN 'SET NULL' WHEN 3 THEN 'SET DEFAULT' END AS [OnDelete], CASE fk.update_referential_action WHEN 0 THEN 'NO ACTION' WHEN 1 THEN 'CASCADE' WHEN 2 THEN 'SET NULL' WHEN 3 THEN 'SET DEFAULT' END AS [OnUpdate] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE 1=1";
       schemaFilter && (query += ` AND OBJECT_SCHEMA_NAME(fk.parent_object_id) = '${schemaFilter.replace(/'/g, "''")}'`), tableFilter && (query += ` AND OBJECT_NAME(fk.parent_object_id) = '${tableFilter.replace(/'/g, "''")}'`), query += " ORDER BY [ParentSchema], [ParentTable], [ConstraintName]";
       try {
@@ -80650,7 +80846,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(foreignKeysCache, cacheKey2, csvText, FK_CACHE_MAX_SIZE, "foreign_keys"), consola.level >= 0 && logger5.info(`Found ${results.length} foreign key(s) - result cached`), {
+        return setInToolCache(foreignKeysCache, cacheKey2, csvText, FK_CACHE_MAX_SIZE, "foreign_keys"), consola.level >= 0 && logger6.info(`Found ${results.length} foreign key(s) - result cached`), {
           content: [
             {
               type: "text",
@@ -80659,7 +80855,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        return consola.level >= 0 && logger5.error("Error executing query:", error46), {
+        return consola.level >= 0 && logger6.error("Error executing query:", error46), {
           content: [
             {
               type: "text",
@@ -80669,7 +80865,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -80683,7 +80879,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
     try {
       let validatedArgs = SearchColumnsInputSchema.parse(args), columnName = validatedArgs.column_name, schemaFilter = validatedArgs.schema_name, normalizedColumn = columnName.toLowerCase().trim(), cacheKey2 = `${schemaFilter || "_all_"}:${normalizedColumn}`, cachedResult2 = getFromToolCache(columnsCache, cacheKey2, COLUMNS_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger5.debug(`Returning cached column search for: ${cacheKey2}`), {
+        return consola.level >= 0 && logger6.debug(`Returning cached column search for: ${cacheKey2}`), {
           content: [
             {
               type: "text",
@@ -80693,7 +80889,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      consola.level >= 0 && logger5.info(`Searching for column: ${columnName}${schemaFilter ? ` in schema: ${schemaFilter}` : ""}`);
+      consola.level >= 0 && logger6.info(`Searching for column: ${columnName}${schemaFilter ? ` in schema: ${schemaFilter}` : ""}`);
       let query = "SELECT TABLE_SCHEMA AS [Schema], TABLE_NAME AS [Table], COLUMN_NAME AS [Column], DATA_TYPE AS [DataType], CHARACTER_MAXIMUM_LENGTH AS [MaxLength], IS_NULLABLE AS [Nullable], ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE '%" + columnName.replace(/'/g, "''") + "%'";
       schemaFilter && (query += ` AND TABLE_SCHEMA = '${schemaFilter.replace(/'/g, "''")}'`), query += " ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION";
       try {
@@ -80708,7 +80904,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(columnsCache, cacheKey2, csvText, COLUMNS_CACHE_MAX_SIZE, "search_columns"), consola.level >= 0 && logger5.info(`Found ${results.length} column(s) matching: ${columnName} - result cached`), {
+        return setInToolCache(columnsCache, cacheKey2, csvText, COLUMNS_CACHE_MAX_SIZE, "search_columns"), consola.level >= 0 && logger6.info(`Found ${results.length} column(s) matching: ${columnName} - result cached`), {
           content: [
             {
               type: "text",
@@ -80717,7 +80913,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        return consola.level >= 0 && logger5.error("Error executing query:", error46), {
+        return consola.level >= 0 && logger6.error("Error executing query:", error46), {
           content: [
             {
               type: "text",
@@ -80727,7 +80923,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -80741,7 +80937,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
     try {
       let validatedArgs = GetTableRelationshipsInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(relationshipsCache, cacheKey2, RELATIONSHIPS_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger5.debug(`Returning cached table relationships for: ${schemaName}.${tableName}`), {
+        return consola.level >= 0 && logger6.debug(`Returning cached table relationships for: ${schemaName}.${tableName}`), {
           content: [
             {
               type: "text",
@@ -80751,7 +80947,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      consola.level >= 0 && logger5.info(`Getting relationships for table: ${schemaName}.${tableName}`);
+      consola.level >= 0 && logger6.info(`Getting relationships for table: ${schemaName}.${tableName}`);
       let query = `SELECT 'PARENT' AS [RelationType], fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS [RelatedSchema], OBJECT_NAME(fk.referenced_object_id) AS [RelatedTable], COL_NAME(fkc.parent_column_id, fkc.parent_column_id) AS [ThisColumn], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [RelatedColumn] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE OBJECT_SCHEMA_NAME(fk.parent_object_id) = '${schemaName.replace(/'/g, "''")}' AND OBJECT_NAME(fk.parent_object_id) = '${tableName.replace(/'/g, "''")}' UNION ALL SELECT 'CHILD' AS [RelationType], fk.name AS [ConstraintName], OBJECT_SCHEMA_NAME(fk.parent_object_id) AS [RelatedSchema], OBJECT_NAME(fk.parent_object_id) AS [RelatedTable], COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS [ThisColumn], COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS [RelatedColumn] FROM sys.foreign_keys fk INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id WHERE OBJECT_SCHEMA_NAME(fk.referenced_object_id) = '${schemaName.replace(/'/g, "''")}' AND OBJECT_NAME(fk.referenced_object_id) = '${tableName.replace(/'/g, "''")}' ORDER BY [RelationType], [RelatedSchema], [RelatedTable]`;
       try {
         let results = await pool.query(query);
@@ -80765,7 +80961,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(relationshipsCache, cacheKey2, csvText, RELATIONSHIPS_CACHE_MAX_SIZE, "table_relationships"), consola.level >= 0 && logger5.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName} - result cached`), {
+        return setInToolCache(relationshipsCache, cacheKey2, csvText, RELATIONSHIPS_CACHE_MAX_SIZE, "table_relationships"), consola.level >= 0 && logger6.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {
               type: "text",
@@ -80774,7 +80970,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        return consola.level >= 0 && logger5.error("Error executing query:", error46), {
+        return consola.level >= 0 && logger6.error("Error executing query:", error46), {
           content: [
             {
               type: "text",
@@ -80784,7 +80980,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -80798,7 +80994,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
     try {
       let validatedArgs = GetTableIndexesInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(indexesCache, cacheKey2, INDEXES_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger5.debug(`Returning cached indexes for: ${schemaName}.${tableName}`), {
+        return consola.level >= 0 && logger6.debug(`Returning cached indexes for: ${schemaName}.${tableName}`), {
           content: [
             {
               type: "text",
@@ -80808,7 +81004,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      consola.level >= 0 && logger5.info(`Getting indexes for table: ${schemaName}.${tableName}`);
+      consola.level >= 0 && logger6.info(`Getting indexes for table: ${schemaName}.${tableName}`);
       let query = `SELECT i.name AS [IndexName], i.type_desc AS [IndexType], CASE WHEN i.is_unique = 1 THEN 'YES' ELSE 'NO' END AS [IsUnique], CASE WHEN i.is_primary_key = 1 THEN 'YES' ELSE 'NO' END AS [IsPrimaryKey], c.name AS [ColumnName], ic.key_ordinal AS [KeyOrdinal], CASE WHEN ic.is_included_column = 1 THEN 'YES' ELSE 'NO' END AS [IsIncluded] FROM sys.indexes i INNER JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id INNER JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id INNER JOIN sys.tables t ON i.object_id = t.object_id WHERE SCHEMA_NAME(t.schema_id) = '${schemaName.replace(/'/g, "''")}' AND t.name = '${tableName.replace(/'/g, "''")}' ORDER BY i.name, ic.key_ordinal`;
       try {
         let results = await pool.query(query);
@@ -80822,7 +81018,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(indexesCache, cacheKey2, csvText, INDEXES_CACHE_MAX_SIZE, "table_indexes"), consola.level >= 0 && logger5.info(`Found ${results.length} index column(s) for table ${schemaName}.${tableName} - result cached`), {
+        return setInToolCache(indexesCache, cacheKey2, csvText, INDEXES_CACHE_MAX_SIZE, "table_indexes"), consola.level >= 0 && logger6.info(`Found ${results.length} index column(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {
               type: "text",
@@ -80831,7 +81027,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        return consola.level >= 0 && logger5.error("Error executing query:", error46), {
+        return consola.level >= 0 && logger6.error("Error executing query:", error46), {
           content: [
             {
               type: "text",
@@ -80841,7 +81037,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -80869,7 +81065,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         if (cachedEntry) {
           if (cachedEntry.lastAccessed = now, consola.level >= 0) {
             let cacheAgeSeconds = Math.round((now - cachedEntry.timestamp) / 1e3);
-            logger5.debug(`Returning cached query result (age: ${cacheAgeSeconds}s)`);
+            logger6.debug(`Returning cached query result (age: ${cacheAgeSeconds}s)`);
           }
           return {
             content: [
@@ -80885,7 +81081,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
       }
       if (consola.level >= 0) {
         let truncatedQuery = query.length > 100 ? query.substring(0, 100) + "..." : query;
-        logger5.info(`Executing READ-ONLY SQL query: ${truncatedQuery}`);
+        logger6.info(`Executing READ-ONLY SQL query: ${truncatedQuery}`);
       }
       try {
         let results = await pool.query(query);
@@ -80901,15 +81097,15 @@ var ExecuteSqlInputSchema = external_exports2.object({
         let resultCount = results.length, warningMessage = "";
         resultCount > MAX_RESULT_ROWS ? (results = results.slice(0, MAX_RESULT_ROWS), warningMessage = `
 
-⚠️ WARNING: Result set truncated from ${resultCount} to ${MAX_RESULT_ROWS} rows. Consider adding LIMIT/TOP clause to your query for better performance.`, consola.level >= 0 && logger5.warn(`Large result set truncated: ${resultCount} rows -> ${MAX_RESULT_ROWS} rows`)) : resultCount > WARN_RESULT_ROWS && (warningMessage = `
+⚠️ WARNING: Result set truncated from ${resultCount} to ${MAX_RESULT_ROWS} rows. Consider adding LIMIT/TOP clause to your query for better performance.`, consola.level >= 0 && logger6.warn(`Large result set truncated: ${resultCount} rows -> ${MAX_RESULT_ROWS} rows`)) : resultCount > WARN_RESULT_ROWS && (warningMessage = `
 
-⚠️ Note: Large result set (${resultCount} rows). Consider using LIMIT/TOP for better performance.`, consola.level >= 0 && logger5.warn(`Large result set: ${resultCount} rows`));
+⚠️ Note: Large result set (${resultCount} rows). Consider using LIMIT/TOP for better performance.`, consola.level >= 0 && logger6.warn(`Large result set: ${resultCount} rows`));
         let resultText = formatCSV(results, warningMessage);
         return queryCache.set(cacheKey2, {
           result: resultText,
           timestamp: now,
           lastAccessed: now
-        }), enforceCacheSizeLimit(), consola.level >= 0 && logger5.debug(`Query result cached (cache size: ${queryCache.size}/${QUERY_CACHE_MAX_SIZE})`), {
+        }), enforceCacheSizeLimit(), consola.level >= 0 && logger6.debug(`Query result cached (cache size: ${queryCache.size}/${QUERY_CACHE_MAX_SIZE})`), {
           content: [
             {
               type: "text",
@@ -80918,7 +81114,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       } catch (error46) {
-        consola.level >= 0 && logger5.error("Error executing READ-ONLY SQL:", query, error46);
+        consola.level >= 0 && logger6.error("Error executing READ-ONLY SQL:", query, error46);
         let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lowerErrorMsg = errorMessage.toLowerCase();
         return lowerErrorMsg.includes("read only") || lowerErrorMsg.includes("cannot execute") || lowerErrorMsg.includes("not allowed") || lowerErrorMsg.includes("insert") || lowerErrorMsg.includes("update") || lowerErrorMsg.includes("delete") ? {
           content: [
@@ -80937,7 +81133,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
         };
       }
     } catch (validationError) {
-      return consola.level >= 0 && logger5.error("Invalid input arguments:", validationError), {
+      return consola.level >= 0 && logger6.error("Invalid input arguments:", validationError), {
         content: [
           {
             type: "text",
@@ -81027,7 +81223,7 @@ __name(closeFileLogger, "closeFileLogger");
 
 // src/server/connection.ts
 var import_mssql = __toESM(require_mssql(), 1);
-var logger6 = consola.withTag("mssql-connection");
+var logger7 = consola.withTag("mssql-connection");
 function buildMssqlConfig(config2) {
   let fileLogger = getFileLogger(), mssqlConfig = {
     server: config2.server,
@@ -81045,18 +81241,18 @@ function buildMssqlConfig(config2) {
     }
   };
   if (config2.windowsAuth)
-    mssqlConfig.options.trustedConnection = !0, consola.level >= 0 && logger6.info("Configured for Windows Authentication"), fileLogger.info("Configured for Windows Authentication");
+    mssqlConfig.options.trustedConnection = !0, consola.level >= 0 && logger7.info("Configured for Windows Authentication"), fileLogger.info("Configured for Windows Authentication");
   else {
     if (!config2.user || !config2.password)
       throw fileLogger.error("Username and password are required for SQL authentication"), new Error("Username and password are required for SQL authentication");
-    mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, consola.level >= 0 && logger6.info(`Configured for SQL Authentication as user: ${config2.user}`), fileLogger.info(`Configured for SQL Authentication as user: ${config2.user}`);
+    mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, consola.level >= 0 && logger7.info(`Configured for SQL Authentication as user: ${config2.user}`), fileLogger.info(`Configured for SQL Authentication as user: ${config2.user}`);
   }
   return mssqlConfig;
 }
 __name(buildMssqlConfig, "buildMssqlConfig");
 function handleQueryError(error46, sqlQuery) {
   let fileLogger = getFileLogger();
-  consola.level >= 0 && logger6.error("Query execution failed:", error46);
+  consola.level >= 0 && logger7.error("Query execution failed:", error46);
   let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lower = errorMessage.toLowerCase();
   if (fileLogger.error("Query execution failed", {
     errorMessage,
@@ -81110,7 +81306,7 @@ var ResilientConnectionPool = class {
   constructor(config2) {
     this.localConfig = config2, this.mssqlConfig = buildMssqlConfig(config2);
     let fileLogger = getFileLogger();
-    consola.level >= 0 && logger6.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), fileLogger.info("ResilientConnectionPool created (READ-ONLY mode)");
+    consola.level >= 0 && logger7.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), fileLogger.info("ResilientConnectionPool created (READ-ONLY mode)");
   }
   /**
    * Attempt to connect to the database.
@@ -81144,7 +81340,7 @@ var ResilientConnectionPool = class {
         fileLogger.error("Connection pool error event", {
           error: err instanceof Error ? err.message : String(err)
         }), this.connected = !1, this.stopped || this.scheduleBackgroundRetry();
-      }), await newPool.connect(), this.pool = newPool, this.connected = !0, this.retryDelay = 1e3, this.clearRetryTimer(), consola.level >= 0 && logger6.debug("Connection pool connected (READ-ONLY mode)"), fileLogger.info("Connection pool connected successfully (READ-ONLY mode)"), !0;
+      }), await newPool.connect(), this.pool = newPool, this.connected = !0, this.retryDelay = 1e3, this.clearRetryTimer(), consola.level >= 0 && logger7.debug("Connection pool connected (READ-ONLY mode)"), fileLogger.info("Connection pool connected successfully (READ-ONLY mode)"), !0;
     } catch (error46) {
       let enhancedError = getEnhancedConnectionError(error46, this.localConfig);
       fileLogger.error("Database connection attempt failed", { error: enhancedError });
@@ -81183,7 +81379,7 @@ var ResilientConnectionPool = class {
     fileLogger.debug("Executing query", { query: sqlQuery.substring(0, 200) });
     try {
       let result = await pool.request().query(sqlQuery);
-      return consola.level >= 0 && logger6.debug("Read-only query executed successfully"), fileLogger.debug("Query executed successfully", {
+      return consola.level >= 0 && logger7.debug("Read-only query executed successfully"), fileLogger.debug("Query executed successfully", {
         rowCount: result.recordset?.length || 0
       }), result.recordset;
     } catch (error46) {
@@ -81202,7 +81398,7 @@ var ResilientConnectionPool = class {
       }
       this.pool = null;
     }
-    this.connected = !1, consola.level >= 0 && logger6.info("Connection pool closed");
+    this.connected = !1, consola.level >= 0 && logger7.info("Connection pool closed");
   }
 };
 function createResilientConnectionPool(config2) {
@@ -81249,7 +81445,8 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   setupHandlers() {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [
       ...MssqlTools.getToolDefinitions(),
-      ...MssqlObjectTools.getToolDefinitions()
+      ...MssqlObjectTools.getToolDefinitions(),
+      ...MssqlServerTools.getToolDefinitions()
     ] })), this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       if (this.configError)
         return {
@@ -81262,7 +81459,7 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
           isError: !0
         };
       let { name, arguments: args } = request.params;
-      return MssqlObjectTools.canHandle(name) ? await MssqlObjectTools.handleTool(name, args, this.pool) : await MssqlTools.handleTool(name, args, this.pool);
+      return MssqlObjectTools.canHandle(name) ? await MssqlObjectTools.handleTool(name, args, this.pool) : MssqlServerTools.canHandle(name) ? await MssqlServerTools.handleTool(name, args, this.pool) : await MssqlTools.handleTool(name, args, this.pool);
     }), this.server.setRequestHandler(ListResourcesRequestSchema, async () => this.pool ? { resources: await MssqlResources.getResourceDefinitions(this.pool) } : { resources: [] }), this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       if (!this.pool)
         throw new Error("Database connection is not yet initialized. Please try again shortly.");

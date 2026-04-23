@@ -338,6 +338,15 @@ These optimizations provide:
      - Blacklist: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, etc.
      - Pattern detection: Prevents SQL injection and dangerous operations
 
+2b. **Server Tools Layer** ([src/MssqlServerTools.ts](src/MssqlServerTools.ts))
+   - Server- and database-level metadata tools, all read-only
+   - Four tools:
+     - `list_databases`: lists databases on the server with state, recovery model, collation, compatibility level. Filters out system DBs (`database_id <= 4`) by default; `include_system=true` includes master/tempdb/model/msdb
+     - `list_schemas`: lists schemas in a database (with owner). Cross-DB via optional `database_name`
+     - `list_linked_servers`: queries `master.sys.servers WHERE server_id != 0` — gracefully reports if user lacks SELECT on master
+     - `get_server_info`: two-layer query — always-available SERVERPROPERTY data (edition, version, collation, machine name, AlwaysOn flag, etc.) plus optional `sys.dm_os_sys_info` (CPU/memory/uptime). The DMV requires `VIEW SERVER STATE`; when missing, the tool gracefully omits those fields with an informational note rather than failing
+   - Caches: short TTLs for server-level state that may change (5 min for server_info, 30 min for databases, 1h for linked_servers); 2h for schemas
+
 2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
    - Programmable-object metadata tools, all read-only and cross-database capable via optional `database_name` parameter
    - All ten tools accept `database_name` (1-part validated; default = connection's bound DB):
@@ -415,7 +424,7 @@ These optimizations provide:
    - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
    - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
 3. **Request Routing**:
-   - Tool requests are dispatched by name: `MssqlObjectTools.canHandle(name)` is checked first (newer programmable-object tools); otherwise routed to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating both providers' `getToolDefinitions()`
+   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all three providers' `getToolDefinitions()`
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
 4. **Query Execution** (READ-ONLY enforced at multiple layers):
@@ -521,6 +530,12 @@ Note: get_version uses static cache (never expires during runtime) as SQL Server
 Definition Pagination (definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
 - `MSSQL_DEFINITION_DEFAULT_LINES`: Default page size when `max_lines` is not specified (default: 200)
 - `MSSQL_DEFINITION_MAX_LINES`: Hard cap on `max_lines` to prevent token DoS (default: 1000)
+
+Server Tools Caching (server/database metadata):
+- `MSSQL_DATABASES_CACHE_TTL`: list_databases cache TTL (default: 1,800,000 = 30 minutes)
+- `MSSQL_SCHEMAS_CACHE_TTL` / `MSSQL_SCHEMAS_CACHE_SIZE`: list_schemas (defaults: 2h / 50)
+- `MSSQL_LINKED_SERVERS_CACHE_TTL`: list_linked_servers (default: 3,600,000 = 1 hour)
+- `MSSQL_SERVER_INFO_CACHE_TTL`: get_server_info (default: 300,000 = 5 minutes — short because version/edition/state may change after a restart)
 
 Object Tools Caching (programmable-object metadata):
 - `MSSQL_PROCS_CACHE_TTL`: list_stored_procedures cache TTL (default: 7,200,000 = 2 hours)

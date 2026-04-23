@@ -50,9 +50,10 @@
     "build": "node --loader ts-node/esm src/scripts/bundle.ts",
     "clean": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\"",
     "dev": "node --loader ts-node/esm src/main.ts",
-    "test": "node --loader ts-node/esm src/tests/error-detection.test.ts && node --loader ts-node/esm src/tests/identifier-pagination.test.ts && node --loader ts-node/esm src/tests/object-tools.test.ts",
+    "test": "node --loader ts-node/esm src/tests/error-detection.test.ts && node --loader ts-node/esm src/tests/identifier-pagination.test.ts && node --loader ts-node/esm src/tests/object-tools.test.ts && node --loader ts-node/esm src/tests/server-tools.test.ts",
     "test:errors": "node --loader ts-node/esm src/tests/error-detection.test.ts",
     "test:identifiers": "node --loader ts-node/esm src/tests/identifier-pagination.test.ts",
-    "test:object-tools": "node --loader ts-node/esm src/tests/object-tools.test.ts"
+    "test:object-tools": "node --loader ts-node/esm src/tests/object-tools.test.ts",
+    "test:server-tools": "node --loader ts-node/esm src/tests/server-tools.test.ts"
   }
 }

@@ -14,6 +14,7 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlResources } from '../MssqlResources';
+import { MssqlServerTools } from '../MssqlServerTools.js';
 import { MssqlTools } from '../MssqlTools';
 import { getFileLogger } from '../utils/fileLogger';
 import { getMssqlConfig } from './config';
@@ -66,6 +67,7 @@ export class MssqlMcpServer {
 			const tools = [
 				...MssqlTools.getToolDefinitions(),
 				...MssqlObjectTools.getToolDefinitions(),
+				...MssqlServerTools.getToolDefinitions(),
 			];
 			return { tools };
 		});
@@ -87,6 +89,9 @@ export class MssqlMcpServer {
 			const { name, arguments: args } = request.params;
 			if (MssqlObjectTools.canHandle(name)) {
 				return await MssqlObjectTools.handleTool(name, args, this.pool);
+			}
+			if (MssqlServerTools.canHandle(name)) {
+				return await MssqlServerTools.handleTool(name, args, this.pool);
 			}
 			return await MssqlTools.handleTool(name, args, this.pool);
 		});
