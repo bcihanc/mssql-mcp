@@ -338,6 +338,19 @@ These optimizations provide:
      - Blacklist: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, etc.
      - Pattern detection: Prevents SQL injection and dangerous operations
 
+2c. **Profiling Tools Layer** ([src/MssqlProfilingTools.ts](src/MssqlProfilingTools.ts))
+   - Data profiling and sampling tools, all read-only and cross-database capable
+   - Three tools:
+     - `profile_column`: returns row_count, null_count, null_pct, distinct_count, min/max, and top 10 most frequent values for a single column. Optional `sample_size` profiles a random subset (estimates only — useful for huge tables). Aggregation errors (text/ntext/image/xml columns) surface as friendly explanations
+     - `get_table_sample`: returns N random rows via `ORDER BY NEWID()` (NOT `TABLESAMPLE` — small tables make TABLESAMPLE return zero rows). Hard cap: 100 rows. Not cached (random)
+     - `get_table_row_count`: three-tier fallback for fast counts:
+       1. `sys.dm_db_partition_stats` (modern, ~10ms, requires VIEW DATABASE STATE)
+       2. `sys.sysindexes` (deprecated but generally accessible, may be slightly stale)
+       3. `SELECT COUNT_BIG(*)` (always accurate, slower on large tables)
+     - `exact=true` skips tiers 1-2 and runs COUNT_BIG directly
+   - `column_name` is validated separately (single-part regex `^[a-zA-Z0-9_]+$`) — bracketed for safe interpolation
+   - Caches: 30 min for column profiles (data may change), 15 min for row counts (lightweight, but stays current); `get_table_sample` is never cached (random by definition)
+
 2b. **Server Tools Layer** ([src/MssqlServerTools.ts](src/MssqlServerTools.ts))
    - Server- and database-level metadata tools, all read-only
    - Four tools:
@@ -424,7 +437,7 @@ These optimizations provide:
    - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
    - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
 3. **Request Routing**:
-   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all three providers' `getToolDefinitions()`
+   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all four providers' `getToolDefinitions()`
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
 4. **Query Execution** (READ-ONLY enforced at multiple layers):
@@ -530,6 +543,11 @@ Note: get_version uses static cache (never expires during runtime) as SQL Server
 Definition Pagination (definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
 - `MSSQL_DEFINITION_DEFAULT_LINES`: Default page size when `max_lines` is not specified (default: 200)
 - `MSSQL_DEFINITION_MAX_LINES`: Hard cap on `max_lines` to prevent token DoS (default: 1000)
+
+Profiling Tools Caching (data profiling):
+- `MSSQL_PROFILE_CACHE_TTL` / `MSSQL_PROFILE_CACHE_SIZE`: profile_column (defaults: 30 min / 100)
+- `MSSQL_ROW_COUNT_CACHE_TTL` / `MSSQL_ROW_COUNT_CACHE_SIZE`: get_table_row_count (defaults: 15 min / 200)
+- get_table_sample is intentionally not cached (each call returns a fresh random sample)
 
 Server Tools Caching (server/database metadata):
 - `MSSQL_DATABASES_CACHE_TTL`: list_databases cache TTL (default: 1,800,000 = 30 minutes)
