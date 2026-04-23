@@ -236,7 +236,13 @@ node --loader ts-node/esm src/main.ts --port 3003 --verbose --env-file .env
 
 3. **Resource Listing Cache** - Table listings are cached with 5-minute TTL to avoid redundant INFORMATION_SCHEMA queries (~20x faster for resource list requests)
 
-4. **Eager Connection** - Database connection pool connects immediately at startup instead of lazy initialization, eliminating cold start latency (first query ~100ms faster)
+4. **Resilient Background Connection** - The MCP transport comes up first; the database connection is established in the background via `ResilientConnectionPool.ensureConnected()`:
+   - **Non-blocking startup**: server is responsive to MCP clients even before the DB is reachable (critical for Claude Desktop UX)
+   - **Warm-on-success**: when the first connection succeeds, the pool is warm before any tool call arrives (~100ms faster first query vs. lazy-on-first-call)
+   - **Auto-retry with exponential backoff**: 1s → 2s → 4s → … → 60s max; no configuration needed
+   - **Mid-session resilience**: connection-error detection (`ECONNRESET`, `ETIMEDOUT`, etc.) triggers a retry cycle without crashing the server
+   - **Thundering-herd protection**: concurrent callers share a single in-flight `connectingPromise`
+   - Previous "eager connection" behavior (that would crash the server on DB unavailability) is preserved only in the deprecated `createConnectionPool()` factory
 
 ### High-Priority Optimizations
 
@@ -261,7 +267,7 @@ node --loader ts-node/esm src/main.ts --port 3003 --verbose --env-file .env
    - Metadata rarely changes, making long TTLs safe and highly effective
    - Reduces database load by 70-80% for typical AI assistant usage patterns
 
-6. **Query Validation Optimization** - Combined regex patterns reduce validation from 11 regex operations to just 2 (dangerous pattern check + whitelist check), significantly reducing CPU overhead for query validation (~5x faster)
+6. **Query Validation Optimization** - Combined regex patterns keep validation cheap despite expanded security coverage: comment/backslash stripping + single consolidated "dangerous pattern" regex (covers DDL/DML/DCL/execution/exfiltration/hex) + hex-detector + whitelist starter check. Significantly lower CPU overhead vs. iterating individual per-keyword tests (~5x faster than the pre-consolidation baseline).
 
 7. **Logging Guards** - String interpolation and computations moved inside logging guards to avoid unnecessary work when logging is disabled (STDIO mode)
 
@@ -301,7 +307,7 @@ These optimizations provide:
 - **HTTP Mode**: ~10x improvement for consecutive requests (connection reuse)
 - **Resource Listing**: ~20x improvement with cache hits (TTL cache)
 - **Query Validation**: ~5x faster (combined regex patterns)
-- **First Query**: ~100ms faster (eager connection)
+- **Startup**: MCP transport comes up immediately; first query is warm (~100ms faster) when DB is available, and the server stays alive and auto-reconnects when it isn't
 - **STDIO Mode**: Minimal overhead from logging guards
 - **Code Quality**: DRY principle via shared CSV utility, easier maintenance
 
@@ -336,25 +342,32 @@ These optimizations provide:
    - Exposes database tables as MCP resources
    - URI format: `mssql://{tableName}/data`
    - Automatically discovers tables via INFORMATION_SCHEMA
-   - Returns top 100 rows per table in CSV format
+   - Returns top N rows per table in CSV format (N controlled by `MSSQL_RESOURCE_LIMIT`, default 100; pagination warning appended when limit reached)
+   - 5-minute TTL cache on the resource list; falls back to stale cache on listing errors to keep the MCP client usable
 
 4. **Connection Management** ([src/server/connection.ts](src/server/connection.ts))
-   - Creates and manages `mssql` connection pool
-   - Provides unified `ConnectionPool` interface with single query method:
+   - Provides `ResilientConnectionPool` — a self-healing pool that keeps the MCP server responsive even when the database is unavailable
+   - Exposes the unified `ConnectionPool` interface with:
      - `query()`: Simple read-only query execution
+     - `close()`: Graceful shutdown
+     - `isConnected` (on `ResilientConnectionPool`): current connection state for health checks
+   - **Graceful startup**: server starts even if the database is unreachable; tool calls surface a user-friendly error until reconnection succeeds
+   - **Automatic reconnection** with exponential backoff (1s → 2s → 4s → … → 60s max), triggered on both startup failure and mid-session disconnects
+   - **Mid-session disconnect detection** via pool `error` events and connection-error classification (`ECONNRESET`, `ETIMEDOUT`, `socket hang up`, etc.)
+   - **Shared promise pattern** for `ensureConnected()` prevents thundering herd when multiple concurrent tool calls arrive while disconnected
+   - **Lazy reconnection** on tool calls: if disconnected, a connection attempt is made before rejecting
    - Detects and blocks write operations with enhanced error messages
+   - Error classifier (`handleQueryError`) distinguishes schema/syntax errors from write-attempt errors to avoid false positives
    - Supports both SQL Server Authentication and Windows Authentication
-   - Connection pool configured for read-only access
+   - `createResilientConnectionPool()` is the primary factory; the legacy `createConnectionPool()` is `@deprecated` and kept only for backward compatibility
 
 5. **Configuration** ([src/server/config.ts](src/server/config.ts))
    - Parses environment variables into `MssqlConfig`
    - Detects and handles special cases:
      - Azure SQL (auto-enables encryption for `*.database.windows.net`)
      - LocalDB (converts `(localdb)\instance` to `.\\instance` format)
-   - Validates table names to prevent SQL injection
-   - **Enhanced Read-Only Query Detection** with dual-layer protection:
-     - **Whitelist validation**: Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, DESC
-     - **Blacklist detection**: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, GRANT, REVOKE, xp_cmdshell, OPENROWSET, etc.
+   - Validates table names to prevent SQL injection (`validateTableName()`)
+   - **Multi-layer read-only query detection** via `isReadOnlyQuery()` — full layer-by-layer details are in the "Security Model" section below
 
 6. **CSV Utilities** ([src/utils/csv.ts](src/utils/csv.ts))
    - Shared CSV formatting utilities for memory-efficient output generation
@@ -362,37 +375,58 @@ These optimizations provide:
    - `escapeCSVCell()`: Proper escaping for special characters (commas, quotes, newlines)
    - Eliminates code duplication between MssqlTools and MssqlResources
    - Ensures consistent CSV formatting across all outputs
-     - **Comment stripping**: Removes SQL comments before validation
-     - **Multi-statement detection**: Prevents chained dangerous operations
 
 ### Data Flow
 
 1. **Incoming MCP Request** → MssqlMcpServer receives via STDIO or HTTP transport
-2. **Request Routing**:
+2. **Connection Availability Gate** (in `CallToolRequestSchema` / `ReadResourceRequestSchema` handlers):
+   - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
+   - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
+3. **Request Routing**:
    - Tool requests → MssqlTools.handleTool()
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
-3. **Query Execution** (READ-ONLY enforced at multiple layers):
+4. **Query Execution** (READ-ONLY enforced at multiple layers):
    - **Layer 1**: Input validation via Zod schema
    - **Layer 2**: Read-only query validation (`isReadOnlyQuery()`)
      - Whitelist check: Must start with SELECT, WITH, SHOW, etc.
      - Blacklist check: Must not contain INSERT, UPDATE, DELETE, DROP, etc.
-   - **Layer 3**: Connection pool execution with write detection
-   - **Layer 4**: Error handling with write attempt detection
-4. **Response Formatting** → CSV format only
-5. **Return to Client** → Structured MCP response
+   - **Layer 3**: `ResilientConnectionPool.query()` — performs lazy reconnect if disconnected, then executes
+   - **Layer 4**: Error classification (`handleQueryError`)
+     - **Schema/syntax errors checked FIRST** (`invalid column name`, `invalid object name`, `incorrect syntax near`, `ambiguous column name`, `must declare`, `could not find stored procedure`) — these are re-thrown as-is
+     - Only if the error doesn't match schema patterns, write-keyword detection runs → wraps as READ-ONLY violation
+     - Connection errors (`ECONNRESET`, `ETIMEDOUT`, …) trigger background reconnect and return a friendly "connection lost" message
+5. **Response Formatting** → CSV format only
+6. **Return to Client** → Structured MCP response
 
 ### Security Model
 
 **THIS MCP SERVER IS READ-ONLY BY DESIGN - NO CONFIGURATION REQUIRED**
 
-- **Multi-Layer Read-Only Enforcement**:
-  - **Layer 1 - Whitelist Validation**: Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, DESC queries allowed
-  - **Layer 2 - Blacklist Detection**: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, TRUNCATE, GRANT, REVOKE, EXEC, xp_cmdshell, OPENROWSET, OPENQUERY, OPENDATASOURCE
-  - **Layer 3 - Comment Stripping**: Removes SQL comments (line and block) before validation to prevent obfuscation
-  - **Layer 4 - Multi-Statement Detection**: Prevents chained dangerous operations (e.g., `SELECT 1; DROP TABLE users`)
-  - **Layer 5 - Runtime Detection**: Connection pool detects write operations in error messages and blocks them
-  - **Layer 6 - Error Sanitization**: Enhanced error messages for write attempt detection
+- **Multi-Layer Read-Only Enforcement** (all in [src/server/config.ts](src/server/config.ts) `isReadOnlyQuery()` unless noted):
+  - **Layer 1 - Encoding Bypass Decoding**: `decodeURIComponent()` unwraps URL-encoded payloads (`%44%52%4F%50` → `DROP`) before validation
+  - **Layer 2 - Unicode Normalization**: `String.normalize('NFKC')` defeats homograph attacks (e.g. fullwidth `ＳＥＬＥＣＴ` → `SELECT`, and Unicode lookalike bypasses)
+  - **Layer 3 - Comment & Backslash Stripping**: Removes line (`--`), block (`/* */`) comments **and** backslashes (used in hex-encoding bypasses) before validation
+  - **Layer 4 - Dangerous Pattern Blacklist** — blocks ALL of:
+    - DDL: `DROP`, `TRUNCATE`, `ALTER`, `CREATE`
+    - DML: `INSERT`, `UPDATE`, `DELETE`, `MERGE`
+    - DCL: `GRANT`, `REVOKE`, `DENY`
+    - Execution: `EXEC`, `EXECUTE`, `SP_EXECUTESQL`, `XP_CMDSHELL`
+    - Data exfiltration: `UNION`, `INTO`, `BULK`, `BACKUP`, `RESTORE`
+    - External access: `OPENROWSET`, `OPENQUERY`, `OPENDATASOURCE`
+    - Multi-statement injection: `;` followed by any dangerous op
+    - Hex-encoded payloads: `0X[0-9A-F]+`
+  - **Layer 5 - Hex-Encoded Keyword Detection**: Additional check for `0x`-prefixed hex strings ≥8 chars (e.g. `0x44524F50` = "DROP")
+  - **Layer 6 - Whitelist Validation**: After all decoding/stripping, query must start with `SELECT`, `WITH`, `SHOW`, `DESCRIBE`, `EXPLAIN`, or `DESC`
+  - **Layer 7 - Runtime Error Classification** (`handleQueryError` in [src/server/connection.ts](src/server/connection.ts)):
+    - **Schema/syntax errors are checked FIRST** and re-thrown verbatim (`invalid column name`, `invalid object name`, `incorrect syntax near`, `ambiguous column name`, `must declare`, `could not find stored procedure`)
+    - **Only after** schema check: write-keyword detection in error messages → wraps as `READ-ONLY mode violation`
+    - This order prevents false positives where a schema error message happens to contain a write keyword (e.g. `"Invalid column name 'update_time'"`)
+  - **Layer 8 - Error Sanitization**: Enhanced error messages for write attempt detection
+
+- **Cache Integrity**:
+  - Cache keys generated via **SHA256** hash of normalized query text (prevents cache-poisoning collisions a crafted query might exploit against a weaker hash)
+  - Normalization: `trim → lowercase → collapse whitespace` before hashing to maximize cache reuse without cross-query bleed
 
 - **SQL Injection Prevention**:
   - Table names validated with regex: `^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)?$`
@@ -464,14 +498,18 @@ Note: get_version uses static cache (never expires during runtime) as SQL Server
 - Enables verbose logging with `--verbose`
 - Uses StreamableHTTPTransport from @hono/mcp
 - Includes CORS configuration for claude.ai
-- Health check endpoint at `/health`
+- Health check endpoint at `/health` — returns JSON with:
+  - `status`: `"healthy"` (always, once the server is up)
+  - `database`: `"connected"` or `"disconnected"` (reflects `ResilientConnectionPool.isConnected`)
+  - `timestamp`, `service`, `version`
 - MCP endpoint at `/mcp`
 
 ### Read-Only Query Execution
 
 The connection layer implements simple read-only query execution:
 - All queries executed directly without transactions (no write operations possible)
-- Error detection for write attempts with enhanced error messages
+- Error classification distinguishes schema errors (re-thrown) from write-attempt errors (wrapped as READ-ONLY violation) — schema check runs first to prevent false positives
+- Connection errors (ECONNRESET / ETIMEDOUT / socket hang up / etc.) are detected and trigger background reconnect; the caller receives a friendly "connection lost — auto-reconnect in progress" message
 - SQL Server 2008+ compatible
 - No transaction nesting issues since transactions are not used
 
@@ -485,6 +523,7 @@ All tool inputs are validated using Zod v4 schemas:
 - `GetForeignKeysInputSchema`: Optional table_name and schema_name filters
 - `SearchColumnsInputSchema`: Required column_name, optional schema_name
 - `GetTableRelationshipsInputSchema`: Required table_name, optional schema_name
+- `GetTableIndexesInputSchema`: Required table_name, optional schema_name
 - Zod schemas converted to JSON Schema for MCP tool definitions
 - Validation errors return user-friendly error messages
 
@@ -501,12 +540,10 @@ All tool inputs are validated using Zod v4 schemas:
 
 Main execution logic is in `MssqlTools.handleExecuteSql()`:
 - Always READ-ONLY mode (no configuration needed)
-- Multi-layer validation via `isReadOnlyQuery()`:
-  - Whitelist check for allowed operations
-  - Blacklist check for dangerous patterns
-  - Comment stripping before validation
-- Execution: Always uses `pool.query()` (no transactions)
-- Result formatting: CSV format only
+- Multi-layer validation via `isReadOnlyQuery()` — see "Security Model" for the full layer list (encoding decode, Unicode normalize, comment/backslash strip, dangerous-pattern blacklist, hex detector, whitelist starter check)
+- Execution: Always uses `pool.query()` (no transactions). On `ResilientConnectionPool`, a lazy reconnect is attempted first if currently disconnected.
+- Result caching: SHA256-keyed cache with lazy TTL cleanup and true LRU eviction
+- Result formatting: CSV format only (via `formatCSV()` in [src/utils/csv.ts](src/utils/csv.ts))
 
 ### Testing with Different SQL Server Versions
 
@@ -524,6 +561,14 @@ Test the multi-layer read-only enforcement:
 3. **Multi-statement attacks**: Test `SELECT 1; DROP TABLE` patterns
 4. **SQL injection attempts**: Test malicious patterns in WHERE clauses
 5. **Comment obfuscation**: Test `SELECT /*INSERT*/ * FROM` patterns
+6. **URL-encoding bypass**: Test `%44%52%4F%50%20%54%41%42%4C%45` (encoded `DROP TABLE`)
+7. **Unicode homograph attacks**: Test fullwidth characters (`ＤＲＯＰ`) and Cyrillic lookalikes
+8. **Hex-encoded payloads**: Test `0x44524F50` (hex for "DROP")
+9. **UNION-based exfiltration**: Verify `SELECT 1 UNION SELECT ...` is blocked
+10. **SELECT INTO exfiltration**: Verify `SELECT * INTO new_table FROM ...` is blocked
+11. **Stored procedure abuse**: Test `EXEC xp_cmdshell`, `sp_executesql`, `OPENROWSET`
+12. **Backup/restore exfiltration**: Test `BACKUP DATABASE ... TO DISK = ...`
+13. **False-positive regression**: Ensure `SELECT * FROM orders WHERE update_time > ...` (column name contains "update") is NOT blocked
 
 ## Build System
 
