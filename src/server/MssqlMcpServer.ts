@@ -12,6 +12,7 @@ import consola from 'consola';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlResources } from '../MssqlResources';
 import { MssqlTools } from '../MssqlTools';
 import { getFileLogger } from '../utils/fileLogger';
@@ -62,7 +63,10 @@ export class MssqlMcpServer {
 	private setupHandlers() {
 		// Tool handlers
 		this.server.setRequestHandler(ListToolsRequestSchema, async () => {
-			const tools = MssqlTools.getToolDefinitions();
+			const tools = [
+				...MssqlTools.getToolDefinitions(),
+				...MssqlObjectTools.getToolDefinitions(),
+			];
 			return { tools };
 		});
 
@@ -81,6 +85,9 @@ export class MssqlMcpServer {
 			}
 
 			const { name, arguments: args } = request.params;
+			if (MssqlObjectTools.canHandle(name)) {
+				return await MssqlObjectTools.handleTool(name, args, this.pool);
+			}
 			return await MssqlTools.handleTool(name, args, this.pool);
 		});
 

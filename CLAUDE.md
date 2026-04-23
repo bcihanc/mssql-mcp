@@ -323,8 +323,8 @@ These optimizations provide:
    - Key methods: `setupHandlers()`, `start()`, `stop()`
 
 2. **Tools Layer** ([src/MssqlTools.ts](src/MssqlTools.ts))
-   - Implements MCP tool definitions and handlers
-   - Provides eight main tools:
+   - Implements MCP tool definitions and handlers for table-level metadata + raw SQL execution
+   - Provides eight original tools:
      - `exec_sql_csv`: Execute READ-ONLY SQL queries with CSV output
      - `get_version`: Retrieve SQL Server version
      - `list_tables`: List all tables and views with schema, type, row count, and size info
@@ -337,6 +337,21 @@ These optimizations provide:
      - Whitelist: Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, DESC allowed
      - Blacklist: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, etc.
      - Pattern detection: Prevents SQL injection and dangerous operations
+
+2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
+   - Programmable-object metadata tools, all read-only and cross-database capable via optional `database_name` parameter
+   - All ten tools accept `database_name` (1-part validated; default = connection's bound DB):
+     - `list_stored_procedures`: schema, name, param count, create/modify dates (filters out `is_ms_shipped` by default; `include_system` to opt in)
+     - `get_procedure_definition`: T-SQL body with line-based pagination (`offset_lines`, `max_lines`); returns friendly explanation if encrypted (`WITH ENCRYPTION`) or user lacks `VIEW DEFINITION` permission
+     - `list_views` + `get_view_definition`: same pattern for views
+     - `list_functions` + `get_function_definition`: covers SQL_SCALAR_FUNCTION (`FN`), inline/multi-statement TVFs (`IF`/`TF`), CLR aggregate/scalar/table-valued (`AF`/`FS`/`FT`)
+     - `list_triggers`: DML triggers (`parent_class = 1`) with parent table, INSTEAD OF flag, enabled state, and aggregated event types (INSERT/UPDATE/DELETE)
+     - `get_trigger_definition`: T-SQL body, paginated (uses `parent_object_id` for schema lookup since triggers live under tables)
+     - `get_object_dependencies`: who references this object — uses `sys.sql_expression_dependencies` (requires VIEW DEFINITION; permission errors surfaced as friendly text)
+     - `get_referenced_objects`: who/what does this object reference (cross-DB references included via `referenced_database_name`)
+   - **Cross-DB metadata function trap**: `OBJECT_NAME`/`OBJECT_SCHEMA_NAME`/`OBJECT_DEFINITION` resolve in *current* DB context unless given `DB_ID('dbname')` as second arg; the implementation always passes the explicit DB id when `database_name` is set
+   - **3-part name rejection**: `name` parameter accepts only 1 or 2 parts; 3-part names are rejected with a clear error pointing the user to `database_name`
+   - All caches use lazy TTL cleanup + true LRU eviction (same pattern as MssqlTools); see "Environment Variables" for tunables
 
 3. **Resources Layer** ([src/MssqlResources.ts](src/MssqlResources.ts))
    - Exposes database tables as MCP resources
@@ -400,7 +415,7 @@ These optimizations provide:
    - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
    - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
 3. **Request Routing**:
-   - Tool requests → MssqlTools.handleTool()
+   - Tool requests are dispatched by name: `MssqlObjectTools.canHandle(name)` is checked first (newer programmable-object tools); otherwise routed to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating both providers' `getToolDefinitions()`
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
 4. **Query Execution** (READ-ONLY enforced at multiple layers):
@@ -503,9 +518,18 @@ Database schema rarely changes, so longer TTLs provide better performance:
 
 Note: get_version uses static cache (never expires during runtime) as SQL Server version never changes.
 
-Definition Pagination (Faz 1+ definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
+Definition Pagination (definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
 - `MSSQL_DEFINITION_DEFAULT_LINES`: Default page size when `max_lines` is not specified (default: 200)
 - `MSSQL_DEFINITION_MAX_LINES`: Hard cap on `max_lines` to prevent token DoS (default: 1000)
+
+Object Tools Caching (programmable-object metadata):
+- `MSSQL_PROCS_CACHE_TTL`: list_stored_procedures cache TTL (default: 7,200,000 = 2 hours)
+- `MSSQL_PROCS_CACHE_SIZE`: max cached entries (default: 100)
+- `MSSQL_VIEWS_CACHE_TTL` / `MSSQL_VIEWS_CACHE_SIZE`: list_views (defaults: 2h / 100)
+- `MSSQL_FUNCTIONS_CACHE_TTL` / `MSSQL_FUNCTIONS_CACHE_SIZE`: list_functions (defaults: 2h / 100)
+- `MSSQL_TRIGGERS_CACHE_TTL` / `MSSQL_TRIGGERS_CACHE_SIZE`: list_triggers (defaults: 2h / 100)
+- `MSSQL_DEFINITION_CACHE_TTL` / `MSSQL_DEFINITION_CACHE_SIZE`: shared cache for all `get_*_definition` tools (defaults: 4h / 200)
+- `MSSQL_DEPENDENCIES_CACHE_TTL` / `MSSQL_DEPENDENCIES_CACHE_SIZE`: shared for get_object_dependencies + get_referenced_objects (defaults: 4h / 100)
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 
