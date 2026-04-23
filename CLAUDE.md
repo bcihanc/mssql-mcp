@@ -338,6 +338,22 @@ These optimizations provide:
      - Blacklist: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, etc.
      - Pattern detection: Prevents SQL injection and dangerous operations
 
+2d. **Diagnostics Tools Layer** ([src/MssqlDiagnosticsTools.ts](src/MssqlDiagnosticsTools.ts))
+   - SQL Agent + performance/wait/blocking diagnostics. All read-only. Most tools require elevated permissions (VIEW SERVER STATE / VIEW DATABASE STATE / sysjobs SELECT) — when missing, the tool returns a friendly 🔒 message naming the exact permission to GRANT
+   - SQL Agent (msdb.dbo.*) — 4 tools:
+     - `list_sql_agent_jobs`: id, name, enabled, owner login, dates (with optional `enabled_only` filter)
+     - `get_job_steps`: per-job step list with subsystem (TSQL/SSIS/CmdExec/PowerShell/etc.), database, command body, on-success/fail actions
+     - `get_job_history`: recent runs with decoded run_status (Failed/Succeeded/Retry/Canceled/InProgress) — default 20, max 200
+     - `list_job_schedules`: schedules joined with jobs (frequency type, interval, active times)
+   - Performance DMVs — 6 tools (NO CACHE — these are real-time):
+     - `get_index_usage_stats`: seeks/scans/lookups/updates per index — find unused indexes
+     - `get_missing_indexes`: optimizer-suggested indexes ordered by impact_score (avg_user_cost × avg_user_impact × seeks)
+     - `get_top_expensive_queries`: top N queries by elapsed_time / cpu / reads / execution_count (configurable via `order_by` enum)
+     - `get_active_sessions`: dm_exec_sessions + dm_exec_requests + current SQL text. **Without VIEW SERVER STATE only own session is visible** — explicit note added when result is single row
+     - `get_blocking_sessions`: blocked → blocker chain with both sides' SQL
+     - `get_wait_stats`: top wait types with Paul Randal's well-known benign-wait filter applied (~50 wait types like CHECKPOINT_QUEUE, BROKER_*, LAZYWRITER_SLEEP excluded)
+   - Top/limit hard caps: 100 for top-N tools, 200 for job_history — DoS protection
+
 2c. **Profiling Tools Layer** ([src/MssqlProfilingTools.ts](src/MssqlProfilingTools.ts))
    - Data profiling and sampling tools, all read-only and cross-database capable
    - Three tools:
@@ -437,7 +453,7 @@ These optimizations provide:
    - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
    - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
 3. **Request Routing**:
-   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all four providers' `getToolDefinitions()`
+   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → `MssqlDiagnosticsTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all five providers' `getToolDefinitions()`
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
 4. **Query Execution** (READ-ONLY enforced at multiple layers):
@@ -543,6 +559,11 @@ Note: get_version uses static cache (never expires during runtime) as SQL Server
 Definition Pagination (definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
 - `MSSQL_DEFINITION_DEFAULT_LINES`: Default page size when `max_lines` is not specified (default: 200)
 - `MSSQL_DEFINITION_MAX_LINES`: Hard cap on `max_lines` to prevent token DoS (default: 1000)
+
+Diagnostics Tools Caching (SQL Agent + performance):
+- `MSSQL_JOBS_CACHE_TTL`: list_sql_agent_jobs (default: 1,800,000 = 30 minutes)
+- `MSSQL_JOB_HISTORY_CACHE_TTL`: get_job_history (default: 300,000 = 5 minutes — short because new runs accrue)
+- get_job_steps, list_job_schedules, and all 6 performance DMV tools are NOT cached (real-time / rarely-queried)
 
 Profiling Tools Caching (data profiling):
 - `MSSQL_PROFILE_CACHE_TTL` / `MSSQL_PROFILE_CACHE_SIZE`: profile_column (defaults: 30 min / 100)

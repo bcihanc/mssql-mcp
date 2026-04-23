@@ -12,6 +12,7 @@ import consola from 'consola';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { MssqlDiagnosticsTools } from '../MssqlDiagnosticsTools.js';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
 import { MssqlResources } from '../MssqlResources';
@@ -70,6 +71,7 @@ export class MssqlMcpServer {
 				...MssqlObjectTools.getToolDefinitions(),
 				...MssqlServerTools.getToolDefinitions(),
 				...MssqlProfilingTools.getToolDefinitions(),
+				...MssqlDiagnosticsTools.getToolDefinitions(),
 			];
 			return { tools };
 		});
@@ -97,6 +99,9 @@ export class MssqlMcpServer {
 			}
 			if (MssqlProfilingTools.canHandle(name)) {
 				return await MssqlProfilingTools.handleTool(name, args, this.pool);
+			}
+			if (MssqlDiagnosticsTools.canHandle(name)) {
+				return await MssqlDiagnosticsTools.handleTool(name, args, this.pool);
 			}
 			return await MssqlTools.handleTool(name, args, this.pool);
 		});
