@@ -338,22 +338,6 @@ These optimizations provide:
      - Blacklist: Blocks INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, etc.
      - Pattern detection: Prevents SQL injection and dangerous operations
 
-2d. **Diagnostics Tools Layer** ([src/MssqlDiagnosticsTools.ts](src/MssqlDiagnosticsTools.ts))
-   - SQL Agent + performance/wait/blocking diagnostics. All read-only. Most tools require elevated permissions (VIEW SERVER STATE / VIEW DATABASE STATE / sysjobs SELECT) — when missing, the tool returns a friendly 🔒 message naming the exact permission to GRANT
-   - SQL Agent (msdb.dbo.*) — 4 tools:
-     - `list_sql_agent_jobs`: id, name, enabled, owner login, dates (with optional `enabled_only` filter)
-     - `get_job_steps`: per-job step list with subsystem (TSQL/SSIS/CmdExec/PowerShell/etc.), database, command body, on-success/fail actions
-     - `get_job_history`: recent runs with decoded run_status (Failed/Succeeded/Retry/Canceled/InProgress) — default 20, max 200
-     - `list_job_schedules`: schedules joined with jobs (frequency type, interval, active times)
-   - Performance DMVs — 6 tools (NO CACHE — these are real-time):
-     - `get_index_usage_stats`: seeks/scans/lookups/updates per index — find unused indexes
-     - `get_missing_indexes`: optimizer-suggested indexes ordered by impact_score (avg_user_cost × avg_user_impact × seeks)
-     - `get_top_expensive_queries`: top N queries by elapsed_time / cpu / reads / execution_count (configurable via `order_by` enum)
-     - `get_active_sessions`: dm_exec_sessions + dm_exec_requests + current SQL text. **Without VIEW SERVER STATE only own session is visible** — explicit note added when result is single row
-     - `get_blocking_sessions`: blocked → blocker chain with both sides' SQL
-     - `get_wait_stats`: top wait types with Paul Randal's well-known benign-wait filter applied (~50 wait types like CHECKPOINT_QUEUE, BROKER_*, LAZYWRITER_SLEEP excluded)
-   - Top/limit hard caps: 100 for top-N tools, 200 for job_history — DoS protection
-
 2c. **Profiling Tools Layer** ([src/MssqlProfilingTools.ts](src/MssqlProfilingTools.ts))
    - Data profiling and sampling tools, all read-only and cross-database capable
    - Three tools:
@@ -377,19 +361,15 @@ These optimizations provide:
    - Caches: short TTLs for server-level state that may change (5 min for server_info, 30 min for databases, 1h for linked_servers); 2h for schemas
 
 2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
-   - Programmable-object metadata tools, all read-only and cross-database capable via optional `database_name` parameter
-   - All ten tools accept `database_name` (1-part validated; default = connection's bound DB):
+   - Programmable-object listing tools, all read-only and cross-database capable via optional `database_name` parameter
+   - Four tools (all accept `database_name` — 1-part validated; default = connection's bound DB):
      - `list_stored_procedures`: schema, name, param count, create/modify dates (filters out `is_ms_shipped` by default; `include_system` to opt in)
-     - `get_procedure_definition`: T-SQL body with line-based pagination (`offset_lines`, `max_lines`); returns friendly explanation if encrypted (`WITH ENCRYPTION`) or user lacks `VIEW DEFINITION` permission
-     - `list_views` + `get_view_definition`: same pattern for views
-     - `list_functions` + `get_function_definition`: covers SQL_SCALAR_FUNCTION (`FN`), inline/multi-statement TVFs (`IF`/`TF`), CLR aggregate/scalar/table-valued (`AF`/`FS`/`FT`)
-     - `list_triggers`: DML triggers (`parent_class = 1`) with parent table, INSTEAD OF flag, enabled state, and aggregated event types (INSERT/UPDATE/DELETE)
-     - `get_trigger_definition`: T-SQL body, paginated (uses `parent_object_id` for schema lookup since triggers live under tables)
-     - `get_object_dependencies`: who references this object — uses `sys.sql_expression_dependencies` (requires VIEW DEFINITION; permission errors surfaced as friendly text)
-     - `get_referenced_objects`: who/what does this object reference (cross-DB references included via `referenced_database_name`)
-   - **Cross-DB metadata function trap**: `OBJECT_NAME`/`OBJECT_SCHEMA_NAME`/`OBJECT_DEFINITION` resolve in *current* DB context unless given `DB_ID('dbname')` as second arg; the implementation always passes the explicit DB id when `database_name` is set
-   - **3-part name rejection**: `name` parameter accepts only 1 or 2 parts; 3-part names are rejected with a clear error pointing the user to `database_name`
+     - `list_views`: schema, name, create/modify dates
+     - `list_functions`: covers SQL_SCALAR_FUNCTION (`FN`), inline/multi-statement TVFs (`IF`/`TF`), CLR aggregate/scalar/table-valued (`AF`/`FS`/`FT`)
+     - `list_triggers`: DML triggers (`parent_class = 1`) with parent table, INSTEAD OF flag, enabled state, and aggregated event types (INSERT/UPDATE/DELETE) via `STUFF + FOR XML PATH`
+   - **Cross-DB metadata function trap**: `OBJECT_NAME`/`OBJECT_SCHEMA_NAME` resolve in *current* DB context unless given `DB_ID('dbname')` as second arg; the implementation always passes the explicit DB id when `database_name` is set
    - All caches use lazy TTL cleanup + true LRU eviction (same pattern as MssqlTools); see "Environment Variables" for tunables
+   - **NOTE — definition retrieval intentionally not provided**: Tools like `get_procedure_definition` / `get_object_dependencies` were prototyped (see git history) but removed because they require `VIEW DEFINITION` (or `VIEW ANY DEFINITION`) which read-only users typically lack. The MCP would return only "🔒 permission denied" messages, polluting AI context with no signal. If a future deployment grants those permissions, restore from commit history and re-register in `MssqlMcpServer.ts`
 
 3. **Resources Layer** ([src/MssqlResources.ts](src/MssqlResources.ts))
    - Exposes database tables as MCP resources
@@ -453,7 +433,7 @@ These optimizations provide:
    - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
    - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
 3. **Request Routing**:
-   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → `MssqlDiagnosticsTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all five providers' `getToolDefinitions()`
+   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all four providers' `getToolDefinitions()`
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
 4. **Query Execution** (READ-ONLY enforced at multiple layers):
@@ -556,14 +536,8 @@ Database schema rarely changes, so longer TTLs provide better performance:
 
 Note: get_version uses static cache (never expires during runtime) as SQL Server version never changes.
 
-Definition Pagination (definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
-- `MSSQL_DEFINITION_DEFAULT_LINES`: Default page size when `max_lines` is not specified (default: 200)
-- `MSSQL_DEFINITION_MAX_LINES`: Hard cap on `max_lines` to prevent token DoS (default: 1000)
-
-Diagnostics Tools Caching (SQL Agent + performance):
-- `MSSQL_JOBS_CACHE_TTL`: list_sql_agent_jobs (default: 1,800,000 = 30 minutes)
-- `MSSQL_JOB_HISTORY_CACHE_TTL`: get_job_history (default: 300,000 = 5 minutes — short because new runs accrue)
-- get_job_steps, list_job_schedules, and all 6 performance DMV tools are NOT cached (real-time / rarely-queried)
+Definition Pagination (`MSSQL_DEFINITION_DEFAULT_LINES` / `MSSQL_DEFINITION_MAX_LINES`):
+- The pagination utility in [src/utils/pagination.ts](src/utils/pagination.ts) reads these env vars but is currently **unused** — definition retrieval tools were removed (see Object Tools Layer note above). The utility is retained for future re-introduction if `VIEW DEFINITION` permission becomes available
 
 Profiling Tools Caching (data profiling):
 - `MSSQL_PROFILE_CACHE_TTL` / `MSSQL_PROFILE_CACHE_SIZE`: profile_column (defaults: 30 min / 100)
@@ -582,8 +556,6 @@ Object Tools Caching (programmable-object metadata):
 - `MSSQL_VIEWS_CACHE_TTL` / `MSSQL_VIEWS_CACHE_SIZE`: list_views (defaults: 2h / 100)
 - `MSSQL_FUNCTIONS_CACHE_TTL` / `MSSQL_FUNCTIONS_CACHE_SIZE`: list_functions (defaults: 2h / 100)
 - `MSSQL_TRIGGERS_CACHE_TTL` / `MSSQL_TRIGGERS_CACHE_SIZE`: list_triggers (defaults: 2h / 100)
-- `MSSQL_DEFINITION_CACHE_TTL` / `MSSQL_DEFINITION_CACHE_SIZE`: shared cache for all `get_*_definition` tools (defaults: 4h / 200)
-- `MSSQL_DEPENDENCIES_CACHE_TTL` / `MSSQL_DEPENDENCIES_CACHE_SIZE`: shared for get_object_dependencies + get_referenced_objects (defaults: 4h / 100)
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 
