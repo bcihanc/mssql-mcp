@@ -1,0 +1,107 @@
+/**
+ * SQL Server identifier validation and bracketing utilities.
+ *
+ * Supports cross-database object naming: 1-part (object), 2-part (schema.object),
+ * or 3-part (database.schema.object). All parts must contain only alphanumeric
+ * characters and underscores; reserved words are protected via bracket-quoting.
+ *
+ * SECURITY: This is the ONLY safe way to interpolate identifiers into SQL strings.
+ * Never bypass this validator — direct string concatenation enables SQL injection.
+ */
+
+const PART_REGEX = /^[a-zA-Z0-9_]+$/;
+const FULL_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$/;
+
+export interface ObjectNameParts {
+	database?: string;
+	schema?: string;
+	object: string;
+}
+
+/**
+ * Parse a SQL object name into its database/schema/object parts.
+ *
+ * Accepted forms:
+ *   "users"               → { object: "users" }
+ *   "dbo.users"           → { schema: "dbo", object: "users" }
+ *   "MyDB.dbo.users"      → { database: "MyDB", schema: "dbo", object: "users" }
+ *
+ * Empty parts (e.g. "MyDB..users") are rejected — explicit schema is required
+ * for 3-part names to prevent silent default-schema bugs in AI-generated calls.
+ *
+ * @throws Error if any part contains invalid characters or part count is wrong.
+ */
+export function parseObjectName(name: string): ObjectNameParts {
+	if (!name || typeof name !== 'string') {
+		throw new Error('Object name must be a non-empty string');
+	}
+
+	if (!FULL_NAME_REGEX.test(name)) {
+		throw new Error(
+			`Invalid object name: "${name}". Allowed: alphanumeric and underscore in each part, separated by dots (1-3 parts).`,
+		);
+	}
+
+	const parts = name.split('.');
+	if (parts.length === 1) {
+		return { object: parts[0] };
+	}
+	if (parts.length === 2) {
+		return { schema: parts[0], object: parts[1] };
+	}
+	return { database: parts[0], schema: parts[1], object: parts[2] };
+}
+
+/**
+ * Validate and bracket-quote a SQL object name for safe interpolation.
+ *
+ *   "users"               → "[users]"
+ *   "dbo.users"           → "[dbo].[users]"
+ *   "MyDB.dbo.users"      → "[MyDB].[dbo].[users]"
+ *
+ * @throws Error on invalid characters.
+ */
+export function validateObjectName(name: string): string {
+	const parts = parseObjectName(name);
+	const out: string[] = [];
+	if (parts.database) out.push(`[${parts.database}]`);
+	if (parts.schema) out.push(`[${parts.schema}]`);
+	out.push(`[${parts.object}]`);
+	return out.join('.');
+}
+
+/**
+ * Validate a single database name (no dots, no brackets in input).
+ * Returns the bracketed form: "MyDB" → "[MyDB]".
+ *
+ * Used when a tool accepts an optional `database_name` parameter and needs
+ * to construct cross-DB queries like `[MyDB].sys.procedures`.
+ */
+export function validateDatabaseName(name: string): string {
+	if (!name || typeof name !== 'string') {
+		throw new Error('Database name must be a non-empty string');
+	}
+	if (!PART_REGEX.test(name)) {
+		throw new Error(
+			`Invalid database name: "${name}". Only alphanumeric characters and underscores are allowed.`,
+		);
+	}
+	return `[${name}]`;
+}
+
+/**
+ * Build a database-aware cache key prefix for cross-DB tool caches.
+ *
+ * Cross-DB tools query different databases with the same SQL pattern; without
+ * a DB prefix, results would collide in the cache. Use this to namespace cache
+ * keys: `${buildCacheKeyPrefix(args.database_name)}${rest_of_key}`.
+ *
+ * If `dbContext` is undefined, returns "_default_::" (the connection's bound DB).
+ */
+export function buildCacheKeyPrefix(dbContext?: string): string {
+	if (!dbContext) return '_default_::';
+	if (!PART_REGEX.test(dbContext)) {
+		throw new Error(`Invalid database context for cache key: "${dbContext}"`);
+	}
+	return `${dbContext.toLowerCase()}::`;
+}

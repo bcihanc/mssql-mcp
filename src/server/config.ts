@@ -1,4 +1,5 @@
 import consola from 'consola';
+import { validateObjectName } from '../utils/identifier.js';
 
 export interface MssqlConfig {
 	server: string;
@@ -198,22 +199,15 @@ export function isReadOnlyQuery(query: string): boolean {
 }
 
 /**
- * Validate table name to prevent SQL injection.
- * Matches the validation logic from the Python reference implementation.
+ * Validate a table name (1-part or 2-part) and return its bracketed form.
+ *
+ * @deprecated Use `validateObjectName` from `../utils/identifier` instead.
+ *   The new validator additionally supports 3-part cross-database names
+ *   (`database.schema.table`) and rejects empty parts that the legacy regex
+ *   allowed (e.g. `MyDB..users`). This wrapper is retained for backward
+ *   compatibility with existing call sites and will be removed in a future
+ *   release.
  */
 export function validateTableName(tableName: string): string {
-	// Allow only alphanumeric, underscore, and dot (for schema.table)
-	if (!/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)?$/.test(tableName)) {
-		throw new Error(`Invalid table name: ${tableName}`);
-	}
-
-	// Split schema and table if present
-	const parts = tableName.split('.');
-	if (parts.length === 2) {
-		// Escape both schema and table name
-		return `[${parts[0]}].[${parts[1]}]`;
-	} else {
-		// Just table name
-		return `[${tableName}]`;
-	}
+	return validateObjectName(tableName);
 }

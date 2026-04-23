@@ -366,7 +366,7 @@ These optimizations provide:
    - Detects and handles special cases:
      - Azure SQL (auto-enables encryption for `*.database.windows.net`)
      - LocalDB (converts `(localdb)\instance` to `.\\instance` format)
-   - Validates table names to prevent SQL injection (`validateTableName()`)
+   - `validateTableName()` is `@deprecated` — thin shim that delegates to `validateObjectName()` in [src/utils/identifier.ts](src/utils/identifier.ts) (kept for backward compatibility)
    - **Multi-layer read-only query detection** via `isReadOnlyQuery()` — full layer-by-layer details are in the "Security Model" section below
 
 6. **CSV Utilities** ([src/utils/csv.ts](src/utils/csv.ts))
@@ -375,6 +375,23 @@ These optimizations provide:
    - `escapeCSVCell()`: Proper escaping for special characters (commas, quotes, newlines)
    - Eliminates code duplication between MssqlTools and MssqlResources
    - Ensures consistent CSV formatting across all outputs
+
+7. **Identifier Utilities** ([src/utils/identifier.ts](src/utils/identifier.ts))
+   - SQL Server identifier validation and bracket-quoting for safe interpolation
+   - Supports 1-part (`object`), 2-part (`schema.object`), and 3-part (`database.schema.object`) names — required for cross-database tool support
+   - `validateObjectName(name)`: validates and returns bracketed form (e.g. `MyDB.dbo.users` → `[MyDB].[dbo].[users]`)
+   - `parseObjectName(name)`: returns `{database?, schema?, object}` parts
+   - `validateDatabaseName(name)`: standalone DB name validator for `database_name` tool params
+   - `buildCacheKeyPrefix(dbContext?)`: namespaces cache keys by DB context to prevent cross-DB cache collisions
+   - **Strict rejections**: empty parts (e.g. `MyDB..users`), 4+ parts, brackets in input, hyphens, semicolons — explicit-only naming prevents AI silent-default bugs
+
+8. **Pagination Utilities** ([src/utils/pagination.ts](src/utils/pagination.ts))
+   - Line-based pagination for large definition responses (procedures/views/functions/triggers)
+   - `paginateLines(text, params)`: slices by line range with hard-cap at 1000 lines (DoS protection)
+   - `formatPaginatedResponse(paginated, name)`: AI-parseable header `📄 {name} — lines {start}-{end} of {total} | has_more={bool}[ next_offset={n}]`
+   - Default page size: 200 lines (configurable via `MSSQL_DEFINITION_DEFAULT_LINES`)
+   - Hard cap: 1000 lines (configurable via `MSSQL_DEFINITION_MAX_LINES`)
+   - Used by Faz 1+ definition tools (`get_procedure_definition`, `get_view_definition`, etc.)
 
 ### Data Flow
 
@@ -429,9 +446,12 @@ These optimizations provide:
   - Normalization: `trim → lowercase → collapse whitespace` before hashing to maximize cache reuse without cross-query bleed
 
 - **SQL Injection Prevention**:
-  - Table names validated with regex: `^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)?$`
-  - Table names escaped with brackets: `[schema].[table]`
-  - Uses parameterized queries via mssql package
+  - Object names (1/2/3-part) validated by `validateObjectName()` in [src/utils/identifier.ts](src/utils/identifier.ts) — regex: `^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$`
+  - Names escaped with brackets: `[database].[schema].[object]` for cross-DB, `[schema].[object]` for same-DB
+  - Optional `database_name` tool params validated by `validateDatabaseName()` — single-name regex `^[a-zA-Z0-9_]+$`
+  - **Strict rejection** of empty parts (e.g. `MyDB..users`), brackets in input, hyphens, and 4+ parts
+  - Cross-DB cache keys namespaced via `buildCacheKeyPrefix(dbContext)` to prevent cross-database cache collisions
+  - Uses parameterized queries via mssql package where possible
   - Dangerous patterns blocked at query validation stage
 
 - **Logging Behavior**:
@@ -482,6 +502,10 @@ Database schema rarely changes, so longer TTLs provide better performance:
 - `MSSQL_INDEXES_CACHE_SIZE`: Maximum cached index queries (default: 200)
 
 Note: get_version uses static cache (never expires during runtime) as SQL Server version never changes.
+
+Definition Pagination (Faz 1+ definition tools — `get_procedure_definition`, `get_view_definition`, `get_function_definition`, `get_trigger_definition`):
+- `MSSQL_DEFINITION_DEFAULT_LINES`: Default page size when `max_lines` is not specified (default: 200)
+- `MSSQL_DEFINITION_MAX_LINES`: Hard cap on `max_lines` to prevent token DoS (default: 1000)
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 

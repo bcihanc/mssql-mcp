@@ -69747,6 +69747,25 @@ var logger = /* @__PURE__ */ __name((fn = console.log) => /* @__PURE__ */ __name
   await next(), await log(fn, "-->", method, path3, c3.res.status, time(start));
 }, "logger2"), "logger");
 
+// src/utils/identifier.ts
+var FULL_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$/;
+function parseObjectName(name) {
+  if (!name || typeof name != "string")
+    throw new Error("Object name must be a non-empty string");
+  if (!FULL_NAME_REGEX.test(name))
+    throw new Error(
+      `Invalid object name: "${name}". Allowed: alphanumeric and underscore in each part, separated by dots (1-3 parts).`
+    );
+  let parts = name.split(".");
+  return parts.length === 1 ? { object: parts[0] } : parts.length === 2 ? { schema: parts[0], object: parts[1] } : { database: parts[0], schema: parts[1], object: parts[2] };
+}
+__name(parseObjectName, "parseObjectName");
+function validateObjectName(name) {
+  let parts = parseObjectName(name), out = [];
+  return parts.database && out.push(`[${parts.database}]`), parts.schema && out.push(`[${parts.schema}]`), out.push(`[${parts.object}]`), out.join(".");
+}
+__name(validateObjectName, "validateObjectName");
+
 // src/server/config.ts
 var logger2 = consola.withTag("mssql-config");
 function getMssqlConfig() {
@@ -69795,10 +69814,7 @@ function isReadOnlyQuery(query) {
 }
 __name(isReadOnlyQuery, "isReadOnlyQuery");
 function validateTableName(tableName) {
-  if (!/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)?$/.test(tableName))
-    throw new Error(`Invalid table name: ${tableName}`);
-  let parts = tableName.split(".");
-  return parts.length === 2 ? `[${parts[0]}].[${parts[1]}]` : `[${tableName}]`;
+  return validateObjectName(tableName);
 }
 __name(validateTableName, "validateTableName");
 
