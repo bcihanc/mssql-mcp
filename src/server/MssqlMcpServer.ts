@@ -16,7 +16,7 @@ import { MssqlResources } from '../MssqlResources';
 import { MssqlTools } from '../MssqlTools';
 import { getFileLogger } from '../utils/fileLogger';
 import { getMssqlConfig } from './config';
-import { createConnectionPool, type ConnectionPool } from './connection';
+import { createResilientConnectionPool, ResilientConnectionPool } from './connection';
 
 export interface MssqlMcpServerConfig {
 	port?: number;
@@ -30,9 +30,10 @@ export class MssqlMcpServer {
 	private server: Server;
 	private app?: Hono<any>;
 	private httpServer?: any;
-	private pool?: ConnectionPool;
+	private pool?: ResilientConnectionPool;
 	private config: Required<MssqlMcpServerConfig>;
 	private httpTransport?: StreamableHTTPTransport;
+	private configError?: string;
 
 	constructor(config: MssqlMcpServerConfig = {}) {
 		this.config = {
@@ -66,8 +67,17 @@ export class MssqlMcpServer {
 		});
 
 		this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+			if (this.configError) {
+				return {
+					content: [{ type: 'text' as const, text: `Error: Database configuration failed: ${this.configError}` }],
+					isError: true,
+				};
+			}
 			if (!this.pool) {
-				throw new Error('Database connection not initialized');
+				return {
+					content: [{ type: 'text' as const, text: 'Error: Database connection is not yet initialized. Please try again shortly.' }],
+					isError: true,
+				};
 			}
 
 			const { name, arguments: args } = request.params;
@@ -77,7 +87,7 @@ export class MssqlMcpServer {
 		// Resource handlers
 		this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
 			if (!this.pool) {
-				throw new Error('Database connection not initialized');
+				return { resources: [] };
 			}
 
 			const resources = await MssqlResources.getResourceDefinitions(this.pool);
@@ -86,7 +96,7 @@ export class MssqlMcpServer {
 
 		this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 			if (!this.pool) {
-				throw new Error('Database connection not initialized');
+				throw new Error('Database connection is not yet initialized. Please try again shortly.');
 			}
 
 			const { uri } = request.params;
@@ -99,7 +109,72 @@ export class MssqlMcpServer {
 		const fileLogger = getFileLogger();
 		fileLogger.info('MssqlMcpServer.start() called');
 
-		// Initialize database configuration and connection pool
+		// CRITICAL: Set up MCP transport FIRST — before anything else.
+		// This ensures the server process stays alive and responsive to the MCP client
+		// regardless of database configuration or connection issues.
+		if (this.config.stdio) {
+			fileLogger.info('Setting up STDIO transport...');
+			try {
+				const transport = new StdioServerTransport();
+				await this.server.connect(transport);
+				fileLogger.info('STDIO transport connected successfully');
+			} catch (error) {
+				fileLogger.error('Failed to setup STDIO transport', error);
+				throw error;
+			}
+		} else {
+			this.app = new Hono<{
+				Bindings: HttpBindings;
+			}>();
+
+			this.app.use(logger());
+
+			this.app.use(
+				'*',
+				cors({
+					origin: ['https://claude.ai'],
+					allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+					allowHeaders: ['Content-Type', 'Authorization'],
+				}),
+			);
+
+			this.app.get('/health', (c) => {
+				return c.json({
+					status: 'healthy',
+					database: this.pool?.isConnected ? 'connected' : 'disconnected',
+					timestamp: new Date().toISOString(),
+					service: 'mssql-mcp-server',
+					version: '1.0.0',
+				});
+			});
+
+			this.httpTransport = new StreamableHTTPTransport();
+			await this.server.connect(this.httpTransport);
+
+			this.app.all('/mcp', async (c) => {
+				return this.httpTransport!.handleRequest(c);
+			});
+
+			this.httpServer = serve({
+				fetch: this.app.fetch,
+				port: this.config.port,
+				hostname: this.config.host,
+			});
+
+			serverLogger.info(`MSSQL MCP server started on http://${this.config.host}:${this.config.port}`);
+		}
+
+		// Now that transport is alive, initialize database connection in the background.
+		// Config errors and connection failures are non-fatal — tool calls will show the error.
+		this.initializeDatabase(fileLogger);
+	}
+
+	/**
+	 * Initialize database configuration and connection pool.
+	 * Runs AFTER transport is set up. Never throws — errors are stored
+	 * and surfaced through tool call responses.
+	 */
+	private initializeDatabase(fileLogger: ReturnType<typeof getFileLogger>): void {
 		fileLogger.info('Getting database configuration...');
 		let dbConfig;
 		try {
@@ -114,90 +189,44 @@ export class MssqlMcpServer {
 				hasPassword: !!dbConfig.password,
 			});
 		} catch (error) {
+			const errorMsg = error instanceof Error ? error.message : String(error);
+			this.configError = errorMsg;
 			fileLogger.error('Failed to get database configuration', error);
-			throw error;
+			if (!this.config.stdio) {
+				serverLogger.error(`Database configuration failed: ${errorMsg}`);
+			}
+			return; // Don't attempt connection — config is invalid
 		}
 
-		// PERFORMANCE: Eagerly create and connect pool (createConnectionPool is now async)
-		fileLogger.info('Creating connection pool...');
+		// Create resilient pool
 		try {
-			this.pool = await createConnectionPool(dbConfig);
-			fileLogger.info('Database connection pool created and connected successfully');
-			if (!this.config.stdio) {
-				serverLogger.success('Database connection established successfully');
-			}
+			this.pool = createResilientConnectionPool(dbConfig);
 		} catch (error) {
-			fileLogger.error('Failed to connect to database', {
-				error: error instanceof Error ? error.message : String(error),
-				stack: error instanceof Error ? error.stack : undefined,
-				server: dbConfig.server,
-				database: dbConfig.database,
-				port: dbConfig.port,
-				windowsAuth: dbConfig.windowsAuth,
-			});
+			const errorMsg = error instanceof Error ? error.message : String(error);
+			this.configError = errorMsg;
+			fileLogger.error('Failed to create connection pool', error);
 			if (!this.config.stdio) {
-				serverLogger.error('Failed to connect to database:', error);
+				serverLogger.error(`Failed to create connection pool: ${errorMsg}`);
 			}
-			throw new Error(`Database connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			return;
 		}
 
-		if (this.config.stdio) {
-			// STDIO transport for CLI usage
-			fileLogger.info('Setting up STDIO transport...');
-			try {
-				const transport = new StdioServerTransport();
-				await this.server.connect(transport);
-				fileLogger.info('STDIO transport connected successfully');
-			} catch (error) {
-				fileLogger.error('Failed to setup STDIO transport', error);
-				throw error;
+		// Fire-and-forget: attempt eager connection in background
+		// This does NOT block start() — the MCP server is already responsive
+		this.pool.ensureConnected().then((connected) => {
+			if (connected) {
+				fileLogger.info('Database connection established successfully');
+				if (!this.config.stdio) {
+					serverLogger.success('Database connection established successfully');
+				}
+			} else {
+				// ensureConnected() automatically starts background retry on failure
+				fileLogger.warn('Database is currently unavailable — server will retry automatically');
+				if (!this.config.stdio) {
+					serverLogger.warn('Database is currently unavailable. The server will automatically reconnect when the database becomes available.');
+				}
 			}
-		} else {
-			// HTTP transport with Hono following the reference pattern
-			this.app = new Hono<{
-				Bindings: HttpBindings;
-			}>();
-
-			this.app.use(logger());
-
-			// CORS configuration
-			this.app.use(
-				'*',
-				cors({
-					origin: ['https://claude.ai'],
-					allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-					allowHeaders: ['Content-Type', 'Authorization'],
-				}),
-			);
-
-			// Health check endpoint
-			this.app.get('/health', (c) => {
-				return c.json({
-					status: 'healthy',
-					timestamp: new Date().toISOString(),
-					service: 'mssql-mcp-server',
-					version: '1.0.0',
-				});
-			});
-
-			// PERFORMANCE FIX: Create transport once and reuse for all requests
-			this.httpTransport = new StreamableHTTPTransport();
-			await this.server.connect(this.httpTransport);
-
-			this.app.all('/mcp', async (c) => {
-				// Reuse the same transport instance instead of creating new one each time
-				return this.httpTransport!.handleRequest(c);
-			});
-
-			// Start HTTP server
-			this.httpServer = serve({
-				fetch: this.app.fetch,
-				port: this.config.port,
-				hostname: this.config.host,
-			});
-
-			serverLogger.info(`MSSQL MCP server started on http://${this.config.host}:${this.config.port}`);
-		}
+		});
 	}
 
 	async stop() {

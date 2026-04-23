@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Bundled with esbuild
-// @wener/mssql-mcp@1.0.1
+// @bcihanc/mssql-mcp@1.0.1
 
 var require,__filename,__dirname;
 {
@@ -80618,16 +80618,8 @@ __name(closeFileLogger, "closeFileLogger");
 // src/server/connection.ts
 var import_mssql = __toESM(require_mssql(), 1);
 var logger5 = consola.withTag("mssql-connection");
-async function createConnectionPool(config2) {
-  let fileLogger = getFileLogger();
-  fileLogger.info("createConnectionPool() called", {
-    server: config2.server,
-    database: config2.database,
-    port: config2.port,
-    windowsAuth: config2.windowsAuth,
-    encrypt: config2.encrypt
-  });
-  let mssqlConfig = {
+function buildMssqlConfig(config2) {
+  let fileLogger = getFileLogger(), mssqlConfig = {
     server: config2.server,
     database: config2.database,
     port: config2.port,
@@ -80640,7 +80632,6 @@ async function createConnectionPool(config2) {
     options: {
       encrypt: config2.encrypt,
       trustServerCertificate: !config2.encrypt
-      // Only trust server cert if not encrypting
     }
   };
   if (config2.windowsAuth)
@@ -80650,73 +80641,170 @@ async function createConnectionPool(config2) {
       throw fileLogger.error("Username and password are required for SQL authentication"), new Error("Username and password are required for SQL authentication");
     mssqlConfig.user = config2.user, mssqlConfig.password = config2.password, consola.level >= 0 && logger5.info(`Configured for SQL Authentication as user: ${config2.user}`), fileLogger.info(`Configured for SQL Authentication as user: ${config2.user}`);
   }
-  let pool = new import_mssql.default.ConnectionPool(mssqlConfig);
-  consola.level >= 0 && logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), fileLogger.info("Connection configured for READ-ONLY mode"), fileLogger.info("Attempting to connect to database...");
-  try {
-    await pool.connect(), logger5.debug("Connection pool connected eagerly (READ-ONLY mode)"), fileLogger.info("Connection pool connected successfully (READ-ONLY mode)");
-  } catch (error46) {
-    let errorMessage = error46 instanceof Error ? error46.message : String(error46), errorStack = error46 instanceof Error ? error46.stack : void 0, isWindows2 = process.platform === "win32";
-    if (fileLogger.error("Database connection failed", {
-      errorMessage,
-      errorStack,
-      platform: process.platform,
-      config: {
-        server: config2.server,
-        database: config2.database,
-        port: config2.port,
-        windowsAuth: config2.windowsAuth,
-        encrypt: config2.encrypt
-      }
-    }), isWindows2) {
-      if (errorMessage.includes("Login failed")) {
-        let enhancedError = config2.windowsAuth ? `Windows Authentication failed. Ensure your Windows user account has SQL Server access permissions. Original error: ${errorMessage}` : `SQL Authentication failed. Check your username and password. Original error: ${errorMessage}`;
-        throw fileLogger.error(enhancedError), new Error(enhancedError);
-      }
-      if (errorMessage.toLowerCase().includes("localdb") || config2.server.toLowerCase().includes("localdb")) {
-        let enhancedError = `LocalDB connection failed. Verify LocalDB is installed and started. Run 'sqllocaldb info' to check. Original error: ${errorMessage}`;
-        throw fileLogger.error(enhancedError), new Error(enhancedError);
-      }
-      if (errorMessage.includes("certificate") || errorMessage.includes("SSL") || errorMessage.includes("TLS")) {
-        let enhancedError = `Certificate validation failed. For testing, try setting MSSQL_ENCRYPT=false (not for production). For Azure SQL, ensure proper certificate chain. Original error: ${errorMessage}`;
-        throw fileLogger.error(enhancedError), new Error(enhancedError);
-      }
-      if (errorMessage.includes("ECONNREFUSED") || errorMessage.includes("ETIMEDOUT")) {
-        let enhancedError = `Cannot connect to SQL Server at ${config2.server}:${config2.port}. Verify SQL Server is running and accessible. Check Windows Firewall settings. Original error: ${errorMessage}`;
-        throw fileLogger.error(enhancedError), new Error(enhancedError);
-      }
-    }
-    let genericError = `Failed to connect to SQL Server: ${errorMessage}`;
-    throw fileLogger.error(genericError), new Error(genericError);
-  }
-  return {
-    async query(sqlQuery) {
-      fileLogger.debug("Executing query", { query: sqlQuery.substring(0, 200) });
-      try {
-        let result = await pool.request().query(sqlQuery);
-        return consola.level >= 0 && logger5.debug("Read-only query executed successfully"), fileLogger.debug("Query executed successfully", {
-          rowCount: result.recordset?.length || 0
-        }), result.recordset;
-      } catch (error46) {
-        consola.level >= 0 && logger5.error("Query execution failed:", error46);
-        let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lower = errorMessage.toLowerCase();
-        if (fileLogger.error("Query execution failed", {
-          errorMessage,
-          query: sqlQuery.substring(0, 200)
-        }), lower.includes("invalid column name") || lower.includes("invalid object name") || lower.includes("incorrect syntax near") || lower.includes("could not find stored procedure") || lower.includes("must declare") || lower.includes("ambiguous column name"))
-          throw error46;
-        if (lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter")) {
-          let writeError = `READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`;
-          throw fileLogger.error(writeError), new Error(writeError);
-        }
-        throw error46;
-      }
-    },
-    async close() {
-      await pool.close(), consola.level >= 0 && logger5.info("Connection pool closed");
-    }
-  };
+  return mssqlConfig;
 }
-__name(createConnectionPool, "createConnectionPool");
+__name(buildMssqlConfig, "buildMssqlConfig");
+function handleQueryError(error46, sqlQuery) {
+  let fileLogger = getFileLogger();
+  consola.level >= 0 && logger5.error("Query execution failed:", error46);
+  let errorMessage = error46 instanceof Error ? error46.message : "Unknown error", lower = errorMessage.toLowerCase();
+  if (fileLogger.error("Query execution failed", {
+    errorMessage,
+    query: sqlQuery.substring(0, 200)
+  }), lower.includes("invalid column name") || lower.includes("invalid object name") || lower.includes("incorrect syntax near") || lower.includes("could not find stored procedure") || lower.includes("must declare") || lower.includes("ambiguous column name"))
+    throw error46;
+  if (lower.includes("insert") || lower.includes("update") || lower.includes("delete") || lower.includes("create") || lower.includes("drop") || lower.includes("alter")) {
+    let writeError = `READ-ONLY mode violation: Write operation detected and blocked. ${errorMessage}`;
+    throw fileLogger.error(writeError), new Error(writeError);
+  }
+  throw error46;
+}
+__name(handleQueryError, "handleQueryError");
+function isConnectionError(error46) {
+  let msg = (error46 instanceof Error ? error46.message : String(error46)).toLowerCase();
+  return msg.includes("econnreset") || msg.includes("econnrefused") || msg.includes("etimedout") || msg.includes("esocket") || msg.includes("connection is closed") || msg.includes("connection lost") || msg.includes("not connected") || msg.includes("network") || msg.includes("socket hang up");
+}
+__name(isConnectionError, "isConnectionError");
+function getEnhancedConnectionError(error46, config2) {
+  let errorMessage = error46 instanceof Error ? error46.message : String(error46);
+  if (process.platform === "win32") {
+    if (errorMessage.includes("Login failed"))
+      return config2.windowsAuth ? `Windows Authentication failed. Ensure your Windows user account has SQL Server access permissions. Original error: ${errorMessage}` : `SQL Authentication failed. Check your username and password. Original error: ${errorMessage}`;
+    if (errorMessage.toLowerCase().includes("localdb") || config2.server.toLowerCase().includes("localdb"))
+      return `LocalDB connection failed. Verify LocalDB is installed and started. Run 'sqllocaldb info' to check. Original error: ${errorMessage}`;
+    if (errorMessage.includes("certificate") || errorMessage.includes("SSL") || errorMessage.includes("TLS"))
+      return `Certificate validation failed. For testing, try setting MSSQL_ENCRYPT=false (not for production). For Azure SQL, ensure proper certificate chain. Original error: ${errorMessage}`;
+    if (errorMessage.includes("ECONNREFUSED") || errorMessage.includes("ETIMEDOUT"))
+      return `Cannot connect to SQL Server at ${config2.server}:${config2.port}. Verify SQL Server is running and accessible. Check Windows Firewall settings. Original error: ${errorMessage}`;
+  }
+  return `Failed to connect to SQL Server: ${errorMessage}`;
+}
+__name(getEnhancedConnectionError, "getEnhancedConnectionError");
+var ResilientConnectionPool = class {
+  static {
+    __name(this, "ResilientConnectionPool");
+  }
+  pool = null;
+  mssqlConfig;
+  localConfig;
+  connected = !1;
+  connectingPromise = null;
+  retryTimer = null;
+  retryDelay = 1e3;
+  maxRetryDelay = 6e4;
+  stopped = !1;
+  /** Whether the pool is currently connected to the database */
+  get isConnected() {
+    return this.connected;
+  }
+  constructor(config2) {
+    this.localConfig = config2, this.mssqlConfig = buildMssqlConfig(config2);
+    let fileLogger = getFileLogger();
+    consola.level >= 0 && logger5.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), fileLogger.info("ResilientConnectionPool created (READ-ONLY mode)");
+  }
+  /**
+   * Attempt to connect to the database.
+   * Uses shared promise pattern to prevent thundering herd —
+   * concurrent callers share the same in-flight connection attempt.
+   */
+  async ensureConnected() {
+    if (this.connected) return !0;
+    if (this.stopped) return !1;
+    if (this.connectingPromise) return this.connectingPromise;
+    this.connectingPromise = this.doConnect();
+    try {
+      let result = await this.connectingPromise;
+      return !result && !this.stopped && this.scheduleBackgroundRetry(), result;
+    } finally {
+      this.connectingPromise = null;
+    }
+  }
+  async doConnect() {
+    let fileLogger = getFileLogger();
+    if (fileLogger.info("Attempting to connect to database..."), this.pool) {
+      try {
+        await this.pool.close();
+      } catch {
+      }
+      this.pool = null;
+    }
+    try {
+      let newPool = new import_mssql.default.ConnectionPool(this.mssqlConfig);
+      return newPool.on("error", (err) => {
+        fileLogger.error("Connection pool error event", {
+          error: err instanceof Error ? err.message : String(err)
+        }), this.connected = !1, this.stopped || this.scheduleBackgroundRetry();
+      }), await newPool.connect(), this.pool = newPool, this.connected = !0, this.retryDelay = 1e3, this.clearRetryTimer(), consola.level >= 0 && logger5.debug("Connection pool connected (READ-ONLY mode)"), fileLogger.info("Connection pool connected successfully (READ-ONLY mode)"), !0;
+    } catch (error46) {
+      let enhancedError = getEnhancedConnectionError(error46, this.localConfig);
+      fileLogger.error("Database connection attempt failed", { error: enhancedError });
+      try {
+        this.pool && await this.pool.close();
+      } catch {
+      }
+      return this.pool = null, this.connected = !1, !1;
+    }
+  }
+  /**
+   * Schedule background retry with exponential backoff.
+   * Backoff schedule: 1s → 2s → 4s → 8s → 16s → 32s → 60s → 60s → ...
+   */
+  scheduleBackgroundRetry() {
+    if (this.stopped || this.connected || this.retryTimer) return;
+    getFileLogger().info(`Scheduling background reconnection attempt in ${this.retryDelay}ms`), this.retryTimer = setTimeout(async () => {
+      if (this.retryTimer = null, this.stopped || this.connected) return;
+      !await this.ensureConnected() && !this.stopped && (this.retryDelay = Math.min(this.retryDelay * 2, this.maxRetryDelay), this.scheduleBackgroundRetry());
+    }, this.retryDelay);
+  }
+  clearRetryTimer() {
+    this.retryTimer && (clearTimeout(this.retryTimer), this.retryTimer = null);
+  }
+  async query(sqlQuery) {
+    let fileLogger = getFileLogger();
+    if (!this.connected && !await this.ensureConnected())
+      throw new Error(
+        "Database is currently unavailable. The server will automatically reconnect when the database becomes available."
+      );
+    let pool = this.pool;
+    if (!pool)
+      throw new Error(
+        "Database is currently unavailable. The server will automatically reconnect when the database becomes available."
+      );
+    fileLogger.debug("Executing query", { query: sqlQuery.substring(0, 200) });
+    try {
+      let result = await pool.request().query(sqlQuery);
+      return consola.level >= 0 && logger5.debug("Read-only query executed successfully"), fileLogger.debug("Query executed successfully", {
+        rowCount: result.recordset?.length || 0
+      }), result.recordset;
+    } catch (error46) {
+      if (isConnectionError(error46))
+        throw fileLogger.error("Connection lost during query execution, starting background retry"), this.connected = !1, this.stopped || (this.retryDelay = 1e3, this.scheduleBackgroundRetry()), new Error(
+          "Database connection was lost during query execution. The server will automatically reconnect when the database becomes available."
+        );
+      return handleQueryError(error46, sqlQuery);
+    }
+  }
+  async close() {
+    if (this.stopped = !0, this.clearRetryTimer(), this.pool) {
+      try {
+        await this.pool.close();
+      } catch {
+      }
+      this.pool = null;
+    }
+    this.connected = !1, consola.level >= 0 && logger5.info("Connection pool closed");
+  }
+};
+function createResilientConnectionPool(config2) {
+  return getFileLogger().info("createResilientConnectionPool() called", {
+    server: config2.server,
+    database: config2.database,
+    port: config2.port,
+    windowsAuth: config2.windowsAuth,
+    encrypt: config2.encrypt
+  }), new ResilientConnectionPool(config2);
+}
+__name(createResilientConnectionPool, "createResilientConnectionPool");
 
 // src/server/MssqlMcpServer.ts
 var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
@@ -80729,6 +80817,7 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   pool;
   config;
   httpTransport;
+  configError;
   constructor(config2 = {}) {
     this.config = {
       port: config2.port ?? 3003,
@@ -80749,52 +80838,28 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   }
   setupHandlers() {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: MssqlTools.getToolDefinitions() })), this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+      if (this.configError)
+        return {
+          content: [{ type: "text", text: `Error: Database configuration failed: ${this.configError}` }],
+          isError: !0
+        };
       if (!this.pool)
-        throw new Error("Database connection not initialized");
+        return {
+          content: [{ type: "text", text: "Error: Database connection is not yet initialized. Please try again shortly." }],
+          isError: !0
+        };
       let { name, arguments: args } = request.params;
       return await MssqlTools.handleTool(name, args, this.pool);
-    }), this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
+    }), this.server.setRequestHandler(ListResourcesRequestSchema, async () => this.pool ? { resources: await MssqlResources.getResourceDefinitions(this.pool) } : { resources: [] }), this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       if (!this.pool)
-        throw new Error("Database connection not initialized");
-      return { resources: await MssqlResources.getResourceDefinitions(this.pool) };
-    }), this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-      if (!this.pool)
-        throw new Error("Database connection not initialized");
+        throw new Error("Database connection is not yet initialized. Please try again shortly.");
       let { uri } = request.params;
       return { contents: [await MssqlResources.handleResource(uri, this.pool)] };
     });
   }
   async start() {
     let fileLogger = getFileLogger();
-    fileLogger.info("MssqlMcpServer.start() called"), fileLogger.info("Getting database configuration...");
-    let dbConfig;
-    try {
-      dbConfig = getMssqlConfig(), fileLogger.info("Database configuration retrieved", {
-        server: dbConfig.server,
-        database: dbConfig.database,
-        port: dbConfig.port,
-        encrypt: dbConfig.encrypt,
-        windowsAuth: dbConfig.windowsAuth,
-        hasUser: !!dbConfig.user,
-        hasPassword: !!dbConfig.password
-      });
-    } catch (error46) {
-      throw fileLogger.error("Failed to get database configuration", error46), error46;
-    }
-    fileLogger.info("Creating connection pool...");
-    try {
-      this.pool = await createConnectionPool(dbConfig), fileLogger.info("Database connection pool created and connected successfully"), this.config.stdio || serverLogger.success("Database connection established successfully");
-    } catch (error46) {
-      throw fileLogger.error("Failed to connect to database", {
-        error: error46 instanceof Error ? error46.message : String(error46),
-        stack: error46 instanceof Error ? error46.stack : void 0,
-        server: dbConfig.server,
-        database: dbConfig.database,
-        port: dbConfig.port,
-        windowsAuth: dbConfig.windowsAuth
-      }), this.config.stdio || serverLogger.error("Failed to connect to database:", error46), new Error(`Database connection failed: ${error46 instanceof Error ? error46.message : "Unknown error"}`);
-    }
-    if (this.config.stdio) {
+    if (fileLogger.info("MssqlMcpServer.start() called"), this.config.stdio) {
       fileLogger.info("Setting up STDIO transport...");
       try {
         let transport = new StdioServerTransport();
@@ -80812,6 +80877,7 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
         })
       ), this.app.get("/health", (c3) => c3.json({
         status: "healthy",
+        database: this.pool?.isConnected ? "connected" : "disconnected",
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         service: "mssql-mcp-server",
         version: "1.0.0"
@@ -80820,6 +80886,41 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
         port: this.config.port,
         hostname: this.config.host
       }), serverLogger.info(`MSSQL MCP server started on http://${this.config.host}:${this.config.port}`);
+    this.initializeDatabase(fileLogger);
+  }
+  /**
+   * Initialize database configuration and connection pool.
+   * Runs AFTER transport is set up. Never throws — errors are stored
+   * and surfaced through tool call responses.
+   */
+  initializeDatabase(fileLogger) {
+    fileLogger.info("Getting database configuration...");
+    let dbConfig;
+    try {
+      dbConfig = getMssqlConfig(), fileLogger.info("Database configuration retrieved", {
+        server: dbConfig.server,
+        database: dbConfig.database,
+        port: dbConfig.port,
+        encrypt: dbConfig.encrypt,
+        windowsAuth: dbConfig.windowsAuth,
+        hasUser: !!dbConfig.user,
+        hasPassword: !!dbConfig.password
+      });
+    } catch (error46) {
+      let errorMsg = error46 instanceof Error ? error46.message : String(error46);
+      this.configError = errorMsg, fileLogger.error("Failed to get database configuration", error46), this.config.stdio || serverLogger.error(`Database configuration failed: ${errorMsg}`);
+      return;
+    }
+    try {
+      this.pool = createResilientConnectionPool(dbConfig);
+    } catch (error46) {
+      let errorMsg = error46 instanceof Error ? error46.message : String(error46);
+      this.configError = errorMsg, fileLogger.error("Failed to create connection pool", error46), this.config.stdio || serverLogger.error(`Failed to create connection pool: ${errorMsg}`);
+      return;
+    }
+    this.pool.ensureConnected().then((connected) => {
+      connected ? (fileLogger.info("Database connection established successfully"), this.config.stdio || serverLogger.success("Database connection established successfully")) : (fileLogger.warn("Database is currently unavailable — server will retry automatically"), this.config.stdio || serverLogger.warn("Database is currently unavailable. The server will automatically reconnect when the database becomes available."));
+    });
   }
   async stop() {
     this.httpServer && (this.httpServer.close(), this.config.stdio || serverLogger.info("HTTP server stopped")), this.server && (await this.server.close(), this.config.stdio || serverLogger.info("MCP server stopped")), this.pool && (await this.pool.close(), this.config.stdio || serverLogger.info("Database connection pool closed"));
