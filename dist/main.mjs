@@ -79796,7 +79796,7 @@ function formatCSV(results, warningMessage) {
 __name(formatCSV, "formatCSV");
 
 // src/utils/identifier.ts
-var PART_REGEX = /^[a-zA-Z0-9_]+$/, FULL_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$/;
+var FULL_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$/, DB_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/;
 function parseObjectName(name) {
   if (!name || typeof name != "string")
     throw new Error("Object name must be a non-empty string");
@@ -79816,16 +79816,16 @@ __name(validateObjectName, "validateObjectName");
 function validateDatabaseName(name) {
   if (!name || typeof name != "string")
     throw new Error("Database name must be a non-empty string");
-  if (!PART_REGEX.test(name))
+  if (!DB_NAME_REGEX.test(name))
     throw new Error(
-      `Invalid database name: "${name}". Only alphanumeric characters and underscores are allowed.`
+      `Invalid database name: "${name}". Only alphanumeric characters, underscores and dots are allowed.`
     );
   return `[${name}]`;
 }
 __name(validateDatabaseName, "validateDatabaseName");
 function buildCacheKeyPrefix(dbContext) {
   if (!dbContext) return "_default_::";
-  if (!PART_REGEX.test(dbContext))
+  if (!DB_NAME_REGEX.test(dbContext))
     throw new Error(`Invalid database context for cache key: "${dbContext}"`);
   return `${dbContext.toLowerCase()}::`;
 }

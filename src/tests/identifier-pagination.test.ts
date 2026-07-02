@@ -60,8 +60,10 @@ check('parse 3-part', parseObjectName('MyDB.dbo.users'), { database: 'MyDB', sch
 console.log('\n--- validateDatabaseName ---');
 check('simple db name', validateDatabaseName('MyDB'), '[MyDB]');
 check('underscore db name', validateDatabaseName('my_db_2'), '[my_db_2]');
-checkThrows('reject db with dot', () => validateDatabaseName('My.DB'));
+check('dotted db name', validateDatabaseName('Aytemiz.LMS'), '[Aytemiz.LMS]');
+checkThrows('reject db with trailing dot', () => validateDatabaseName('My.DB.'));
 checkThrows('reject db with bracket', () => validateDatabaseName('[MyDB]'));
+checkThrows('reject db with semicolon', () => validateDatabaseName('foo; DROP'));
 
 console.log('\n--- buildCacheKeyPrefix ---');
 check('default (no dbContext)', buildCacheKeyPrefix(), '_default_::');

@@ -28,6 +28,17 @@ npm run clean
 ```
 Removes the `dist` directory (cross-platform compatible).
 
+### Testing
+```bash
+npm test                     # Run all 5 test suites sequentially
+npm run test:errors          # Error-detection / read-only enforcement tests
+npm run test:identifiers     # Identifier validation + pagination tests
+npm run test:object-tools    # Object listing tools tests
+npm run test:server-tools    # Server/database metadata tools tests
+npm run test:profiling-tools # Profiling & sampling tools tests
+```
+Tests run directly via the ts-node ESM loader (no test framework) — each file is a standalone script under `src/tests/`.
+
 ## Platform Compatibility
 
 ### Windows Support
@@ -481,7 +492,7 @@ These optimizations provide:
 - **SQL Injection Prevention**:
   - Object names (1/2/3-part) validated by `validateObjectName()` in [src/utils/identifier.ts](src/utils/identifier.ts) — regex: `^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$`
   - Names escaped with brackets: `[database].[schema].[object]` for cross-DB, `[schema].[object]` for same-DB
-  - Optional `database_name` tool params validated by `validateDatabaseName()` — single-name regex `^[a-zA-Z0-9_]+$`
+  - Optional `database_name` tool params validated by `validateDatabaseName()` — regex `^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$` (dots allowed because DB names like `Aytemiz.LMS` are safe once bracket-quoted; brackets/hyphens/semicolons still rejected)
   - **Strict rejection** of empty parts (e.g. `MyDB..users`), brackets in input, hyphens, and 4+ parts
   - Cross-DB cache keys namespaced via `buildCacheKeyPrefix(dbContext)` to prevent cross-database cache collisions
   - Uses parameterized queries via mssql package where possible

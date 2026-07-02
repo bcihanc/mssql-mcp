@@ -9,8 +9,11 @@
  * Never bypass this validator — direct string concatenation enables SQL injection.
  */
 
-const PART_REGEX = /^[a-zA-Z0-9_]+$/;
 const FULL_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+){0,2}$/;
+// Database names may themselves contain dots (e.g. "Aytemiz.LMS") — safe once
+// bracket-quoted, since dots carry no meaning inside [brackets]. Brackets and
+// other special characters stay forbidden to prevent injection via early `]`.
+const DB_NAME_REGEX = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/;
 
 export interface ObjectNameParts {
 	database?: string;
@@ -71,8 +74,8 @@ export function validateObjectName(name: string): string {
 }
 
 /**
- * Validate a single database name (no dots, no brackets in input).
- * Returns the bracketed form: "MyDB" → "[MyDB]".
+ * Validate a single database name (no brackets in input; dots allowed).
+ * Returns the bracketed form: "MyDB" → "[MyDB]", "Aytemiz.LMS" → "[Aytemiz.LMS]".
  *
  * Used when a tool accepts an optional `database_name` parameter and needs
  * to construct cross-DB queries like `[MyDB].sys.procedures`.
@@ -81,9 +84,9 @@ export function validateDatabaseName(name: string): string {
 	if (!name || typeof name !== 'string') {
 		throw new Error('Database name must be a non-empty string');
 	}
-	if (!PART_REGEX.test(name)) {
+	if (!DB_NAME_REGEX.test(name)) {
 		throw new Error(
-			`Invalid database name: "${name}". Only alphanumeric characters and underscores are allowed.`,
+			`Invalid database name: "${name}". Only alphanumeric characters, underscores and dots are allowed.`,
 		);
 	}
 	return `[${name}]`;
@@ -100,7 +103,7 @@ export function validateDatabaseName(name: string): string {
  */
 export function buildCacheKeyPrefix(dbContext?: string): string {
 	if (!dbContext) return '_default_::';
-	if (!PART_REGEX.test(dbContext)) {
+	if (!DB_NAME_REGEX.test(dbContext)) {
 		throw new Error(`Invalid database context for cache key: "${dbContext}"`);
 	}
 	return `${dbContext.toLowerCase()}::`;
