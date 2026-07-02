@@ -79,18 +79,19 @@ console.log('\n--- all tool defs expose connection_name ---');
 
 console.log('\n--- parseConnectionConfigs ---');
 {
-	// Legacy fallback: no MSSQL_CONNECTIONS -> single "default"
-	const saved = { ...process.env };
-	process.env.MSSQL_SERVER = 'legacy-host';
-	process.env.MSSQL_DATABASE = 'db';
-	process.env.MSSQL_USER = 'u';
-	process.env.MSSQL_PASSWORD = 'p';
-	delete process.env.MSSQL_CONNECTIONS;
-	const legacy = parseConnectionConfigs();
+	// Legacy fallback: no MSSQL_CONNECTIONS -> single "default".
+	// Passed directly as a synthetic env object (not real process.env) to prove
+	// parseConnectionConfigs() is deterministic on its `env` parameter.
+	const env = {
+		MSSQL_SERVER: 'legacy-host',
+		MSSQL_DATABASE: 'db',
+		MSSQL_USER: 'u',
+		MSSQL_PASSWORD: 'p',
+	} as any;
+	const legacy = parseConnectionConfigs(env);
 	check('legacy -> defaultName is default', legacy.defaultName, 'default');
 	check('legacy -> one connection', legacy.connections.size, 1);
 	check('legacy -> default server', legacy.connections.get('default')?.server, 'legacy-host');
-	process.env = saved;
 }
 {
 	// Multi with explicit default
@@ -143,6 +144,33 @@ checkThrows('invalid connection name -> throws', () => parseConnectionConfigs({
 		connections: { 'bad name': { server: 'x', database: 'S', user: 'u', password: 'p' } },
 	}),
 } as any));
+checkThrows('entry missing server -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({
+		connections: { a: { database: 'S', user: 'u', password: 'p' } },
+	}),
+} as any));
+checkThrows('entry missing database -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({
+		connections: { a: { server: 'x', user: 'u', password: 'p' } },
+	}),
+} as any));
+checkThrows('entry missing user/password without windowsAuth -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({
+		connections: { a: { server: 'x', database: 'S' } },
+	}),
+} as any));
+{
+	// windowsAuth: true with no user/password succeeds
+	const env = {
+		MSSQL_CONNECTIONS: JSON.stringify({
+			connections: { a: { server: 'x', database: 'S', windowsAuth: true } },
+		}),
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	check('windowsAuth -> windowsAuth is true', parsed.connections.get('a')?.windowsAuth, true);
+	check('windowsAuth -> user is undefined', parsed.connections.get('a')?.user, undefined);
+	check('windowsAuth -> password is undefined', parsed.connections.get('a')?.password, undefined);
+}
 
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);

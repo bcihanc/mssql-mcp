@@ -17,42 +17,46 @@ const logger = consola.withTag('mssql-config');
 /**
  * Get database configuration from environment variables.
  * Matches the exact environment variable structure from the Python reference implementation.
+ *
+ * @param env Source of environment variables (defaults to `process.env`). Accepting this as a
+ *   parameter, rather than reading `process.env` directly, keeps this function deterministic and
+ *   lets `parseConnectionConfigs()` thread a synthetic env through the legacy fallback path
+ *   without mutating real process state.
  */
-export function getMssqlConfig(): MssqlConfig {
+export function getMssqlConfig(env: NodeJS.ProcessEnv = process.env): MssqlConfig {
 	// Basic configuration
-	let server = process.env.MSSQL_SERVER || 'localhost';
+	const server = env.MSSQL_SERVER || 'localhost';
 	if (consola.level >= 0) {
-		logger.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || 'NOT SET'}`);
+		logger.info(`MSSQL_SERVER environment variable: ${env.MSSQL_SERVER || 'NOT SET'}`);
 		logger.info(`Using server: ${server}`);
 	}
 
-	// Handle LocalDB connections (matching Python reference behavior)
-	// LocalDB format: (localdb)\instancename or (localdb)\\instancename
-	// CROSS-PLATFORM: Handles both single and double backslash, case-insensitive
-	if (server.toLowerCase().includes('(localdb)')) {
-		// For LocalDB, convert to proper format for tedious
-		// Convert (localdb)\MSSQLLocalDB or (localdb)\\MSSQLLocalDB to .\\MSSQLLocalDB
-		// Regex: Match single or double backslash after (localdb), case-insensitive
-		const instanceName = server.replace(/\(localdb\)\\{1,2}/i, '');
-		server = `.\\${instanceName}`;
-		if (consola.level >= 0) {
-			logger.info(`Detected LocalDB connection, converted to: ${server}`);
-		}
-	}
-
-	const config: MssqlConfig = {
+	const rawConfig: MssqlConfig = {
 		server,
-		user: process.env.MSSQL_USER,
-		password: process.env.MSSQL_PASSWORD,
-		database: process.env.MSSQL_DATABASE || '',
+		user: env.MSSQL_USER,
+		password: env.MSSQL_PASSWORD,
+		database: env.MSSQL_DATABASE || '',
 		port: 1433,
-		encrypt: false,
-		command: process.env.MSSQL_COMMAND || 'execute_sql',
+		encrypt: env.MSSQL_ENCRYPT?.toLowerCase() === 'true',
+		command: env.MSSQL_COMMAND || 'execute_sql',
 		windowsAuth: false,
 	};
 
+	// LocalDB conversion and Azure/encrypt normalization are shared with
+	// parseConnectionConfigs() via normalizeMssqlConfig() so both paths behave identically.
+	const config = normalizeMssqlConfig(rawConfig);
+
+	if (consola.level >= 0 && config.server !== server) {
+		logger.info(`Detected LocalDB connection, converted to: ${config.server}`);
+	}
+	if (consola.level >= 0 && config.encrypt && !rawConfig.encrypt) {
+		logger.info('Detected Azure SQL, enabling encryption');
+	} else if (consola.level >= 0 && config.encrypt && rawConfig.encrypt) {
+		logger.info('Encryption enabled via MSSQL_ENCRYPT setting');
+	}
+
 	// Port support (matching Python reference)
-	const port = process.env.MSSQL_PORT;
+	const port = env.MSSQL_PORT;
 	if (port) {
 		try {
 			config.port = parseInt(port, 10);
@@ -63,25 +67,8 @@ export function getMssqlConfig(): MssqlConfig {
 		}
 	}
 
-	// Encryption settings for Azure SQL (matching Python reference behavior)
-	// Check if we're connecting to Azure SQL
-	if (config.server && config.server.includes('.database.windows.net')) {
-		config.encrypt = true; // Azure SQL requires encryption
-		if (consola.level >= 0) {
-			logger.info('Detected Azure SQL, enabling encryption');
-		}
-	} else {
-		// For non-Azure connections, check MSSQL_ENCRYPT setting
-		if (process.env.MSSQL_ENCRYPT?.toLowerCase() === 'true') {
-			config.encrypt = true;
-			if (consola.level >= 0) {
-				logger.info('Encryption enabled via MSSQL_ENCRYPT setting');
-			}
-		}
-	}
-
 	// Windows Authentication support (matching Python reference behavior)
-	const useWindowsAuth = process.env.MSSQL_WINDOWS_AUTH?.toLowerCase() === 'true';
+	const useWindowsAuth = env.MSSQL_WINDOWS_AUTH?.toLowerCase() === 'true';
 
 	if (useWindowsAuth) {
 		config.windowsAuth = true;
@@ -261,7 +248,7 @@ export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): Pa
 
 	// Legacy single-connection fallback
 	if (!raw) {
-		const legacy = getMssqlConfig();
+		const legacy = getMssqlConfig(env);
 		const connections = new Map<string, MssqlConfig>();
 		connections.set('default', legacy);
 		return { connections, defaultName: 'default' };
@@ -303,7 +290,7 @@ export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): Pa
 			password: windowsAuth ? undefined : entry.password,
 			port: entry.port ?? 1433,
 			encrypt: entry.encrypt ?? false,
-			command: process.env.MSSQL_COMMAND || 'execute_sql',
+			command: env.MSSQL_COMMAND || 'execute_sql',
 			windowsAuth,
 		});
 		connections.set(name, config);
