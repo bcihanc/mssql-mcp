@@ -14,12 +14,12 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
-import { MssqlResources } from '../MssqlResources';
+import { MssqlResources } from '../MssqlResources.js';
 import { MssqlServerTools } from '../MssqlServerTools.js';
-import { MssqlTools } from '../MssqlTools';
-import { getFileLogger } from '../utils/fileLogger';
-import { getMssqlConfig } from './config';
-import { createResilientConnectionPool, ResilientConnectionPool } from './connection';
+import { MssqlTools } from '../MssqlTools.js';
+import { getFileLogger } from '../utils/fileLogger.js';
+import { parseConnectionConfigs } from './config.js';
+import { ConnectionRegistry, resolvePoolForCall } from './ConnectionRegistry.js';
 
 export interface MssqlMcpServerConfig {
 	port?: number;
@@ -33,7 +33,7 @@ export class MssqlMcpServer {
 	private server: Server;
 	private app?: Hono<any>;
 	private httpServer?: any;
-	private pool?: ResilientConnectionPool;
+	private registry?: ConnectionRegistry;
 	private config: Required<MssqlMcpServerConfig>;
 	private httpTransport?: StreamableHTTPTransport;
 	private configError?: string;
@@ -81,7 +81,7 @@ export class MssqlMcpServer {
 					isError: true,
 				};
 			}
-			if (!this.pool) {
+			if (!this.registry) {
 				return {
 					content: [{ type: 'text' as const, text: 'Error: Database connection is not yet initialized. Please try again shortly.' }],
 					isError: true,
@@ -89,35 +89,50 @@ export class MssqlMcpServer {
 			}
 
 			const { name, arguments: args } = request.params;
+
+			// list_connections is registry-wide — no pool resolution.
+			if (name === 'list_connections') {
+				return MssqlServerTools.handleListConnections(this.registry);
+			}
+
+			// Resolve the target pool from connection_name (default when omitted).
+			let pool;
+			try {
+				pool = resolvePoolForCall(this.registry, args);
+			} catch (error) {
+				return {
+					content: [{ type: 'text' as const, text: `Error: ${error instanceof Error ? error.message : 'connection resolution failed'}` }],
+					isError: true,
+				};
+			}
+
 			if (MssqlObjectTools.canHandle(name)) {
-				return await MssqlObjectTools.handleTool(name, args, this.pool);
+				return await MssqlObjectTools.handleTool(name, args, pool);
 			}
 			if (MssqlServerTools.canHandle(name)) {
-				return await MssqlServerTools.handleTool(name, args, this.pool);
+				return await MssqlServerTools.handleTool(name, args, pool);
 			}
 			if (MssqlProfilingTools.canHandle(name)) {
-				return await MssqlProfilingTools.handleTool(name, args, this.pool);
+				return await MssqlProfilingTools.handleTool(name, args, pool);
 			}
-			return await MssqlTools.handleTool(name, args, this.pool);
+			return await MssqlTools.handleTool(name, args, pool);
 		});
 
 		// Resource handlers
 		this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
-			if (!this.pool) {
+			if (!this.registry) {
 				return { resources: [] };
 			}
-
-			const resources = await MssqlResources.getResourceDefinitions(this.pool);
+			const resources = await MssqlResources.getResourceDefinitions(this.registry.get());
 			return { resources };
 		});
 
 		this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-			if (!this.pool) {
+			if (!this.registry) {
 				throw new Error('Database connection is not yet initialized. Please try again shortly.');
 			}
-
 			const { uri } = request.params;
-			const contents = await MssqlResources.handleResource(uri, this.pool);
+			const contents = await MssqlResources.handleResource(uri, this.registry.get());
 			return { contents: [contents] };
 		});
 	}
@@ -156,9 +171,17 @@ export class MssqlMcpServer {
 			);
 
 			this.app.get('/health', (c) => {
+				const connections = this.registry
+					? this.registry.list().map((info) => ({
+						name: info.name,
+						connected: this.registry!.get(info.name).isConnected,
+					}))
+					: [];
+				const defaultConnected = this.registry ? this.registry.get().isConnected : false;
 				return c.json({
 					status: 'healthy',
-					database: this.pool?.isConnected ? 'connected' : 'disconnected',
+					database: defaultConnected ? 'connected' : 'disconnected',
+					connections,
 					timestamp: new Date().toISOString(),
 					service: 'mssql-mcp-server',
 					version: '1.0.0',
@@ -192,58 +215,38 @@ export class MssqlMcpServer {
 	 * and surfaced through tool call responses.
 	 */
 	private initializeDatabase(fileLogger: ReturnType<typeof getFileLogger>): void {
-		fileLogger.info('Getting database configuration...');
-		let dbConfig;
+		fileLogger.info('Parsing connection configuration...');
+		let parsed;
 		try {
-			dbConfig = getMssqlConfig();
-			fileLogger.info('Database configuration retrieved', {
-				server: dbConfig.server,
-				database: dbConfig.database,
-				port: dbConfig.port,
-				encrypt: dbConfig.encrypt,
-				windowsAuth: dbConfig.windowsAuth,
-				hasUser: !!dbConfig.user,
-				hasPassword: !!dbConfig.password,
+			parsed = parseConnectionConfigs();
+			fileLogger.info('Connection configuration parsed', {
+				defaultConnection: parsed.defaultName,
+				connectionCount: parsed.connections.size,
 			});
 		} catch (error) {
 			const errorMsg = error instanceof Error ? error.message : String(error);
 			this.configError = errorMsg;
-			fileLogger.error('Failed to get database configuration', error);
+			fileLogger.error('Failed to parse connection configuration', error);
 			if (!this.config.stdio) {
 				serverLogger.error(`Database configuration failed: ${errorMsg}`);
-			}
-			return; // Don't attempt connection — config is invalid
-		}
-
-		// Create resilient pool
-		try {
-			this.pool = createResilientConnectionPool(dbConfig);
-		} catch (error) {
-			const errorMsg = error instanceof Error ? error.message : String(error);
-			this.configError = errorMsg;
-			fileLogger.error('Failed to create connection pool', error);
-			if (!this.config.stdio) {
-				serverLogger.error(`Failed to create connection pool: ${errorMsg}`);
 			}
 			return;
 		}
 
-		// Fire-and-forget: attempt eager connection in background
-		// This does NOT block start() — the MCP server is already responsive
-		this.pool.ensureConnected().then((connected) => {
-			if (connected) {
-				fileLogger.info('Database connection established successfully');
-				if (!this.config.stdio) {
-					serverLogger.success('Database connection established successfully');
-				}
-			} else {
-				// ensureConnected() automatically starts background retry on failure
-				fileLogger.warn('Database is currently unavailable — server will retry automatically');
-				if (!this.config.stdio) {
-					serverLogger.warn('Database is currently unavailable. The server will automatically reconnect when the database becomes available.');
-				}
+		try {
+			this.registry = new ConnectionRegistry(parsed);
+		} catch (error) {
+			const errorMsg = error instanceof Error ? error.message : String(error);
+			this.configError = errorMsg;
+			fileLogger.error('Failed to create connection registry', error);
+			if (!this.config.stdio) {
+				serverLogger.error(`Failed to create connection registry: ${errorMsg}`);
 			}
-		});
+			return;
+		}
+
+		// Lazy connections: pools connect on first use. No eager connect here.
+		fileLogger.info('Connection registry ready (lazy connections)');
 	}
 
 	async stop() {
@@ -261,10 +264,10 @@ export class MssqlMcpServer {
 			}
 		}
 
-		if (this.pool) {
-			await this.pool.close();
+		if (this.registry) {
+			await this.registry.closeAll();
 			if (!this.config.stdio) {
-				serverLogger.info('Database connection pool closed');
+				serverLogger.info('All database connection pools closed');
 			}
 		}
 	}

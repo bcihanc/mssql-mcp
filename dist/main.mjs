@@ -79830,6 +79830,17 @@ function buildCacheKeyPrefix(dbContext) {
   return `${dbContext.toLowerCase()}::`;
 }
 __name(buildCacheKeyPrefix, "buildCacheKeyPrefix");
+var CONNECTION_NAME_REGEX = /^[a-zA-Z0-9_-]+$/;
+function validateConnectionName(name) {
+  if (!name || typeof name != "string")
+    throw new Error("Connection name must be a non-empty string");
+  if (!CONNECTION_NAME_REGEX.test(name))
+    throw new Error(
+      `Invalid connection name: "${name}". Only letters, digits, underscore and hyphen are allowed.`
+    );
+  return name;
+}
+__name(validateConnectionName, "validateConnectionName");
 function namespaceCacheKey(connectionName, rawKey) {
   return `${connectionName}::${rawKey}`;
 }
@@ -80317,6 +80328,62 @@ function normalizeMssqlConfig(raw2) {
   return server.includes(".database.windows.net") && (encrypt = !0), { ...raw2, server, encrypt };
 }
 __name(normalizeMssqlConfig, "normalizeMssqlConfig");
+function parseConnectionConfigs(env2 = process.env) {
+  let raw2 = env2.MSSQL_CONNECTIONS;
+  if (!raw2) {
+    let legacy = getMssqlConfig(env2), connections2 = /* @__PURE__ */ new Map();
+    return connections2.set("default", legacy), { connections: connections2, defaultName: "default" };
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw2);
+  } catch (error46) {
+    throw new Error(
+      `MSSQL_CONNECTIONS is not valid JSON: ${error46 instanceof Error ? error46.message : "parse error"}`
+    );
+  }
+  if (!parsed || typeof parsed != "object" || !parsed.connections || typeof parsed.connections != "object")
+    throw new Error('MSSQL_CONNECTIONS must be an object with a non-empty "connections" map.');
+  let names = Object.keys(parsed.connections);
+  if (names.length === 0)
+    throw new Error('MSSQL_CONNECTIONS "connections" map is empty — define at least one connection.');
+  let connections = /* @__PURE__ */ new Map();
+  for (let name of names) {
+    validateConnectionName(name);
+    let entry = parsed.connections[name];
+    if (!entry || !entry.server || !entry.database)
+      throw new Error(`Connection "${name}" is missing required "server" or "database".`);
+    let windowsAuth = entry.windowsAuth === !0;
+    if (!windowsAuth && (!entry.user || !entry.password))
+      throw new Error(`Connection "${name}" requires "user" and "password" (or "windowsAuth": true).`);
+    let config2 = normalizeMssqlConfig({
+      server: entry.server,
+      database: entry.database,
+      user: windowsAuth ? void 0 : entry.user,
+      password: windowsAuth ? void 0 : entry.password,
+      port: entry.port ?? 1433,
+      encrypt: entry.encrypt ?? !1,
+      command: env2.MSSQL_COMMAND || "execute_sql",
+      windowsAuth
+    });
+    connections.set(name, config2);
+  }
+  let defaultName;
+  if (parsed.default) {
+    if (!connections.has(parsed.default))
+      throw new Error(
+        `MSSQL_CONNECTIONS "default" points to "${parsed.default}", which is not a defined connection. Defined: ${names.join(", ")}.`
+      );
+    defaultName = parsed.default;
+  } else if (names.length === 1)
+    defaultName = names[0];
+  else
+    throw new Error(
+      `MSSQL_CONNECTIONS defines multiple connections but no "default". Add a "default" naming one of: ${names.join(", ")}.`
+    );
+  return { connections, defaultName };
+}
+__name(parseConnectionConfigs, "parseConnectionConfigs");
 
 // src/MssqlResources.ts
 var logger5 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, resourceCache = null, RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || "100", 10), MssqlResources = {
@@ -81483,6 +81550,61 @@ function createResilientConnectionPool(config2, name = "default") {
 }
 __name(createResilientConnectionPool, "createResilientConnectionPool");
 
+// src/server/ConnectionRegistry.ts
+var ConnectionRegistry = class {
+  static {
+    __name(this, "ConnectionRegistry");
+  }
+  pools = /* @__PURE__ */ new Map();
+  configs = /* @__PURE__ */ new Map();
+  defaultName;
+  constructor(parsed) {
+    this.defaultName = parsed.defaultName;
+    for (let [name, config2] of parsed.connections)
+      this.configs.set(name, config2), this.pools.set(name, createResilientConnectionPool(config2, name));
+  }
+  /** Resolve a pool by name; falls back to the default connection when name is omitted. */
+  get(name) {
+    let target = name ?? this.defaultName, pool = this.pools.get(target);
+    if (!pool)
+      throw new Error(
+        `Unknown connection: "${target}". Defined connections: ${[...this.pools.keys()].join(", ")}.`
+      );
+    return pool;
+  }
+  has(name) {
+    return this.pools.has(name);
+  }
+  /** Public connection metadata for list_connections. NEVER includes passwords. */
+  list() {
+    let out = [];
+    for (let [name, config2] of this.configs)
+      out.push({
+        name,
+        server: config2.server,
+        database: config2.database,
+        user: config2.user ?? (config2.windowsAuth ? "(Windows Auth)" : ""),
+        is_default: name === this.defaultName
+      });
+    return out;
+  }
+  async closeAll() {
+    for (let pool of this.pools.values())
+      try {
+        await pool.close();
+      } catch {
+      }
+  }
+};
+function resolvePoolForCall(registry2, args) {
+  let raw2 = args?.connection_name;
+  if (raw2 == null)
+    return registry2.get();
+  let name = validateConnectionName(String(raw2));
+  return registry2.get(name);
+}
+__name(resolvePoolForCall, "resolvePoolForCall");
+
 // src/server/MssqlMcpServer.ts
 var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   static {
@@ -81491,7 +81613,7 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
   server;
   app;
   httpServer;
-  pool;
+  registry;
   config;
   httpTransport;
   configError;
@@ -81525,18 +81647,29 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
           content: [{ type: "text", text: `Error: Database configuration failed: ${this.configError}` }],
           isError: !0
         };
-      if (!this.pool)
+      if (!this.registry)
         return {
           content: [{ type: "text", text: "Error: Database connection is not yet initialized. Please try again shortly." }],
           isError: !0
         };
       let { name, arguments: args } = request.params;
-      return MssqlObjectTools.canHandle(name) ? await MssqlObjectTools.handleTool(name, args, this.pool) : MssqlServerTools.canHandle(name) ? await MssqlServerTools.handleTool(name, args, this.pool) : MssqlProfilingTools.canHandle(name) ? await MssqlProfilingTools.handleTool(name, args, this.pool) : await MssqlTools.handleTool(name, args, this.pool);
-    }), this.server.setRequestHandler(ListResourcesRequestSchema, async () => this.pool ? { resources: await MssqlResources.getResourceDefinitions(this.pool) } : { resources: [] }), this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-      if (!this.pool)
+      if (name === "list_connections")
+        return MssqlServerTools.handleListConnections(this.registry);
+      let pool;
+      try {
+        pool = resolvePoolForCall(this.registry, args);
+      } catch (error46) {
+        return {
+          content: [{ type: "text", text: `Error: ${error46 instanceof Error ? error46.message : "connection resolution failed"}` }],
+          isError: !0
+        };
+      }
+      return MssqlObjectTools.canHandle(name) ? await MssqlObjectTools.handleTool(name, args, pool) : MssqlServerTools.canHandle(name) ? await MssqlServerTools.handleTool(name, args, pool) : MssqlProfilingTools.canHandle(name) ? await MssqlProfilingTools.handleTool(name, args, pool) : await MssqlTools.handleTool(name, args, pool);
+    }), this.server.setRequestHandler(ListResourcesRequestSchema, async () => this.registry ? { resources: await MssqlResources.getResourceDefinitions(this.registry.get()) } : { resources: [] }), this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+      if (!this.registry)
         throw new Error("Database connection is not yet initialized. Please try again shortly.");
       let { uri } = request.params;
-      return { contents: [await MssqlResources.handleResource(uri, this.pool)] };
+      return { contents: [await MssqlResources.handleResource(uri, this.registry.get())] };
     });
   }
   async start() {
@@ -81557,13 +81690,20 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
           allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
           allowHeaders: ["Content-Type", "Authorization"]
         })
-      ), this.app.get("/health", (c3) => c3.json({
-        status: "healthy",
-        database: this.pool?.isConnected ? "connected" : "disconnected",
-        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        service: "mssql-mcp-server",
-        version: "1.0.0"
-      })), this.httpTransport = new StreamableHTTPTransport(), await this.server.connect(this.httpTransport), this.app.all("/mcp", async (c3) => this.httpTransport.handleRequest(c3)), this.httpServer = serve({
+      ), this.app.get("/health", (c3) => {
+        let connections = this.registry ? this.registry.list().map((info) => ({
+          name: info.name,
+          connected: this.registry.get(info.name).isConnected
+        })) : [], defaultConnected = this.registry ? this.registry.get().isConnected : !1;
+        return c3.json({
+          status: "healthy",
+          database: defaultConnected ? "connected" : "disconnected",
+          connections,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          service: "mssql-mcp-server",
+          version: "1.0.0"
+        });
+      }), this.httpTransport = new StreamableHTTPTransport(), await this.server.connect(this.httpTransport), this.app.all("/mcp", async (c3) => this.httpTransport.handleRequest(c3)), this.httpServer = serve({
         fetch: this.app.fetch,
         port: this.config.port,
         hostname: this.config.host
@@ -81576,36 +81716,29 @@ var serverLogger = consola.withTag("mssql-mcp-server"), MssqlMcpServer = class {
    * and surfaced through tool call responses.
    */
   initializeDatabase(fileLogger) {
-    fileLogger.info("Getting database configuration...");
-    let dbConfig;
+    fileLogger.info("Parsing connection configuration...");
+    let parsed;
     try {
-      dbConfig = getMssqlConfig(), fileLogger.info("Database configuration retrieved", {
-        server: dbConfig.server,
-        database: dbConfig.database,
-        port: dbConfig.port,
-        encrypt: dbConfig.encrypt,
-        windowsAuth: dbConfig.windowsAuth,
-        hasUser: !!dbConfig.user,
-        hasPassword: !!dbConfig.password
+      parsed = parseConnectionConfigs(), fileLogger.info("Connection configuration parsed", {
+        defaultConnection: parsed.defaultName,
+        connectionCount: parsed.connections.size
       });
     } catch (error46) {
       let errorMsg = error46 instanceof Error ? error46.message : String(error46);
-      this.configError = errorMsg, fileLogger.error("Failed to get database configuration", error46), this.config.stdio || serverLogger.error(`Database configuration failed: ${errorMsg}`);
+      this.configError = errorMsg, fileLogger.error("Failed to parse connection configuration", error46), this.config.stdio || serverLogger.error(`Database configuration failed: ${errorMsg}`);
       return;
     }
     try {
-      this.pool = createResilientConnectionPool(dbConfig);
+      this.registry = new ConnectionRegistry(parsed);
     } catch (error46) {
       let errorMsg = error46 instanceof Error ? error46.message : String(error46);
-      this.configError = errorMsg, fileLogger.error("Failed to create connection pool", error46), this.config.stdio || serverLogger.error(`Failed to create connection pool: ${errorMsg}`);
+      this.configError = errorMsg, fileLogger.error("Failed to create connection registry", error46), this.config.stdio || serverLogger.error(`Failed to create connection registry: ${errorMsg}`);
       return;
     }
-    this.pool.ensureConnected().then((connected) => {
-      connected ? (fileLogger.info("Database connection established successfully"), this.config.stdio || serverLogger.success("Database connection established successfully")) : (fileLogger.warn("Database is currently unavailable — server will retry automatically"), this.config.stdio || serverLogger.warn("Database is currently unavailable. The server will automatically reconnect when the database becomes available."));
-    });
+    fileLogger.info("Connection registry ready (lazy connections)");
   }
   async stop() {
-    this.httpServer && (this.httpServer.close(), this.config.stdio || serverLogger.info("HTTP server stopped")), this.server && (await this.server.close(), this.config.stdio || serverLogger.info("MCP server stopped")), this.pool && (await this.pool.close(), this.config.stdio || serverLogger.info("Database connection pool closed"));
+    this.httpServer && (this.httpServer.close(), this.config.stdio || serverLogger.info("HTTP server stopped")), this.server && (await this.server.close(), this.config.stdio || serverLogger.info("MCP server stopped")), this.registry && (await this.registry.closeAll(), this.config.stdio || serverLogger.info("All database connection pools closed"));
   }
 };
 
