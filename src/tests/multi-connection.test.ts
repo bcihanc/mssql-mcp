@@ -6,6 +6,10 @@
 import { z } from 'zod/v4';
 import { namespaceCacheKey, validateConnectionName } from '../utils/identifier.js';
 import { ConnectionScopeSchema } from '../utils/connectionScope.js';
+import { MssqlTools } from '../MssqlTools.js';
+import { MssqlServerTools } from '../MssqlServerTools.js';
+import { MssqlObjectTools } from '../MssqlObjectTools.js';
+import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
 
 let pass = 0;
 let fail = 0;
@@ -55,6 +59,21 @@ console.log('\n--- ConnectionScopeSchema ---');
 	check('merged schema exposes connection_name', 'connection_name' in json.properties, true);
 	check('merged schema keeps original field', 'table_name' in json.properties, true);
 	check('connection_name is optional', (json.required || []).includes('connection_name'), false);
+}
+
+console.log('\n--- all tool defs expose connection_name ---');
+{
+	const allDefs = [
+		...MssqlTools.getToolDefinitions(),
+		...MssqlServerTools.getToolDefinitions(),
+		...MssqlObjectTools.getToolDefinitions(),
+		...MssqlProfilingTools.getToolDefinitions(),
+	];
+	check('19 tool definitions total', allDefs.length, 19);
+	for (const def of allDefs) {
+		const props = (def.inputSchema as any).properties || {};
+		check(`${def.name} exposes connection_name`, 'connection_name' in props, true);
+	}
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

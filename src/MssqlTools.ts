@@ -2,9 +2,9 @@ import type { TextContent, Tool } from '@modelcontextprotocol/sdk/types.js';
 import consola from 'consola';
 import crypto from 'node:crypto';
 import { z } from 'zod/v4';
-import { isReadOnlyQuery } from './server/config';
-import type { ConnectionPool } from './server/connection';
-import { formatCSV } from './utils/csv';
+import { isReadOnlyQuery } from './server/config.js';
+import type { ConnectionPool } from './server/connection.js';
+import { formatCSV } from './utils/csv.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-tools');
