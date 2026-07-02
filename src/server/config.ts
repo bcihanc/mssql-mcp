@@ -1,5 +1,5 @@
 import consola from 'consola';
-import { validateObjectName } from '../utils/identifier.js';
+import { validateConnectionName, validateObjectName } from '../utils/identifier.js';
 
 export interface MssqlConfig {
 	server: string;
@@ -210,4 +210,121 @@ export function isReadOnlyQuery(query: string): boolean {
  */
 export function validateTableName(tableName: string): string {
 	return validateObjectName(tableName);
+}
+
+export interface ParsedConnections {
+	connections: Map<string, MssqlConfig>;
+	defaultName: string;
+}
+
+/**
+ * Apply LocalDB conversion and Azure/encrypt normalization to a raw config.
+ * Shared by getMssqlConfig() and parseConnectionConfigs() so both paths behave
+ * identically.
+ */
+export function normalizeMssqlConfig(raw: MssqlConfig): MssqlConfig {
+	let server = raw.server || 'localhost';
+	if (server.toLowerCase().includes('(localdb)')) {
+		const instanceName = server.replace(/\(localdb\)\\{1,2}/i, '');
+		server = `.\\${instanceName}`;
+	}
+	let encrypt = raw.encrypt;
+	if (server.includes('.database.windows.net')) {
+		encrypt = true;
+	}
+	return { ...raw, server, encrypt };
+}
+
+interface RawConnectionEntry {
+	server?: string;
+	database?: string;
+	user?: string;
+	password?: string;
+	port?: number;
+	encrypt?: boolean;
+	windowsAuth?: boolean;
+}
+
+/**
+ * Parse multi-connection configuration.
+ *
+ * - If `MSSQL_CONNECTIONS` is set: parse it as JSON, validate each entry, and
+ *   resolve the default connection name.
+ * - Otherwise: fall back to the legacy single-connection env vars, exposed as a
+ *   single connection named "default".
+ *
+ * @throws Error on malformed JSON, empty connections, invalid names, or an
+ *   unresolvable default. Callers surface this as a configuration error.
+ */
+export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): ParsedConnections {
+	const raw = env.MSSQL_CONNECTIONS;
+
+	// Legacy single-connection fallback
+	if (!raw) {
+		const legacy = getMssqlConfig();
+		const connections = new Map<string, MssqlConfig>();
+		connections.set('default', legacy);
+		return { connections, defaultName: 'default' };
+	}
+
+	let parsed: { default?: string; connections?: Record<string, RawConnectionEntry> };
+	try {
+		parsed = JSON.parse(raw);
+	} catch (error) {
+		throw new Error(
+			`MSSQL_CONNECTIONS is not valid JSON: ${error instanceof Error ? error.message : 'parse error'}`,
+		);
+	}
+
+	if (!parsed || typeof parsed !== 'object' || !parsed.connections || typeof parsed.connections !== 'object') {
+		throw new Error('MSSQL_CONNECTIONS must be an object with a non-empty "connections" map.');
+	}
+
+	const names = Object.keys(parsed.connections);
+	if (names.length === 0) {
+		throw new Error('MSSQL_CONNECTIONS "connections" map is empty — define at least one connection.');
+	}
+
+	const connections = new Map<string, MssqlConfig>();
+	for (const name of names) {
+		validateConnectionName(name); // throws on invalid name
+		const entry = parsed.connections[name];
+		if (!entry || !entry.server || !entry.database) {
+			throw new Error(`Connection "${name}" is missing required "server" or "database".`);
+		}
+		const windowsAuth = entry.windowsAuth === true;
+		if (!windowsAuth && (!entry.user || !entry.password)) {
+			throw new Error(`Connection "${name}" requires "user" and "password" (or "windowsAuth": true).`);
+		}
+		const config: MssqlConfig = normalizeMssqlConfig({
+			server: entry.server,
+			database: entry.database,
+			user: windowsAuth ? undefined : entry.user,
+			password: windowsAuth ? undefined : entry.password,
+			port: entry.port ?? 1433,
+			encrypt: entry.encrypt ?? false,
+			command: process.env.MSSQL_COMMAND || 'execute_sql',
+			windowsAuth,
+		});
+		connections.set(name, config);
+	}
+
+	// Resolve default
+	let defaultName: string;
+	if (parsed.default) {
+		if (!connections.has(parsed.default)) {
+			throw new Error(
+				`MSSQL_CONNECTIONS "default" points to "${parsed.default}", which is not a defined connection. Defined: ${names.join(', ')}.`,
+			);
+		}
+		defaultName = parsed.default;
+	} else if (names.length === 1) {
+		defaultName = names[0];
+	} else {
+		throw new Error(
+			`MSSQL_CONNECTIONS defines multiple connections but no "default". Add a "default" naming one of: ${names.join(', ')}.`,
+		);
+	}
+
+	return { connections, defaultName };
 }

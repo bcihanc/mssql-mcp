@@ -10,6 +10,7 @@ import { MssqlTools } from '../MssqlTools.js';
 import { MssqlServerTools } from '../MssqlServerTools.js';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
+import { parseConnectionConfigs } from '../server/config.js';
 
 let pass = 0;
 let fail = 0;
@@ -75,6 +76,73 @@ console.log('\n--- all tool defs expose connection_name ---');
 		check(`${def.name} exposes connection_name`, 'connection_name' in props, true);
 	}
 }
+
+console.log('\n--- parseConnectionConfigs ---');
+{
+	// Legacy fallback: no MSSQL_CONNECTIONS -> single "default"
+	const saved = { ...process.env };
+	process.env.MSSQL_SERVER = 'legacy-host';
+	process.env.MSSQL_DATABASE = 'db';
+	process.env.MSSQL_USER = 'u';
+	process.env.MSSQL_PASSWORD = 'p';
+	delete process.env.MSSQL_CONNECTIONS;
+	const legacy = parseConnectionConfigs();
+	check('legacy -> defaultName is default', legacy.defaultName, 'default');
+	check('legacy -> one connection', legacy.connections.size, 1);
+	check('legacy -> default server', legacy.connections.get('default')?.server, 'legacy-host');
+	process.env = saved;
+}
+{
+	// Multi with explicit default
+	const env = {
+		MSSQL_CONNECTIONS: JSON.stringify({
+			default: 'uretim',
+			connections: {
+				uretim: { server: 'prod', database: 'S', user: 'u', password: 'p' },
+				test: { server: 'test', database: 'S', user: 'u', password: 'p' },
+			},
+		}),
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	check('multi -> defaultName', parsed.defaultName, 'uretim');
+	check('multi -> two connections', parsed.connections.size, 2);
+	check('multi -> test server', parsed.connections.get('test')?.server, 'test');
+}
+{
+	// Single connection, no default -> auto default
+	const env = {
+		MSSQL_CONNECTIONS: JSON.stringify({
+			connections: { only: { server: 'x', database: 'S', user: 'u', password: 'p' } },
+		}),
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	check('single no-default -> auto default', parsed.defaultName, 'only');
+}
+checkThrows('multi no-default -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({
+		connections: {
+			a: { server: 'x', database: 'S', user: 'u', password: 'p' },
+			b: { server: 'y', database: 'S', user: 'u', password: 'p' },
+		},
+	}),
+} as any));
+checkThrows('default points to missing -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({
+		default: 'nope',
+		connections: { a: { server: 'x', database: 'S', user: 'u', password: 'p' } },
+	}),
+} as any));
+checkThrows('malformed JSON -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: '{not valid json',
+} as any));
+checkThrows('empty connections -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({ connections: {} }),
+} as any));
+checkThrows('invalid connection name -> throws', () => parseConnectionConfigs({
+	MSSQL_CONNECTIONS: JSON.stringify({
+		connections: { 'bad name': { server: 'x', database: 'S', user: 'u', password: 'p' } },
+	}),
+} as any));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);
