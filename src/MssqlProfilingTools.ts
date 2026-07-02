@@ -3,7 +3,7 @@ import consola from 'consola';
 import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
-import { buildCacheKeyPrefix, parseObjectName, validateDatabaseName } from './utils/identifier.js';
+import { buildCacheKeyPrefix, namespaceCacheKey, parseObjectName, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-profiling-tools');
@@ -187,7 +187,7 @@ export const MssqlProfilingTools = {
 			}
 			const colBracketed = `[${v.column_name}]`;
 			const sampleKey = v.sample_size ? `s${v.sample_size}` : 'full';
-			const cacheKey = `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v.column_name}:${sampleKey}`;
+			const cacheKey = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v.column_name}:${sampleKey}`);
 
 			const cached = getFromCache(profileCache, cacheKey, PROFILE_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
@@ -263,7 +263,7 @@ export const MssqlProfilingTools = {
 		try {
 			const v = RowCountInputSchema.parse(args);
 			const table = resolveTable(v.table_name, v.database_name);
-			const cacheKey = `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v.exact ? 'exact' : 'fast'}`;
+			const cacheKey = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v.exact ? 'exact' : 'fast'}`);
 
 			const cached = getFromCache(rowCountCache, cacheKey, ROW_COUNT_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);

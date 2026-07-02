@@ -207,5 +207,20 @@ console.log('\n--- ConnectionRegistry ---');
 	checkThrows('resolve unknown name -> throws', () => resolvePoolForCall(registry, { connection_name: 'nope' }));
 }
 
+console.log('\n--- cache isolation (get_version) ---');
+{
+	// Fake pools returning different versions for the same query
+	const poolA: any = { name: 'connA', async query() { return [{ version: 'SQL-A' }]; }, async close() {} };
+	const poolB: any = { name: 'connB', async query() { return [{ version: 'SQL-B' }]; }, async close() {} };
+
+	const a1 = await MssqlTools.handleGetVersion(poolA);
+	const b1 = await MssqlTools.handleGetVersion(poolB);
+	const aText = a1.content[0].text;
+	const bText = b1.content[0].text;
+	check('poolA returns its own version', aText.includes('SQL-A'), true);
+	check('poolB is NOT served poolA cache', bText.includes('SQL-B'), true);
+	check('poolB did not get SQL-A', bText.includes('SQL-A'), false);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);

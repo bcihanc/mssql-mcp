@@ -3,7 +3,7 @@ import consola from 'consola';
 import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
-import { buildCacheKeyPrefix, validateDatabaseName } from './utils/identifier.js';
+import { buildCacheKeyPrefix, namespaceCacheKey, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-server-tools');
@@ -145,7 +145,8 @@ export const MssqlServerTools = {
 		try {
 			const v = ListDatabasesInputSchema.parse(args);
 			const cacheKey = v.include_system ? 'all' : 'user';
-			const cached = getFromCache(databasesCache, cacheKey, DATABASES_CACHE_TTL_MS);
+			const nsCacheKey = namespaceCacheKey(pool.name, cacheKey);
+			const cached = getFromCache(databasesCache, nsCacheKey, DATABASES_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
 
 			const where = v.include_system ? '' : `WHERE d.database_id > 4`;
@@ -157,7 +158,7 @@ export const MssqlServerTools = {
 				return plainResponse('No databases found.');
 			}
 			const csv = formatCSV(results);
-			setInCache(databasesCache, cacheKey, csv, 4, 'list_databases');
+			setInCache(databasesCache, nsCacheKey, csv, 4, 'list_databases');
 			return plainResponse(csv);
 		} catch (error) {
 			if (consola.level >= 0) logger.error('list_databases error:', error);
@@ -175,8 +176,9 @@ export const MssqlServerTools = {
 				dbPrefix = `${bracketed}.`;
 				cacheKey = buildCacheKeyPrefix(v.database_name);
 			}
+			const nsCacheKey = namespaceCacheKey(pool.name, cacheKey);
 
-			const cached = getFromCache(schemasCache, cacheKey, SCHEMAS_CACHE_TTL_MS);
+			const cached = getFromCache(schemasCache, nsCacheKey, SCHEMAS_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
 
 			const query = `SELECT s.schema_id, s.name AS schema_name, COALESCE(p.name, '<unknown>') AS owner_name FROM ${dbPrefix}sys.schemas s LEFT JOIN ${dbPrefix}sys.database_principals p ON s.principal_id = p.principal_id ORDER BY s.name`;
@@ -187,7 +189,7 @@ export const MssqlServerTools = {
 				return plainResponse(`No schemas found in ${v.database_name || 'current database'}.`);
 			}
 			const csv = formatCSV(results);
-			setInCache(schemasCache, cacheKey, csv, SCHEMAS_CACHE_MAX_SIZE, 'list_schemas');
+			setInCache(schemasCache, nsCacheKey, csv, SCHEMAS_CACHE_MAX_SIZE, 'list_schemas');
 			return plainResponse(csv);
 		} catch (error) {
 			if (consola.level >= 0) logger.error('list_schemas error:', error);
@@ -197,7 +199,7 @@ export const MssqlServerTools = {
 
 	async handleListLinkedServers(pool: ConnectionPool): Promise<{ content: TextContent[] }> {
 		try {
-			const cacheKey = '_singleton_';
+			const cacheKey = namespaceCacheKey(pool.name, '_singleton_');
 			const cached = getFromCache(linkedServersCache, cacheKey, LINKED_SERVERS_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
 
@@ -231,7 +233,7 @@ export const MssqlServerTools = {
 
 	async handleGetServerInfo(pool: ConnectionPool): Promise<{ content: TextContent[] }> {
 		try {
-			const cacheKey = '_singleton_';
+			const cacheKey = namespaceCacheKey(pool.name, '_singleton_');
 			const cached = getFromCache(serverInfoCache, cacheKey, SERVER_INFO_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
 

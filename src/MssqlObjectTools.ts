@@ -3,7 +3,7 @@ import consola from 'consola';
 import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
-import { buildCacheKeyPrefix, validateDatabaseName } from './utils/identifier.js';
+import { buildCacheKeyPrefix, namespaceCacheKey, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-object-tools');
@@ -174,7 +174,7 @@ export const MssqlObjectTools = {
 		try {
 			const v = ListProcsInputSchema.parse(args);
 			const scope = resolveDbScope(v.database_name);
-			const cacheKey = `${scope.dbCacheKey}${v.schema_name || '_all_'}:${v.include_system ? 'sys' : 'user'}`;
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${v.schema_name || '_all_'}:${v.include_system ? 'sys' : 'user'}`);
 
 			const cached = getFromCache(procsCache, cacheKey, PROCS_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
@@ -204,7 +204,7 @@ export const MssqlObjectTools = {
 		try {
 			const v = ListViewsInputSchema.parse(args);
 			const scope = resolveDbScope(v.database_name);
-			const cacheKey = `${scope.dbCacheKey}${v.schema_name || '_all_'}:${v.include_system ? 'sys' : 'user'}`;
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${v.schema_name || '_all_'}:${v.include_system ? 'sys' : 'user'}`);
 
 			const cached = getFromCache(viewsCache, cacheKey, VIEWS_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
@@ -234,7 +234,7 @@ export const MssqlObjectTools = {
 		try {
 			const v = ListFunctionsInputSchema.parse(args);
 			const scope = resolveDbScope(v.database_name);
-			const cacheKey = `${scope.dbCacheKey}${v.schema_name || '_all_'}:${v.include_system ? 'sys' : 'user'}`;
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${v.schema_name || '_all_'}:${v.include_system ? 'sys' : 'user'}`);
 
 			const cached = getFromCache(functionsCache, cacheKey, FUNCTIONS_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
@@ -265,7 +265,7 @@ export const MssqlObjectTools = {
 			const v = ListTriggersInputSchema.parse(args);
 			const scope = resolveDbScope(v.database_name);
 			const tableFilter = v.table_name || '_all_';
-			const cacheKey = `${scope.dbCacheKey}${tableFilter}:${v.include_system ? 'sys' : 'user'}`;
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${tableFilter}:${v.include_system ? 'sys' : 'user'}`);
 
 			const cached = getFromCache(triggersCache, cacheKey, TRIGGERS_CACHE_TTL_MS);
 			if (cached !== null) return cachedResponse(cached);
