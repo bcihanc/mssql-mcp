@@ -108,3 +108,33 @@ export function buildCacheKeyPrefix(dbContext?: string): string {
 	}
 	return `${dbContext.toLowerCase()}::`;
 }
+
+// Connection names are logical labels used as registry keys and cache-key
+// prefixes — never interpolated into SQL. Dots are disallowed (unlike DB names)
+// because they carry no benefit here and keep the label space clean.
+const CONNECTION_NAME_REGEX = /^[a-zA-Z0-9_-]+$/;
+
+/**
+ * Validate a connection name. Returns the name unchanged if valid.
+ * @throws Error if the name contains anything other than letters, digits,
+ *   underscore, or hyphen.
+ */
+export function validateConnectionName(name: string): string {
+	if (!name || typeof name !== 'string') {
+		throw new Error('Connection name must be a non-empty string');
+	}
+	if (!CONNECTION_NAME_REGEX.test(name)) {
+		throw new Error(
+			`Invalid connection name: "${name}". Only letters, digits, underscore and hyphen are allowed.`,
+		);
+	}
+	return name;
+}
+
+/**
+ * Namespace a cache key by connection name so identical query patterns against
+ * different connections never collide in the shared static caches.
+ */
+export function namespaceCacheKey(connectionName: string, rawKey: string): string {
+	return `${connectionName}::${rawKey}`;
+}
