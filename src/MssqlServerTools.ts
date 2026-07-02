@@ -2,6 +2,7 @@ import type { TextContent, Tool } from '@modelcontextprotocol/sdk/types.js';
 import consola from 'consola';
 import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
+import type { ConnectionRegistry } from './server/ConnectionRegistry.js';
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, namespaceCacheKey, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
@@ -123,6 +124,11 @@ export const MssqlServerTools = {
 				name: 'get_server_info',
 				description: 'Get SQL Server instance metadata: edition, product version, collation, machine name, server name, language, clustered/AlwaysOn flags, and full @@VERSION string. Optionally includes CPU count and memory if VIEW SERVER STATE permission is available (gracefully omitted if not).',
 				inputSchema: z.toJSONSchema(GetServerInfoInputSchema.extend(ConnectionScopeSchema.shape)) as any,
+			},
+			{
+				name: 'list_connections',
+				description: 'List all configured database connections available to this MCP server: name, server, database, user, and which one is the default. Use the returned name as the connection_name parameter on other tools to target a specific connection. Passwords are never exposed.',
+				inputSchema: z.toJSONSchema(z.object({})) as any,
 			},
 		];
 	},
@@ -283,6 +289,20 @@ export const MssqlServerTools = {
 			if (consola.level >= 0) logger.error('get_server_info error:', error);
 			return errorResponse('Error fetching server info', error);
 		}
+	},
+
+	handleListConnections(registry: ConnectionRegistry): { content: TextContent[] } {
+		const rows = registry.list().map((c) => ({
+			name: c.name,
+			server: c.server,
+			database: c.database,
+			user: c.user,
+			is_default: c.is_default ? 'yes' : 'no',
+		}));
+		if (rows.length === 0) {
+			return plainResponse('No connections configured.');
+		}
+		return plainResponse(formatCSV(rows));
 	},
 
 	clearCachesForTesting(): void {

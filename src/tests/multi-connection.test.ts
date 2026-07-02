@@ -71,8 +71,10 @@ console.log('\n--- all tool defs expose connection_name ---');
 		...MssqlObjectTools.getToolDefinitions(),
 		...MssqlProfilingTools.getToolDefinitions(),
 	];
-	check('19 tool definitions total', allDefs.length, 19);
+	check('20 tool definitions total', allDefs.length, 20);
 	for (const def of allDefs) {
+		// list_connections is a registry-level tool, so it doesn't have connection_name
+		if (def.name === 'list_connections') continue;
 		const props = (def.inputSchema as any).properties || {};
 		check(`${def.name} exposes connection_name`, 'connection_name' in props, true);
 	}
@@ -220,6 +222,31 @@ console.log('\n--- cache isolation (get_version) ---');
 	check('poolA returns its own version', aText.includes('SQL-A'), true);
 	check('poolB is NOT served poolA cache', bText.includes('SQL-B'), true);
 	check('poolB did not get SQL-A', bText.includes('SQL-A'), false);
+}
+
+console.log('\n--- list_connections tool ---');
+{
+	const parsed = parseConnectionConfigs({
+		MSSQL_CONNECTIONS: JSON.stringify({
+			default: 'uretim',
+			connections: {
+				uretim: { server: 'prod', database: 'S', user: 'u', password: 'secret-pw' },
+				test: { server: 'test', database: 'S', user: 'v', password: 'secret-pw' },
+			},
+		}),
+	} as any);
+	const registry = new ConnectionRegistry(parsed);
+	const res = MssqlServerTools.handleListConnections(registry);
+	const text = res.content[0].text;
+	check('lists uretim', text.includes('uretim'), true);
+	check('lists test', text.includes('test'), true);
+	check('shows server', text.includes('prod'), true);
+	check('NEVER leaks password', text.includes('secret-pw'), false);
+
+	// Tool is advertised but NOT routed through the pool path
+	const defs = MssqlServerTools.getToolDefinitions();
+	check('list_connections advertised', defs.some((d) => d.name === 'list_connections'), true);
+	check('list_connections excluded from canHandle', MssqlServerTools.canHandle('list_connections'), false);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

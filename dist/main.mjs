@@ -79830,6 +79830,10 @@ function buildCacheKeyPrefix(dbContext) {
   return `${dbContext.toLowerCase()}::`;
 }
 __name(buildCacheKeyPrefix, "buildCacheKeyPrefix");
+function namespaceCacheKey(connectionName, rawKey) {
+  return `${connectionName}::${rawKey}`;
+}
+__name(namespaceCacheKey, "namespaceCacheKey");
 
 // src/utils/connectionScope.ts
 var ConnectionScopeSchema = external_exports2.object({
@@ -79957,7 +79961,7 @@ var MssqlObjectTools = {
   },
   async handleListProcedures(args, pool) {
     try {
-      let v2 = ListProcsInputSchema.parse(args), scope = resolveDbScope(v2.database_name), cacheKey2 = `${scope.dbCacheKey}${v2.schema_name || "_all_"}:${v2.include_system ? "sys" : "user"}`, cached2 = getFromCache(procsCache, cacheKey2, PROCS_CACHE_TTL_MS);
+      let v2 = ListProcsInputSchema.parse(args), scope = resolveDbScope(v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${v2.schema_name || "_all_"}:${v2.include_system ? "sys" : "user"}`), cached2 = getFromCache(procsCache, cacheKey2, PROCS_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse(cached2);
       let filters = [];
       v2.include_system || filters.push("p.is_ms_shipped = 0"), v2.schema_name && filters.push(`s.name = '${escapeLiteral(v2.schema_name)}'`);
@@ -79974,7 +79978,7 @@ var MssqlObjectTools = {
   },
   async handleListViews(args, pool) {
     try {
-      let v2 = ListViewsInputSchema.parse(args), scope = resolveDbScope(v2.database_name), cacheKey2 = `${scope.dbCacheKey}${v2.schema_name || "_all_"}:${v2.include_system ? "sys" : "user"}`, cached2 = getFromCache(viewsCache, cacheKey2, VIEWS_CACHE_TTL_MS);
+      let v2 = ListViewsInputSchema.parse(args), scope = resolveDbScope(v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${v2.schema_name || "_all_"}:${v2.include_system ? "sys" : "user"}`), cached2 = getFromCache(viewsCache, cacheKey2, VIEWS_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse(cached2);
       let filters = [];
       v2.include_system || filters.push("vw.is_ms_shipped = 0"), v2.schema_name && filters.push(`s.name = '${escapeLiteral(v2.schema_name)}'`);
@@ -79991,7 +79995,7 @@ var MssqlObjectTools = {
   },
   async handleListFunctions(args, pool) {
     try {
-      let v2 = ListFunctionsInputSchema.parse(args), scope = resolveDbScope(v2.database_name), cacheKey2 = `${scope.dbCacheKey}${v2.schema_name || "_all_"}:${v2.include_system ? "sys" : "user"}`, cached2 = getFromCache(functionsCache, cacheKey2, FUNCTIONS_CACHE_TTL_MS);
+      let v2 = ListFunctionsInputSchema.parse(args), scope = resolveDbScope(v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${v2.schema_name || "_all_"}:${v2.include_system ? "sys" : "user"}`), cached2 = getFromCache(functionsCache, cacheKey2, FUNCTIONS_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse(cached2);
       let filters = ["o.type IN ('FN','IF','TF','AF','FS','FT')"];
       v2.include_system || filters.push("o.is_ms_shipped = 0"), v2.schema_name && filters.push(`s.name = '${escapeLiteral(v2.schema_name)}'`);
@@ -80008,7 +80012,7 @@ var MssqlObjectTools = {
   },
   async handleListTriggers(args, pool) {
     try {
-      let v2 = ListTriggersInputSchema.parse(args), scope = resolveDbScope(v2.database_name), tableFilter = v2.table_name || "_all_", cacheKey2 = `${scope.dbCacheKey}${tableFilter}:${v2.include_system ? "sys" : "user"}`, cached2 = getFromCache(triggersCache, cacheKey2, TRIGGERS_CACHE_TTL_MS);
+      let v2 = ListTriggersInputSchema.parse(args), scope = resolveDbScope(v2.database_name), tableFilter = v2.table_name || "_all_", cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${tableFilter}:${v2.include_system ? "sys" : "user"}`), cached2 = getFromCache(triggersCache, cacheKey2, TRIGGERS_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse(cached2);
       let filters = ["t.parent_class = 1"];
       v2.include_system || filters.push("t.is_ms_shipped = 0"), v2.table_name && filters.push(`OBJECT_NAME(t.parent_id, ${scope.dbIdExpr}) = '${escapeLiteral(v2.table_name)}'`);
@@ -80153,7 +80157,7 @@ var MssqlProfilingTools = {
       let v2 = ProfileColumnInputSchema.parse(args), table = resolveTable(v2.table_name, v2.database_name);
       if (!/^[a-zA-Z0-9_]+$/.test(v2.column_name))
         throw new Error(`Invalid column_name "${v2.column_name}". Only alphanumeric characters and underscores allowed.`);
-      let colBracketed = `[${v2.column_name}]`, sampleKey = v2.sample_size ? `s${v2.sample_size}` : "full", cacheKey2 = `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.column_name}:${sampleKey}`, cached2 = getFromCache2(profileCache, cacheKey2, PROFILE_CACHE_TTL_MS);
+      let colBracketed = `[${v2.column_name}]`, sampleKey = v2.sample_size ? `s${v2.sample_size}` : "full", cacheKey2 = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.column_name}:${sampleKey}`), cached2 = getFromCache2(profileCache, cacheKey2, PROFILE_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse2(cached2);
       let sourceExpr = v2.sample_size ? `(SELECT TOP ${v2.sample_size} ${colBracketed} FROM ${table.bracketedFqn} ORDER BY NEWID()) AS sampled` : `${table.bracketedFqn}`, aggregateQuery = `SELECT COUNT_BIG(*) AS row_count, COUNT_BIG(*) - COUNT_BIG(${colBracketed}) AS null_count, CAST((COUNT_BIG(*) - COUNT_BIG(${colBracketed})) * 100.0 / NULLIF(COUNT_BIG(*), 0) AS DECIMAL(5,2)) AS null_pct, COUNT(DISTINCT ${colBracketed}) AS distinct_count, MIN(${colBracketed}) AS min_value, MAX(${colBracketed}) AS max_value FROM ${sourceExpr}`, topQuery = `SELECT TOP 10 ${colBracketed} AS value, COUNT_BIG(*) AS occurrences FROM ${sourceExpr} WHERE ${colBracketed} IS NOT NULL GROUP BY ${colBracketed} ORDER BY occurrences DESC`;
       consola.level >= 0 && logger3.info(`Profiling ${table.displayName}.${v2.column_name}${v2.sample_size ? ` (sample ${v2.sample_size})` : ""}`);
@@ -80205,7 +80209,7 @@ ${csv}${note}`);
   },
   async handleRowCount(args, pool) {
     try {
-      let v2 = RowCountInputSchema.parse(args), table = resolveTable(v2.table_name, v2.database_name), cacheKey2 = `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.exact ? "exact" : "fast"}`, cached2 = getFromCache2(rowCountCache, cacheKey2, ROW_COUNT_CACHE_TTL_MS);
+      let v2 = RowCountInputSchema.parse(args), table = resolveTable(v2.table_name, v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.exact ? "exact" : "fast"}`), cached2 = getFromCache2(rowCountCache, cacheKey2, ROW_COUNT_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse2(cached2);
       let fqnLiteral = `'${escapeLiteral2(`${table.schemaName}.${table.tableName}`)}'`, objectIdExpr = v2.database_name ? `OBJECT_ID('${escapeLiteral2(`${v2.database_name}.${table.schemaName}.${table.tableName}`)}')` : `OBJECT_ID(${fqnLiteral})`, rowCount = null, source = "unknown";
       if (!v2.exact) {
@@ -80256,27 +80260,28 @@ Source: ${source}`;
 
 // src/server/config.ts
 var logger4 = consola.withTag("mssql-config");
-function getMssqlConfig() {
-  let server = process.env.MSSQL_SERVER || "localhost";
-  consola.level >= 0 && (logger4.info(`MSSQL_SERVER environment variable: ${process.env.MSSQL_SERVER || "NOT SET"}`), logger4.info(`Using server: ${server}`)), server.toLowerCase().includes("(localdb)") && (server = `.\\${server.replace(/\(localdb\)\\{1,2}/i, "")}`, consola.level >= 0 && logger4.info(`Detected LocalDB connection, converted to: ${server}`));
-  let config2 = {
+function getMssqlConfig(env2 = process.env) {
+  let server = env2.MSSQL_SERVER || "localhost";
+  consola.level >= 0 && (logger4.info(`MSSQL_SERVER environment variable: ${env2.MSSQL_SERVER || "NOT SET"}`), logger4.info(`Using server: ${server}`));
+  let rawConfig = {
     server,
-    user: process.env.MSSQL_USER,
-    password: process.env.MSSQL_PASSWORD,
-    database: process.env.MSSQL_DATABASE || "",
+    user: env2.MSSQL_USER,
+    password: env2.MSSQL_PASSWORD,
+    database: env2.MSSQL_DATABASE || "",
     port: 1433,
-    encrypt: !1,
-    command: process.env.MSSQL_COMMAND || "execute_sql",
+    encrypt: env2.MSSQL_ENCRYPT?.toLowerCase() === "true",
+    command: env2.MSSQL_COMMAND || "execute_sql",
     windowsAuth: !1
-  }, port = process.env.MSSQL_PORT;
+  }, config2 = normalizeMssqlConfig(rawConfig);
+  consola.level >= 0 && config2.server !== server && logger4.info(`Detected LocalDB connection, converted to: ${config2.server}`), consola.level >= 0 && config2.encrypt && !rawConfig.encrypt ? logger4.info("Detected Azure SQL, enabling encryption") : consola.level >= 0 && config2.encrypt && rawConfig.encrypt && logger4.info("Encryption enabled via MSSQL_ENCRYPT setting");
+  let port = env2.MSSQL_PORT;
   if (port)
     try {
       config2.port = parseInt(port, 10);
     } catch {
       consola.level >= 0 && logger4.warn(`Invalid MSSQL_PORT value: ${port}. Using default port 1433.`);
     }
-  config2.server && config2.server.includes(".database.windows.net") ? (config2.encrypt = !0, consola.level >= 0 && logger4.info("Detected Azure SQL, enabling encryption")) : process.env.MSSQL_ENCRYPT?.toLowerCase() === "true" && (config2.encrypt = !0, consola.level >= 0 && logger4.info("Encryption enabled via MSSQL_ENCRYPT setting"));
-  let useWindowsAuth = process.env.MSSQL_WINDOWS_AUTH?.toLowerCase() === "true";
+  let useWindowsAuth = env2.MSSQL_WINDOWS_AUTH?.toLowerCase() === "true";
   if (useWindowsAuth) {
     if (config2.windowsAuth = !0, !config2.database)
       throw consola.level >= 0 && logger4.error("MSSQL_DATABASE is required"), new Error("Missing required database configuration");
@@ -80305,6 +80310,13 @@ function validateTableName(tableName) {
   return validateObjectName(tableName);
 }
 __name(validateTableName, "validateTableName");
+function normalizeMssqlConfig(raw2) {
+  let server = raw2.server || "localhost";
+  server.toLowerCase().includes("(localdb)") && (server = `.\\${server.replace(/\(localdb\)\\{1,2}/i, "")}`);
+  let encrypt = raw2.encrypt;
+  return server.includes(".database.windows.net") && (encrypt = !0), { ...raw2, server, encrypt };
+}
+__name(normalizeMssqlConfig, "normalizeMssqlConfig");
 
 // src/MssqlResources.ts
 var logger5 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, resourceCache = null, RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || "100", 10), MssqlResources = {
@@ -80456,6 +80468,11 @@ var MssqlServerTools = {
         name: "get_server_info",
         description: "Get SQL Server instance metadata: edition, product version, collation, machine name, server name, language, clustered/AlwaysOn flags, and full @@VERSION string. Optionally includes CPU count and memory if VIEW SERVER STATE permission is available (gracefully omitted if not).",
         inputSchema: external_exports2.toJSONSchema(GetServerInfoInputSchema.extend(ConnectionScopeSchema.shape))
+      },
+      {
+        name: "list_connections",
+        description: "List all configured database connections available to this MCP server: name, server, database, user, and which one is the default. Use the returned name as the connection_name parameter on other tools to target a specific connection. Passwords are never exposed.",
+        inputSchema: external_exports2.toJSONSchema(external_exports2.object({}))
       }
     ];
   },
@@ -80474,7 +80491,7 @@ var MssqlServerTools = {
   },
   async handleListDatabases(args, pool) {
     try {
-      let v2 = ListDatabasesInputSchema.parse(args), cacheKey2 = v2.include_system ? "all" : "user", cached2 = getFromCache3(databasesCache, cacheKey2, DATABASES_CACHE_TTL_MS);
+      let v2 = ListDatabasesInputSchema.parse(args), cacheKey2 = v2.include_system ? "all" : "user", nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cached2 = getFromCache3(databasesCache, nsCacheKey, DATABASES_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse3(cached2);
       let query = `SELECT d.database_id, d.name AS database_name, d.state_desc, d.recovery_model_desc, d.collation_name, d.create_date, d.compatibility_level FROM sys.databases d ${v2.include_system ? "" : "WHERE d.database_id > 4"} ORDER BY d.name`;
       consola.level >= 0 && logger6.info(`Listing databases (include_system=${!!v2.include_system})`);
@@ -80482,7 +80499,7 @@ var MssqlServerTools = {
       if (!results || results.length === 0)
         return plainResponse3("No databases found.");
       let csv = formatCSV(results);
-      return setInCache3(databasesCache, cacheKey2, csv, 4, "list_databases"), plainResponse3(csv);
+      return setInCache3(databasesCache, nsCacheKey, csv, 4, "list_databases"), plainResponse3(csv);
     } catch (error46) {
       return consola.level >= 0 && logger6.error("list_databases error:", error46), errorResponse3("Error listing databases", error46);
     }
@@ -80491,7 +80508,7 @@ var MssqlServerTools = {
     try {
       let v2 = ListSchemasInputSchema.parse(args), dbPrefix = "", cacheKey2 = buildCacheKeyPrefix();
       v2.database_name && (dbPrefix = `${validateDatabaseName(v2.database_name)}.`, cacheKey2 = buildCacheKeyPrefix(v2.database_name));
-      let cached2 = getFromCache3(schemasCache, cacheKey2, SCHEMAS_CACHE_TTL_MS);
+      let nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cached2 = getFromCache3(schemasCache, nsCacheKey, SCHEMAS_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse3(cached2);
       let query = `SELECT s.schema_id, s.name AS schema_name, COALESCE(p.name, '<unknown>') AS owner_name FROM ${dbPrefix}sys.schemas s LEFT JOIN ${dbPrefix}sys.database_principals p ON s.principal_id = p.principal_id ORDER BY s.name`;
       consola.level >= 0 && logger6.info(`Listing schemas in ${v2.database_name || "current DB"}`);
@@ -80499,14 +80516,14 @@ var MssqlServerTools = {
       if (!results || results.length === 0)
         return plainResponse3(`No schemas found in ${v2.database_name || "current database"}.`);
       let csv = formatCSV(results);
-      return setInCache3(schemasCache, cacheKey2, csv, SCHEMAS_CACHE_MAX_SIZE, "list_schemas"), plainResponse3(csv);
+      return setInCache3(schemasCache, nsCacheKey, csv, SCHEMAS_CACHE_MAX_SIZE, "list_schemas"), plainResponse3(csv);
     } catch (error46) {
       return consola.level >= 0 && logger6.error("list_schemas error:", error46), errorResponse3("Error listing schemas", error46);
     }
   },
   async handleListLinkedServers(pool) {
     try {
-      let cacheKey2 = "_singleton_", cached2 = getFromCache3(linkedServersCache, cacheKey2, LINKED_SERVERS_CACHE_TTL_MS);
+      let cacheKey2 = namespaceCacheKey(pool.name, "_singleton_"), cached2 = getFromCache3(linkedServersCache, cacheKey2, LINKED_SERVERS_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse3(cached2);
       let query = "SELECT s.server_id, s.name, s.product, s.provider, s.data_source, s.location, s.is_linked, s.is_remote_login_enabled, s.is_data_access_enabled, s.is_rpc_out_enabled, s.modify_date FROM master.sys.servers s WHERE s.server_id != 0 ORDER BY s.name";
       consola.level >= 0 && logger6.info("Listing linked servers");
@@ -80530,7 +80547,7 @@ var MssqlServerTools = {
   },
   async handleGetServerInfo(pool) {
     try {
-      let cacheKey2 = "_singleton_", cached2 = getFromCache3(serverInfoCache, cacheKey2, SERVER_INFO_CACHE_TTL_MS);
+      let cacheKey2 = namespaceCacheKey(pool.name, "_singleton_"), cached2 = getFromCache3(serverInfoCache, cacheKey2, SERVER_INFO_CACHE_TTL_MS);
       if (cached2 !== null) return cachedResponse3(cached2);
       let propsQuery = `SELECT
 				CAST(SERVERPROPERTY('ProductVersion') AS VARCHAR(128)) AS product_version,
@@ -80563,6 +80580,16 @@ var MssqlServerTools = {
       return consola.level >= 0 && logger6.error("get_server_info error:", error46), errorResponse3("Error fetching server info", error46);
     }
   },
+  handleListConnections(registry2) {
+    let rows = registry2.list().map((c3) => ({
+      name: c3.name,
+      server: c3.server,
+      database: c3.database,
+      user: c3.user,
+      is_default: c3.is_default ? "yes" : "no"
+    }));
+    return rows.length === 0 ? plainResponse3("No connections configured.") : plainResponse3(formatCSV(rows));
+  },
   clearCachesForTesting() {
     databasesCache.clear(), schemasCache.clear(), linkedServersCache.clear(), serverInfoCache.clear();
   }
@@ -80570,7 +80597,7 @@ var MssqlServerTools = {
 
 // src/MssqlTools.ts
 import crypto3 from "node:crypto";
-var logger7 = consola.withTag("mssql-tools"), MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || "10000", 10), WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || "5000", 10), QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || "60000", 10), QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || "100", 10), queryCache = /* @__PURE__ */ new Map(), TABLES_CACHE_TTL_MS = parseInt(process.env.MSSQL_TABLES_CACHE_TTL || "1800000", 10), SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || "7200000", 10), FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || "14400000", 10), RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || "14400000", 10), COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || "7200000", 10), INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_INDEXES_CACHE_TTL || "14400000", 10), SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || "200", 10), FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || "100", 10), RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || "100", 10), COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || "100", 10), INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_INDEXES_CACHE_SIZE || "200", 10), listTablesCache = /* @__PURE__ */ new Map(), tableSchemaCache = /* @__PURE__ */ new Map(), foreignKeysCache = /* @__PURE__ */ new Map(), relationshipsCache = /* @__PURE__ */ new Map(), columnsCache = /* @__PURE__ */ new Map(), indexesCache = /* @__PURE__ */ new Map(), versionCache = null;
+var logger7 = consola.withTag("mssql-tools"), MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || "10000", 10), WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || "5000", 10), QUERY_CACHE_TTL_MS = parseInt(process.env.MSSQL_CACHE_TTL || "60000", 10), QUERY_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_CACHE_SIZE || "100", 10), queryCache = /* @__PURE__ */ new Map(), TABLES_CACHE_TTL_MS = parseInt(process.env.MSSQL_TABLES_CACHE_TTL || "1800000", 10), SCHEMA_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMA_CACHE_TTL || "7200000", 10), FK_CACHE_TTL_MS = parseInt(process.env.MSSQL_FK_CACHE_TTL || "14400000", 10), RELATIONSHIPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_TTL || "14400000", 10), COLUMNS_CACHE_TTL_MS = parseInt(process.env.MSSQL_COLUMNS_CACHE_TTL || "7200000", 10), INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_INDEXES_CACHE_TTL || "14400000", 10), SCHEMA_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMA_CACHE_SIZE || "200", 10), FK_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FK_CACHE_SIZE || "100", 10), RELATIONSHIPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_RELATIONSHIPS_CACHE_SIZE || "100", 10), COLUMNS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_COLUMNS_CACHE_SIZE || "100", 10), INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_INDEXES_CACHE_SIZE || "200", 10), listTablesCache = /* @__PURE__ */ new Map(), tableSchemaCache = /* @__PURE__ */ new Map(), foreignKeysCache = /* @__PURE__ */ new Map(), relationshipsCache = /* @__PURE__ */ new Map(), columnsCache = /* @__PURE__ */ new Map(), indexesCache = /* @__PURE__ */ new Map(), versionCache = /* @__PURE__ */ new Map();
 function getCacheKey(query) {
   let normalizedQuery = query.trim().toLowerCase().replace(/\s+/g, " ");
   return crypto3.createHash("sha256").update(normalizedQuery, "utf8").digest("hex");
@@ -80710,20 +80737,14 @@ var ExecuteSqlInputSchema = external_exports2.object({
     throw new Error(`Unknown tool: ${name}`);
   },
   async handleGetVersion(pool) {
-    if (versionCache !== null)
-      return consola.level >= 0 && logger7.debug("Returning cached SQL Server version"), {
-        content: [
-          {
-            type: "text",
-            text: versionCache + `
+    let cached2 = versionCache.get(pool.name);
+    if (cached2 !== void 0)
+      return consola.level >= 0 && logger7.debug("Returning cached SQL Server version"), { content: [{ type: "text", text: cached2 + `
 
-📋 (Cached result)`
-          }
-        ]
-      };
+📋 (Cached result)` }] };
     try {
       let version3 = (await pool.query("SELECT @@VERSION AS version"))[0]?.version || "Unknown";
-      return versionCache = version3, consola.level >= 0 && logger7.info("SQL Server version cached"), {
+      return versionCache.set(pool.name, version3), consola.level >= 0 && logger7.info("SQL Server version cached"), {
         content: [
           {
             type: "text",
@@ -80744,9 +80765,9 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleListTables(args, pool) {
     try {
-      let schemaFilter = ListTablesInputSchema.parse(args).schema_name, cacheKey2 = schemaFilter || "_all_schemas_", cachedResult2 = getFromToolCache(listTablesCache, cacheKey2, TABLES_CACHE_TTL_MS);
+      let schemaFilter = ListTablesInputSchema.parse(args).schema_name, cacheKey2 = schemaFilter || "_all_schemas_", nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cachedResult2 = getFromToolCache(listTablesCache, nsCacheKey, TABLES_CACHE_TTL_MS);
       if (cachedResult2 !== null)
-        return consola.level >= 0 && logger7.debug(`Returning cached list_tables result for key: ${cacheKey2}`), {
+        return consola.level >= 0 && logger7.debug(`Returning cached list_tables result for key: ${nsCacheKey}`), {
           content: [
             {
               type: "text",
@@ -80771,7 +80792,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results), now = Date.now();
-        return listTablesCache.set(cacheKey2, {
+        return listTablesCache.set(nsCacheKey, {
           result: csvText,
           timestamp: now,
           lastAccessed: now
@@ -80806,7 +80827,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleGetTableSchema(args, pool) {
     try {
-      let validatedArgs = GetTableSchemaInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(tableSchemaCache, cacheKey2, SCHEMA_CACHE_TTL_MS);
+      let validatedArgs = GetTableSchemaInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cachedResult2 = getFromToolCache(tableSchemaCache, nsCacheKey, SCHEMA_CACHE_TTL_MS);
       if (cachedResult2 !== null)
         return consola.level >= 0 && logger7.debug(`Returning cached table schema for: ${schemaName}.${tableName}`), {
           content: [
@@ -80832,7 +80853,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(tableSchemaCache, cacheKey2, csvText, SCHEMA_CACHE_MAX_SIZE, "table_schema"), consola.level >= 0 && logger7.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`), {
+        return setInToolCache(tableSchemaCache, nsCacheKey, csvText, SCHEMA_CACHE_MAX_SIZE, "table_schema"), consola.level >= 0 && logger7.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {
               type: "text",
@@ -80863,7 +80884,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleGetForeignKeys(args, pool) {
     try {
-      let validatedArgs = GetForeignKeysInputSchema.parse(args), tableFilter = validatedArgs.table_name, schemaFilter = validatedArgs.schema_name, cacheKey2 = `${schemaFilter || "_all_"}:${tableFilter || "_all_"}`, cachedResult2 = getFromToolCache(foreignKeysCache, cacheKey2, FK_CACHE_TTL_MS);
+      let validatedArgs = GetForeignKeysInputSchema.parse(args), tableFilter = validatedArgs.table_name, schemaFilter = validatedArgs.schema_name, cacheKey2 = `${schemaFilter || "_all_"}:${tableFilter || "_all_"}`, nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cachedResult2 = getFromToolCache(foreignKeysCache, nsCacheKey, FK_CACHE_TTL_MS);
       if (cachedResult2 !== null)
         return consola.level >= 0 && logger7.debug(`Returning cached foreign keys for: ${cacheKey2}`), {
           content: [
@@ -80890,7 +80911,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(foreignKeysCache, cacheKey2, csvText, FK_CACHE_MAX_SIZE, "foreign_keys"), consola.level >= 0 && logger7.info(`Found ${results.length} foreign key(s) - result cached`), {
+        return setInToolCache(foreignKeysCache, nsCacheKey, csvText, FK_CACHE_MAX_SIZE, "foreign_keys"), consola.level >= 0 && logger7.info(`Found ${results.length} foreign key(s) - result cached`), {
           content: [
             {
               type: "text",
@@ -80921,7 +80942,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleSearchColumns(args, pool) {
     try {
-      let validatedArgs = SearchColumnsInputSchema.parse(args), columnName = validatedArgs.column_name, schemaFilter = validatedArgs.schema_name, normalizedColumn = columnName.toLowerCase().trim(), cacheKey2 = `${schemaFilter || "_all_"}:${normalizedColumn}`, cachedResult2 = getFromToolCache(columnsCache, cacheKey2, COLUMNS_CACHE_TTL_MS);
+      let validatedArgs = SearchColumnsInputSchema.parse(args), columnName = validatedArgs.column_name, schemaFilter = validatedArgs.schema_name, normalizedColumn = columnName.toLowerCase().trim(), cacheKey2 = `${schemaFilter || "_all_"}:${normalizedColumn}`, nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cachedResult2 = getFromToolCache(columnsCache, nsCacheKey, COLUMNS_CACHE_TTL_MS);
       if (cachedResult2 !== null)
         return consola.level >= 0 && logger7.debug(`Returning cached column search for: ${cacheKey2}`), {
           content: [
@@ -80948,7 +80969,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(columnsCache, cacheKey2, csvText, COLUMNS_CACHE_MAX_SIZE, "search_columns"), consola.level >= 0 && logger7.info(`Found ${results.length} column(s) matching: ${columnName} - result cached`), {
+        return setInToolCache(columnsCache, nsCacheKey, csvText, COLUMNS_CACHE_MAX_SIZE, "search_columns"), consola.level >= 0 && logger7.info(`Found ${results.length} column(s) matching: ${columnName} - result cached`), {
           content: [
             {
               type: "text",
@@ -80979,7 +81000,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleGetTableRelationships(args, pool) {
     try {
-      let validatedArgs = GetTableRelationshipsInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(relationshipsCache, cacheKey2, RELATIONSHIPS_CACHE_TTL_MS);
+      let validatedArgs = GetTableRelationshipsInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cachedResult2 = getFromToolCache(relationshipsCache, nsCacheKey, RELATIONSHIPS_CACHE_TTL_MS);
       if (cachedResult2 !== null)
         return consola.level >= 0 && logger7.debug(`Returning cached table relationships for: ${schemaName}.${tableName}`), {
           content: [
@@ -81005,7 +81026,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(relationshipsCache, cacheKey2, csvText, RELATIONSHIPS_CACHE_MAX_SIZE, "table_relationships"), consola.level >= 0 && logger7.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName} - result cached`), {
+        return setInToolCache(relationshipsCache, nsCacheKey, csvText, RELATIONSHIPS_CACHE_MAX_SIZE, "table_relationships"), consola.level >= 0 && logger7.info(`Found ${results.length} relationship(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {
               type: "text",
@@ -81036,7 +81057,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
   },
   async handleGetTableIndexes(args, pool) {
     try {
-      let validatedArgs = GetTableIndexesInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, cachedResult2 = getFromToolCache(indexesCache, cacheKey2, INDEXES_CACHE_TTL_MS);
+      let validatedArgs = GetTableIndexesInputSchema.parse(args), tableName = validatedArgs.table_name, schemaName = validatedArgs.schema_name || "dbo", cacheKey2 = `${schemaName}:${tableName}`, nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cachedResult2 = getFromToolCache(indexesCache, nsCacheKey, INDEXES_CACHE_TTL_MS);
       if (cachedResult2 !== null)
         return consola.level >= 0 && logger7.debug(`Returning cached indexes for: ${schemaName}.${tableName}`), {
           content: [
@@ -81062,7 +81083,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             ]
           };
         let csvText = formatCSV(results);
-        return setInToolCache(indexesCache, cacheKey2, csvText, INDEXES_CACHE_MAX_SIZE, "table_indexes"), consola.level >= 0 && logger7.info(`Found ${results.length} index column(s) for table ${schemaName}.${tableName} - result cached`), {
+        return setInToolCache(indexesCache, nsCacheKey, csvText, INDEXES_CACHE_MAX_SIZE, "table_indexes"), consola.level >= 0 && logger7.info(`Found ${results.length} index column(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {
               type: "text",
@@ -81103,7 +81124,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
             }
           ]
         };
-      let cacheKey2 = getCacheKey(query), now = Date.now();
+      let cacheKey2 = namespaceCacheKey(pool.name, getCacheKey(query)), now = Date.now();
       if (!cleanExpiredEntry(cacheKey2)) {
         let cachedEntry = queryCache.get(cacheKey2);
         if (cachedEntry) {
@@ -81343,12 +81364,17 @@ var ResilientConnectionPool = class {
   retryDelay = 1e3;
   maxRetryDelay = 6e4;
   stopped = !1;
+  connectionName;
   /** Whether the pool is currently connected to the database */
   get isConnected() {
     return this.connected;
   }
-  constructor(config2) {
-    this.localConfig = config2, this.mssqlConfig = buildMssqlConfig(config2);
+  /** The logical connection name this pool serves (registry key, cache prefix). */
+  get name() {
+    return this.connectionName;
+  }
+  constructor(config2, name = "default") {
+    this.connectionName = name, this.localConfig = config2, this.mssqlConfig = buildMssqlConfig(config2);
     let fileLogger = getFileLogger();
     consola.level >= 0 && logger8.info("Connection configured for READ-ONLY access mode (write operations are disabled)"), fileLogger.info("ResilientConnectionPool created (READ-ONLY mode)");
   }
@@ -81445,14 +81471,15 @@ var ResilientConnectionPool = class {
     this.connected = !1, consola.level >= 0 && logger8.info("Connection pool closed");
   }
 };
-function createResilientConnectionPool(config2) {
+function createResilientConnectionPool(config2, name = "default") {
   return getFileLogger().info("createResilientConnectionPool() called", {
+    connection: name,
     server: config2.server,
     database: config2.database,
     port: config2.port,
     windowsAuth: config2.windowsAuth,
     encrypt: config2.encrypt
-  }), new ResilientConnectionPool(config2);
+  }), new ResilientConnectionPool(config2, name);
 }
 __name(createResilientConnectionPool, "createResilientConnectionPool");
 

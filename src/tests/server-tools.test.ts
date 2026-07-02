@@ -34,10 +34,11 @@ const expected = ['list_databases', 'list_schemas', 'list_linked_servers', 'get_
 for (const t of expected) check(`canHandle: ${t}`, MssqlServerTools.canHandle(t), true);
 check('canHandle: unknown returns false', MssqlServerTools.canHandle('foo'), false);
 check('canHandle: list_stored_procedures (object tool) returns false', MssqlServerTools.canHandle('list_stored_procedures'), false);
+check('canHandle: list_connections (registry tool) returns false', MssqlServerTools.canHandle('list_connections'), false);
 
 console.log('\n--- getToolDefinitions ---');
 const defs = MssqlServerTools.getToolDefinitions();
-check('exposes 4 tool definitions', defs.length, 4);
+check('exposes 5 tool definitions', defs.length, 5);
 
 const dbProps = (defs.find((d) => d.name === 'list_databases')!.inputSchema as any).properties || {};
 check('list_databases has include_system property', !!dbProps.include_system, true);
