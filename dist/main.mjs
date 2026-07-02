@@ -80452,7 +80452,7 @@ var logger5 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, reso
 };
 
 // src/MssqlServerTools.ts
-var logger6 = consola.withTag("mssql-server-tools"), DATABASES_CACHE_TTL_MS = parseInt(process.env.MSSQL_DATABASES_CACHE_TTL || "1800000", 10), SCHEMAS_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMAS_CACHE_TTL || "7200000", 10), SCHEMAS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMAS_CACHE_SIZE || "50", 10), LINKED_SERVERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_TTL || "3600000", 10), SERVER_INFO_CACHE_TTL_MS = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_TTL || "300000", 10), databasesCache = /* @__PURE__ */ new Map(), schemasCache = /* @__PURE__ */ new Map(), linkedServersCache = /* @__PURE__ */ new Map(), serverInfoCache = /* @__PURE__ */ new Map();
+var logger6 = consola.withTag("mssql-server-tools"), DATABASES_CACHE_TTL_MS = parseInt(process.env.MSSQL_DATABASES_CACHE_TTL || "1800000", 10), DATABASES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DATABASES_CACHE_SIZE || "16", 10), SCHEMAS_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMAS_CACHE_TTL || "7200000", 10), SCHEMAS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMAS_CACHE_SIZE || "50", 10), LINKED_SERVERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_TTL || "3600000", 10), LINKED_SERVERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_SIZE || "16", 10), SERVER_INFO_CACHE_TTL_MS = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_TTL || "300000", 10), SERVER_INFO_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_SIZE || "16", 10), databasesCache = /* @__PURE__ */ new Map(), schemasCache = /* @__PURE__ */ new Map(), linkedServersCache = /* @__PURE__ */ new Map(), serverInfoCache = /* @__PURE__ */ new Map();
 function cleanExpired3(cache, key, ttlMs) {
   let entry = cache.get(key);
   return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
@@ -80566,7 +80566,7 @@ var MssqlServerTools = {
       if (!results || results.length === 0)
         return plainResponse3("No databases found.");
       let csv = formatCSV(results);
-      return setInCache3(databasesCache, nsCacheKey, csv, 4, "list_databases"), plainResponse3(csv);
+      return setInCache3(databasesCache, nsCacheKey, csv, DATABASES_CACHE_MAX_SIZE, "list_databases"), plainResponse3(csv);
     } catch (error46) {
       return consola.level >= 0 && logger6.error("list_databases error:", error46), errorResponse3("Error listing databases", error46);
     }
@@ -80607,7 +80607,7 @@ var MssqlServerTools = {
       if (!results || results.length === 0)
         return plainResponse3("No linked servers configured on this SQL Server instance.");
       let csv = formatCSV(results);
-      return setInCache3(linkedServersCache, cacheKey2, csv, 1, "list_linked_servers"), plainResponse3(csv);
+      return setInCache3(linkedServersCache, cacheKey2, csv, LINKED_SERVERS_CACHE_MAX_SIZE, "list_linked_servers"), plainResponse3(csv);
     } catch (error46) {
       return consola.level >= 0 && logger6.error("list_linked_servers error:", error46), errorResponse3("Error listing linked servers", error46);
     }
@@ -80642,7 +80642,7 @@ var MssqlServerTools = {
       let csv = formatCSV([merged]), finalText = osInfoError ? `${csv}
 
 ℹ️ ${osInfoError}` : csv;
-      return setInCache3(serverInfoCache, cacheKey2, finalText, 1, "get_server_info"), plainResponse3(finalText);
+      return setInCache3(serverInfoCache, cacheKey2, finalText, SERVER_INFO_CACHE_MAX_SIZE, "get_server_info"), plainResponse3(finalText);
     } catch (error46) {
       return consola.level >= 0 && logger6.error("get_server_info error:", error46), errorResponse3("Error fetching server info", error46);
     }
