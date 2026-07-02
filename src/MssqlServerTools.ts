@@ -16,10 +16,13 @@ interface ToolCacheEntry {
 }
 
 const DATABASES_CACHE_TTL_MS = parseInt(process.env.MSSQL_DATABASES_CACHE_TTL || '1800000', 10);
+const DATABASES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DATABASES_CACHE_SIZE || '16', 10);
 const SCHEMAS_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMAS_CACHE_TTL || '7200000', 10);
 const SCHEMAS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMAS_CACHE_SIZE || '50', 10);
 const LINKED_SERVERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_TTL || '3600000', 10);
+const LINKED_SERVERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_SIZE || '16', 10);
 const SERVER_INFO_CACHE_TTL_MS = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_TTL || '300000', 10);
+const SERVER_INFO_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_SIZE || '16', 10);
 
 const databasesCache = new Map<string, ToolCacheEntry>();
 const schemasCache = new Map<string, ToolCacheEntry>();
@@ -164,7 +167,7 @@ export const MssqlServerTools = {
 				return plainResponse('No databases found.');
 			}
 			const csv = formatCSV(results);
-			setInCache(databasesCache, nsCacheKey, csv, 4, 'list_databases');
+			setInCache(databasesCache, nsCacheKey, csv, DATABASES_CACHE_MAX_SIZE, 'list_databases');
 			return plainResponse(csv);
 		} catch (error) {
 			if (consola.level >= 0) logger.error('list_databases error:', error);
@@ -229,7 +232,7 @@ export const MssqlServerTools = {
 				return plainResponse('No linked servers configured on this SQL Server instance.');
 			}
 			const csv = formatCSV(results);
-			setInCache(linkedServersCache, cacheKey, csv, 1, 'list_linked_servers');
+			setInCache(linkedServersCache, cacheKey, csv, LINKED_SERVERS_CACHE_MAX_SIZE, 'list_linked_servers');
 			return plainResponse(csv);
 		} catch (error) {
 			if (consola.level >= 0) logger.error('list_linked_servers error:', error);
@@ -283,7 +286,7 @@ export const MssqlServerTools = {
 
 			const csv = formatCSV([merged]);
 			const finalText = osInfoError ? `${csv}\n\nℹ️ ${osInfoError}` : csv;
-			setInCache(serverInfoCache, cacheKey, finalText, 1, 'get_server_info');
+			setInCache(serverInfoCache, cacheKey, finalText, SERVER_INFO_CACHE_MAX_SIZE, 'get_server_info');
 			return plainResponse(finalText);
 		} catch (error) {
 			if (consola.level >= 0) logger.error('get_server_info error:', error);
