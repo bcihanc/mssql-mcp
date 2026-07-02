@@ -4,6 +4,7 @@ import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, validateDatabaseName } from './utils/identifier.js';
+import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-object-tools');
 
@@ -135,22 +136,22 @@ export const MssqlObjectTools = {
 			{
 				name: 'list_stored_procedures',
 				description: 'List all stored procedures with schema, name, parameter count, and create/modify dates. Supports cross-database queries via the optional database_name parameter. Filters out system-shipped procedures by default.',
-				inputSchema: z.toJSONSchema(ListProcsInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListProcsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'list_views',
 				description: 'List all views with schema, name, and create/modify dates. Supports cross-database queries via the optional database_name parameter. Filters out system-shipped views by default.',
-				inputSchema: z.toJSONSchema(ListViewsInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListViewsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'list_functions',
 				description: 'List all user-defined functions (scalar, inline TVF, multi-statement TVF, CLR aggregate) with schema, name, type, and create/modify dates. Supports cross-database queries.',
-				inputSchema: z.toJSONSchema(ListFunctionsInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListFunctionsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'list_triggers',
 				description: 'List DML triggers with parent table, name, type (INSTEAD OF / AFTER), enabled state, and the events they fire on (INSERT/UPDATE/DELETE). Optionally filter by parent table_name.',
-				inputSchema: z.toJSONSchema(ListTriggersInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListTriggersInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 		];
 	},

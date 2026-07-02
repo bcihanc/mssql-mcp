@@ -79831,6 +79831,11 @@ function buildCacheKeyPrefix(dbContext) {
 }
 __name(buildCacheKeyPrefix, "buildCacheKeyPrefix");
 
+// src/utils/connectionScope.ts
+var ConnectionScopeSchema = external_exports2.object({
+  connection_name: external_exports2.string().optional().describe("Target connection name. Omit to use the default connection. Use list_connections to see available names.")
+});
+
 // src/MssqlObjectTools.ts
 var logger2 = consola.withTag("mssql-object-tools"), PROCS_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROCS_CACHE_TTL || "7200000", 10), PROCS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROCS_CACHE_SIZE || "100", 10), VIEWS_CACHE_TTL_MS = parseInt(process.env.MSSQL_VIEWS_CACHE_TTL || "7200000", 10), VIEWS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_VIEWS_CACHE_SIZE || "100", 10), FUNCTIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_TTL || "7200000", 10), FUNCTIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_SIZE || "100", 10), TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || "7200000", 10), TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || "100", 10), procsCache = /* @__PURE__ */ new Map(), viewsCache = /* @__PURE__ */ new Map(), functionsCache = /* @__PURE__ */ new Map(), triggersCache = /* @__PURE__ */ new Map();
 function cleanExpired(cache, key, ttlMs) {
@@ -79918,22 +79923,22 @@ var MssqlObjectTools = {
       {
         name: "list_stored_procedures",
         description: "List all stored procedures with schema, name, parameter count, and create/modify dates. Supports cross-database queries via the optional database_name parameter. Filters out system-shipped procedures by default.",
-        inputSchema: external_exports2.toJSONSchema(ListProcsInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListProcsInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "list_views",
         description: "List all views with schema, name, and create/modify dates. Supports cross-database queries via the optional database_name parameter. Filters out system-shipped views by default.",
-        inputSchema: external_exports2.toJSONSchema(ListViewsInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListViewsInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "list_functions",
         description: "List all user-defined functions (scalar, inline TVF, multi-statement TVF, CLR aggregate) with schema, name, type, and create/modify dates. Supports cross-database queries.",
-        inputSchema: external_exports2.toJSONSchema(ListFunctionsInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListFunctionsInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "list_triggers",
         description: "List DML triggers with parent table, name, type (INSTEAD OF / AFTER), enabled state, and the events they fire on (INSERT/UPDATE/DELETE). Optionally filter by parent table_name.",
-        inputSchema: external_exports2.toJSONSchema(ListTriggersInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListTriggersInputSchema.extend(ConnectionScopeSchema.shape))
       }
     ];
   },
@@ -80118,17 +80123,17 @@ var MssqlProfilingTools = {
       {
         name: "profile_column",
         description: "Profile a column with row count, null count, null %, distinct count, min/max, and top 10 most frequent values. WARNING: COUNT(DISTINCT) and aggregate operations may be slow on large tables — use the optional sample_size parameter to profile a random subset (estimates only). Some column types (text/ntext/image, xml, spatial) may produce errors on aggregation; these surface as friendly errors.",
-        inputSchema: external_exports2.toJSONSchema(ProfileColumnInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ProfileColumnInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_table_sample",
         description: "Return a random sample of N rows from a table (default: 10, hard cap: 100). Uses ORDER BY NEWID() rather than TABLESAMPLE for reliable results on small tables. Not cached (each call returns a fresh random sample).",
-        inputSchema: external_exports2.toJSONSchema(TableSampleInputSchema)
+        inputSchema: external_exports2.toJSONSchema(TableSampleInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_table_row_count",
         description: "Get the row count of a table. Default uses fast metadata estimate (sys.partitions / sys.sysindexes — usually <10ms). Set exact=true for SELECT COUNT_BIG(*) which is slower but always accurate. Three-tier fallback: sys.partitions → sys.sysindexes → COUNT_BIG (when partitions return 0 or are not accessible).",
-        inputSchema: external_exports2.toJSONSchema(RowCountInputSchema)
+        inputSchema: external_exports2.toJSONSchema(RowCountInputSchema.extend(ConnectionScopeSchema.shape))
       }
     ];
   },
@@ -80435,22 +80440,22 @@ var MssqlServerTools = {
       {
         name: "list_databases",
         description: "List all databases on the SQL Server with id, name, state, recovery model, collation, create date, and compatibility level. Filters out system databases (master, tempdb, model, msdb) by default; pass include_system=true to include them.",
-        inputSchema: external_exports2.toJSONSchema(ListDatabasesInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListDatabasesInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "list_schemas",
         description: "List all schemas in a database with schema id, name, and owner. Supports cross-database via the optional database_name parameter (default: current database).",
-        inputSchema: external_exports2.toJSONSchema(ListSchemasInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListSchemasInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "list_linked_servers",
         description: "List all linked servers configured on this SQL Server instance (sys.servers). Returns name, product, provider, data source, and remote login/data access flags. Excludes the local server (server_id = 0).",
-        inputSchema: external_exports2.toJSONSchema(ListLinkedServersInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListLinkedServersInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_server_info",
         description: "Get SQL Server instance metadata: edition, product version, collation, machine name, server name, language, clustered/AlwaysOn flags, and full @@VERSION string. Optionally includes CPU count and memory if VIEW SERVER STATE permission is available (gracefully omitted if not).",
-        inputSchema: external_exports2.toJSONSchema(GetServerInfoInputSchema)
+        inputSchema: external_exports2.toJSONSchema(GetServerInfoInputSchema.extend(ConnectionScopeSchema.shape))
       }
     ];
   },
@@ -80646,42 +80651,42 @@ var ExecuteSqlInputSchema = external_exports2.object({
       {
         name: "exec_sql_csv",
         description: "Execute a READ-ONLY SQL query on the SQL Server and return results in CSV format. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are allowed. Write operations (INSERT, UPDATE, DELETE, DROP, etc.) are strictly prohibited.",
-        inputSchema: external_exports2.toJSONSchema(ExecuteSqlInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ExecuteSqlInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_version",
         description: "Get the SQL Server version information",
-        inputSchema: external_exports2.toJSONSchema(GetVersionInputSchema)
+        inputSchema: external_exports2.toJSONSchema(GetVersionInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "list_tables",
         description: "List all tables and views in the database with their schema, type (TABLE/VIEW), row count, and size information. Optionally filter by schema name.",
-        inputSchema: external_exports2.toJSONSchema(ListTablesInputSchema)
+        inputSchema: external_exports2.toJSONSchema(ListTablesInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_table_schema",
         description: "Get detailed schema information for a specific table including column names, data types, nullability, default values, and constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE). Also shows computed columns with their expressions.",
-        inputSchema: external_exports2.toJSONSchema(GetTableSchemaInputSchema)
+        inputSchema: external_exports2.toJSONSchema(GetTableSchemaInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_foreign_keys",
         description: "Get all foreign key relationships in the database with detailed constraint information. Optionally filter by table or schema.",
-        inputSchema: external_exports2.toJSONSchema(GetForeignKeysInputSchema)
+        inputSchema: external_exports2.toJSONSchema(GetForeignKeysInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "search_columns",
         description: "Search for columns by name across all tables in the database. Supports partial matching with LIKE patterns (use % as wildcard).",
-        inputSchema: external_exports2.toJSONSchema(SearchColumnsInputSchema)
+        inputSchema: external_exports2.toJSONSchema(SearchColumnsInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_table_relationships",
         description: "Get all parent and child table relationships for a specific table, showing foreign key connections.",
-        inputSchema: external_exports2.toJSONSchema(GetTableRelationshipsInputSchema)
+        inputSchema: external_exports2.toJSONSchema(GetTableRelationshipsInputSchema.extend(ConnectionScopeSchema.shape))
       },
       {
         name: "get_table_indexes",
         description: "Get all indexes for a specific table including index type, columns, uniqueness, and whether it is a primary key. Essential for performance troubleshooting.",
-        inputSchema: external_exports2.toJSONSchema(GetTableIndexesInputSchema)
+        inputSchema: external_exports2.toJSONSchema(GetTableIndexesInputSchema.extend(ConnectionScopeSchema.shape))
       }
     ];
   },

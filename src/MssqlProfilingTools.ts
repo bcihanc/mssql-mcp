@@ -4,6 +4,7 @@ import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, parseObjectName, validateDatabaseName } from './utils/identifier.js';
+import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-profiling-tools');
 
@@ -148,17 +149,17 @@ export const MssqlProfilingTools = {
 			{
 				name: 'profile_column',
 				description: 'Profile a column with row count, null count, null %, distinct count, min/max, and top 10 most frequent values. WARNING: COUNT(DISTINCT) and aggregate operations may be slow on large tables — use the optional sample_size parameter to profile a random subset (estimates only). Some column types (text/ntext/image, xml, spatial) may produce errors on aggregation; these surface as friendly errors.',
-				inputSchema: z.toJSONSchema(ProfileColumnInputSchema) as any,
+				inputSchema: z.toJSONSchema(ProfileColumnInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_table_sample',
 				description: 'Return a random sample of N rows from a table (default: 10, hard cap: 100). Uses ORDER BY NEWID() rather than TABLESAMPLE for reliable results on small tables. Not cached (each call returns a fresh random sample).',
-				inputSchema: z.toJSONSchema(TableSampleInputSchema) as any,
+				inputSchema: z.toJSONSchema(TableSampleInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_table_row_count',
 				description: 'Get the row count of a table. Default uses fast metadata estimate (sys.partitions / sys.sysindexes — usually <10ms). Set exact=true for SELECT COUNT_BIG(*) which is slower but always accurate. Three-tier fallback: sys.partitions → sys.sysindexes → COUNT_BIG (when partitions return 0 or are not accessible).',
-				inputSchema: z.toJSONSchema(RowCountInputSchema) as any,
+				inputSchema: z.toJSONSchema(RowCountInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 		];
 	},

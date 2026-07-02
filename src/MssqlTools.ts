@@ -5,6 +5,7 @@ import { z } from 'zod/v4';
 import { isReadOnlyQuery } from './server/config';
 import type { ConnectionPool } from './server/connection';
 import { formatCSV } from './utils/csv';
+import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-tools');
 
@@ -205,42 +206,42 @@ export const MssqlTools = {
 			{
 				name: 'exec_sql_csv',
 				description: 'Execute a READ-ONLY SQL query on the SQL Server and return results in CSV format. Only SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, and DESC queries are allowed. Write operations (INSERT, UPDATE, DELETE, DROP, etc.) are strictly prohibited.',
-				inputSchema: z.toJSONSchema(ExecuteSqlInputSchema) as any,
+				inputSchema: z.toJSONSchema(ExecuteSqlInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_version',
 				description: 'Get the SQL Server version information',
-				inputSchema: z.toJSONSchema(GetVersionInputSchema) as any,
+				inputSchema: z.toJSONSchema(GetVersionInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'list_tables',
 				description: 'List all tables and views in the database with their schema, type (TABLE/VIEW), row count, and size information. Optionally filter by schema name.',
-				inputSchema: z.toJSONSchema(ListTablesInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListTablesInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_table_schema',
 				description: 'Get detailed schema information for a specific table including column names, data types, nullability, default values, and constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE). Also shows computed columns with their expressions.',
-				inputSchema: z.toJSONSchema(GetTableSchemaInputSchema) as any,
+				inputSchema: z.toJSONSchema(GetTableSchemaInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_foreign_keys',
 				description: 'Get all foreign key relationships in the database with detailed constraint information. Optionally filter by table or schema.',
-				inputSchema: z.toJSONSchema(GetForeignKeysInputSchema) as any,
+				inputSchema: z.toJSONSchema(GetForeignKeysInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'search_columns',
 				description: 'Search for columns by name across all tables in the database. Supports partial matching with LIKE patterns (use % as wildcard).',
-				inputSchema: z.toJSONSchema(SearchColumnsInputSchema) as any,
+				inputSchema: z.toJSONSchema(SearchColumnsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_table_relationships',
 				description: 'Get all parent and child table relationships for a specific table, showing foreign key connections.',
-				inputSchema: z.toJSONSchema(GetTableRelationshipsInputSchema) as any,
+				inputSchema: z.toJSONSchema(GetTableRelationshipsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_table_indexes',
 				description: 'Get all indexes for a specific table including index type, columns, uniqueness, and whether it is a primary key. Essential for performance troubleshooting.',
-				inputSchema: z.toJSONSchema(GetTableIndexesInputSchema) as any,
+				inputSchema: z.toJSONSchema(GetTableIndexesInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 		];
 	},

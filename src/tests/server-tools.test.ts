@@ -47,10 +47,10 @@ const schemaProps = (defs.find((d) => d.name === 'list_schemas')!.inputSchema as
 check('list_schemas has database_name property (cross-DB)', !!schemaProps.database_name, true);
 
 const lsProps = (defs.find((d) => d.name === 'list_linked_servers')!.inputSchema as any).properties || {};
-check('list_linked_servers has no parameters', Object.keys(lsProps).length, 0);
+check('list_linked_servers has no business parameters (only shared connection_name)', Object.keys(lsProps).sort(), ['connection_name']);
 
 const siProps = (defs.find((d) => d.name === 'get_server_info')!.inputSchema as any).properties || {};
-check('get_server_info has no parameters', Object.keys(siProps).length, 0);
+check('get_server_info has no business parameters (only shared connection_name)', Object.keys(siProps).sort(), ['connection_name']);
 
 console.log('\n--- handler dispatch with stub pool ---');
 const stubPool: any = {

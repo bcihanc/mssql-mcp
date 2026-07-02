@@ -4,6 +4,7 @@ import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, validateDatabaseName } from './utils/identifier.js';
+import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-server-tools');
 
@@ -106,22 +107,22 @@ export const MssqlServerTools = {
 			{
 				name: 'list_databases',
 				description: 'List all databases on the SQL Server with id, name, state, recovery model, collation, create date, and compatibility level. Filters out system databases (master, tempdb, model, msdb) by default; pass include_system=true to include them.',
-				inputSchema: z.toJSONSchema(ListDatabasesInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListDatabasesInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'list_schemas',
 				description: 'List all schemas in a database with schema id, name, and owner. Supports cross-database via the optional database_name parameter (default: current database).',
-				inputSchema: z.toJSONSchema(ListSchemasInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListSchemasInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'list_linked_servers',
 				description: 'List all linked servers configured on this SQL Server instance (sys.servers). Returns name, product, provider, data source, and remote login/data access flags. Excludes the local server (server_id = 0).',
-				inputSchema: z.toJSONSchema(ListLinkedServersInputSchema) as any,
+				inputSchema: z.toJSONSchema(ListLinkedServersInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 			{
 				name: 'get_server_info',
 				description: 'Get SQL Server instance metadata: edition, product version, collation, machine name, server name, language, clustered/AlwaysOn flags, and full @@VERSION string. Optionally includes CPU count and memory if VIEW SERVER STATE permission is available (gracefully omitted if not).',
-				inputSchema: z.toJSONSchema(GetServerInfoInputSchema) as any,
+				inputSchema: z.toJSONSchema(GetServerInfoInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
 		];
 	},
