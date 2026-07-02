@@ -11,6 +11,7 @@ import { MssqlServerTools } from '../MssqlServerTools.js';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
 import { parseConnectionConfigs } from '../server/config.js';
+import { ConnectionRegistry, resolvePoolForCall } from '../server/ConnectionRegistry.js';
 
 let pass = 0;
 let fail = 0;
@@ -170,6 +171,40 @@ checkThrows('entry missing user/password without windowsAuth -> throws', () => p
 	check('windowsAuth -> windowsAuth is true', parsed.connections.get('a')?.windowsAuth, true);
 	check('windowsAuth -> user is undefined', parsed.connections.get('a')?.user, undefined);
 	check('windowsAuth -> password is undefined', parsed.connections.get('a')?.password, undefined);
+}
+
+console.log('\n--- ConnectionRegistry ---');
+{
+	const parsed = parseConnectionConfigs({
+		MSSQL_CONNECTIONS: JSON.stringify({
+			default: 'uretim',
+			connections: {
+				uretim: { server: 'prod', database: 'S', user: 'u', password: 'p' },
+				test: { server: 'test', database: 'S', user: 'v', password: 'p' },
+			},
+		}),
+	} as any);
+	const registry = new ConnectionRegistry(parsed);
+
+	check('get() -> default pool name', registry.get().name, 'uretim');
+	check('get("test") -> named pool', registry.get('test').name, 'test');
+	check('has known', registry.has('test'), true);
+	check('has unknown', registry.has('nope'), false);
+	checkThrows('get unknown -> throws', () => registry.get('nope'));
+
+	const list = registry.list();
+	check('list length', list.length, 2);
+	const uretim = list.find((c) => c.name === 'uretim')!;
+	check('list exposes server', uretim.server, 'prod');
+	check('list exposes user', uretim.user, 'u');
+	check('list marks default', uretim.is_default, true);
+	check('list has no password field', 'password' in (uretim as any), false);
+
+	// resolvePoolForCall
+	check('resolve no arg -> default', resolvePoolForCall(registry, {}).name, 'uretim');
+	check('resolve named', resolvePoolForCall(registry, { connection_name: 'test' }).name, 'test');
+	checkThrows('resolve invalid name -> throws', () => resolvePoolForCall(registry, { connection_name: 'bad name' }));
+	checkThrows('resolve unknown name -> throws', () => resolvePoolForCall(registry, { connection_name: 'nope' }));
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

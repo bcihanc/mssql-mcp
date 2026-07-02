@@ -1,11 +1,12 @@
 import consola from 'consola';
 import sql from 'mssql';
-import { getFileLogger } from '../utils/fileLogger';
-import type { MssqlConfig as LocalMssqlConfig } from './config';
+import { getFileLogger } from '../utils/fileLogger.js';
+import type { MssqlConfig as LocalMssqlConfig } from './config.js';
 
 const logger = consola.withTag('mssql-connection');
 
 export interface ConnectionPool {
+	name: string;
 	query<T = any>(sqlQuery: string): Promise<T[]>;
 	close(): Promise<void>;
 }
@@ -166,13 +167,20 @@ export class ResilientConnectionPool implements ConnectionPool {
 	private retryDelay = 1000;
 	private readonly maxRetryDelay = 60000;
 	private stopped = false;
+	private readonly connectionName: string;
 
 	/** Whether the pool is currently connected to the database */
 	get isConnected(): boolean {
 		return this.connected;
 	}
 
-	constructor(config: LocalMssqlConfig) {
+	/** The logical connection name this pool serves (registry key, cache prefix). */
+	get name(): string {
+		return this.connectionName;
+	}
+
+	constructor(config: LocalMssqlConfig, name: string = 'default') {
+		this.connectionName = name;
 		this.localConfig = config;
 		this.mssqlConfig = buildMssqlConfig(config);
 
@@ -357,16 +365,17 @@ export class ResilientConnectionPool implements ConnectionPool {
  * Create a resilient connection pool that handles connection failures gracefully.
  * The pool will automatically retry connecting in the background with exponential backoff.
  */
-export function createResilientConnectionPool(config: LocalMssqlConfig): ResilientConnectionPool {
+export function createResilientConnectionPool(config: LocalMssqlConfig, name: string = 'default'): ResilientConnectionPool {
 	const fileLogger = getFileLogger();
 	fileLogger.info('createResilientConnectionPool() called', {
+		connection: name,
 		server: config.server,
 		database: config.database,
 		port: config.port,
 		windowsAuth: config.windowsAuth,
 		encrypt: config.encrypt,
 	});
-	return new ResilientConnectionPool(config);
+	return new ResilientConnectionPool(config, name);
 }
 
 /**
@@ -421,6 +430,7 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 	}
 
 	return {
+		name: 'default',
 		async query<T = any>(sqlQuery: string): Promise<T[]> {
 			fileLogger.debug('Executing query', { query: sqlQuery.substring(0, 200) });
 			try {
