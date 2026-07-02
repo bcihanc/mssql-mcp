@@ -297,8 +297,19 @@ export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): Pa
 	}
 
 	// Resolve default
+	// MSSQL_DEFAULT_CONNECTION env override takes precedence over the JSON "default"
+	// key. This lets many projects share ONE connections file (secrets in one place)
+	// while each project selects its own default connection via a non-secret env var.
+	const overrideDefault = env.MSSQL_DEFAULT_CONNECTION;
 	let defaultName: string;
-	if (parsed.default) {
+	if (overrideDefault) {
+		if (!connections.has(overrideDefault)) {
+			throw new Error(
+				`MSSQL_DEFAULT_CONNECTION is "${overrideDefault}", which is not a defined connection. Defined: ${names.join(', ')}.`,
+			);
+		}
+		defaultName = overrideDefault;
+	} else if (parsed.default) {
 		if (!connections.has(parsed.default)) {
 			throw new Error(
 				`MSSQL_CONNECTIONS "default" points to "${parsed.default}", which is not a defined connection. Defined: ${names.join(', ')}.`,

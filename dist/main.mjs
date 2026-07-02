@@ -80368,8 +80368,14 @@ function parseConnectionConfigs(env2 = process.env) {
     });
     connections.set(name, config2);
   }
-  let defaultName;
-  if (parsed.default) {
+  let overrideDefault = env2.MSSQL_DEFAULT_CONNECTION, defaultName;
+  if (overrideDefault) {
+    if (!connections.has(overrideDefault))
+      throw new Error(
+        `MSSQL_DEFAULT_CONNECTION is "${overrideDefault}", which is not a defined connection. Defined: ${names.join(", ")}.`
+      );
+    defaultName = overrideDefault;
+  } else if (parsed.default) {
     if (!connections.has(parsed.default))
       throw new Error(
         `MSSQL_CONNECTIONS "default" points to "${parsed.default}", which is not a defined connection. Defined: ${names.join(", ")}.`

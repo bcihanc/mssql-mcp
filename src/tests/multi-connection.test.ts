@@ -249,5 +249,33 @@ console.log('\n--- list_connections tool ---');
 	check('list_connections excluded from canHandle', MssqlServerTools.canHandle('list_connections'), false);
 }
 
+console.log('\n--- MSSQL_DEFAULT_CONNECTION override ---');
+{
+	const connJson = JSON.stringify({
+		default: 'ayt',
+		connections: {
+			ayt: { server: 'a', database: 'S', user: 'u', password: 'p' },
+			portal: { server: 'b', database: 'S', user: 'u', password: 'p' },
+		},
+	});
+	// Override picks a different connection than the JSON "default"
+	const overridden = parseConnectionConfigs({ MSSQL_CONNECTIONS: connJson, MSSQL_DEFAULT_CONNECTION: 'portal' } as any);
+	check('override wins over JSON default', overridden.defaultName, 'portal');
+	// No override falls back to JSON default
+	const fallback = parseConnectionConfigs({ MSSQL_CONNECTIONS: connJson } as any);
+	check('no override -> JSON default', fallback.defaultName, 'ayt');
+	// Override works even when JSON has no "default" and multiple connections exist
+	const noJsonDefault = JSON.stringify({
+		connections: {
+			ayt: { server: 'a', database: 'S', user: 'u', password: 'p' },
+			crm: { server: 'c', database: 'S', user: 'u', password: 'p' },
+		},
+	});
+	const viaOverride = parseConnectionConfigs({ MSSQL_CONNECTIONS: noJsonDefault, MSSQL_DEFAULT_CONNECTION: 'crm' } as any);
+	check('override supplies default when JSON has none', viaOverride.defaultName, 'crm');
+	// Override naming a missing connection throws
+	checkThrows('override to unknown connection throws', () => parseConnectionConfigs({ MSSQL_CONNECTIONS: connJson, MSSQL_DEFAULT_CONNECTION: 'nope' } as any));
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);
