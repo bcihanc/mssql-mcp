@@ -152,6 +152,28 @@ Add to your `claude_desktop_config.json`:
 - **Debug logs**: Automatically enabled! Check `logs/mssql-mcp-*.log` files
 - For more details, see [CLAUDE.md](CLAUDE.md#windows-support) and [Debug Logging](CLAUDE.md#debug-logging)
 
+### Multi-Connection Setup (Optional)
+
+Need to query more than one SQL Server (e.g. production and test)? Instead of `.env` vars, set a single `MSSQL_CONNECTIONS` JSON env var directly in the `env` block of your MCP config:
+
+```json
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "node",
+      "args": ["/path/to/mssql-mcp/dist/main.mjs", "--stdio"],
+      "env": {
+        "MSSQL_CONNECTIONS": "{\"default\":\"uretim\",\"connections\":{\"uretim\":{\"server\":\"prod-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"},\"test\":{\"server\":\"test-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"}}}"
+      }
+    }
+  }
+}
+```
+
+Every tool accepts an optional `connection_name` parameter to target a specific connection (omit it to use `default`). Call `list_connections` to see the configured names, servers, and databases (passwords are never returned).
+
+**Backward compatible**: if `MSSQL_CONNECTIONS` is not set, the server falls back to the classic single-connection `MSSQL_SERVER`/`MSSQL_DATABASE`/`MSSQL_USER`/`MSSQL_PASSWORD` env vars described above, exposed as a connection named `default` — no changes needed for existing setups. When `MSSQL_CONNECTIONS` **is** set, the legacy vars are ignored.
+
 ### 3. Restart Claude Desktop
 
 Your SQL Server database is now available to Claude! 🎉

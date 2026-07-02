@@ -364,11 +364,12 @@ These optimizations provide:
 
 2b. **Server Tools Layer** ([src/MssqlServerTools.ts](src/MssqlServerTools.ts))
    - Server- and database-level metadata tools, all read-only
-   - Four tools:
+   - Five tools:
      - `list_databases`: lists databases on the server with state, recovery model, collation, compatibility level. Filters out system DBs (`database_id <= 4`) by default; `include_system=true` includes master/tempdb/model/msdb
      - `list_schemas`: lists schemas in a database (with owner). Cross-DB via optional `database_name`
      - `list_linked_servers`: queries `master.sys.servers WHERE server_id != 0` — gracefully reports if user lacks SELECT on master
      - `get_server_info`: two-layer query — always-available SERVERPROPERTY data (edition, version, collation, machine name, AlwaysOn flag, etc.) plus optional `sys.dm_os_sys_info` (CPU/memory/uptime). The DMV requires `VIEW SERVER STATE`; when missing, the tool gracefully omits those fields with an informational note rather than failing
+     - `list_connections`: lists all configured connections from `MSSQL_CONNECTIONS` (or the single legacy `default` connection) — returns name, server, database, user, and `is_default` for each; passwords are never exposed. Use the returned `name` as `connection_name` on any tool to target that connection
    - Caches: short TTLs for server-level state that may change (5 min for server_info, 30 min for databases, 1h for linked_servers); 2h for schemas
 
 2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
@@ -569,6 +570,23 @@ Object Tools Caching (programmable-object metadata):
 - `MSSQL_TRIGGERS_CACHE_TTL` / `MSSQL_TRIGGERS_CACHE_SIZE`: list_triggers (defaults: 2h / 100)
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
+
+### Multi-Connection Support
+
+The server supports multiple named connections via a single `MSSQL_CONNECTIONS` env var (JSON), set directly in `.mcp.json`:
+
+```json
+"env": {
+  "MSSQL_CONNECTIONS": "{\"default\":\"uretim\",\"connections\":{\"uretim\":{\"server\":\"prod-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"},\"test\":{\"server\":\"test-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"}}}"
+}
+```
+
+- **Backward compatible**: if `MSSQL_CONNECTIONS` is absent, the legacy `MSSQL_SERVER`/`MSSQL_USER`/... vars define a single connection named `default`. When `MSSQL_CONNECTIONS` IS present, the legacy vars are ignored.
+- **Default resolution**: single connection → auto-default; multiple connections require an explicit `default`; a `default` pointing to a missing name is a config error.
+- **Connection selection**: every tool accepts an optional `connection_name` parameter (omit → default). Use `list_connections` to discover names (never exposes passwords).
+- **Cache isolation**: all tool caches are namespaced by connection name — results never bleed across connections.
+- **Lazy connections**: each pool connects on first use (VPN-friendly).
+- **Resources** (`mssql://{table}/data`) operate on the **default connection only**; use tools with `connection_name` for other connections.
 
 ### Transport Modes
 
