@@ -30,7 +30,7 @@ Removes the `dist` directory (cross-platform compatible).
 
 ### Testing
 ```bash
-npm test                         # Run all 7 test suites sequentially
+npm test                         # Run all 9 test suites sequentially
 npm run test:errors              # Error-detection / read-only enforcement tests
 npm run test:identifiers         # Identifier validation + pagination tests
 npm run test:object-tools        # Object listing tools tests
@@ -38,6 +38,8 @@ npm run test:server-tools        # Server/database metadata tools tests
 npm run test:profiling-tools     # Profiling & sampling tools tests
 npm run test:multi-connection    # Multi-connection config parsing + resolution tests
 npm run test:schema-description  # get_table_schema MS_Description tests
+npm run test:operations          # Timeout, token efficiency, clear_cache, resources multi-connection tests
+npm run test:performance-tools   # Performance tools (missing indexes, query plan, top queries) tests
 ```
 Tests run directly via the ts-node ESM loader (no test framework) — each file is a standalone script under `src/tests/`.
 
@@ -338,7 +340,7 @@ These optimizations provide:
 2. **Tools Layer** ([src/MssqlTools.ts](src/MssqlTools.ts))
    - Implements MCP tool definitions and handlers for table-level metadata + raw SQL execution
    - Provides eight original tools:
-     - `exec_sql_csv`: Execute READ-ONLY SQL queries with CSV output
+     - `exec_sql_csv`: Execute READ-ONLY SQL queries with CSV output. Optional `timeout_seconds` (1-300 s; default `MSSQL_REQUEST_TIMEOUT` 30 s, enforced by a cancel-timer — driver `requestTimeout` is only a 300 s backstop) and `max_rows` (post-fetch row cap, token saver — pair with `TOP` in the SQL to also cut database work) params. Long cell values are truncated per `MSSQL_MAX_CELL_CHARS` (default 1000 chars, 0=off; marker `...[truncated N chars]`) — this truncation also applies to `get_table_sample`. The result cache key now includes `max_rows` and the cell-truncation setting so different combinations never collide
      - `get_version`: Retrieve SQL Server version
      - `list_tables`: List all tables and views with schema, type, row count, and size info
      - `get_table_schema`: Get detailed schema for a specific table (columns, types, constraints including UNIQUE, computed columns, MS_Description descriptions)
@@ -364,14 +366,22 @@ These optimizations provide:
    - `column_name` is validated separately (single-part regex `^[a-zA-Z0-9_]+$`) — bracketed for safe interpolation
    - Caches: 30 min for column profiles (data may change), 15 min for row counts (lightweight, but stays current); `get_table_sample` is never cached (random by definition)
 
+2d. **Performance Tools Layer** ([src/MssqlPerformanceTools.ts](src/MssqlPerformanceTools.ts))
+   - Performance-diagnostic tools, all read-only
+   - Three tools:
+     - `get_missing_indexes`: missing-index suggestions from `sys.dm_db_missing_index_*` DMVs (TOP 25 by improvement measure). Optional `database_name`/`table_name` filters — table filtering matches the DMV `statement` column with an escaped LIKE suffix (never `OBJECT_ID`, which silently NULLs on dotted DB names). Requires `VIEW SERVER STATE`; degrades to a friendly GRANT hint. Cached 5 min (`MSSQL_MISSING_INDEXES_CACHE_TTL`/`_SIZE`)
+     - `get_query_plan`: ESTIMATED execution plan (`SET SHOWPLAN_XML ON`) — the query is validated by `isReadOnlyQuery()` first and NEVER executed. Runs on a dedicated ephemeral connection (`createEphemeralConnection` on `ResilientConnectionPool`, pool max 1, closed in `finally`) so SHOWPLAN state can never poison the shared pool. `database_name` opens the ephemeral connection directly in that DB. Requires `SHOWPLAN` permission; friendly diagnostic when missing. Plans capped at 100,000 chars. Not cached
+     - `get_top_queries`: heaviest queries from the plan cache (`sys.dm_exec_query_stats` + `dm_exec_sql_text`): execution count, total/avg elapsed ms, CPU ms, logical reads. `sort_by` enum → SQL expression via a lookup map (never raw interpolation); `top` 1-50. Requires `VIEW SERVER STATE`. Not cached (live diagnostic)
+
 2b. **Server Tools Layer** ([src/MssqlServerTools.ts](src/MssqlServerTools.ts))
    - Server- and database-level metadata tools, all read-only
-   - Five tools:
+   - Six tools:
      - `list_databases`: lists databases on the server with state, recovery model, collation, compatibility level. Filters out system DBs (`database_id <= 4`) by default; `include_system=true` includes master/tempdb/model/msdb
      - `list_schemas`: lists schemas in a database (with owner). Cross-DB via optional `database_name`
      - `list_linked_servers`: queries `master.sys.servers WHERE server_id != 0` — gracefully reports if user lacks SELECT on master
      - `get_server_info`: two-layer query — always-available SERVERPROPERTY data (edition, version, collation, machine name, AlwaysOn flag, etc.) plus optional `sys.dm_os_sys_info` (CPU/memory/uptime). The DMV requires `VIEW SERVER STATE`; when missing, the tool gracefully omits those fields with an informational note rather than failing
      - `list_connections`: lists all configured connections from `MSSQL_CONNECTIONS` (or the single legacy `default` connection) — returns name, server, database, user, and `is_default` for each; passwords are never exposed. Use the returned `name` as `connection_name` on any tool to target that connection
+     - `clear_cache`: clears every layer's caches via each provider's exported `clearCaches(connectionName?)` — table tools, object tools, server tools, profiling tools, performance tools, and resources. Optional `connection_name` limits clearing to one connection's entries; omitted clears all. Executes no SQL — pure in-memory cache eviction
    - Caches: short TTLs for server-level state that may change (5 min for server_info, 30 min for databases, 1h for linked_servers); 2h for schemas
 
 2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
@@ -390,10 +400,10 @@ These optimizations provide:
 
 3. **Resources Layer** ([src/MssqlResources.ts](src/MssqlResources.ts))
    - Exposes database tables as MCP resources
-   - URI format: `mssql://{tableName}/data`
-   - Automatically discovers tables via INFORMATION_SCHEMA
+   - URI format: single connection → legacy `mssql://{tableName}/data` (unchanged); multiple connections → `mssql://{connection}/{tableName}/data`. Resource reads accept both forms regardless of how many connections are configured
+   - Automatically discovers tables via INFORMATION_SCHEMA, once per configured connection
    - Returns top N rows per table in CSV format (N controlled by `MSSQL_RESOURCE_LIMIT`, default 100; pagination warning appended when limit reached)
-   - 5-minute TTL cache on the resource list; falls back to stale cache on listing errors to keep the MCP client usable
+   - 5-minute TTL cache on the resource list, keyed per connection; falls back to that connection's stale cache on listing errors (per-connection error isolation — one connection's failure doesn't blank out the others) to keep the MCP client usable
 
 4. **Connection Management** ([src/server/connection.ts](src/server/connection.ts))
    - Provides `ResilientConnectionPool` — a self-healing pool that keeps the MCP server responsive even when the database is unavailable
@@ -450,7 +460,7 @@ These optimizations provide:
    - If `configError` is set (invalid env vars), return a tool error explaining the misconfiguration
    - If `pool` is not yet initialized or disconnected, return a friendly "database unavailable — server will auto-reconnect" message instead of crashing
 3. **Request Routing**:
-   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all four providers' `getToolDefinitions()`
+   - Tool requests are dispatched by name in this order: `MssqlObjectTools.canHandle(name)` → `MssqlServerTools.canHandle(name)` → `MssqlProfilingTools.canHandle(name)` → `MssqlPerformanceTools.canHandle(name)` → fallback to `MssqlTools.handleTool()`. The combined tool list is exposed via `ListToolsRequestSchema` by concatenating all five providers' `getToolDefinitions()`
    - Resource list → MssqlResources.getResourceDefinitions()
    - Resource read → MssqlResources.handleResource()
 4. **Query Execution** (READ-ONLY enforced at multiple layers):
@@ -532,6 +542,8 @@ Performance Tuning (Optional):
 - `MSSQL_MAX_ROWS`: Maximum rows returned per query (default: 10,000) - results truncated with warning if exceeded
 - `MSSQL_WARN_ROWS`: Warning threshold for large results (default: 5,000) - warning shown but not truncated
 - `MSSQL_RESOURCE_LIMIT`: Rows returned for resource browsing (default: 100)
+- `MSSQL_REQUEST_TIMEOUT`: Default query timeout in milliseconds (default: 30,000 = 30 s). Per-call override via `exec_sql_csv`'s `timeout_seconds` param (1-300 s); enforced by a cancel-timer — the driver's own `requestTimeout` is only a `max(300000, cfg)` backstop
+- `MSSQL_MAX_CELL_CHARS`: Max characters per CSV cell before truncation (default: 1000; `0` disables). Applies to `exec_sql_csv` and `get_table_sample` only; truncated cells get a `...[truncated N chars]` marker
 
 Query Result Caching (exec_sql_csv):
 - `MSSQL_CACHE_TTL`: Query result cache duration in milliseconds (default: 60,000 = 60 seconds)
@@ -577,6 +589,10 @@ Object Tools Caching (programmable-object metadata):
 - `MSSQL_SEARCH_CACHE_TTL` / `MSSQL_SEARCH_CACHE_SIZE`: search_object_definitions (defaults: 30 min / 100)
 - `MSSQL_DEPS_CACHE_TTL` / `MSSQL_DEPS_CACHE_SIZE`: get_object_dependencies (defaults: 2h / 100)
 
+Performance Tools Caching (query-diagnostic metadata):
+- `MSSQL_MISSING_INDEXES_CACHE_TTL` / `MSSQL_MISSING_INDEXES_CACHE_SIZE`: get_missing_indexes (defaults: 300,000 = 5 min / 50)
+- `get_query_plan` and `get_top_queries` are intentionally not cached (live diagnostic data)
+
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 
 ### Multi-Connection Support
@@ -599,7 +615,7 @@ The server resolves connections from **three sources, in priority order** (all s
 }
 ```
 
-- Field suffixes: `SERVER`, `DATABASE`, `USER`, `PASSWORD`, plus optional `PORT`, `ENCRYPT`, `WINDOWS_AUTH`. `PORT` is parsed as a number; `ENCRYPT`/`WINDOWS_AUTH` accept the string `"true"`.
+- Field suffixes: `SERVER`, `DATABASE`, `USER`, `PASSWORD`, plus optional `PORT`, `ENCRYPT`, `WINDOWS_AUTH`, `REQUEST_TIMEOUT`. `PORT` and `REQUEST_TIMEOUT` are parsed as numbers; `ENCRYPT`/`WINDOWS_AUTH` accept the string `"true"`. A connection's `REQUEST_TIMEOUT` overrides the global `MSSQL_REQUEST_TIMEOUT` default for that connection only.
 - The field is matched from the RIGHT against the known suffix set, so connection names containing hyphens or underscores (e.g. `aytemiz-com-tr`) parse unambiguously. `WINDOWS_AUTH` (two tokens) is matched before shorter suffixes.
 - Default is selected via `MSSQL_DEFAULT_CONNECTION` (or auto when a single connection is defined). A `MSSQL_CONN_*` key with no recognized field suffix is a config error (fail-loud on typos).
 
@@ -618,7 +634,7 @@ The server resolves connections from **three sources, in priority order** (all s
 - **Connection selection**: every tool accepts an optional `connection_name` parameter (omit → default). Use `list_connections` to discover names (never exposes passwords).
 - **Cache isolation**: all tool caches are namespaced by connection name — results never bleed across connections.
 - **Lazy connections**: each pool connects on first use (VPN-friendly).
-- **Resources** (`mssql://{table}/data`) operate on the **default connection only**; use tools with `connection_name` for other connections.
+- **Resources**: with a single connection, URIs stay `mssql://{table}/data` (legacy, unchanged). With multiple connections, resources are listed for every configured connection as `mssql://{connection}/{table}/data`; reads accept either URI form. Each connection's resource list is cached and error-isolated independently.
 
 ### Transport Modes
 

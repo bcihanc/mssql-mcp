@@ -226,6 +226,12 @@ MSSQL_ENCRYPT=true               # Force encryption (default: false, auto-enable
 MSSQL_MAX_ROWS=10000             # Max rows per query (default: 10,000) - truncates with warning
 MSSQL_WARN_ROWS=5000             # Warning threshold (default: 5,000) - warns but doesn't truncate
 MSSQL_RESOURCE_LIMIT=100         # Rows for resource browsing (default: 100)
+MSSQL_REQUEST_TIMEOUT=30000      # Default query timeout in ms (default: 30,000 = 30s); override per-call with exec_sql_csv's timeout_seconds (1-300s)
+MSSQL_MAX_CELL_CHARS=1000        # Max chars per CSV cell before truncation (default: 1000, 0=off); applies to exec_sql_csv and get_table_sample
+
+# Performance Tools Caching
+MSSQL_MISSING_INDEXES_CACHE_TTL=300000  # get_missing_indexes cache TTL (default: 300,000 = 5 min)
+MSSQL_MISSING_INDEXES_CACHE_SIZE=50     # Max cached queries (default: 50)
 
 # Query Result Caching (exec_sql_csv)
 MSSQL_CACHE_TTL=60000            # Query cache duration in ms (default: 60,000 = 60s)
@@ -263,6 +269,9 @@ When connected, Claude can use these capabilities:
 - **`exec_sql_csv`**: Execute **READ-ONLY** SQL queries and get results in CSV format
   - ✅ Allowed: SELECT, WITH, SHOW, DESCRIBE, EXPLAIN, DESC
   - ❌ Blocked: INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, EXEC, GRANT, REVOKE, and all other write operations
+  - Optional `timeout_seconds` (1-300): per-call query timeout override; defaults to `MSSQL_REQUEST_TIMEOUT` (30s)
+  - Optional `max_rows`: caps the number of rows returned after fetch, to save tokens on large result sets
+  - Long cell values are truncated per `MSSQL_MAX_CELL_CHARS` (default 1000 chars) with a `...[truncated N chars]` marker
 - **`get_version`**: Get SQL Server version information
 
 ### 📂 Database Discovery & Schema
@@ -322,6 +331,13 @@ When connected, Claude can use these capabilities:
   - `direction`: `uses` (objects it references), `used_by` (objects that reference it), or `both` (default)
   - `used_by` falls back to name-based matching for references SQL Server can't resolve automatically
   - Dynamic SQL references are not captured (use `search_object_definitions` instead); encrypted objects have no recorded dependencies
+
+### ⚡ Performance & Operations Tools
+
+- **`get_missing_indexes`**: Get missing-index suggestions from SQL Server's own DMVs (table, columns, estimated impact, TOP 25 by improvement measure). Optional `database_name`/`table_name` filters. Requires `VIEW SERVER STATE`
+- **`get_query_plan`**: Get the ESTIMATED execution plan (SHOWPLAN XML) for a SELECT query WITHOUT executing it, on a dedicated one-off connection. Requires `SHOWPLAN` permission
+- **`get_top_queries`**: List the heaviest queries from the server's plan cache — execution count, total/avg elapsed ms, CPU ms, logical reads. Sortable via `sort_by`. Requires `VIEW SERVER STATE`
+- **`clear_cache`**: Clear all server-side metadata/result caches across every tool layer (useful after a schema change). Optional `connection_name` to scope to one connection. Executes no SQL
 
 ### 📂 Database Resources
 
