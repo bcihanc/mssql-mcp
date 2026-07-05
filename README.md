@@ -244,6 +244,12 @@ MSSQL_COLUMNS_CACHE_TTL=7200000  # search_columns cache TTL (default: 7,200,000 
 MSSQL_COLUMNS_CACHE_SIZE=100     # Max cached column searches (default: 100)
 MSSQL_INDEXES_CACHE_TTL=14400000 # get_table_indexes cache TTL (default: 14,400,000 = 4 hours)
 MSSQL_INDEXES_CACHE_SIZE=200     # Max cached index queries (default: 200)
+
+# Object Tools Caching (programmable-object metadata)
+MSSQL_SEARCH_CACHE_TTL=1800000   # search_object_definitions cache TTL (default: 1,800,000 = 30 min)
+MSSQL_SEARCH_CACHE_SIZE=100      # Max cached search queries (default: 100)
+MSSQL_DEPS_CACHE_TTL=7200000     # get_object_dependencies cache TTL (default: 7,200,000 = 2 hours)
+MSSQL_DEPS_CACHE_SIZE=100        # Max cached dependency queries (default: 100)
 ```
 
 **Note**: `MSSQL_ACCESS_MODE` has been removed. This server is **always READ-ONLY** for security.
@@ -270,6 +276,7 @@ When connected, Claude can use these capabilities:
   - Returns: Column names, data types, max length, nullability, default values
   - Constraint information: PRIMARY KEY, FOREIGN KEY, UNIQUE constraints
   - Computed column detection with expression definitions
+  - Column and table descriptions from `MS_Description` extended properties (when present), shown in a `[Description]` column plus a `Table description:` line
   - Supports schema specification (default: "dbo")
 
 - **`get_table_indexes`**: Get all indexes for a specific table (NEW - Essential for performance troubleshooting)
@@ -304,6 +311,17 @@ When connected, Claude can use these capabilities:
   - Line-based pagination via `offset_lines` / `max_lines` (default 200 lines, hard cap 1000)
   - Cross-database via `database_name`
   - NULL-safe diagnostics: reports clearly when the object is not found, when it is not a code module, when the login lacks `VIEW DEFINITION` permission, or when the object is encrypted (`WITH ENCRYPTION`)
+
+- **`search_object_definitions`**: Search for literal text inside stored procedure / view / function / trigger source code
+  - Case-insensitive, literal match (LIKE wildcards in `search_text` are escaped, so `%`/`_` are searched as plain characters)
+  - Optional `object_type` (procedure/view/function/trigger) and `schema_name` filters
+  - Capped at 100 results with a note to narrow the search; objects without `VIEW DEFINITION` or that are encrypted are silently unsearchable
+  - Pairs with `get_object_definition` for a "find it, then read it" workflow
+
+- **`get_object_dependencies`**: Get the direct (1-level) dependencies of a stored procedure, view, function, or trigger
+  - `direction`: `uses` (objects it references), `used_by` (objects that reference it), or `both` (default)
+  - `used_by` falls back to name-based matching for references SQL Server can't resolve automatically
+  - Dynamic SQL references are not captured (use `search_object_definitions` instead); encrypted objects have no recorded dependencies
 
 ### 📂 Database Resources
 

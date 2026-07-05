@@ -79886,7 +79886,7 @@ var ConnectionScopeSchema = external_exports2.object({
 });
 
 // src/MssqlObjectTools.ts
-var logger2 = consola.withTag("mssql-object-tools"), PROCS_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROCS_CACHE_TTL || "7200000", 10), PROCS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROCS_CACHE_SIZE || "100", 10), VIEWS_CACHE_TTL_MS = parseInt(process.env.MSSQL_VIEWS_CACHE_TTL || "7200000", 10), VIEWS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_VIEWS_CACHE_SIZE || "100", 10), FUNCTIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_TTL || "7200000", 10), FUNCTIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_SIZE || "100", 10), TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || "7200000", 10), TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || "100", 10), DEFINITIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_TTL || "7200000", 10), DEFINITIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_SIZE || "100", 10), procsCache = /* @__PURE__ */ new Map(), viewsCache = /* @__PURE__ */ new Map(), functionsCache = /* @__PURE__ */ new Map(), triggersCache = /* @__PURE__ */ new Map(), definitionsCache = /* @__PURE__ */ new Map();
+var logger2 = consola.withTag("mssql-object-tools"), PROCS_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROCS_CACHE_TTL || "7200000", 10), PROCS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROCS_CACHE_SIZE || "100", 10), VIEWS_CACHE_TTL_MS = parseInt(process.env.MSSQL_VIEWS_CACHE_TTL || "7200000", 10), VIEWS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_VIEWS_CACHE_SIZE || "100", 10), FUNCTIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_TTL || "7200000", 10), FUNCTIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_SIZE || "100", 10), TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || "7200000", 10), TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || "100", 10), DEFINITIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_TTL || "7200000", 10), DEFINITIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_SIZE || "100", 10), SEARCH_CACHE_TTL_MS = parseInt(process.env.MSSQL_SEARCH_CACHE_TTL || "1800000", 10), SEARCH_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SEARCH_CACHE_SIZE || "100", 10), DEPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEPS_CACHE_TTL || "7200000", 10), DEPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEPS_CACHE_SIZE || "100", 10), procsCache = /* @__PURE__ */ new Map(), viewsCache = /* @__PURE__ */ new Map(), functionsCache = /* @__PURE__ */ new Map(), triggersCache = /* @__PURE__ */ new Map(), definitionsCache = /* @__PURE__ */ new Map(), searchCache = /* @__PURE__ */ new Map(), depsCache = /* @__PURE__ */ new Map();
 function cleanExpired(cache, key, ttlMs) {
   let entry = cache.get(key);
   return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
@@ -79926,12 +79926,21 @@ var DatabaseScopeSchema = external_exports2.object({
   object_name: external_exports2.string().describe('Object name as "schema.name" or just "name" (schema defaults to dbo). e.g. "dbo.GetUsers"'),
   offset_lines: external_exports2.number().int().optional().describe("Line offset for pagination (default 0)"),
   max_lines: external_exports2.number().int().optional().describe("Max lines to return (default 200, hard cap 1000)")
+}), SearchObjectDefinitionsInputSchema = DatabaseScopeSchema.extend({
+  search_text: external_exports2.string().min(1).describe("Plain text to search for inside object definitions (case-insensitive). LIKE wildcards are escaped — the text is matched literally."),
+  object_type: external_exports2.enum(["procedure", "view", "function", "trigger"]).optional().describe("Optional object type filter. If omitted, all module types are searched."),
+  schema_name: external_exports2.string().optional().describe('Optional schema name filter (e.g. "dbo")')
+}), GetObjectDependenciesInputSchema = DatabaseScopeSchema.extend({
+  object_name: external_exports2.string().describe('Object name as "schema.name" or just "name" (schema defaults to dbo). e.g. "dbo.GetUsers"'),
+  direction: external_exports2.enum(["uses", "used_by", "both"]).optional().describe("Dependency direction: what this object uses, what uses this object, or both (default: both)")
 }), TOOL_NAMES = /* @__PURE__ */ new Set([
   "list_stored_procedures",
   "list_views",
   "list_functions",
   "list_triggers",
-  "get_object_definition"
+  "get_object_definition",
+  "search_object_definitions",
+  "get_object_dependencies"
 ]);
 function resolveDbScope(databaseName) {
   if (databaseName) {
@@ -79953,6 +79962,16 @@ function escapeLiteral(s2) {
   return s2.replace(/'/g, "''");
 }
 __name(escapeLiteral, "escapeLiteral");
+function escapeLikePattern(s2) {
+  return s2.replace(/\\/g, "\\\\").replace(/[%_\[]/g, (c3) => `\\${c3}`);
+}
+__name(escapeLikePattern, "escapeLikePattern");
+var OBJECT_TYPE_FILTERS = {
+  procedure: "o.type IN ('P')",
+  view: "o.type IN ('V')",
+  function: "o.type IN ('FN','IF','TF','AF','FS','FT')",
+  trigger: "o.type IN ('TR')"
+}, SEARCH_SCOPE_NOTE = "ℹ️ Objects whose definition is hidden (missing VIEW DEFINITION permission) or encrypted (WITH ENCRYPTION) cannot be searched.", DEPS_LIMITS_NOTE = "ℹ️ Direct (1-level) dependencies only. Dynamic SQL references (EXEC('...')) are not recorded in the catalog — use search_object_definitions to find those. Encrypted (WITH ENCRYPTION) objects have no recorded dependencies.";
 function plainResponse(text) {
   return { content: [{ type: "text", text }] };
 }
@@ -79998,6 +80017,16 @@ var MssqlObjectTools = {
         name: "get_object_definition",
         description: "Get the full SQL definition (source code) of a stored procedure, view, function, or trigger. Returns NULL-safe diagnostics when the definition is inaccessible (missing VIEW DEFINITION permission), encrypted (WITH ENCRYPTION), or the object is not a code module. Supports cross-database via database_name and line-based pagination.",
         inputSchema: external_exports2.toJSONSchema(GetObjectDefinitionInputSchema.extend(ConnectionScopeSchema.shape))
+      },
+      {
+        name: "search_object_definitions",
+        description: "Search for a literal text string inside all stored procedure, view, function, and trigger definitions (case-insensitive). Returns matching objects with match counts — use get_object_definition to read a matching object's body. Supports cross-database via database_name.",
+        inputSchema: external_exports2.toJSONSchema(SearchObjectDefinitionsInputSchema.extend(ConnectionScopeSchema.shape))
+      },
+      {
+        name: "get_object_dependencies",
+        description: "List the direct dependencies of a stored procedure, view, function, or trigger: what it uses and/or what uses it (direction: uses | used_by | both). Based on sys.sql_expression_dependencies; dynamic SQL references are not captured. Supports cross-database via database_name.",
+        inputSchema: external_exports2.toJSONSchema(GetObjectDependenciesInputSchema.extend(ConnectionScopeSchema.shape))
       }
     ];
   },
@@ -80013,6 +80042,10 @@ var MssqlObjectTools = {
         return this.handleListTriggers(args, pool);
       case "get_object_definition":
         return this.handleGetObjectDefinition(args, pool);
+      case "search_object_definitions":
+        return this.handleSearchObjectDefinitions(args, pool);
+      case "get_object_dependencies":
+        return this.handleGetObjectDependencies(args, pool);
     }
     throw new Error(`Unknown tool: ${name}`);
   },
@@ -80116,8 +80149,67 @@ var MssqlObjectTools = {
       return consola.level >= 0 && logger2.error("get_object_definition error:", error46), errorResponse("Error getting object definition", error46);
     }
   },
+  async handleSearchObjectDefinitions(args, pool) {
+    try {
+      let v2 = SearchObjectDefinitionsInputSchema.parse(args), term = v2.search_text.trim();
+      if (!term)
+        return plainResponse("search_text cannot be empty or whitespace-only.");
+      let scope = resolveDbScope(v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${term}:${v2.object_type || "_all_"}:${v2.schema_name || "_all_"}`), cached2 = getFromCache(searchCache, cacheKey2, SEARCH_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse(cached2);
+      let lit = escapeLiteral(term), likeLit = escapeLiteral(escapeLikePattern(term)), filters = [];
+      v2.object_type && filters.push(OBJECT_TYPE_FILTERS[v2.object_type]), v2.schema_name && filters.push(`s.name = '${escapeLiteral(v2.schema_name)}'`);
+      let extraWhere = filters.length ? ` AND ${filters.join(" AND ")}` : "", query = `SELECT TOP 100 s.name AS schema_name, o.name AS object_name, o.type_desc AS object_type, (LEN(m.definition) - LEN(REPLACE(LOWER(m.definition), LOWER('${lit}'), ''))) / LEN('${lit}') AS match_count, o.modify_date FROM ${scope.dbPrefix}sys.sql_modules m INNER JOIN ${scope.dbPrefix}sys.objects o ON m.object_id = o.object_id INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE LOWER(m.definition) LIKE LOWER('%${likeLit}%') ESCAPE '\\'${extraWhere} ORDER BY match_count DESC, schema_name, object_name`;
+      consola.level >= 0 && logger2.info(`Searching object definitions for "${term}" in ${v2.database_name || "current DB"}`);
+      let results = await pool.query(query);
+      if (!results || results.length === 0)
+        return plainResponse(`No objects found containing '${term}'.
+
+${SEARCH_SCOPE_NOTE}`);
+      let text = formatCSV(results);
+      return results.length === 100 && (text += `
+
+⚠️ Result limited to 100 objects — narrow the search (object_type / schema_name / database_name) to see the rest.`), text += `
+
+${SEARCH_SCOPE_NOTE}`, setInCache(searchCache, cacheKey2, text, SEARCH_CACHE_MAX_SIZE, "search_object_definitions"), plainResponse(text);
+    } catch (error46) {
+      return consola.level >= 0 && logger2.error("search_object_definitions error:", error46), errorResponse("Error searching object definitions", error46);
+    }
+  },
+  async handleGetObjectDependencies(args, pool) {
+    try {
+      let v2 = GetObjectDependenciesInputSchema.parse(args), parts = parseObjectName(v2.object_name);
+      if (parts.database)
+        return plainResponse(`Invalid object_name: "${v2.object_name}" has 3 parts (database.schema.object). Use the database_name parameter for cross-database access and pass object_name as "schema.name" or "name".`);
+      let schema = parts.schema || "dbo", object2 = parts.object, direction = v2.direction || "both", scope = resolveDbScope(v2.database_name), dbSuffix = v2.database_name ? ` in database ${v2.database_name}` : "", cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${schema}.${object2}:${direction}`), cached2 = getFromCache(depsCache, cacheKey2, DEPS_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse(cached2);
+      let existsQuery = `SELECT o.object_id FROM ${scope.dbPrefix}sys.objects o INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE s.name = '${escapeLiteral(schema)}' AND o.name = '${escapeLiteral(object2)}'`;
+      consola.level >= 0 && logger2.info(`Getting dependencies for ${schema}.${object2} in ${v2.database_name || "current DB"}`);
+      let existsRows = await pool.query(existsQuery);
+      if (!existsRows || existsRows.length === 0)
+        return plainResponse(`Object not found: ${schema}.${object2}${dbSuffix}.`);
+      let fullName = escapeLiteral(`${v2.database_name ? `${v2.database_name}.` : ""}${schema}.${object2}`), rows = [];
+      if (direction === "uses" || direction === "both") {
+        let usesQuery = `SELECT DISTINCT 'uses' AS direction, d.referenced_schema_name AS schema_name, d.referenced_entity_name AS object_name, ro.type_desc AS object_type, d.referenced_database_name AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d LEFT JOIN ${scope.dbPrefix}sys.objects ro ON d.referenced_id = ro.object_id WHERE d.referencing_id = OBJECT_ID('${fullName}')`;
+        rows.push(...await pool.query(usesQuery) || []);
+      }
+      if (direction === "used_by" || direction === "both") {
+        let usedByQuery = `SELECT DISTINCT 'used_by' AS direction, rs.name AS schema_name, ro.name AS object_name, ro.type_desc AS object_type, CAST(NULL AS NVARCHAR(128)) AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d INNER JOIN ${scope.dbPrefix}sys.objects ro ON d.referencing_id = ro.object_id INNER JOIN ${scope.dbPrefix}sys.schemas rs ON ro.schema_id = rs.schema_id WHERE d.referenced_id = OBJECT_ID('${fullName}') OR (d.referenced_id IS NULL AND d.referenced_entity_name = '${escapeLiteral(object2)}' AND (d.referenced_schema_name = '${escapeLiteral(schema)}' OR d.referenced_schema_name IS NULL))`;
+        rows.push(...await pool.query(usedByQuery) || []);
+      }
+      if (rows.length === 0)
+        return plainResponse(`No recorded dependencies for ${schema}.${object2}${dbSuffix} (direction: ${direction}).
+
+${DEPS_LIMITS_NOTE}`);
+      let text = `${formatCSV(rows)}
+
+${DEPS_LIMITS_NOTE}`;
+      return setInCache(depsCache, cacheKey2, text, DEPS_CACHE_MAX_SIZE, "get_object_dependencies"), plainResponse(text);
+    } catch (error46) {
+      return consola.level >= 0 && logger2.error("get_object_dependencies error:", error46), errorResponse("Error getting object dependencies", error46);
+    }
+  },
   clearCachesForTesting() {
-    procsCache.clear(), viewsCache.clear(), functionsCache.clear(), triggersCache.clear(), definitionsCache.clear();
+    procsCache.clear(), viewsCache.clear(), functionsCache.clear(), triggersCache.clear(), definitionsCache.clear(), searchCache.clear(), depsCache.clear();
   }
 };
 
@@ -81041,7 +81133,7 @@ var ExecuteSqlInputSchema = external_exports2.object({
           ]
         };
       consola.level >= 0 && logger7.info(`Getting schema for table: ${schemaName}.${tableName}`);
-      let query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], CASE WHEN uq.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [UniqueKey], CASE WHEN cc.column_id IS NOT NULL THEN 'YES' ELSE 'NO' END AS [Computed], cc.definition AS [ComputedExpression], c.ORDINAL_POSITION AS [Position] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'UNIQUE') uq ON c.TABLE_SCHEMA = uq.TABLE_SCHEMA AND c.TABLE_NAME = uq.TABLE_NAME AND c.COLUMN_NAME = uq.COLUMN_NAME LEFT JOIN sys.computed_columns cc ON cc.object_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND cc.name = c.COLUMN_NAME WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
+      let query = `SELECT c.COLUMN_NAME AS [Column], c.DATA_TYPE AS [DataType], c.CHARACTER_MAXIMUM_LENGTH AS [MaxLength], c.IS_NULLABLE AS [Nullable], c.COLUMN_DEFAULT AS [Default], CASE WHEN pk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [PrimaryKey], CASE WHEN fk.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [ForeignKey], CASE WHEN uq.COLUMN_NAME IS NOT NULL THEN 'YES' ELSE 'NO' END AS [UniqueKey], CASE WHEN cc.column_id IS NOT NULL THEN 'YES' ELSE 'NO' END AS [Computed], cc.definition AS [ComputedExpression], c.ORDINAL_POSITION AS [Position], CAST(ep.value AS NVARCHAR(4000)) AS [Description] FROM INFORMATION_SCHEMA.COLUMNS c LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY') pk ON c.TABLE_SCHEMA = pk.TABLE_SCHEMA AND c.TABLE_NAME = pk.TABLE_NAME AND c.COLUMN_NAME = pk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'FOREIGN KEY') fk ON c.TABLE_SCHEMA = fk.TABLE_SCHEMA AND c.TABLE_NAME = fk.TABLE_NAME AND c.COLUMN_NAME = fk.COLUMN_NAME LEFT JOIN (SELECT ku.TABLE_SCHEMA, ku.TABLE_NAME, ku.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku ON tc.CONSTRAINT_NAME = ku.CONSTRAINT_NAME AND tc.TABLE_SCHEMA = ku.TABLE_SCHEMA AND tc.TABLE_NAME = ku.TABLE_NAME WHERE tc.CONSTRAINT_TYPE = 'UNIQUE') uq ON c.TABLE_SCHEMA = uq.TABLE_SCHEMA AND c.TABLE_NAME = uq.TABLE_NAME AND c.COLUMN_NAME = uq.COLUMN_NAME LEFT JOIN sys.computed_columns cc ON cc.object_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND cc.name = c.COLUMN_NAME LEFT JOIN sys.columns col ON col.object_id = OBJECT_ID(c.TABLE_SCHEMA + '.' + c.TABLE_NAME) AND col.name = c.COLUMN_NAME LEFT JOIN sys.extended_properties ep ON ep.class = 1 AND ep.major_id = col.object_id AND ep.minor_id = col.column_id AND ep.name = 'MS_Description' WHERE c.TABLE_SCHEMA = '${schemaName.replace(/'/g, "''")}' AND c.TABLE_NAME = '${tableName.replace(/'/g, "''")}' ORDER BY c.ORDINAL_POSITION`;
       try {
         let results = await pool.query(query);
         if (!results || results.length === 0)
@@ -81053,7 +81145,15 @@ var ExecuteSqlInputSchema = external_exports2.object({
               }
             ]
           };
-        let csvText = formatCSV(results);
+        let tableDescPrefix = "";
+        try {
+          let descQuery = `SELECT CAST(ep.value AS NVARCHAR(4000)) AS table_description FROM sys.extended_properties ep WHERE ep.class = 1 AND ep.major_id = OBJECT_ID('${schemaName.replace(/'/g, "''")}.${tableName.replace(/'/g, "''")}') AND ep.minor_id = 0 AND ep.name = 'MS_Description'`, descRows = await pool.query(descQuery);
+          descRows && descRows.length > 0 && descRows[0].table_description && (tableDescPrefix = `Table description: ${descRows[0].table_description}
+
+`);
+        } catch {
+        }
+        let csvText = tableDescPrefix + formatCSV(results);
         return setInToolCache(tableSchemaCache, nsCacheKey, csvText, SCHEMA_CACHE_MAX_SIZE, "table_schema"), consola.level >= 0 && logger7.info(`Found ${results.length} column(s) for table ${schemaName}.${tableName} - result cached`), {
           content: [
             {

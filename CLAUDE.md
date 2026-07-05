@@ -30,12 +30,14 @@ Removes the `dist` directory (cross-platform compatible).
 
 ### Testing
 ```bash
-npm test                     # Run all 5 test suites sequentially
-npm run test:errors          # Error-detection / read-only enforcement tests
-npm run test:identifiers     # Identifier validation + pagination tests
-npm run test:object-tools    # Object listing tools tests
-npm run test:server-tools    # Server/database metadata tools tests
-npm run test:profiling-tools # Profiling & sampling tools tests
+npm test                         # Run all 7 test suites sequentially
+npm run test:errors              # Error-detection / read-only enforcement tests
+npm run test:identifiers         # Identifier validation + pagination tests
+npm run test:object-tools        # Object listing tools tests
+npm run test:server-tools        # Server/database metadata tools tests
+npm run test:profiling-tools     # Profiling & sampling tools tests
+npm run test:multi-connection    # Multi-connection config parsing + resolution tests
+npm run test:schema-description  # get_table_schema MS_Description tests
 ```
 Tests run directly via the ts-node ESM loader (no test framework) — each file is a standalone script under `src/tests/`.
 
@@ -309,7 +311,7 @@ These optimizations provide:
 - **Cache Overhead**: Near-zero CPU overhead for cache maintenance (lazy cleanup vs eager)
 - **Metadata Caching**: 20-50x faster for metadata operations
   - `list_tables`: ~50x faster with cache hits (now includes views)
-  - `get_table_schema`: ~40x faster with cache hits (now includes UNIQUE constraints and computed columns)
+  - `get_table_schema`: ~40x faster with cache hits (now includes UNIQUE constraints, computed columns, and MS_Description descriptions)
   - `get_foreign_keys`: ~30x faster with cache hits
   - `get_table_relationships`: ~25x faster with cache hits
   - `get_table_indexes`: ~30x faster with cache hits
@@ -339,7 +341,7 @@ These optimizations provide:
      - `exec_sql_csv`: Execute READ-ONLY SQL queries with CSV output
      - `get_version`: Retrieve SQL Server version
      - `list_tables`: List all tables and views with schema, type, row count, and size info
-     - `get_table_schema`: Get detailed schema for a specific table (columns, types, constraints including UNIQUE, computed columns)
+     - `get_table_schema`: Get detailed schema for a specific table (columns, types, constraints including UNIQUE, computed columns, MS_Description descriptions)
      - `get_foreign_keys`: Get all foreign key relationships with cascade rules
      - `search_columns`: Search for columns by name across all tables
      - `get_table_relationships`: Get parent/child relationships for a specific table
@@ -374,15 +376,17 @@ These optimizations provide:
 
 2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
    - Programmable-object listing tools, all read-only and cross-database capable via optional `database_name` parameter
-   - Five tools (all accept `database_name` — 1-part validated; default = connection's bound DB):
+   - Seven tools (all accept `database_name` — 1-part validated; default = connection's bound DB):
      - `list_stored_procedures`: schema, name, param count, create/modify dates (filters out `is_ms_shipped` by default; `include_system` to opt in)
      - `list_views`: schema, name, create/modify dates
      - `list_functions`: covers SQL_SCALAR_FUNCTION (`FN`), inline/multi-statement TVFs (`IF`/`TF`), CLR aggregate/scalar/table-valued (`AF`/`FS`/`FT`)
      - `list_triggers`: DML triggers (`parent_class = 1`) with parent table, INSTEAD OF flag, enabled state, and aggregated event types (INSERT/UPDATE/DELETE) via `STUFF + FOR XML PATH`
      - `get_object_definition`: full SQL body of a stored procedure / view / function / trigger via `sys.sql_modules.definition` (cross-DB safe through `{db}.sys.sql_modules`). NULL-safe: distinguishes "not found", non-module objects (tables), missing `VIEW DEFINITION` permission (via `HAS_PERMS_BY_NAME`, same-DB only), and `WITH ENCRYPTION`. 3-part `object_name` is rejected (use `database_name`). Line-paginated via `paginateLines`. Caches only the successful full body.
+     - `search_object_definitions`: literal, case-insensitive text search inside all module definitions (`sys.sql_modules`). LIKE wildcards in `search_text` are escaped — matches are literal. Optional `object_type` (procedure/view/function/trigger) and `schema_name` filters; TOP 100 cap with a narrow-the-search note. Hidden (no VIEW DEFINITION) and encrypted definitions are NULL in `sys.sql_modules`, so they are silently unsearchable — a note in the output says so. Pairs with `get_object_definition` ("find → read").
+     - `get_object_dependencies`: direct (1-level) dependencies of a module via `sys.sql_expression_dependencies` — `direction`: `uses` (what it references), `used_by` (what references it, with a name-based fallback for unresolved refs), or `both` (default). Dynamic SQL references are not captured (use `search_object_definitions`); encrypted objects have no recorded dependencies. 3-part `object_name` rejected (use `database_name`).
    - **Cross-DB metadata function trap**: `OBJECT_NAME`/`OBJECT_SCHEMA_NAME` resolve in *current* DB context unless given `DB_ID('dbname')` as second arg; the implementation always passes the explicit DB id when `database_name` is set
    - All caches use lazy TTL cleanup + true LRU eviction (same pattern as MssqlTools); see "Environment Variables" for tunables
-   - **NOTE — definition retrieval is provided by `get_object_definition`** (a single generic tool for all module types). It requires `VIEW DEFINITION` (object/schema-level grant is enough — server-wide `VIEW ANY DEFINITION` is not needed). When the permission is missing, the tool returns a clear NULL-safe diagnostic rather than a raw error. Per-type definition tools (`get_procedure_definition`, `get_object_dependencies`) remain intentionally absent — the one generic tool covers procedures, views, functions, and triggers.
+   - **NOTE — definition retrieval is provided by `get_object_definition`** (a single generic tool for all module types). It requires `VIEW DEFINITION` (object/schema-level grant is enough — server-wide `VIEW ANY DEFINITION` is not needed). When the permission is missing, the tool returns a clear NULL-safe diagnostic rather than a raw error. Per-type definition tools (e.g. `get_procedure_definition`) remain intentionally absent — the one generic tool covers procedures, views, functions, and triggers. `search_object_definitions` (full-text search across definitions) and `get_object_dependencies` (dependency graph) are separate, complementary tools — not replacements for `get_object_definition`.
 
 3. **Resources Layer** ([src/MssqlResources.ts](src/MssqlResources.ts))
    - Exposes database tables as MCP resources
@@ -570,6 +574,8 @@ Object Tools Caching (programmable-object metadata):
 - `MSSQL_FUNCTIONS_CACHE_TTL` / `MSSQL_FUNCTIONS_CACHE_SIZE`: list_functions (defaults: 2h / 100)
 - `MSSQL_TRIGGERS_CACHE_TTL` / `MSSQL_TRIGGERS_CACHE_SIZE`: list_triggers (defaults: 2h / 100)
 - `MSSQL_DEFINITIONS_CACHE_TTL` / `MSSQL_DEFINITIONS_CACHE_SIZE`: get_object_definition (defaults: 2h / 100) — caches only successfully-retrieved full definitions; diagnostics are never cached
+- `MSSQL_SEARCH_CACHE_TTL` / `MSSQL_SEARCH_CACHE_SIZE`: search_object_definitions (defaults: 30 min / 100)
+- `MSSQL_DEPS_CACHE_TTL` / `MSSQL_DEPS_CACHE_SIZE`: get_object_dependencies (defaults: 2h / 100)
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 
