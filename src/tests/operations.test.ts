@@ -10,6 +10,7 @@ import { MssqlTools } from '../MssqlTools.js';
 import { formatCSV } from '../utils/csv.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
 import { MssqlServerTools } from '../MssqlServerTools.js';
+import { MssqlResources } from '../MssqlResources.js';
 
 let pass = 0;
 let fail = 0;
@@ -200,6 +201,34 @@ console.log('\n--- clear_cache ---');
 
 	const fresh = await MssqlTools.handleTool('list_tables', {}, poolB);
 	check('full clear emptied connB too (no cached marker)', (fresh.content[0].text as string).includes('Cached result'), false);
+}
+
+console.log('\n--- resources multi-connection ---');
+{
+	const tPool = (n: string): any => ({ name: n, query: async (sql: string) => (sql.includes('INFORMATION_SCHEMA.TABLES') ? [{ TABLE_NAME: `tbl_${n}` }] : [{ c: 1 }]) });
+	const poolRa = tPool('ra');
+	const poolRb = tPool('rb');
+	const info = (n: string, d: boolean) => ({ name: n, server: 's', database: 'd', user: 'u', is_default: d });
+
+	const multiRegistry: any = { list: () => [info('ra', true), info('rb', false)], get: (n?: string) => (n === 'rb' ? poolRb : poolRa) };
+	const defsMulti = await MssqlResources.getResourceDefinitions(multiRegistry);
+	check('two connections → two resources', defsMulti.length, 2);
+	checkContains('multi URI carries connection name', defsMulti.map((r) => r.uri).join(','), 'mssql://ra/tbl_ra/data');
+	checkContains('second connection listed too', defsMulti.map((r) => r.uri).join(','), 'mssql://rb/tbl_rb/data');
+
+	const singleRegistry: any = { list: () => [info('solo', true)], get: () => tPool('solo') };
+	const defsSingle = await MssqlResources.getResourceDefinitions(singleRegistry);
+	check('single connection keeps legacy URI', defsSingle[0].uri, 'mssql://tbl_solo/data');
+
+	const read3 = await MssqlResources.handleResource('mssql://rb/sometable/data', multiRegistry);
+	checkContains('3-segment URI reads named connection', read3.text as string, 'c');
+	const read2 = await MssqlResources.handleResource('mssql://sometable/data', multiRegistry);
+	checkContains('2-segment URI reads default connection', read2.text as string, 'c');
+
+	const failPool: any = { name: 'down', query: async () => { throw new Error('unreachable'); } };
+	const mixedRegistry: any = { list: () => [info('up', true), info('down', false)], get: (n?: string) => (n === 'down' ? failPool : tPool('up')) };
+	const defsMixed = await MssqlResources.getResourceDefinitions(mixedRegistry);
+	check('unreachable connection skipped, healthy one listed', defsMixed.length, 1);
 }
 
 // --- summary (KEEP LAST — later tasks append sections ABOVE this block) ---

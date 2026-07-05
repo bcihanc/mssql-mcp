@@ -128,7 +128,7 @@ export class MssqlMcpServer {
 			if (!this.registry) {
 				return { resources: [] };
 			}
-			const resources = await MssqlResources.getResourceDefinitions(this.registry.get());
+			const resources = await MssqlResources.getResourceDefinitions(this.registry);
 			return { resources };
 		});
 
@@ -137,7 +137,7 @@ export class MssqlMcpServer {
 				throw new Error('Database connection is not yet initialized. Please try again shortly.');
 			}
 			const { uri } = request.params;
-			const contents = await MssqlResources.handleResource(uri, this.registry.get());
+			const contents = await MssqlResources.handleResource(uri, this.registry);
 			return { contents: [contents] };
 		});
 	}
