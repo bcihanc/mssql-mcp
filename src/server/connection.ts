@@ -404,7 +404,11 @@ export class ResilientConnectionPool implements ConnectionPool {
 				await conn.request().batch(sqlText);
 			},
 			async query<T = any>(sqlText: string): Promise<T[]> {
-				const result = await conn.request().query(sqlText);
+				// Must go over the TDS SQL_BATCH path (request.batch), NOT request.query:
+				// tedious execSql always wraps in an sp_executesql RPC (even with zero
+				// params), and SQL Server produces SHOWPLAN output only for ad-hoc
+				// batches — the RPC form returns an empty resultset under SHOWPLAN_XML.
+				const result = await conn.request().batch(sqlText);
 				return result.recordset as T[];
 			},
 			async close(): Promise<void> {

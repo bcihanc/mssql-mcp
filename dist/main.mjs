@@ -82098,7 +82098,7 @@ var ResilientConnectionPool = class {
         await conn.request().batch(sqlText);
       },
       async query(sqlText) {
-        return (await conn.request().query(sqlText)).recordset;
+        return (await conn.request().batch(sqlText)).recordset;
       },
       async close() {
         try {
