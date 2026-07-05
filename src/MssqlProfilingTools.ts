@@ -5,6 +5,7 @@ import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, namespaceCacheKey, parseObjectName, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
+import { clearMapByPrefix } from './utils/cacheClear.js';
 
 const logger = consola.withTag('mssql-profiling-tools');
 
@@ -341,5 +342,13 @@ export const MssqlProfilingTools = {
 	clearCachesForTesting(): void {
 		profileCache.clear();
 		rowCountCache.clear();
+	},
+
+	clearCaches(connectionName?: string): number {
+		let cleared = 0;
+		for (const cache of [profileCache, rowCountCache]) {
+			cleared += clearMapByPrefix(cache as Map<string, unknown>, connectionName);
+		}
+		return cleared;
 	},
 };

@@ -1,8 +1,8 @@
 import type { Resource, TextResourceContents } from '@modelcontextprotocol/sdk/types.js';
 import consola from 'consola';
-import { validateTableName } from './server/config';
-import type { ConnectionPool } from './server/connection';
-import { formatCSV } from './utils/csv';
+import { validateTableName } from './server/config.js';
+import type { ConnectionPool } from './server/connection.js';
+import { formatCSV } from './utils/csv.js';
 
 const logger = consola.withTag('mssql-resources');
 
@@ -129,5 +129,11 @@ export const MssqlResources = {
 			}
 			throw new Error(`Database error: ${error instanceof Error ? error.message : 'Unknown error'}`);
 		}
+	},
+
+	clearCaches(_connectionName?: string): number {
+		const n = resourceCache ? 1 : 0;
+		resourceCache = null;
+		return n;
 	},
 };

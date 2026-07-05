@@ -7,6 +7,7 @@ import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
 import { namespaceCacheKey } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
+import { clearMapByPrefix } from './utils/cacheClear.js';
 
 const logger = consola.withTag('mssql-tools');
 
@@ -1095,5 +1096,19 @@ export const MssqlTools = {
 				],
 			};
 		}
+	},
+
+	clearCaches(connectionName?: string): number {
+		let cleared = 0;
+		for (const cache of [queryCache, listTablesCache, tableSchemaCache, foreignKeysCache, relationshipsCache, columnsCache, indexesCache]) {
+			cleared += clearMapByPrefix(cache as Map<string, unknown>, connectionName);
+		}
+		if (connectionName) {
+			if (versionCache.delete(connectionName)) cleared++;
+		} else {
+			cleared += versionCache.size;
+			versionCache.clear();
+		}
+		return cleared;
 	},
 };

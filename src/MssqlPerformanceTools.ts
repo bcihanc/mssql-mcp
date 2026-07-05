@@ -6,6 +6,7 @@ import type { ConnectionPool, EphemeralConnection } from './server/connection.js
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, namespaceCacheKey, parseObjectName, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
+import { clearMapByPrefix } from './utils/cacheClear.js';
 
 const logger = consola.withTag('mssql-performance-tools');
 
@@ -287,5 +288,9 @@ export const MssqlPerformanceTools = {
 			if (consola.level >= 0) logger.error('get_query_plan error:', error);
 			return errorResponse('Error getting query plan', error);
 		}
+	},
+
+	clearCaches(connectionName?: string): number {
+		return clearMapByPrefix(missingIndexesCache as Map<string, unknown>, connectionName);
 	},
 };

@@ -6,6 +6,12 @@ import type { ConnectionRegistry } from './server/ConnectionRegistry.js';
 import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, namespaceCacheKey, validateDatabaseName } from './utils/identifier.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
+import { MssqlObjectTools } from './MssqlObjectTools.js';
+import { MssqlPerformanceTools } from './MssqlPerformanceTools.js';
+import { MssqlProfilingTools } from './MssqlProfilingTools.js';
+import { MssqlResources } from './MssqlResources.js';
+import { MssqlTools } from './MssqlTools.js';
+import { clearMapByPrefix } from './utils/cacheClear.js';
 
 const logger = consola.withTag('mssql-server-tools');
 
@@ -76,11 +82,16 @@ const ListLinkedServersInputSchema = z.object({});
 
 const GetServerInfoInputSchema = z.object({});
 
+const ClearCacheInputSchema = z.object({
+	connection_name: z.string().optional().describe('Clear only cache entries belonging to this connection. Omit to clear all cached data for every connection.'),
+});
+
 const TOOL_NAMES = new Set([
 	'list_databases',
 	'list_schemas',
 	'list_linked_servers',
 	'get_server_info',
+	'clear_cache',
 ]);
 
 function plainResponse(text: string): { content: TextContent[] } {
@@ -133,6 +144,11 @@ export const MssqlServerTools = {
 				description: 'List all configured database connections available to this MCP server: name, server, database, user, and which one is the default. Use the returned name as the connection_name parameter on other tools to target a specific connection. Passwords are never exposed.',
 				inputSchema: z.toJSONSchema(z.object({})) as any,
 			},
+			{
+				name: 'clear_cache',
+				description: 'Clear the server-side metadata/result caches (schema, tables, definitions, query results, ...). Use after the database schema changed and tools are returning stale cached data. Executes NO SQL. Optional connection_name clears only that connection\'s entries. First queries after clearing will be slower while caches repopulate.',
+				inputSchema: z.toJSONSchema(ClearCacheInputSchema) as any,
+			},
 		];
 	},
 
@@ -146,6 +162,8 @@ export const MssqlServerTools = {
 				return this.handleListLinkedServers(pool);
 			case 'get_server_info':
 				return this.handleGetServerInfo(pool);
+			case 'clear_cache':
+				return this.handleClearCache(args);
 		}
 		throw new Error(`Unknown tool: ${name}`);
 	},
@@ -306,6 +324,34 @@ export const MssqlServerTools = {
 			return plainResponse('No connections configured.');
 		}
 		return plainResponse(formatCSV(rows));
+	},
+
+	clearCaches(connectionName?: string): number {
+		let cleared = 0;
+		for (const cache of [databasesCache, schemasCache, linkedServersCache, serverInfoCache]) {
+			cleared += clearMapByPrefix(cache as Map<string, unknown>, connectionName);
+		}
+		return cleared;
+	},
+
+	handleClearCache(args: any): { content: TextContent[] } {
+		try {
+			const v = ClearCacheInputSchema.parse(args);
+			const conn = v.connection_name;
+			const rows = [
+				{ layer: 'table_tools', entries_cleared: MssqlTools.clearCaches(conn) },
+				{ layer: 'object_tools', entries_cleared: MssqlObjectTools.clearCaches(conn) },
+				{ layer: 'server_tools', entries_cleared: this.clearCaches(conn) },
+				{ layer: 'profiling_tools', entries_cleared: MssqlProfilingTools.clearCaches(conn) },
+				{ layer: 'performance_tools', entries_cleared: MssqlPerformanceTools.clearCaches(conn) },
+				{ layer: 'resources', entries_cleared: MssqlResources.clearCaches(conn) },
+			];
+			const total = rows.reduce((s, r) => s + r.entries_cleared, 0);
+			return plainResponse(`${formatCSV(rows)}\n\nTotal: ${total} entries cleared${conn ? ` for connection "${conn}"` : ''}.\nℹ️ First queries after clearing will be slower while caches repopulate.`);
+		} catch (error) {
+			if (consola.level >= 0) logger.error('clear_cache error:', error);
+			return errorResponse('Error clearing caches', error);
+		}
 	},
 
 	clearCachesForTesting(): void {

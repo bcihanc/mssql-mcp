@@ -9,6 +9,7 @@ import { ResilientConnectionPool } from '../server/connection.js';
 import { MssqlTools } from '../MssqlTools.js';
 import { formatCSV } from '../utils/csv.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
+import { MssqlServerTools } from '../MssqlServerTools.js';
 
 let pass = 0;
 let fail = 0;
@@ -174,6 +175,31 @@ console.log('\n--- metadata tools NOT truncated ---');
 	const fakeMetaPool: any = { name: 'opsD', query: async () => [{ Schema: 's', Name: longName, Type: 'BASE TABLE' }] };
 	const lt = await MssqlTools.handleTool('list_tables', {}, fakeMetaPool);
 	check('list_tables cell untouched (truncation is exec/sample-only)', (lt.content[0].text as string).includes(longName), true);
+}
+
+console.log('\n--- clear_cache ---');
+{
+	const mkPool = (n: string): any => ({ name: n, query: async () => [{ Schema: 's', Name: 'T', Type: 'BASE TABLE' }] });
+	const poolA = mkPool('connA');
+	const poolB = mkPool('connB');
+	await MssqlTools.handleTool('list_tables', {}, poolA);
+	await MssqlTools.handleTool('list_tables', {}, poolB);
+
+	const clearedA = MssqlTools.clearCaches('connA');
+	check('clearCaches(connA) removed at least one entry', clearedA >= 1, true);
+
+	const again = await MssqlTools.handleTool('list_tables', {}, poolB);
+	checkContains('connB entries survive a connA-filtered clear', again.content[0].text as string, 'Cached result');
+
+	const res = await MssqlServerTools.handleTool('clear_cache', {}, poolA);
+	checkContains('clear_cache reports table_tools layer', res.content[0].text as string, 'table_tools');
+	checkContains('clear_cache reports performance_tools layer', res.content[0].text as string, 'performance_tools');
+	checkContains('clear_cache reports resources layer', res.content[0].text as string, 'resources');
+	checkContains('clear_cache reports total', res.content[0].text as string, 'Total:');
+	checkContains('repopulation note', res.content[0].text as string, 'slower');
+
+	const fresh = await MssqlTools.handleTool('list_tables', {}, poolB);
+	check('full clear emptied connB too (no cached marker)', (fresh.content[0].text as string).includes('Cached result'), false);
 }
 
 // --- summary (KEEP LAST — later tasks append sections ABOVE this block) ---

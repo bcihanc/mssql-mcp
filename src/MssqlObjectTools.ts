@@ -6,6 +6,7 @@ import { formatCSV } from './utils/csv.js';
 import { buildCacheKeyPrefix, namespaceCacheKey, parseObjectName, validateDatabaseName } from './utils/identifier.js';
 import { paginateLines, formatPaginatedResponse } from './utils/pagination.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
+import { clearMapByPrefix } from './utils/cacheClear.js';
 
 const logger = consola.withTag('mssql-object-tools');
 
@@ -516,5 +517,13 @@ export const MssqlObjectTools = {
 		definitionsCache.clear();
 		searchCache.clear();
 		depsCache.clear();
+	},
+
+	clearCaches(connectionName?: string): number {
+		let cleared = 0;
+		for (const cache of [procsCache, viewsCache, functionsCache, triggersCache, definitionsCache, searchCache, depsCache]) {
+			cleared += clearMapByPrefix(cache as Map<string, unknown>, connectionName);
+		}
+		return cleared;
 	},
 };

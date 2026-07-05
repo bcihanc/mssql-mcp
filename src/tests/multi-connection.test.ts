@@ -73,7 +73,7 @@ console.log('\n--- all tool defs expose connection_name ---');
 		...MssqlProfilingTools.getToolDefinitions(),
 		...MssqlPerformanceTools.getToolDefinitions(),
 	];
-	check('26 tool definitions total', allDefs.length, 26);
+	check('27 tool definitions total', allDefs.length, 27);
 	for (const def of allDefs) {
 		// list_connections is a registry-level tool, so it doesn't have connection_name
 		if (def.name === 'list_connections') continue;

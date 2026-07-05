@@ -38,7 +38,7 @@ check('canHandle: list_connections (registry tool) returns false', MssqlServerTo
 
 console.log('\n--- getToolDefinitions ---');
 const defs = MssqlServerTools.getToolDefinitions();
-check('exposes 5 tool definitions', defs.length, 5);
+check('exposes 6 tool definitions', defs.length, 6);
 
 const dbProps = (defs.find((d) => d.name === 'list_databases')!.inputSchema as any).properties || {};
 check('list_databases has include_system property', !!dbProps.include_system, true);
