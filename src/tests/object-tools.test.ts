@@ -241,8 +241,9 @@ async function callSearch(args: any, stub: any): Promise<string> {
 	const text = await callSearch({ search_text: 'OrderDetail' }, stub);
 	checkContains('search happy path: CSV contains object', text, 'GetUsers');
 	checkContains('search happy path: scope note appended', text, 'cannot be searched');
-	checkContains('search SQL: LIKE with lowered literal', stub.queries[0], "LIKE LOWER('%OrderDetail%') ESCAPE '\\'");
+	checkContains('search SQL: LIKE with lowered literal', stub.queries[0], "LIKE LOWER(N'%OrderDetail%') ESCAPE '\\'");
 	checkContains('search SQL: TOP 100 limit', stub.queries[0], 'SELECT TOP 100');
+	checkContains('search SQL: N-prefixed literal for Unicode safety', stub.queries[0], "N'%");
 }
 
 // Wildcards are escaped -> literal match
@@ -290,6 +291,14 @@ async function callSearch(args: any, stub: any): Promise<string> {
 	const hundred = Array.from({ length: 100 }, (_, i) => ({ schema_name: 'dbo', object_name: `P${i}`, object_type: 'SQL_STORED_PROCEDURE', match_count: 1, modify_date: '2026-01-01' }));
 	const text = await callSearch({ search_text: 'x' }, searchStub(hundred));
 	checkContains('cap note at 100 rows', text, 'limited to 100');
+}
+
+// schema_name filter + cross-DB prefix reach the SQL
+{
+	const stub = searchStub([]);
+	await callSearch({ search_text: 'x', schema_name: 'sales', database_name: 'OtherDB' }, stub);
+	checkContains('search SQL: schema filter', stub.queries[0], "s.name = 'sales'");
+	checkContains('search SQL: cross-db prefix', stub.queries[0], '[OtherDB].sys.sql_modules');
 }
 
 // Cache: second identical call returns cached marker without re-querying
@@ -370,18 +379,27 @@ const usedByRow = { direction: 'used_by', schema_name: 'dbo', object_name: 'vw_S
 	const stub = depsStub([{ object_id: 1 }], [], []);
 	await callDeps({ object_name: 'dbo.Orders', direction: 'used_by' }, stub);
 	const usedBySql = stub.queries.find((q: string) => q.includes("'used_by' AS direction"))!;
-	checkContains('used_by SQL: id match', usedBySql, "d.referenced_id = OBJECT_ID('dbo.Orders')");
+	checkContains('used_by SQL: id match', usedBySql, 'd.referenced_id = 1');
 	checkContains('used_by SQL: name fallback', usedBySql, "d.referenced_entity_name = 'Orders'");
 	checkContains('used_by SQL: is_unresolved flag computed', usedBySql, 'CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved');
+	checkContains('used_by SQL: name fallback guarded against cross-db/server', usedBySql, 'AND d.referenced_database_name IS NULL AND d.referenced_server_name IS NULL');
 }
 
-// Cross-DB: OBJECT_ID gets the 3-part literal
+// Cross-DB: numeric object_id is used directly (no unbracketed 4-part OBJECT_ID string)
 {
 	const stub = depsStub([{ object_id: 1 }], [], []);
 	await callDeps({ object_name: 'dbo.X', database_name: 'OtherDB', direction: 'uses' }, stub);
 	const usesSql = stub.queries.find((q: string) => q.includes("'uses' AS direction"))!;
-	checkContains('cross-db OBJECT_ID literal', usesSql, "OBJECT_ID('OtherDB.dbo.X')");
+	checkContains('cross-db numeric object_id', usesSql, 'd.referencing_id = 1');
 	checkContains('cross-db catalog prefix', usesSql, '[OtherDB].sys.sql_expression_dependencies');
+}
+
+// Non-numeric object_id from exists-check -> error surfaced, no SQL interpolation of the raw string
+{
+	const stub = depsStub([{ object_id: 'abc' }]);
+	const text = await callDeps({ object_name: 'dbo.Weird' }, stub);
+	checkContains('deps non-numeric object_id: error surfaced', text, 'error');
+	check('deps non-numeric object_id: no uses/used_by query executed', stub.queries.length, 1);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

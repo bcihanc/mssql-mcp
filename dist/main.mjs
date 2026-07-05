@@ -80158,7 +80158,7 @@ var MssqlObjectTools = {
       if (cached2 !== null) return cachedResponse(cached2);
       let lit = escapeLiteral(term), likeLit = escapeLiteral(escapeLikePattern(term)), filters = [];
       v2.object_type && filters.push(OBJECT_TYPE_FILTERS[v2.object_type]), v2.schema_name && filters.push(`s.name = '${escapeLiteral(v2.schema_name)}'`);
-      let extraWhere = filters.length ? ` AND ${filters.join(" AND ")}` : "", query = `SELECT TOP 100 s.name AS schema_name, o.name AS object_name, o.type_desc AS object_type, (LEN(m.definition) - LEN(REPLACE(LOWER(m.definition), LOWER('${lit}'), ''))) / LEN('${lit}') AS match_count, o.modify_date FROM ${scope.dbPrefix}sys.sql_modules m INNER JOIN ${scope.dbPrefix}sys.objects o ON m.object_id = o.object_id INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE LOWER(m.definition) LIKE LOWER('%${likeLit}%') ESCAPE '\\'${extraWhere} ORDER BY match_count DESC, schema_name, object_name`;
+      let extraWhere = filters.length ? ` AND ${filters.join(" AND ")}` : "", query = `SELECT TOP 100 s.name AS schema_name, o.name AS object_name, o.type_desc AS object_type, (LEN(m.definition) - LEN(REPLACE(LOWER(m.definition), LOWER(N'${lit}'), ''))) / LEN(N'${lit}') AS match_count, o.modify_date FROM ${scope.dbPrefix}sys.sql_modules m INNER JOIN ${scope.dbPrefix}sys.objects o ON m.object_id = o.object_id INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE LOWER(m.definition) LIKE LOWER(N'%${likeLit}%') ESCAPE '\\'${extraWhere} ORDER BY match_count DESC, schema_name, object_name`;
       consola.level >= 0 && logger2.info(`Searching object definitions for "${term}" in ${v2.database_name || "current DB"}`);
       let results = await pool.query(query);
       if (!results || results.length === 0)
@@ -80187,13 +80187,16 @@ ${SEARCH_SCOPE_NOTE}`, setInCache(searchCache, cacheKey2, text, SEARCH_CACHE_MAX
       let existsRows = await pool.query(existsQuery);
       if (!existsRows || existsRows.length === 0)
         return plainResponse(`Object not found: ${schema}.${object2}${dbSuffix}.`);
-      let fullName = escapeLiteral(`${v2.database_name ? `${v2.database_name}.` : ""}${schema}.${object2}`), rows = [];
+      let objectId = existsRows[0].object_id, idNum = Number(objectId);
+      if (!Number.isInteger(idNum))
+        return plainResponse(`Internal error: unexpected non-numeric object_id for ${schema}.${object2}${dbSuffix}.`);
+      let rows = [];
       if (direction === "uses" || direction === "both") {
-        let usesQuery = `SELECT DISTINCT 'uses' AS direction, d.referenced_schema_name AS schema_name, d.referenced_entity_name AS object_name, ro.type_desc AS object_type, d.referenced_database_name AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d LEFT JOIN ${scope.dbPrefix}sys.objects ro ON d.referenced_id = ro.object_id WHERE d.referencing_id = OBJECT_ID('${fullName}')`;
+        let usesQuery = `SELECT DISTINCT 'uses' AS direction, d.referenced_schema_name AS schema_name, d.referenced_entity_name AS object_name, ro.type_desc AS object_type, d.referenced_database_name AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d LEFT JOIN ${scope.dbPrefix}sys.objects ro ON d.referenced_id = ro.object_id WHERE d.referencing_id = ${idNum}`;
         rows.push(...await pool.query(usesQuery) || []);
       }
       if (direction === "used_by" || direction === "both") {
-        let usedByQuery = `SELECT DISTINCT 'used_by' AS direction, rs.name AS schema_name, ro.name AS object_name, ro.type_desc AS object_type, CAST(NULL AS NVARCHAR(128)) AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d INNER JOIN ${scope.dbPrefix}sys.objects ro ON d.referencing_id = ro.object_id INNER JOIN ${scope.dbPrefix}sys.schemas rs ON ro.schema_id = rs.schema_id WHERE d.referenced_id = OBJECT_ID('${fullName}') OR (d.referenced_id IS NULL AND d.referenced_entity_name = '${escapeLiteral(object2)}' AND (d.referenced_schema_name = '${escapeLiteral(schema)}' OR d.referenced_schema_name IS NULL))`;
+        let usedByQuery = `SELECT DISTINCT 'used_by' AS direction, rs.name AS schema_name, ro.name AS object_name, ro.type_desc AS object_type, CAST(NULL AS NVARCHAR(128)) AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d INNER JOIN ${scope.dbPrefix}sys.objects ro ON d.referencing_id = ro.object_id INNER JOIN ${scope.dbPrefix}sys.schemas rs ON ro.schema_id = rs.schema_id WHERE d.referenced_id = ${idNum} OR (d.referenced_id IS NULL AND d.referenced_entity_name = '${escapeLiteral(object2)}' AND (d.referenced_schema_name = '${escapeLiteral(schema)}' OR d.referenced_schema_name IS NULL) AND d.referenced_database_name IS NULL AND d.referenced_server_name IS NULL)`;
         rows.push(...await pool.query(usedByQuery) || []);
       }
       if (rows.length === 0)

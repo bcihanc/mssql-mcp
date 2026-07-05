@@ -436,7 +436,7 @@ export const MssqlObjectTools = {
 			if (v.schema_name) filters.push(`s.name = '${escapeLiteral(v.schema_name)}'`);
 			const extraWhere = filters.length ? ` AND ${filters.join(' AND ')}` : '';
 
-			const query = `SELECT TOP 100 s.name AS schema_name, o.name AS object_name, o.type_desc AS object_type, (LEN(m.definition) - LEN(REPLACE(LOWER(m.definition), LOWER('${lit}'), ''))) / LEN('${lit}') AS match_count, o.modify_date FROM ${scope.dbPrefix}sys.sql_modules m INNER JOIN ${scope.dbPrefix}sys.objects o ON m.object_id = o.object_id INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE LOWER(m.definition) LIKE LOWER('%${likeLit}%') ESCAPE '\\'${extraWhere} ORDER BY match_count DESC, schema_name, object_name`;
+			const query = `SELECT TOP 100 s.name AS schema_name, o.name AS object_name, o.type_desc AS object_type, (LEN(m.definition) - LEN(REPLACE(LOWER(m.definition), LOWER(N'${lit}'), ''))) / LEN(N'${lit}') AS match_count, o.modify_date FROM ${scope.dbPrefix}sys.sql_modules m INNER JOIN ${scope.dbPrefix}sys.objects o ON m.object_id = o.object_id INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE LOWER(m.definition) LIKE LOWER(N'%${likeLit}%') ESCAPE '\\'${extraWhere} ORDER BY match_count DESC, schema_name, object_name`;
 
 			if (consola.level >= 0) logger.info(`Searching object definitions for "${term}" in ${v.database_name || 'current DB'}`);
 			const results = await pool.query(query);
@@ -480,14 +480,19 @@ export const MssqlObjectTools = {
 				return plainResponse(`Object not found: ${schema}.${object}${dbSuffix}.`);
 			}
 
-			const fullName = escapeLiteral(`${v.database_name ? `${v.database_name}.` : ''}${schema}.${object}`);
+			const objectId = existsRows[0].object_id;
+			const idNum = Number(objectId);
+			if (!Number.isInteger(idNum)) {
+				return plainResponse(`Internal error: unexpected non-numeric object_id for ${schema}.${object}${dbSuffix}.`);
+			}
+
 			const rows: any[] = [];
 			if (direction === 'uses' || direction === 'both') {
-				const usesQuery = `SELECT DISTINCT 'uses' AS direction, d.referenced_schema_name AS schema_name, d.referenced_entity_name AS object_name, ro.type_desc AS object_type, d.referenced_database_name AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d LEFT JOIN ${scope.dbPrefix}sys.objects ro ON d.referenced_id = ro.object_id WHERE d.referencing_id = OBJECT_ID('${fullName}')`;
+				const usesQuery = `SELECT DISTINCT 'uses' AS direction, d.referenced_schema_name AS schema_name, d.referenced_entity_name AS object_name, ro.type_desc AS object_type, d.referenced_database_name AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d LEFT JOIN ${scope.dbPrefix}sys.objects ro ON d.referenced_id = ro.object_id WHERE d.referencing_id = ${idNum}`;
 				rows.push(...((await pool.query(usesQuery)) || []));
 			}
 			if (direction === 'used_by' || direction === 'both') {
-				const usedByQuery = `SELECT DISTINCT 'used_by' AS direction, rs.name AS schema_name, ro.name AS object_name, ro.type_desc AS object_type, CAST(NULL AS NVARCHAR(128)) AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d INNER JOIN ${scope.dbPrefix}sys.objects ro ON d.referencing_id = ro.object_id INNER JOIN ${scope.dbPrefix}sys.schemas rs ON ro.schema_id = rs.schema_id WHERE d.referenced_id = OBJECT_ID('${fullName}') OR (d.referenced_id IS NULL AND d.referenced_entity_name = '${escapeLiteral(object)}' AND (d.referenced_schema_name = '${escapeLiteral(schema)}' OR d.referenced_schema_name IS NULL))`;
+				const usedByQuery = `SELECT DISTINCT 'used_by' AS direction, rs.name AS schema_name, ro.name AS object_name, ro.type_desc AS object_type, CAST(NULL AS NVARCHAR(128)) AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d INNER JOIN ${scope.dbPrefix}sys.objects ro ON d.referencing_id = ro.object_id INNER JOIN ${scope.dbPrefix}sys.schemas rs ON ro.schema_id = rs.schema_id WHERE d.referenced_id = ${idNum} OR (d.referenced_id IS NULL AND d.referenced_entity_name = '${escapeLiteral(object)}' AND (d.referenced_schema_name = '${escapeLiteral(schema)}' OR d.referenced_schema_name IS NULL) AND d.referenced_database_name IS NULL AND d.referenced_server_name IS NULL)`;
 				rows.push(...((await pool.query(usedByQuery)) || []));
 			}
 
