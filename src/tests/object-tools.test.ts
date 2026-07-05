@@ -40,6 +40,7 @@ const expectedTools = [
 	'list_functions',
 	'list_triggers',
 	'get_object_definition',
+	'search_object_definitions',
 ];
 for (const t of expectedTools) check(`canHandle: ${t}`, MssqlObjectTools.canHandle(t), true);
 check('canHandle: unknown_tool returns false', MssqlObjectTools.canHandle('unknown_tool'), false);
@@ -58,7 +59,7 @@ for (const t of removedTools) check(`canHandle: removed ${t} returns false`, Mss
 
 console.log('\n--- getToolDefinitions ---');
 const defs = MssqlObjectTools.getToolDefinitions();
-check('exposes 5 tool definitions (4 list tools + get_object_definition)', defs.length, 5);
+check('exposes 6 tool definitions (4 list tools + get_object_definition + search)', defs.length, 6);
 
 const names = new Set(defs.map((d) => d.name));
 for (const t of expectedTools) check(`definition exists: ${t}`, names.has(t), true);
@@ -211,6 +212,94 @@ async function callDef(args: any, stub: any): Promise<string> {
 {
 	const text = await callDef({ object_name: 'a;drop' }, defStub([]));
 	checkContains('invalid object_name: parse error surfaced', text, 'Invalid object name');
+}
+
+console.log('\n--- search_object_definitions (controlled stub) ---');
+
+// Capture stub: records every SQL text, returns canned rows.
+function searchStub(rows: any[]): any {
+	const queries: string[] = [];
+	return {
+		name: 'test',
+		queries,
+		query: async (sql: string) => {
+			queries.push(sql);
+			return rows;
+		},
+	};
+}
+
+async function callSearch(args: any, stub: any): Promise<string> {
+	MssqlObjectTools.clearCachesForTesting();
+	const r = await MssqlObjectTools.handleTool('search_object_definitions', args, stub);
+	return r.content[0]?.type === 'text' ? r.content[0].text : '';
+}
+
+// Happy path: rows returned as CSV + scope note
+{
+	const stub = searchStub([{ schema_name: 'dbo', object_name: 'GetUsers', object_type: 'SQL_STORED_PROCEDURE', match_count: 3, modify_date: '2026-01-01' }]);
+	const text = await callSearch({ search_text: 'OrderDetail' }, stub);
+	checkContains('search happy path: CSV contains object', text, 'GetUsers');
+	checkContains('search happy path: scope note appended', text, 'cannot be searched');
+	checkContains('search SQL: LIKE with lowered literal', stub.queries[0], "LIKE LOWER('%OrderDetail%') ESCAPE '\\'");
+	checkContains('search SQL: TOP 100 limit', stub.queries[0], 'SELECT TOP 100');
+}
+
+// Wildcards are escaped -> literal match
+{
+	const stub = searchStub([]);
+	await callSearch({ search_text: '100%_[x]' }, stub);
+	checkContains('search SQL: % escaped', stub.queries[0], '\\%');
+	checkContains('search SQL: _ escaped', stub.queries[0], '\\_');
+	checkContains('search SQL: [ escaped', stub.queries[0], '\\[');
+}
+
+// Single quotes are doubled
+{
+	const stub = searchStub([]);
+	await callSearch({ search_text: "a'b" }, stub);
+	checkContains('search SQL: quote doubled', stub.queries[0], "a''b");
+}
+
+// object_type filter maps to sys.objects type codes
+{
+	const stub = searchStub([]);
+	await callSearch({ search_text: 'x', object_type: 'procedure' }, stub);
+	checkContains('search SQL: procedure type filter', stub.queries[0], "o.type IN ('P')");
+}
+{
+	const stub = searchStub([]);
+	await callSearch({ search_text: 'x', object_type: 'function' }, stub);
+	checkContains('search SQL: function type filter', stub.queries[0], "o.type IN ('FN','IF','TF','AF','FS','FT')");
+}
+
+// Whitespace-only search_text rejected (also guards LEN() division by zero)
+{
+	const text = await callSearch({ search_text: '   ' }, searchStub([]));
+	checkContains('whitespace-only search_text rejected', text, 'cannot be empty');
+}
+
+// Empty result message
+{
+	const text = await callSearch({ search_text: 'zzz_yok' }, searchStub([]));
+	checkContains('no match message', text, "No objects found containing 'zzz_yok'");
+}
+
+// TOP 100 cap note when exactly 100 rows return
+{
+	const hundred = Array.from({ length: 100 }, (_, i) => ({ schema_name: 'dbo', object_name: `P${i}`, object_type: 'SQL_STORED_PROCEDURE', match_count: 1, modify_date: '2026-01-01' }));
+	const text = await callSearch({ search_text: 'x' }, searchStub(hundred));
+	checkContains('cap note at 100 rows', text, 'limited to 100');
+}
+
+// Cache: second identical call returns cached marker without re-querying
+{
+	const stub = searchStub([{ schema_name: 'dbo', object_name: 'GetUsers', object_type: 'SQL_STORED_PROCEDURE', match_count: 1, modify_date: '2026-01-01' }]);
+	await MssqlObjectTools.handleTool('search_object_definitions', { search_text: 'cached' }, stub); // warm (no clear!)
+	const r2 = await MssqlObjectTools.handleTool('search_object_definitions', { search_text: 'cached' }, stub);
+	const text2 = r2.content[0]?.type === 'text' ? r2.content[0].text : '';
+	checkContains('search cache hit marker', text2, '📋 (Cached result)');
+	check('search cache: only one SQL executed', stub.queries.length, 1);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

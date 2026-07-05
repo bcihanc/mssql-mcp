@@ -25,12 +25,15 @@ const TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || '
 const TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || '100', 10);
 const DEFINITIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_TTL || '7200000', 10);
 const DEFINITIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_SIZE || '100', 10);
+const SEARCH_CACHE_TTL_MS = parseInt(process.env.MSSQL_SEARCH_CACHE_TTL || '1800000', 10);
+const SEARCH_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SEARCH_CACHE_SIZE || '100', 10);
 
 const procsCache = new Map<string, ToolCacheEntry>();
 const viewsCache = new Map<string, ToolCacheEntry>();
 const functionsCache = new Map<string, ToolCacheEntry>();
 const triggersCache = new Map<string, ToolCacheEntry>();
 const definitionsCache = new Map<string, ToolCacheEntry>();
+const searchCache = new Map<string, ToolCacheEntry>();
 
 function cleanExpired(cache: Map<string, ToolCacheEntry>, key: string, ttlMs: number): boolean {
 	const entry = cache.get(key);
@@ -89,12 +92,19 @@ const GetObjectDefinitionInputSchema = DatabaseScopeSchema.extend({
 	max_lines: z.number().int().optional().describe('Max lines to return (default 200, hard cap 1000)'),
 });
 
+const SearchObjectDefinitionsInputSchema = DatabaseScopeSchema.extend({
+	search_text: z.string().min(1).describe('Plain text to search for inside object definitions (case-insensitive). LIKE wildcards are escaped — the text is matched literally.'),
+	object_type: z.enum(['procedure', 'view', 'function', 'trigger']).optional().describe('Optional object type filter. If omitted, all module types are searched.'),
+	schema_name: z.string().optional().describe('Optional schema name filter (e.g. "dbo")'),
+});
+
 const TOOL_NAMES = new Set([
 	'list_stored_procedures',
 	'list_views',
 	'list_functions',
 	'list_triggers',
 	'get_object_definition',
+	'search_object_definitions',
 ]);
 
 interface ResolvedScope {
@@ -123,6 +133,19 @@ function resolveDbScope(databaseName?: string): ResolvedScope {
 function escapeLiteral(s: string): string {
 	return s.replace(/'/g, "''");
 }
+
+function escapeLikePattern(s: string): string {
+	return s.replace(/\\/g, '\\\\').replace(/[%_\[]/g, (c) => `\\${c}`);
+}
+
+const OBJECT_TYPE_FILTERS: Record<string, string> = {
+	procedure: `o.type IN ('P')`,
+	view: `o.type IN ('V')`,
+	function: `o.type IN ('FN','IF','TF','AF','FS','FT')`,
+	trigger: `o.type IN ('TR')`,
+};
+
+const SEARCH_SCOPE_NOTE = 'ℹ️ Objects whose definition is hidden (missing VIEW DEFINITION permission) or encrypted (WITH ENCRYPTION) cannot be searched.';
 
 function plainResponse(text: string): { content: TextContent[] } {
 	return { content: [{ type: 'text', text }] };
@@ -169,6 +192,11 @@ export const MssqlObjectTools = {
 				description: 'Get the full SQL definition (source code) of a stored procedure, view, function, or trigger. Returns NULL-safe diagnostics when the definition is inaccessible (missing VIEW DEFINITION permission), encrypted (WITH ENCRYPTION), or the object is not a code module. Supports cross-database via database_name and line-based pagination.',
 				inputSchema: z.toJSONSchema(GetObjectDefinitionInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
+			{
+				name: 'search_object_definitions',
+				description: 'Search for a literal text string inside all stored procedure, view, function, and trigger definitions (case-insensitive). Returns matching objects with match counts — use get_object_definition to read a matching object\'s body. Supports cross-database via database_name.',
+				inputSchema: z.toJSONSchema(SearchObjectDefinitionsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
+			},
 		];
 	},
 
@@ -184,6 +212,8 @@ export const MssqlObjectTools = {
 				return this.handleListTriggers(args, pool);
 			case 'get_object_definition':
 				return this.handleGetObjectDefinition(args, pool);
+			case 'search_object_definitions':
+				return this.handleSearchObjectDefinitions(args, pool);
 		}
 		throw new Error(`Unknown tool: ${name}`);
 	},
@@ -369,11 +399,52 @@ export const MssqlObjectTools = {
 		}
 	},
 
+	async handleSearchObjectDefinitions(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const v = SearchObjectDefinitionsInputSchema.parse(args);
+			const term = v.search_text.trim();
+			if (!term) {
+				return plainResponse('search_text cannot be empty or whitespace-only.');
+			}
+			const scope = resolveDbScope(v.database_name);
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${term}:${v.object_type || '_all_'}:${v.schema_name || '_all_'}`);
+
+			const cached = getFromCache(searchCache, cacheKey, SEARCH_CACHE_TTL_MS);
+			if (cached !== null) return cachedResponse(cached);
+
+			const lit = escapeLiteral(term);
+			const likeLit = escapeLiteral(escapeLikePattern(term));
+			const filters: string[] = [];
+			if (v.object_type) filters.push(OBJECT_TYPE_FILTERS[v.object_type]);
+			if (v.schema_name) filters.push(`s.name = '${escapeLiteral(v.schema_name)}'`);
+			const extraWhere = filters.length ? ` AND ${filters.join(' AND ')}` : '';
+
+			const query = `SELECT TOP 100 s.name AS schema_name, o.name AS object_name, o.type_desc AS object_type, (LEN(m.definition) - LEN(REPLACE(LOWER(m.definition), LOWER('${lit}'), ''))) / LEN('${lit}') AS match_count, o.modify_date FROM ${scope.dbPrefix}sys.sql_modules m INNER JOIN ${scope.dbPrefix}sys.objects o ON m.object_id = o.object_id INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE LOWER(m.definition) LIKE LOWER('%${likeLit}%') ESCAPE '\\'${extraWhere} ORDER BY match_count DESC, schema_name, object_name`;
+
+			if (consola.level >= 0) logger.info(`Searching object definitions for "${term}" in ${v.database_name || 'current DB'}`);
+			const results = await pool.query(query);
+			if (!results || results.length === 0) {
+				return plainResponse(`No objects found containing '${term}'.\n\n${SEARCH_SCOPE_NOTE}`);
+			}
+			let text = formatCSV(results);
+			if (results.length === 100) {
+				text += '\n\n⚠️ Result limited to 100 objects — narrow the search (object_type / schema_name / database_name) to see the rest.';
+			}
+			text += `\n\n${SEARCH_SCOPE_NOTE}`;
+			setInCache(searchCache, cacheKey, text, SEARCH_CACHE_MAX_SIZE, 'search_object_definitions');
+			return plainResponse(text);
+		} catch (error) {
+			if (consola.level >= 0) logger.error('search_object_definitions error:', error);
+			return errorResponse('Error searching object definitions', error);
+		}
+	},
+
 	clearCachesForTesting(): void {
 		procsCache.clear();
 		viewsCache.clear();
 		functionsCache.clear();
 		triggersCache.clear();
 		definitionsCache.clear();
+		searchCache.clear();
 	},
 };
