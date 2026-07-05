@@ -3,11 +3,22 @@ import sql from 'mssql';
 import { getFileLogger } from '../utils/fileLogger.js';
 import type { MssqlConfig as LocalMssqlConfig } from './config.js';
 
+// Driver-level requestTimeout is pool-wide, so it is only a BACKSTOP set high
+// enough that per-call increases (up to 300 s) can work. The EFFECTIVE timeout
+// is always enforced by the cancel-timer in ResilientConnectionPool.query().
+const DRIVER_TIMEOUT_FLOOR_MS = 300000;
+const DEFAULT_EFFECTIVE_TIMEOUT_MS = 30000;
+
+export interface QueryOptions {
+	/** Per-call timeout in milliseconds; overrides the connection's configured requestTimeout. */
+	timeoutMs?: number;
+}
+
 const logger = consola.withTag('mssql-connection');
 
 export interface ConnectionPool {
 	name: string;
-	query<T = any>(sqlQuery: string): Promise<T[]>;
+	query<T = any>(sqlQuery: string, options?: QueryOptions): Promise<T[]>;
 	close(): Promise<void>;
 }
 
@@ -22,6 +33,7 @@ function buildMssqlConfig(config: LocalMssqlConfig): sql.config {
 		server: config.server,
 		database: config.database,
 		port: config.port,
+		requestTimeout: Math.max(DRIVER_TIMEOUT_FLOOR_MS, config.requestTimeout ?? 0),
 		pool: {
 			max: 10,
 			min: 2, // PERFORMANCE: Keep minimum 2 connections warm to avoid reconnection overhead
@@ -295,7 +307,7 @@ export class ResilientConnectionPool implements ConnectionPool {
 		}
 	}
 
-	async query<T = any>(sqlQuery: string): Promise<T[]> {
+	async query<T = any>(sqlQuery: string, options?: QueryOptions): Promise<T[]> {
 		const fileLogger = getFileLogger();
 
 		// Lazy reconnection: if not connected, try to connect now
@@ -317,8 +329,15 @@ export class ResilientConnectionPool implements ConnectionPool {
 		}
 
 		fileLogger.debug('Executing query', { query: sqlQuery.substring(0, 200) });
+		const effectiveTimeoutMs = options?.timeoutMs ?? this.localConfig.requestTimeout ?? DEFAULT_EFFECTIVE_TIMEOUT_MS;
+		const request = pool.request();
+		let timedOut = false;
+		const timer = setTimeout(() => {
+			timedOut = true;
+			try { request.cancel(); } catch { /* cancel is best-effort */ }
+		}, effectiveTimeoutMs);
 		try {
-			const result = await pool.request().query(sqlQuery);
+			const result = await request.query(sqlQuery);
 			if (consola.level >= 0) {
 				logger.debug('Read-only query executed successfully');
 			}
@@ -327,6 +346,13 @@ export class ResilientConnectionPool implements ConnectionPool {
 			});
 			return result.recordset as T[];
 		} catch (error) {
+			// FIRST: our own cancellation — must never be classified as connection loss
+			if (timedOut) {
+				fileLogger.warn('Query cancelled by effective timeout', { effectiveTimeoutMs });
+				throw new Error(
+					`Query exceeded the ${Math.round(effectiveTimeoutMs / 1000)}-second timeout and was cancelled. Use timeout_seconds to allow more time (max 300).`,
+				);
+			}
 			// If this is a connection error, mark as disconnected and start retry
 			if (isConnectionError(error)) {
 				fileLogger.error('Connection lost during query execution, starting background retry');
@@ -342,6 +368,8 @@ export class ResilientConnectionPool implements ConnectionPool {
 
 			// For non-connection errors, use the shared error classifier
 			return handleQueryError(error, sqlQuery);
+		} finally {
+			clearTimeout(timer);
 		}
 	}
 
@@ -431,7 +459,7 @@ export async function createConnectionPool(config: LocalMssqlConfig): Promise<Co
 
 	return {
 		name: 'default',
-		async query<T = any>(sqlQuery: string): Promise<T[]> {
+		async query<T = any>(sqlQuery: string, _options?: QueryOptions): Promise<T[]> {
 			fileLogger.debug('Executing query', { query: sqlQuery.substring(0, 200) });
 			try {
 				const result = await pool.request().query(sqlQuery);

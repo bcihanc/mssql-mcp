@@ -161,6 +161,7 @@ function setInToolCache(
 // Zod schema for SQL query execution
 const ExecuteSqlInputSchema = z.object({
 	query: z.string().min(1).describe('The SQL query to execute'),
+	timeout_seconds: z.number().int().min(1).max(300).optional().describe('Per-call query timeout in seconds (1-300). Overrides the MSSQL_REQUEST_TIMEOUT default (30 seconds) for this query only.'),
 });
 
 // Zod schema for version check
@@ -971,7 +972,7 @@ export const MssqlTools = {
 
 			try {
 				// Execute read-only query
-				let results = await pool.query(query);
+				let results = await pool.query(query, validatedArgs.timeout_seconds ? { timeoutMs: validatedArgs.timeout_seconds * 1000 } : undefined);
 
 				// Handle empty results
 				if (!results || results.length === 0) {

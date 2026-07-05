@@ -10,6 +10,8 @@ export interface MssqlConfig {
 	encrypt: boolean;
 	command: string;
 	windowsAuth: boolean;
+	/** Effective query timeout in milliseconds (default 30000). Per-call override via exec_sql_csv timeout_seconds. */
+	requestTimeout?: number;
 }
 
 const logger = consola.withTag('mssql-config');
@@ -64,6 +66,17 @@ export function getMssqlConfig(env: NodeJS.ProcessEnv = process.env): MssqlConfi
 			if (consola.level >= 0) {
 				logger.warn(`Invalid MSSQL_PORT value: ${port}. Using default port 1433.`);
 			}
+		}
+	}
+
+	// Query timeout support (milliseconds, consistent with all other duration env vars)
+	const requestTimeoutRaw = env.MSSQL_REQUEST_TIMEOUT;
+	if (requestTimeoutRaw) {
+		const parsedTimeout = parseInt(requestTimeoutRaw, 10);
+		if (!Number.isNaN(parsedTimeout) && parsedTimeout > 0) {
+			config.requestTimeout = parsedTimeout;
+		} else if (consola.level >= 0) {
+			logger.warn(`Invalid MSSQL_REQUEST_TIMEOUT value: ${requestTimeoutRaw}. Using default 30000ms.`);
 		}
 	}
 
@@ -230,6 +243,7 @@ interface RawConnectionEntry {
 	port?: number;
 	encrypt?: boolean;
 	windowsAuth?: boolean;
+	requestTimeout?: number;
 }
 
 /**
@@ -252,6 +266,7 @@ const CONN_FIELD_MAP: Record<string, keyof RawConnectionEntry> = {
 	PORT: 'port',
 	ENCRYPT: 'encrypt',
 	WINDOWS_AUTH: 'windowsAuth',
+	REQUEST_TIMEOUT: 'requestTimeout',
 };
 
 // Match the longest field suffix first so the two-token WINDOWS_AUTH is never
@@ -312,6 +327,9 @@ function collectPrefixedConnections(env: NodeJS.ProcessEnv): Record<string, RawC
 			entry.encrypt = value.toLowerCase() === 'true';
 		} else if (field === 'windowsAuth') {
 			entry.windowsAuth = value.toLowerCase() === 'true';
+		} else if (field === 'requestTimeout') {
+			const t = parseInt(value, 10);
+			if (!Number.isNaN(t) && t > 0) entry.requestTimeout = t;
 		} else {
 			entry[field] = value as never;
 		}
@@ -337,6 +355,9 @@ function buildConnections(
 		throw new Error(`${sourceLabel} defines no connections — define at least one.`);
 	}
 
+	const globalTimeoutRaw = env.MSSQL_REQUEST_TIMEOUT ? parseInt(env.MSSQL_REQUEST_TIMEOUT, 10) : NaN;
+	const globalTimeout = !Number.isNaN(globalTimeoutRaw) && globalTimeoutRaw > 0 ? globalTimeoutRaw : undefined;
+
 	const connections = new Map<string, MssqlConfig>();
 	for (const name of names) {
 		validateConnectionName(name); // throws on invalid name
@@ -357,6 +378,7 @@ function buildConnections(
 			encrypt: entry.encrypt ?? false,
 			command: env.MSSQL_COMMAND || 'execute_sql',
 			windowsAuth,
+			requestTimeout: (typeof entry.requestTimeout === 'number' && entry.requestTimeout > 0 ? entry.requestTimeout : undefined) ?? globalTimeout,
 		});
 		connections.set(name, config);
 	}
