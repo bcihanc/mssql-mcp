@@ -303,7 +303,7 @@ When connected, Claude can use these capabilities:
   - Input: `object_name` as `"schema.name"` or just `"name"` (schema defaults to `dbo`)
   - Line-based pagination via `offset_lines` / `max_lines` (default 200 lines, hard cap 1000)
   - Cross-database via `database_name`
-  - NULL-safe diagnostics: reports clearly when the object is not a code module, when the login lacks `VIEW DEFINITION` permission, or when the object is encrypted (`WITH ENCRYPTION`)
+  - NULL-safe diagnostics: reports clearly when the object is not found, when it is not a code module, when the login lacks `VIEW DEFINITION` permission, or when the object is encrypted (`WITH ENCRYPTION`)
 
 ### 📂 Database Resources
 

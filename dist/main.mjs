@@ -80101,7 +80101,7 @@ var MssqlObjectTools = {
         return plainResponse(`Object not found: ${schema}.${object2}${dbSuffix}.`);
       let row = results[0];
       if (!row.is_module)
-        return plainResponse(`Object '${schema}.${object2}' is a ${row.type_desc}; it has no SQL definition (only stored procedures, views, functions, and triggers do).`);
+        return plainResponse(`Object '${schema}.${object2}'${dbSuffix} is a ${row.type_desc}; it has no SQL definition (only stored procedures, views, functions, and triggers do).`);
       if (row.definition == null) {
         if (v2.database_name)
           return plainResponse(`Definition unavailable for '${schema}.${object2}'${dbSuffix}: either the connection's login lacks VIEW DEFINITION permission, or the object is encrypted (WITH ENCRYPTION). The cross-database permission check is unreliable, so the exact cause can't be determined here.`);

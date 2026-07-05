@@ -343,7 +343,7 @@ export const MssqlObjectTools = {
 
 			const row: any = results[0];
 			if (!row.is_module) {
-				return plainResponse(`Object '${schema}.${object}' is a ${row.type_desc}; it has no SQL definition (only stored procedures, views, functions, and triggers do).`);
+				return plainResponse(`Object '${schema}.${object}'${dbSuffix} is a ${row.type_desc}; it has no SQL definition (only stored procedures, views, functions, and triggers do).`);
 			}
 
 			if (row.definition == null) {
