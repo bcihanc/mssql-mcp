@@ -14,11 +14,23 @@ export interface QueryOptions {
 	timeoutMs?: number;
 }
 
+/**
+ * A dedicated one-off connection for session-scoped statements (SET SHOWPLAN_XML ON).
+ * Never taken from the shared pool — pool poisoning is structurally impossible
+ * because the connection is closed after use.
+ */
+export interface EphemeralConnection {
+	batch(sqlText: string): Promise<void>;
+	query<T = any>(sqlText: string): Promise<T[]>;
+	close(): Promise<void>;
+}
+
 const logger = consola.withTag('mssql-connection');
 
 export interface ConnectionPool {
 	name: string;
 	query<T = any>(sqlQuery: string, options?: QueryOptions): Promise<T[]>;
+	createEphemeralConnection?(databaseOverride?: string): Promise<EphemeralConnection>;
 	close(): Promise<void>;
 }
 
@@ -371,6 +383,28 @@ export class ResilientConnectionPool implements ConnectionPool {
 		} finally {
 			clearTimeout(timer);
 		}
+	}
+
+	async createEphemeralConnection(databaseOverride?: string): Promise<EphemeralConnection> {
+		const config: sql.config = {
+			...buildMssqlConfig(this.localConfig),
+			pool: { max: 1, min: 0, idleTimeoutMillis: 5000 },
+		};
+		if (databaseOverride) config.database = databaseOverride;
+		const conn = new sql.ConnectionPool(config);
+		await conn.connect();
+		return {
+			async batch(sqlText: string): Promise<void> {
+				await conn.request().batch(sqlText);
+			},
+			async query<T = any>(sqlText: string): Promise<T[]> {
+				const result = await conn.request().query(sqlText);
+				return result.recordset as T[];
+			},
+			async close(): Promise<void> {
+				try { await conn.close(); } catch { /* ignore close errors */ }
+			},
+		};
 	}
 
 	async close(): Promise<void> {
