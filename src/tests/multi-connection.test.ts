@@ -10,6 +10,7 @@ import { MssqlTools } from '../MssqlTools.js';
 import { MssqlServerTools } from '../MssqlServerTools.js';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
+import { MssqlPerformanceTools } from '../MssqlPerformanceTools.js';
 import { parseConnectionConfigs } from '../server/config.js';
 import { ConnectionRegistry, resolvePoolForCall } from '../server/ConnectionRegistry.js';
 
@@ -70,8 +71,9 @@ console.log('\n--- all tool defs expose connection_name ---');
 		...MssqlServerTools.getToolDefinitions(),
 		...MssqlObjectTools.getToolDefinitions(),
 		...MssqlProfilingTools.getToolDefinitions(),
+		...MssqlPerformanceTools.getToolDefinitions(),
 	];
-	check('23 tool definitions total', allDefs.length, 23);
+	check('25 tool definitions total', allDefs.length, 25);
 	for (const def of allDefs) {
 		// list_connections is a registry-level tool, so it doesn't have connection_name
 		if (def.name === 'list_connections') continue;

@@ -13,6 +13,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { MssqlObjectTools } from '../MssqlObjectTools.js';
+import { MssqlPerformanceTools } from '../MssqlPerformanceTools.js';
 import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
 import { MssqlResources } from '../MssqlResources.js';
 import { MssqlServerTools } from '../MssqlServerTools.js';
@@ -70,6 +71,7 @@ export class MssqlMcpServer {
 				...MssqlObjectTools.getToolDefinitions(),
 				...MssqlServerTools.getToolDefinitions(),
 				...MssqlProfilingTools.getToolDefinitions(),
+				...MssqlPerformanceTools.getToolDefinitions(),
 			];
 			return { tools };
 		});
@@ -114,6 +116,9 @@ export class MssqlMcpServer {
 			}
 			if (MssqlProfilingTools.canHandle(name)) {
 				return await MssqlProfilingTools.handleTool(name, args, pool);
+			}
+			if (MssqlPerformanceTools.canHandle(name)) {
+				return await MssqlPerformanceTools.handleTool(name, args, pool);
 			}
 			return await MssqlTools.handleTool(name, args, pool);
 		});
