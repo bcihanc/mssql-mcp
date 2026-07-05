@@ -575,15 +575,39 @@ Object Tools Caching (programmable-object metadata):
 
 ### Multi-Connection Support
 
-The server supports multiple named connections via a single `MSSQL_CONNECTIONS` env var (JSON), set directly in `.mcp.json`:
+The server resolves connections from **three sources, in priority order** (all set directly in `.mcp.json`):
+
+**1. Flat `MSSQL_CONN_<name>_<FIELD>` env vars (recommended — human-readable).** Each field is its own env var, so the `.mcp.json` "env" block reads one key per line with no `\"` escaping:
 
 ```json
 "env": {
-  "MSSQL_CONNECTIONS": "{\"default\":\"uretim\",\"connections\":{\"uretim\":{\"server\":\"prod-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"},\"test\":{\"server\":\"test-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"}}}"
+  "MSSQL_DEFAULT_CONNECTION": "uretim",
+  "MSSQL_CONN_uretim_SERVER":   "prod-sql",
+  "MSSQL_CONN_uretim_DATABASE": "Sales",
+  "MSSQL_CONN_uretim_USER":     "ro",
+  "MSSQL_CONN_uretim_PASSWORD": "***",
+  "MSSQL_CONN_test_SERVER":     "test-sql",
+  "MSSQL_CONN_test_DATABASE":   "Sales",
+  "MSSQL_CONN_test_USER":       "ro",
+  "MSSQL_CONN_test_PASSWORD":   "***"
 }
 ```
 
-- **Backward compatible**: if `MSSQL_CONNECTIONS` is absent, the legacy `MSSQL_SERVER`/`MSSQL_USER`/... vars define a single connection named `default`. When `MSSQL_CONNECTIONS` IS present, the legacy vars are ignored.
+- Field suffixes: `SERVER`, `DATABASE`, `USER`, `PASSWORD`, plus optional `PORT`, `ENCRYPT`, `WINDOWS_AUTH`. `PORT` is parsed as a number; `ENCRYPT`/`WINDOWS_AUTH` accept the string `"true"`.
+- The field is matched from the RIGHT against the known suffix set, so connection names containing hyphens or underscores (e.g. `aytemiz-com-tr`) parse unambiguously. `WINDOWS_AUTH` (two tokens) is matched before shorter suffixes.
+- Default is selected via `MSSQL_DEFAULT_CONNECTION` (or auto when a single connection is defined). A `MSSQL_CONN_*` key with no recognized field suffix is a config error (fail-loud on typos).
+
+**2. `MSSQL_CONNECTIONS` JSON blob (backward compatible).** A single env var holding the whole config as an escaped JSON string. Takes precedence over the flat vars when both are present:
+
+```json
+"env": {
+  "MSSQL_CONNECTIONS": "{\"default\":\"uretim\",\"connections\":{\"uretim\":{\"server\":\"prod-sql\",\"database\":\"Sales\",\"user\":\"ro\",\"password\":\"***\"}}}"
+}
+```
+
+**3. Legacy single-connection vars.** `MSSQL_SERVER`/`MSSQL_USER`/... define one connection named `default`.
+
+- **Backward compatible**: sources are checked JSON → flat → legacy; existing configs keep working unchanged. When a higher-priority source is present, lower ones are ignored.
 - **Default resolution**: single connection → auto-default; multiple connections require an explicit `default`; a `default` pointing to a missing name is a config error.
 - **Connection selection**: every tool accepts an optional `connection_name` parameter (omit → default). Use `list_connections` to discover names (never exposes passwords).
 - **Cache isolation**: all tool caches are namespaced by connection name — results never bleed across connections.

@@ -249,6 +249,83 @@ console.log('\n--- list_connections tool ---');
 	check('list_connections excluded from canHandle', MssqlServerTools.canHandle('list_connections'), false);
 }
 
+console.log('\n--- flat MSSQL_CONN_<name>_<FIELD> parsing ---');
+{
+	// Two connections, one with a hyphenated name — readable per-field env vars.
+	const env = {
+		MSSQL_DEFAULT_CONNECTION: 'vaay',
+		MSSQL_CONN_vaay_SERVER: 'vaay-host',
+		MSSQL_CONN_vaay_DATABASE: 'VaayDB',
+		MSSQL_CONN_vaay_USER: 'ro',
+		MSSQL_CONN_vaay_PASSWORD: 'secret-pw',
+		'MSSQL_CONN_aytemiz-com-tr_SERVER': 'web-host',
+		'MSSQL_CONN_aytemiz-com-tr_DATABASE': 'WebDB',
+		'MSSQL_CONN_aytemiz-com-tr_USER': 'ro',
+		'MSSQL_CONN_aytemiz-com-tr_PASSWORD': 'secret-pw',
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	check('flat -> two connections', parsed.connections.size, 2);
+	check('flat -> default from MSSQL_DEFAULT_CONNECTION', parsed.defaultName, 'vaay');
+	check('flat -> vaay server', parsed.connections.get('vaay')?.server, 'vaay-host');
+	check('flat -> vaay database', parsed.connections.get('vaay')?.database, 'VaayDB');
+	check('flat -> hyphenated name parsed', parsed.connections.get('aytemiz-com-tr')?.server, 'web-host');
+}
+{
+	// Single flat connection, no explicit default -> auto default.
+	const env = {
+		MSSQL_CONN_only_SERVER: 'x',
+		MSSQL_CONN_only_DATABASE: 'S',
+		MSSQL_CONN_only_USER: 'u',
+		MSSQL_CONN_only_PASSWORD: 'p',
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	check('flat single -> auto default', parsed.defaultName, 'only');
+}
+{
+	// PORT / ENCRYPT / WINDOWS_AUTH coercion.
+	const env = {
+		MSSQL_CONN_win_SERVER: 'x',
+		MSSQL_CONN_win_DATABASE: 'S',
+		MSSQL_CONN_win_PORT: '1450',
+		MSSQL_CONN_win_ENCRYPT: 'true',
+		MSSQL_CONN_win_WINDOWS_AUTH: 'true',
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	const cfg = parsed.connections.get('win');
+	check('flat -> PORT coerced to number', cfg?.port, 1450);
+	check('flat -> ENCRYPT coerced to boolean', cfg?.encrypt, true);
+	check('flat -> WINDOWS_AUTH true drops user/password', cfg?.windowsAuth, true);
+	check('flat -> windowsAuth user undefined', cfg?.user, undefined);
+}
+checkThrows('flat multi no-default -> throws', () => parseConnectionConfigs({
+	MSSQL_CONN_a_SERVER: 'x', MSSQL_CONN_a_DATABASE: 'S', MSSQL_CONN_a_USER: 'u', MSSQL_CONN_a_PASSWORD: 'p',
+	MSSQL_CONN_b_SERVER: 'y', MSSQL_CONN_b_DATABASE: 'S', MSSQL_CONN_b_USER: 'u', MSSQL_CONN_b_PASSWORD: 'p',
+} as any));
+checkThrows('flat missing password (no windowsAuth) -> throws', () => parseConnectionConfigs({
+	MSSQL_CONN_a_SERVER: 'x', MSSQL_CONN_a_DATABASE: 'S', MSSQL_CONN_a_USER: 'u',
+} as any));
+checkThrows('flat unrecognized field -> throws', () => parseConnectionConfigs({
+	MSSQL_CONN_a_HOSTNAME: 'x',
+} as any));
+checkThrows('flat invalid connection name -> throws', () => parseConnectionConfigs({
+	'MSSQL_CONN_bad.name_SERVER': 'x',
+} as any));
+{
+	// MSSQL_CONNECTIONS JSON takes precedence over flat vars when both are present.
+	const env = {
+		MSSQL_CONNECTIONS: JSON.stringify({
+			connections: { fromjson: { server: 'json-host', database: 'S', user: 'u', password: 'p' } },
+		}),
+		MSSQL_CONN_flat_SERVER: 'flat-host',
+		MSSQL_CONN_flat_DATABASE: 'S',
+		MSSQL_CONN_flat_USER: 'u',
+		MSSQL_CONN_flat_PASSWORD: 'p',
+	} as any;
+	const parsed = parseConnectionConfigs(env);
+	check('JSON wins over flat vars', parsed.defaultName, 'fromjson');
+	check('flat vars ignored when JSON present', parsed.connections.has('flat'), false);
+}
+
 console.log('\n--- MSSQL_DEFAULT_CONNECTION override ---');
 {
 	const connJson = JSON.stringify({
