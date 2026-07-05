@@ -7,6 +7,8 @@
 import { getMssqlConfig, parseConnectionConfigs } from '../server/config.js';
 import { ResilientConnectionPool } from '../server/connection.js';
 import { MssqlTools } from '../MssqlTools.js';
+import { formatCSV } from '../utils/csv.js';
+import { MssqlProfilingTools } from '../MssqlProfilingTools.js';
 
 let pass = 0;
 let fail = 0;
@@ -120,6 +122,58 @@ console.log('\n--- exec_sql_csv timeout_seconds threading ---');
 
 	const bad = await MssqlTools.handleTool('exec_sql_csv', { query: 'SELECT 3 AS three', timeout_seconds: 500 }, fakePool);
 	checkContains('timeout_seconds > 300 rejected by Zod', bad.content[0].text as string, 'Invalid arguments');
+}
+
+console.log('\n--- cell truncation (formatCSV) ---');
+{
+	const longVal = 'x'.repeat(1500);
+	const out = formatCSV([{ a: longVal }], undefined, 1000);
+	checkContains('long cell gets truncation marker', out, '...[truncated 500 chars]');
+	check('kept exactly maxCellChars prefix', out.includes('x'.repeat(1000)), true);
+	check('original full value gone', out.includes('x'.repeat(1001)), false);
+
+	const commaVal = ('y,').repeat(800); // 1600 chars, contains commas → must be quoted
+	const out2 = formatCSV([{ a: commaVal }], undefined, 1000);
+	checkContains('marker survives CSV quoting (inside quotes)', out2, 'chars]"');
+
+	const out3 = formatCSV([{ a: longVal }]);
+	check('no maxCellChars → cell untouched', out3.includes(longVal), true);
+
+	const out4 = formatCSV([{ a: longVal }], undefined, 0);
+	check('maxCellChars=0 disables truncation', out4.includes(longVal), true);
+}
+
+console.log('\n--- exec_sql_csv max_rows ---');
+{
+	let queryCount = 0;
+	const rows5 = [{ n: 1 }, { n: 2 }, { n: 3 }, { n: 4 }, { n: 5 }];
+	const fakePool: any = { name: 'opsB', query: async () => { queryCount++; return rows5.map((r) => ({ ...r })); } };
+
+	const r1 = await MssqlTools.handleTool('exec_sql_csv', { query: 'SELECT n FROM t5', max_rows: 2 }, fakePool);
+	checkContains('max_rows note present', r1.content[0].text as string, 'Showing first 2 of 5 fetched rows');
+	check('exactly 2 data rows', (r1.content[0].text as string).split('\n').filter((l) => /^\d+$/.test(l)).length, 2);
+
+	const r2 = await MssqlTools.handleTool('exec_sql_csv', { query: 'SELECT n FROM t5', max_rows: 3 }, fakePool);
+	check('different max_rows → cache miss (fresh query)', queryCount, 2);
+	checkContains('max_rows=3 note', r2.content[0].text as string, 'Showing first 3 of 5');
+
+	await MssqlTools.handleTool('exec_sql_csv', { query: 'SELECT n FROM t5', max_rows: 3 }, fakePool);
+	check('same max_rows → cache hit (no new query)', queryCount, 2);
+}
+
+console.log('\n--- get_table_sample cell truncation ---');
+{
+	const fakeSamplePool: any = { name: 'opsC', query: async () => [{ big: 'z'.repeat(1500) }] };
+	const s = await MssqlProfilingTools.handleTool('get_table_sample', { table_name: 'TruncT' }, fakeSamplePool);
+	checkContains('sample cell truncated', s.content[0].text as string, '...[truncated 500 chars]');
+}
+
+console.log('\n--- metadata tools NOT truncated ---');
+{
+	const longName = 'w'.repeat(1500);
+	const fakeMetaPool: any = { name: 'opsD', query: async () => [{ Schema: 's', Name: longName, Type: 'BASE TABLE' }] };
+	const lt = await MssqlTools.handleTool('list_tables', {}, fakeMetaPool);
+	check('list_tables cell untouched (truncation is exec/sample-only)', (lt.content[0].text as string).includes(longName), true);
 }
 
 // --- summary (KEEP LAST — later tasks append sections ABOVE this block) ---

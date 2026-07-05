@@ -18,6 +18,7 @@ const PROFILE_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROFILE_CACHE_TTL || '18
 const PROFILE_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROFILE_CACHE_SIZE || '100', 10);
 const ROW_COUNT_CACHE_TTL_MS = parseInt(process.env.MSSQL_ROW_COUNT_CACHE_TTL || '900000', 10);
 const ROW_COUNT_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_ROW_COUNT_CACHE_SIZE || '200', 10);
+const MAX_CELL_CHARS = parseInt(process.env.MSSQL_MAX_CELL_CHARS || '1000', 10);
 
 const profileCache = new Map<string, ToolCacheEntry>();
 const rowCountCache = new Map<string, ToolCacheEntry>();
@@ -250,7 +251,7 @@ export const MssqlProfilingTools = {
 			if (!results || results.length === 0) {
 				return plainResponse(`📭 ${table.displayName} — table is empty.`);
 			}
-			const csv = formatCSV(results);
+			const csv = formatCSV(results, undefined, MAX_CELL_CHARS);
 			const note = n === SAMPLE_HARD_CAP ? `\n\nℹ️ sample_rows capped at ${SAMPLE_HARD_CAP} (hard limit).` : '';
 			return plainResponse(`Random sample (${results.length} rows) from ${table.displayName}:\n${csv}${note}`);
 		} catch (error) {

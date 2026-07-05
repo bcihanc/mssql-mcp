@@ -13,6 +13,8 @@ const logger = consola.withTag('mssql-tools');
 // PERFORMANCE: Configurable result size limits from environment
 const MAX_RESULT_ROWS = parseInt(process.env.MSSQL_MAX_ROWS || '10000', 10);
 const WARN_RESULT_ROWS = parseInt(process.env.MSSQL_WARN_ROWS || '5000', 10);
+// TOKEN EFFICIENCY: cells longer than this are truncated with an explicit marker (0 disables)
+const MAX_CELL_CHARS = parseInt(process.env.MSSQL_MAX_CELL_CHARS || '1000', 10);
 
 // PERFORMANCE: Query result caching with TTL and true LRU
 interface QueryCacheEntry {
@@ -162,6 +164,7 @@ function setInToolCache(
 const ExecuteSqlInputSchema = z.object({
 	query: z.string().min(1).describe('The SQL query to execute'),
 	timeout_seconds: z.number().int().min(1).max(300).optional().describe('Per-call query timeout in seconds (1-300). Overrides the MSSQL_REQUEST_TIMEOUT default (30 seconds) for this query only.'),
+	max_rows: z.number().int().min(1).optional().describe('Return at most this many rows (token saver — applied after fetch; use TOP in your SQL to also reduce database work).'),
 });
 
 // Zod schema for version check
@@ -937,7 +940,7 @@ export const MssqlTools = {
 			}
 
 			// PERFORMANCE: Check query cache first with lazy cleanup
-			const cacheKey = namespaceCacheKey(pool.name, getCacheKey(query));
+			const cacheKey = namespaceCacheKey(pool.name, getCacheKey(`${query}|max_rows=${validatedArgs.max_rows ?? 0}|cell=${MAX_CELL_CHARS}`));
 			const now = Date.now();
 
 			// Lazy cleanup: check if cached entry is expired
@@ -1011,8 +1014,15 @@ export const MssqlTools = {
 					}
 				}
 
+				// TOKEN EFFICIENCY: per-call row cap (applied after fetch — saves tokens, not DB work)
+				if (validatedArgs.max_rows && results.length > validatedArgs.max_rows) {
+					const fetchedCount = results.length;
+					results = results.slice(0, validatedArgs.max_rows);
+					warningMessage += `\n\nℹ️ Showing first ${validatedArgs.max_rows} of ${fetchedCount} fetched rows (max_rows). Use TOP in your SQL to also reduce database work.`;
+				}
+
 				// PERFORMANCE: Memory-efficient CSV formatting using array join (O(n) instead of O(n²))
-				const resultText = formatCSV(results, warningMessage);
+				const resultText = formatCSV(results, warningMessage, MAX_CELL_CHARS);
 
 				// PERFORMANCE: Cache the query result with LRU tracking
 				queryCache.set(cacheKey, {

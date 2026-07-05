@@ -8,9 +8,10 @@
  *
  * @param results - Array of objects to format as CSV
  * @param warningMessage - Optional warning message to append
+ * @param maxCellChars - Optional maximum characters per cell (truncates longer cells with marker)
  * @returns CSV formatted string
  */
-export function formatCSV(results: any[], warningMessage?: string): string {
+export function formatCSV(results: any[], warningMessage?: string, maxCellChars?: number): string {
 	if (!results || results.length === 0) {
 		return '';
 	}
@@ -27,7 +28,11 @@ export function formatCSV(results: any[], warningMessage?: string): string {
 			if (value === null || value === undefined) return '';
 
 			// PERFORMANCE: Single regex test instead of 3 includes() calls
-			const strValue = String(value);
+			let strValue = String(value);
+			// TOKEN EFFICIENCY: truncate very long cells BEFORE quoting so the marker stays readable
+			if (maxCellChars && maxCellChars > 0 && strValue.length > maxCellChars) {
+				strValue = `${strValue.slice(0, maxCellChars)}...[truncated ${strValue.length - maxCellChars} chars]`;
+			}
 			if (needsQuotingRegex.test(strValue)) {
 				return `"${strValue.replace(/"/g, '""')}"`;
 			}
