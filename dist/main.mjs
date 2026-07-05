@@ -79846,13 +79846,47 @@ function namespaceCacheKey(connectionName, rawKey) {
 }
 __name(namespaceCacheKey, "namespaceCacheKey");
 
+// src/utils/pagination.ts
+var DEFINITION_DEFAULT_LINES = parseInt(process.env.MSSQL_DEFINITION_DEFAULT_LINES || "200", 10), DEFINITION_MAX_LINES = parseInt(process.env.MSSQL_DEFINITION_MAX_LINES || "1000", 10);
+function paginateLines(fullText, params = {}) {
+  let lines = fullText.split(`
+`), total = lines.length, offset = Math.max(0, Math.floor(Number(params.offset_lines) || 0)), max = Math.floor(Number(params.max_lines) || DEFINITION_DEFAULT_LINES);
+  if ((!Number.isFinite(max) || max <= 0) && (max = DEFINITION_DEFAULT_LINES), max > DEFINITION_MAX_LINES && (max = DEFINITION_MAX_LINES), offset >= total)
+    return {
+      content: "",
+      total_lines: total,
+      offset,
+      returned_lines: 0,
+      has_more: !1
+    };
+  let slice = lines.slice(offset, offset + max), returned = slice.length, hasMore = offset + returned < total;
+  return {
+    content: slice.join(`
+`),
+    total_lines: total,
+    offset,
+    returned_lines: returned,
+    has_more: hasMore,
+    next_offset: hasMore ? offset + returned : void 0
+  };
+}
+__name(paginateLines, "paginateLines");
+function formatPaginatedResponse(paginated, objectName) {
+  if (paginated.returned_lines === 0)
+    return paginated.total_lines === 0 ? `📄 ${objectName} — definition is empty.` : `📄 ${objectName} — offset_lines=${paginated.offset} is past end of definition (total_lines=${paginated.total_lines}).`;
+  let start = paginated.offset + 1, end = paginated.offset + paginated.returned_lines, nextHint = paginated.has_more ? ` next_offset=${paginated.next_offset}` : "";
+  return `${`📄 ${objectName} — lines ${start}-${end} of ${paginated.total_lines} | has_more=${paginated.has_more}${nextHint}`}
+${paginated.content}`;
+}
+__name(formatPaginatedResponse, "formatPaginatedResponse");
+
 // src/utils/connectionScope.ts
 var ConnectionScopeSchema = external_exports2.object({
   connection_name: external_exports2.string().optional().describe("Target connection name. Omit to use the default connection. Use list_connections to see available names.")
 });
 
 // src/MssqlObjectTools.ts
-var logger2 = consola.withTag("mssql-object-tools"), PROCS_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROCS_CACHE_TTL || "7200000", 10), PROCS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROCS_CACHE_SIZE || "100", 10), VIEWS_CACHE_TTL_MS = parseInt(process.env.MSSQL_VIEWS_CACHE_TTL || "7200000", 10), VIEWS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_VIEWS_CACHE_SIZE || "100", 10), FUNCTIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_TTL || "7200000", 10), FUNCTIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_SIZE || "100", 10), TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || "7200000", 10), TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || "100", 10), procsCache = /* @__PURE__ */ new Map(), viewsCache = /* @__PURE__ */ new Map(), functionsCache = /* @__PURE__ */ new Map(), triggersCache = /* @__PURE__ */ new Map();
+var logger2 = consola.withTag("mssql-object-tools"), PROCS_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROCS_CACHE_TTL || "7200000", 10), PROCS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROCS_CACHE_SIZE || "100", 10), VIEWS_CACHE_TTL_MS = parseInt(process.env.MSSQL_VIEWS_CACHE_TTL || "7200000", 10), VIEWS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_VIEWS_CACHE_SIZE || "100", 10), FUNCTIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_TTL || "7200000", 10), FUNCTIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_SIZE || "100", 10), TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || "7200000", 10), TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || "100", 10), DEFINITIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_TTL || "7200000", 10), DEFINITIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_SIZE || "100", 10), procsCache = /* @__PURE__ */ new Map(), viewsCache = /* @__PURE__ */ new Map(), functionsCache = /* @__PURE__ */ new Map(), triggersCache = /* @__PURE__ */ new Map(), definitionsCache = /* @__PURE__ */ new Map();
 function cleanExpired(cache, key, ttlMs) {
   let entry = cache.get(key);
   return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
@@ -79888,11 +79922,16 @@ var DatabaseScopeSchema = external_exports2.object({
 }), ListViewsInputSchema = ListProcsInputSchema, ListFunctionsInputSchema = ListProcsInputSchema, ListTriggersInputSchema = DatabaseScopeSchema.extend({
   table_name: external_exports2.string().optional().describe("Optional 1-part table name filter (no schema). Lists triggers attached to this table."),
   include_system: external_exports2.boolean().optional().describe("Include system-shipped triggers (default: false)")
+}), GetObjectDefinitionInputSchema = DatabaseScopeSchema.extend({
+  object_name: external_exports2.string().describe('Object name as "schema.name" or just "name" (schema defaults to dbo). e.g. "dbo.GetUsers"'),
+  offset_lines: external_exports2.number().int().optional().describe("Line offset for pagination (default 0)"),
+  max_lines: external_exports2.number().int().optional().describe("Max lines to return (default 200, hard cap 1000)")
 }), TOOL_NAMES = /* @__PURE__ */ new Set([
   "list_stored_procedures",
   "list_views",
   "list_functions",
-  "list_triggers"
+  "list_triggers",
+  "get_object_definition"
 ]);
 function resolveDbScope(databaseName) {
   if (databaseName) {
@@ -79954,6 +79993,11 @@ var MssqlObjectTools = {
         name: "list_triggers",
         description: "List DML triggers with parent table, name, type (INSTEAD OF / AFTER), enabled state, and the events they fire on (INSERT/UPDATE/DELETE). Optionally filter by parent table_name.",
         inputSchema: external_exports2.toJSONSchema(ListTriggersInputSchema.extend(ConnectionScopeSchema.shape))
+      },
+      {
+        name: "get_object_definition",
+        description: "Get the full SQL definition (source code) of a stored procedure, view, function, or trigger. Returns NULL-safe diagnostics when the definition is inaccessible (missing VIEW DEFINITION permission), encrypted (WITH ENCRYPTION), or the object is not a code module. Supports cross-database via database_name and line-based pagination.",
+        inputSchema: external_exports2.toJSONSchema(GetObjectDefinitionInputSchema.extend(ConnectionScopeSchema.shape))
       }
     ];
   },
@@ -79967,6 +80011,8 @@ var MssqlObjectTools = {
         return this.handleListFunctions(args, pool);
       case "list_triggers":
         return this.handleListTriggers(args, pool);
+      case "get_object_definition":
+        return this.handleGetObjectDefinition(args, pool);
     }
     throw new Error(`Unknown tool: ${name}`);
   },
@@ -80038,8 +80084,40 @@ var MssqlObjectTools = {
       return consola.level >= 0 && logger2.error("list_triggers error:", error46), errorResponse("Error listing triggers", error46);
     }
   },
+  async handleGetObjectDefinition(args, pool) {
+    try {
+      let v2 = GetObjectDefinitionInputSchema.parse(args), parts = parseObjectName(v2.object_name);
+      if (parts.database)
+        return plainResponse(`Invalid object_name: "${v2.object_name}" has 3 parts (database.schema.object). Use the database_name parameter for cross-database access and pass object_name as "schema.name" or "name".`);
+      let schema = parts.schema || "dbo", object2 = parts.object, scope = resolveDbScope(v2.database_name), dbSuffix = v2.database_name ? ` in database ${v2.database_name}` : "", cacheKey2 = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${schema}.${object2}`), cached2 = getFromCache(definitionsCache, cacheKey2, DEFINITIONS_CACHE_TTL_MS);
+      if (cached2 !== null) {
+        let paginated2 = paginateLines(cached2, { offset_lines: v2.offset_lines, max_lines: v2.max_lines });
+        return cachedResponse(formatPaginatedResponse(paginated2, `${schema}.${object2}`));
+      }
+      let query = `SELECT o.type_desc, CASE WHEN m.object_id IS NULL THEN 0 ELSE 1 END AS is_module, m.definition AS definition FROM ${scope.dbPrefix}sys.objects o INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id LEFT JOIN ${scope.dbPrefix}sys.sql_modules m ON o.object_id = m.object_id WHERE s.name = '${escapeLiteral(schema)}' AND o.name = '${escapeLiteral(object2)}'`;
+      consola.level >= 0 && logger2.info(`Getting object definition for ${schema}.${object2} in ${v2.database_name || "current DB"}`);
+      let results = await pool.query(query);
+      if (!results || results.length === 0)
+        return plainResponse(`Object not found: ${schema}.${object2}${dbSuffix}.`);
+      let row = results[0];
+      if (!row.is_module)
+        return plainResponse(`Object '${schema}.${object2}' is a ${row.type_desc}; it has no SQL definition (only stored procedures, views, functions, and triggers do).`);
+      if (row.definition == null) {
+        if (v2.database_name)
+          return plainResponse(`Definition unavailable for '${schema}.${object2}'${dbSuffix}: either the connection's login lacks VIEW DEFINITION permission, or the object is encrypted (WITH ENCRYPTION). The cross-database permission check is unreliable, so the exact cause can't be determined here.`);
+        let permQuery = `SELECT HAS_PERMS_BY_NAME('${escapeLiteral(schema)}.${escapeLiteral(object2)}','OBJECT','VIEW DEFINITION') AS has_perm`, permResults = await pool.query(permQuery);
+        return (permResults && permResults.length > 0 ? permResults[0].has_perm : 0) ? plainResponse("Definition is encrypted (WITH ENCRYPTION) and cannot be read.") : plainResponse(`Definition hidden: the connection's login lacks VIEW DEFINITION permission on '${schema}.${object2}'. Ask a DBA to GRANT VIEW DEFINITION.`);
+      }
+      let definition = row.definition;
+      setInCache(definitionsCache, cacheKey2, definition, DEFINITIONS_CACHE_MAX_SIZE, "get_object_definition");
+      let paginated = paginateLines(definition, { offset_lines: v2.offset_lines, max_lines: v2.max_lines });
+      return plainResponse(formatPaginatedResponse(paginated, `${schema}.${object2}`));
+    } catch (error46) {
+      return consola.level >= 0 && logger2.error("get_object_definition error:", error46), errorResponse("Error getting object definition", error46);
+    }
+  },
   clearCachesForTesting() {
-    procsCache.clear(), viewsCache.clear(), functionsCache.clear(), triggersCache.clear();
+    procsCache.clear(), viewsCache.clear(), functionsCache.clear(), triggersCache.clear(), definitionsCache.clear();
   }
 };
 
