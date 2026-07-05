@@ -233,55 +233,120 @@ interface RawConnectionEntry {
 }
 
 /**
- * Parse multi-connection configuration.
+ * Field suffixes recognized in the flat `MSSQL_CONN_<name>_<FIELD>` format,
+ * mapped to their `RawConnectionEntry` keys. This flat format is the
+ * human-readable alternative to the escaped `MSSQL_CONNECTIONS` JSON blob:
+ * every field is its own env var, so a `.mcp.json` "env" block reads one
+ * key per line with no `\"` escaping.
  *
- * - If `MSSQL_CONNECTIONS` is set: parse it as JSON, validate each entry, and
- *   resolve the default connection name.
- * - Otherwise: fall back to the legacy single-connection env vars, exposed as a
- *   single connection named "default".
- *
- * @throws Error on malformed JSON, empty connections, invalid names, or an
- *   unresolvable default. Callers surface this as a configuration error.
+ *   MSSQL_CONN_vaay_SERVER   = VAAYDB.local
+ *   MSSQL_CONN_vaay_DATABASE = AytemizDB
+ *   MSSQL_CONN_vaay_USER     = ReadOnly
+ *   MSSQL_CONN_vaay_PASSWORD = ***
  */
-export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): ParsedConnections {
-	const raw = env.MSSQL_CONNECTIONS;
+const CONN_FIELD_MAP: Record<string, keyof RawConnectionEntry> = {
+	SERVER: 'server',
+	DATABASE: 'database',
+	USER: 'user',
+	PASSWORD: 'password',
+	PORT: 'port',
+	ENCRYPT: 'encrypt',
+	WINDOWS_AUTH: 'windowsAuth',
+};
 
-	// Legacy single-connection fallback
-	if (!raw) {
-		const legacy = getMssqlConfig(env);
-		const connections = new Map<string, MssqlConfig>();
-		connections.set('default', legacy);
-		return { connections, defaultName: 'default' };
+// Match the longest field suffix first so the two-token WINDOWS_AUTH is never
+// shadowed by an accidental shorter match. Connection names may contain
+// underscores and hyphens (see validateConnectionName), so the field is
+// identified by matching a known suffix from the RIGHT, and everything before
+// it is the connection name.
+const CONN_FIELD_SUFFIXES = Object.keys(CONN_FIELD_MAP).sort((a, b) => b.length - a.length);
+
+/**
+ * Collect connections defined via flat `MSSQL_CONN_<name>_<FIELD>` env vars.
+ *
+ * Returns a `{ name → RawConnectionEntry }` record, or `null` when no such vars
+ * are present (so the caller can fall through to the legacy single-connection
+ * path). Values are coerced to the entry's type (port → number, encrypt /
+ * windowsAuth → boolean from the string "true").
+ *
+ * @throws Error if a `MSSQL_CONN_*` key has no recognized field suffix, or the
+ *   embedded connection name is invalid.
+ */
+function collectPrefixedConnections(env: NodeJS.ProcessEnv): Record<string, RawConnectionEntry> | null {
+	const PREFIX = 'MSSQL_CONN_';
+	const record: Record<string, RawConnectionEntry> = {};
+	let found = false;
+
+	for (const key of Object.keys(env)) {
+		if (!key.startsWith(PREFIX)) continue;
+		const rest = key.slice(PREFIX.length); // e.g. "vaay_SERVER", "aytemiz-com-tr_WINDOWS_AUTH"
+
+		let matchedSuffix: string | undefined;
+		let connName: string | undefined;
+		for (const suffix of CONN_FIELD_SUFFIXES) {
+			if (rest.endsWith(`_${suffix}`)) {
+				matchedSuffix = suffix;
+				connName = rest.slice(0, rest.length - suffix.length - 1);
+				break;
+			}
+		}
+
+		if (!matchedSuffix || !connName) {
+			throw new Error(
+				`Unrecognized connection env var "${key}". Expected MSSQL_CONN_<name>_<FIELD>, where FIELD is one of: ${Object.keys(CONN_FIELD_MAP).join(', ')}.`,
+			);
+		}
+
+		validateConnectionName(connName); // throws on invalid name
+
+		const value = env[key];
+		if (value === undefined) continue;
+		found = true;
+
+		const entry = (record[connName] ??= {});
+		const field = CONN_FIELD_MAP[matchedSuffix];
+		if (field === 'port') {
+			const port = parseInt(value, 10);
+			if (!Number.isNaN(port)) entry.port = port;
+		} else if (field === 'encrypt') {
+			entry.encrypt = value.toLowerCase() === 'true';
+		} else if (field === 'windowsAuth') {
+			entry.windowsAuth = value.toLowerCase() === 'true';
+		} else {
+			entry[field] = value as never;
+		}
 	}
 
-	let parsed: { default?: string; connections?: Record<string, RawConnectionEntry> };
-	try {
-		parsed = JSON.parse(raw);
-	} catch (error) {
-		throw new Error(
-			`MSSQL_CONNECTIONS is not valid JSON: ${error instanceof Error ? error.message : 'parse error'}`,
-		);
-	}
+	return found ? record : null;
+}
 
-	if (!parsed || typeof parsed !== 'object' || !parsed.connections || typeof parsed.connections !== 'object') {
-		throw new Error('MSSQL_CONNECTIONS must be an object with a non-empty "connections" map.');
-	}
-
-	const names = Object.keys(parsed.connections);
+/**
+ * Validate a `{ name → RawConnectionEntry }` record and turn it into a
+ * `Map<string, MssqlConfig>`. Shared by the JSON and flat-env parsing paths so
+ * both enforce identical rules (required fields, windowsAuth, normalization).
+ *
+ * @throws Error on empty record, invalid name, or missing required fields.
+ */
+function buildConnections(
+	rawConnections: Record<string, RawConnectionEntry>,
+	env: NodeJS.ProcessEnv,
+	sourceLabel: string,
+): Map<string, MssqlConfig> {
+	const names = Object.keys(rawConnections);
 	if (names.length === 0) {
-		throw new Error('MSSQL_CONNECTIONS "connections" map is empty — define at least one connection.');
+		throw new Error(`${sourceLabel} defines no connections — define at least one.`);
 	}
 
 	const connections = new Map<string, MssqlConfig>();
 	for (const name of names) {
 		validateConnectionName(name); // throws on invalid name
-		const entry = parsed.connections[name];
+		const entry = rawConnections[name];
 		if (!entry || !entry.server || !entry.database) {
 			throw new Error(`Connection "${name}" is missing required "server" or "database".`);
 		}
 		const windowsAuth = entry.windowsAuth === true;
 		if (!windowsAuth && (!entry.user || !entry.password)) {
-			throw new Error(`Connection "${name}" requires "user" and "password" (or "windowsAuth": true).`);
+			throw new Error(`Connection "${name}" requires "user" and "password" (or windowsAuth).`);
 		}
 		const config: MssqlConfig = normalizeMssqlConfig({
 			server: entry.server,
@@ -295,34 +360,96 @@ export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): Pa
 		});
 		connections.set(name, config);
 	}
+	return connections;
+}
 
-	// Resolve default
-	// MSSQL_DEFAULT_CONNECTION env override takes precedence over the JSON "default"
-	// key. This lets many projects share ONE connections file (secrets in one place)
-	// while each project selects its own default connection via a non-secret env var.
+/**
+ * Resolve which connection is the default.
+ *
+ * Precedence: the `MSSQL_DEFAULT_CONNECTION` env override wins over the JSON
+ * "default" key (lets projects sharing one config pick their own default via a
+ * non-secret env var). Falls back to the JSON default, then — if exactly one
+ * connection exists — that sole connection. Otherwise it is a config error.
+ *
+ * @throws Error if the resolved default names a connection that is not defined,
+ *   or multiple connections exist with no default selected.
+ */
+function resolveDefaultName(
+	env: NodeJS.ProcessEnv,
+	connections: Map<string, MssqlConfig>,
+	jsonDefault: string | undefined,
+): string {
+	const names = [...connections.keys()];
 	const overrideDefault = env.MSSQL_DEFAULT_CONNECTION;
-	let defaultName: string;
 	if (overrideDefault) {
 		if (!connections.has(overrideDefault)) {
 			throw new Error(
 				`MSSQL_DEFAULT_CONNECTION is "${overrideDefault}", which is not a defined connection. Defined: ${names.join(', ')}.`,
 			);
 		}
-		defaultName = overrideDefault;
-	} else if (parsed.default) {
-		if (!connections.has(parsed.default)) {
+		return overrideDefault;
+	}
+	if (jsonDefault) {
+		if (!connections.has(jsonDefault)) {
 			throw new Error(
-				`MSSQL_CONNECTIONS "default" points to "${parsed.default}", which is not a defined connection. Defined: ${names.join(', ')}.`,
+				`"default" points to "${jsonDefault}", which is not a defined connection. Defined: ${names.join(', ')}.`,
 			);
 		}
-		defaultName = parsed.default;
-	} else if (names.length === 1) {
-		defaultName = names[0];
-	} else {
-		throw new Error(
-			`MSSQL_CONNECTIONS defines multiple connections but no "default". Add a "default" naming one of: ${names.join(', ')}.`,
-		);
+		return jsonDefault;
+	}
+	if (names.length === 1) {
+		return names[0];
+	}
+	throw new Error(
+		`Multiple connections defined but no default selected. Set MSSQL_DEFAULT_CONNECTION to one of: ${names.join(', ')}.`,
+	);
+}
+
+/**
+ * Parse multi-connection configuration.
+ *
+ * Three sources, checked in order:
+ * 1. `MSSQL_CONNECTIONS` JSON blob (backward compatible).
+ * 2. Flat `MSSQL_CONN_<name>_<FIELD>` env vars (human-readable — one field per
+ *    line in `.mcp.json`, no JSON escaping).
+ * 3. Legacy single-connection env vars (`MSSQL_SERVER`/...), exposed as a single
+ *    connection named "default".
+ *
+ * @throws Error on malformed JSON, empty connections, invalid names, or an
+ *   unresolvable default. Callers surface this as a configuration error.
+ */
+export function parseConnectionConfigs(env: NodeJS.ProcessEnv = process.env): ParsedConnections {
+	const raw = env.MSSQL_CONNECTIONS;
+
+	// Source 1: MSSQL_CONNECTIONS JSON blob
+	if (raw) {
+		let parsed: { default?: string; connections?: Record<string, RawConnectionEntry> };
+		try {
+			parsed = JSON.parse(raw);
+		} catch (error) {
+			throw new Error(
+				`MSSQL_CONNECTIONS is not valid JSON: ${error instanceof Error ? error.message : 'parse error'}`,
+			);
+		}
+		if (!parsed || typeof parsed !== 'object' || !parsed.connections || typeof parsed.connections !== 'object') {
+			throw new Error('MSSQL_CONNECTIONS must be an object with a non-empty "connections" map.');
+		}
+		const connections = buildConnections(parsed.connections, env, 'MSSQL_CONNECTIONS');
+		const defaultName = resolveDefaultName(env, connections, parsed.default);
+		return { connections, defaultName };
 	}
 
-	return { connections, defaultName };
+	// Source 2: flat MSSQL_CONN_<name>_<FIELD> env vars
+	const prefixed = collectPrefixedConnections(env);
+	if (prefixed) {
+		const connections = buildConnections(prefixed, env, 'MSSQL_CONN_* variables');
+		const defaultName = resolveDefaultName(env, connections, undefined);
+		return { connections, defaultName };
+	}
+
+	// Source 3: legacy single-connection fallback
+	const legacy = getMssqlConfig(env);
+	const connections = new Map<string, MssqlConfig>();
+	connections.set('default', legacy);
+	return { connections, defaultName: 'default' };
 }

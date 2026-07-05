@@ -80328,34 +80328,55 @@ function normalizeMssqlConfig(raw2) {
   return server.includes(".database.windows.net") && (encrypt = !0), { ...raw2, server, encrypt };
 }
 __name(normalizeMssqlConfig, "normalizeMssqlConfig");
-function parseConnectionConfigs(env2 = process.env) {
-  let raw2 = env2.MSSQL_CONNECTIONS;
-  if (!raw2) {
-    let legacy = getMssqlConfig(env2), connections2 = /* @__PURE__ */ new Map();
-    return connections2.set("default", legacy), { connections: connections2, defaultName: "default" };
+var CONN_FIELD_MAP = {
+  SERVER: "server",
+  DATABASE: "database",
+  USER: "user",
+  PASSWORD: "password",
+  PORT: "port",
+  ENCRYPT: "encrypt",
+  WINDOWS_AUTH: "windowsAuth"
+}, CONN_FIELD_SUFFIXES = Object.keys(CONN_FIELD_MAP).sort((a2, b2) => b2.length - a2.length);
+function collectPrefixedConnections(env2) {
+  let PREFIX = "MSSQL_CONN_", record2 = {}, found = !1;
+  for (let key of Object.keys(env2)) {
+    if (!key.startsWith(PREFIX)) continue;
+    let rest = key.slice(PREFIX.length), matchedSuffix, connName;
+    for (let suffix of CONN_FIELD_SUFFIXES)
+      if (rest.endsWith(`_${suffix}`)) {
+        matchedSuffix = suffix, connName = rest.slice(0, rest.length - suffix.length - 1);
+        break;
+      }
+    if (!matchedSuffix || !connName)
+      throw new Error(
+        `Unrecognized connection env var "${key}". Expected MSSQL_CONN_<name>_<FIELD>, where FIELD is one of: ${Object.keys(CONN_FIELD_MAP).join(", ")}.`
+      );
+    validateConnectionName(connName);
+    let value = env2[key];
+    if (value === void 0) continue;
+    found = !0;
+    let entry = record2[connName] ??= {}, field = CONN_FIELD_MAP[matchedSuffix];
+    if (field === "port") {
+      let port = parseInt(value, 10);
+      Number.isNaN(port) || (entry.port = port);
+    } else field === "encrypt" ? entry.encrypt = value.toLowerCase() === "true" : field === "windowsAuth" ? entry.windowsAuth = value.toLowerCase() === "true" : entry[field] = value;
   }
-  let parsed;
-  try {
-    parsed = JSON.parse(raw2);
-  } catch (error46) {
-    throw new Error(
-      `MSSQL_CONNECTIONS is not valid JSON: ${error46 instanceof Error ? error46.message : "parse error"}`
-    );
-  }
-  if (!parsed || typeof parsed != "object" || !parsed.connections || typeof parsed.connections != "object")
-    throw new Error('MSSQL_CONNECTIONS must be an object with a non-empty "connections" map.');
-  let names = Object.keys(parsed.connections);
+  return found ? record2 : null;
+}
+__name(collectPrefixedConnections, "collectPrefixedConnections");
+function buildConnections(rawConnections, env2, sourceLabel) {
+  let names = Object.keys(rawConnections);
   if (names.length === 0)
-    throw new Error('MSSQL_CONNECTIONS "connections" map is empty — define at least one connection.');
+    throw new Error(`${sourceLabel} defines no connections — define at least one.`);
   let connections = /* @__PURE__ */ new Map();
   for (let name of names) {
     validateConnectionName(name);
-    let entry = parsed.connections[name];
+    let entry = rawConnections[name];
     if (!entry || !entry.server || !entry.database)
       throw new Error(`Connection "${name}" is missing required "server" or "database".`);
     let windowsAuth = entry.windowsAuth === !0;
     if (!windowsAuth && (!entry.user || !entry.password))
-      throw new Error(`Connection "${name}" requires "user" and "password" (or "windowsAuth": true).`);
+      throw new Error(`Connection "${name}" requires "user" and "password" (or windowsAuth).`);
     let config2 = normalizeMssqlConfig({
       server: entry.server,
       database: entry.database,
@@ -80368,26 +80389,55 @@ function parseConnectionConfigs(env2 = process.env) {
     });
     connections.set(name, config2);
   }
-  let overrideDefault = env2.MSSQL_DEFAULT_CONNECTION, defaultName;
+  return connections;
+}
+__name(buildConnections, "buildConnections");
+function resolveDefaultName(env2, connections, jsonDefault) {
+  let names = [...connections.keys()], overrideDefault = env2.MSSQL_DEFAULT_CONNECTION;
   if (overrideDefault) {
     if (!connections.has(overrideDefault))
       throw new Error(
         `MSSQL_DEFAULT_CONNECTION is "${overrideDefault}", which is not a defined connection. Defined: ${names.join(", ")}.`
       );
-    defaultName = overrideDefault;
-  } else if (parsed.default) {
-    if (!connections.has(parsed.default))
+    return overrideDefault;
+  }
+  if (jsonDefault) {
+    if (!connections.has(jsonDefault))
       throw new Error(
-        `MSSQL_CONNECTIONS "default" points to "${parsed.default}", which is not a defined connection. Defined: ${names.join(", ")}.`
+        `"default" points to "${jsonDefault}", which is not a defined connection. Defined: ${names.join(", ")}.`
       );
-    defaultName = parsed.default;
-  } else if (names.length === 1)
-    defaultName = names[0];
-  else
-    throw new Error(
-      `MSSQL_CONNECTIONS defines multiple connections but no "default". Add a "default" naming one of: ${names.join(", ")}.`
-    );
-  return { connections, defaultName };
+    return jsonDefault;
+  }
+  if (names.length === 1)
+    return names[0];
+  throw new Error(
+    `Multiple connections defined but no default selected. Set MSSQL_DEFAULT_CONNECTION to one of: ${names.join(", ")}.`
+  );
+}
+__name(resolveDefaultName, "resolveDefaultName");
+function parseConnectionConfigs(env2 = process.env) {
+  let raw2 = env2.MSSQL_CONNECTIONS;
+  if (raw2) {
+    let parsed;
+    try {
+      parsed = JSON.parse(raw2);
+    } catch (error46) {
+      throw new Error(
+        `MSSQL_CONNECTIONS is not valid JSON: ${error46 instanceof Error ? error46.message : "parse error"}`
+      );
+    }
+    if (!parsed || typeof parsed != "object" || !parsed.connections || typeof parsed.connections != "object")
+      throw new Error('MSSQL_CONNECTIONS must be an object with a non-empty "connections" map.');
+    let connections2 = buildConnections(parsed.connections, env2, "MSSQL_CONNECTIONS"), defaultName = resolveDefaultName(env2, connections2, parsed.default);
+    return { connections: connections2, defaultName };
+  }
+  let prefixed = collectPrefixedConnections(env2);
+  if (prefixed) {
+    let connections2 = buildConnections(prefixed, env2, "MSSQL_CONN_* variables"), defaultName = resolveDefaultName(env2, connections2, void 0);
+    return { connections: connections2, defaultName };
+  }
+  let legacy = getMssqlConfig(env2), connections = /* @__PURE__ */ new Map();
+  return connections.set("default", legacy), { connections, defaultName: "default" };
 }
 __name(parseConnectionConfigs, "parseConnectionConfigs");
 
