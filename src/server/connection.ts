@@ -389,10 +389,16 @@ export class ResilientConnectionPool implements ConnectionPool {
 		const config: sql.config = {
 			...buildMssqlConfig(this.localConfig),
 			pool: { max: 1, min: 0, idleTimeoutMillis: 5000 },
+			requestTimeout: this.localConfig.requestTimeout ?? DEFAULT_EFFECTIVE_TIMEOUT_MS,
 		};
 		if (databaseOverride) config.database = databaseOverride;
 		const conn = new sql.ConnectionPool(config);
-		await conn.connect();
+		try {
+			await conn.connect();
+		} catch (e) {
+			try { await conn.close(); } catch { /* ignore cleanup errors */ }
+			throw e;
+		}
 		return {
 			async batch(sqlText: string): Promise<void> {
 				await conn.request().batch(sqlText);

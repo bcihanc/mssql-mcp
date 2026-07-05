@@ -273,6 +273,12 @@ normalized text before SHA256) — a 20-row view and a full view never collide.
   log; other connections still list.
 - Signatures change to accept the server's pool registry + default name
   (exact registry type read from MssqlMcpServer at implementation time).
+- Listing runs per-connection attempts in parallel (`Promise.allSettled`)
+  instead of serially, so one slow/unreachable connection no longer stalls
+  the others. Connections with no stale cache to fall back on are
+  negative-cached for 60 s after a failed attempt, so repeated re-listings
+  (e.g. the 5-minute resource-list refresh) don't re-stall on the same
+  down connection every time.
 
 ---
 

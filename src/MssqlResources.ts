@@ -11,9 +11,11 @@ const logger = consola.withTag('mssql-resources');
 interface ResourceCache {
 	resources: Resource[];
 	timestamp: number;
+	isNegative?: boolean;
 }
 
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const NEGATIVE_CACHE_TTL_MS = 60 * 1000; // failed connections retry listing at most once a minute
 const resourceCaches = new Map<string, ResourceCache>();
 
 // PERFORMANCE: Configurable resource data limit from environment
@@ -22,7 +24,8 @@ const RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || '100', 
 async function listTablesFor(pool: ConnectionPool, connectionName: string, multi: boolean): Promise<Resource[]> {
 	const now = Date.now();
 	const cached = resourceCaches.get(connectionName);
-	if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+	const ttl = cached?.isNegative ? NEGATIVE_CACHE_TTL_MS : CACHE_TTL_MS;
+	if (cached && now - cached.timestamp < ttl) {
 		if (consola.level >= 0) {
 			logger.debug(`Returning cached resources for ${connectionName} (age: ${Math.round((now - cached.timestamp) / 1000)}s)`);
 		}
@@ -57,6 +60,9 @@ async function listTablesFor(pool: ConnectionPool, connectionName: string, multi
 			if (consola.level >= 0) logger.warn(`Returning stale cache for ${connectionName} due to error`);
 			return cached.resources;
 		}
+		// Negative cache: no stale cache to fall back on, so remember the failure
+		// for a short window to avoid re-stalling every re-list on a dead connection.
+		resourceCaches.set(connectionName, { resources: [], timestamp: now, isNegative: true });
 		return [];
 	}
 }
@@ -65,9 +71,20 @@ export const MssqlResources = {
 	async getResourceDefinitions(registry: ConnectionRegistry): Promise<Resource[]> {
 		const infos = registry.list();
 		const multi = infos.length > 1;
+		// PERFORMANCE: run per-connection listing attempts in parallel instead of serially —
+		// an unreachable connection otherwise costs a full connect attempt (~15s) per call,
+		// multiplied across every configured connection. A failed attempt still schedules
+		// ResilientConnectionPool's own background retry (by design — bounded at one
+		// attempt per 60s of max backoff via the negative cache above), so parallelizing
+		// here does not increase connection pressure on a down server.
+		const results = await Promise.allSettled(infos.map((info) => listTablesFor(registry.get(info.name), info.name, multi)));
 		const all: Resource[] = [];
-		for (const info of infos) {
-			all.push(...(await listTablesFor(registry.get(info.name), info.name, multi)));
+		for (const result of results) {
+			// listTablesFor catches internally and always resolves, so a rejection here
+			// would be unexpected — allSettled is a safety net, not the primary error path.
+			if (result.status === 'fulfilled') {
+				all.push(...result.value);
+			}
 		}
 		return all;
 	},

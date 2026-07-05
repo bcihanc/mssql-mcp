@@ -404,6 +404,7 @@ These optimizations provide:
    - Automatically discovers tables via INFORMATION_SCHEMA, once per configured connection
    - Returns top N rows per table in CSV format (N controlled by `MSSQL_RESOURCE_LIMIT`, default 100; pagination warning appended when limit reached)
    - 5-minute TTL cache on the resource list, keyed per connection; falls back to that connection's stale cache on listing errors (per-connection error isolation — one connection's failure doesn't blank out the others) to keep the MCP client usable
+   - Per-connection listing attempts run in parallel (`Promise.allSettled`), and a connection with no stale cache to fall back on is negative-cached for 60 seconds after a failed attempt so repeated re-listings don't re-stall on the same down connection
 
 4. **Connection Management** ([src/server/connection.ts](src/server/connection.ts))
    - Provides `ResilientConnectionPool` — a self-healing pool that keeps the MCP server responsive even when the database is unavailable

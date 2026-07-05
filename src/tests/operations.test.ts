@@ -231,6 +231,29 @@ console.log('\n--- resources multi-connection ---');
 	check('unreachable connection skipped, healthy one listed', defsMixed.length, 1);
 }
 
+console.log('\n--- resources listing: parallel + negative cache ---');
+{
+	const info = (n: string, d: boolean) => ({ name: n, server: 's', database: 'd', user: 'u', is_default: d });
+	const slowPool = (n: string, ms: number): any => ({ name: n, query: async () => { await new Promise((r) => setTimeout(r, ms)); return [{ TABLE_NAME: `tbl_${n}` }]; } });
+	const pSlowA = slowPool('parA', 120);
+	const pSlowB = slowPool('parB', 120);
+	const parReg: any = { list: () => [info('parA', true), info('parB', false)], get: (n?: string) => (n === 'parB' ? pSlowB : pSlowA) };
+	const t0 = Date.now();
+	const parDefs = await MssqlResources.getResourceDefinitions(parReg);
+	const elapsed = Date.now() - t0;
+	check('parallel listing returns both', parDefs.length, 2);
+	check('parallel listing not serial (elapsed < 200ms for 2x120ms pools)', elapsed < 200, true);
+
+	let failCount = 0;
+	const negPool: any = { name: 'negC', query: async () => { failCount++; throw new Error('unreachable'); } };
+	const negReg: any = { list: () => [info('negC', true)], get: () => negPool };
+	const neg1 = await MssqlResources.getResourceDefinitions(negReg);
+	check('failed connection lists empty', neg1.length, 0);
+	const neg2 = await MssqlResources.getResourceDefinitions(negReg);
+	check('negative cache prevents immediate retry', failCount, 1);
+	check('negative cache still returns empty', neg2.length, 0);
+}
+
 // --- summary (KEEP LAST — later tasks append sections ABOVE this block) ---
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);

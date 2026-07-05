@@ -80856,10 +80856,10 @@ Source: ${source}`;
 };
 
 // src/MssqlResources.ts
-var logger6 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, resourceCaches = /* @__PURE__ */ new Map(), RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || "100", 10);
+var logger6 = consola.withTag("mssql-resources"), CACHE_TTL_MS = 300 * 1e3, NEGATIVE_CACHE_TTL_MS = 60 * 1e3, resourceCaches = /* @__PURE__ */ new Map(), RESOURCE_DATA_LIMIT = parseInt(process.env.MSSQL_RESOURCE_LIMIT || "100", 10);
 async function listTablesFor(pool, connectionName, multi) {
-  let now = Date.now(), cached2 = resourceCaches.get(connectionName);
-  if (cached2 && now - cached2.timestamp < CACHE_TTL_MS)
+  let now = Date.now(), cached2 = resourceCaches.get(connectionName), ttl = cached2?.isNegative ? NEGATIVE_CACHE_TTL_MS : CACHE_TTL_MS;
+  if (cached2 && now - cached2.timestamp < ttl)
     return consola.level >= 0 && logger6.debug(`Returning cached resources for ${connectionName} (age: ${Math.round((now - cached2.timestamp) / 1e3)}s)`), cached2.resources;
   try {
     let results = await pool.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'");
@@ -80876,15 +80876,15 @@ async function listTablesFor(pool, connectionName, multi) {
     }
     return resourceCaches.set(connectionName, { resources, timestamp: now }), resources;
   } catch (error46) {
-    return consola.level >= 0 && logger6.error(`Failed to list resources for ${connectionName}:`, error46), cached2 ? (consola.level >= 0 && logger6.warn(`Returning stale cache for ${connectionName} due to error`), cached2.resources) : [];
+    return consola.level >= 0 && logger6.error(`Failed to list resources for ${connectionName}:`, error46), cached2 ? (consola.level >= 0 && logger6.warn(`Returning stale cache for ${connectionName} due to error`), cached2.resources) : (resourceCaches.set(connectionName, { resources: [], timestamp: now, isNegative: !0 }), []);
   }
 }
 __name(listTablesFor, "listTablesFor");
 var MssqlResources = {
   async getResourceDefinitions(registry2) {
-    let infos = registry2.list(), multi = infos.length > 1, all = [];
-    for (let info of infos)
-      all.push(...await listTablesFor(registry2.get(info.name), info.name, multi));
+    let infos = registry2.list(), multi = infos.length > 1, results = await Promise.allSettled(infos.map((info) => listTablesFor(registry2.get(info.name), info.name, multi))), all = [];
+    for (let result of results)
+      result.status === "fulfilled" && all.push(...result.value);
     return all;
   },
   async handleResource(uri, registry2) {
@@ -82079,11 +82079,21 @@ var ResilientConnectionPool = class {
   async createEphemeralConnection(databaseOverride) {
     let config2 = {
       ...buildMssqlConfig(this.localConfig),
-      pool: { max: 1, min: 0, idleTimeoutMillis: 5e3 }
+      pool: { max: 1, min: 0, idleTimeoutMillis: 5e3 },
+      requestTimeout: this.localConfig.requestTimeout ?? DEFAULT_EFFECTIVE_TIMEOUT_MS
     };
     databaseOverride && (config2.database = databaseOverride);
     let conn = new import_mssql.default.ConnectionPool(config2);
-    return await conn.connect(), {
+    try {
+      await conn.connect();
+    } catch (e2) {
+      try {
+        await conn.close();
+      } catch {
+      }
+      throw e2;
+    }
+    return {
       async batch(sqlText) {
         await conn.request().batch(sqlText);
       },
