@@ -374,14 +374,15 @@ These optimizations provide:
 
 2a. **Object Tools Layer** ([src/MssqlObjectTools.ts](src/MssqlObjectTools.ts))
    - Programmable-object listing tools, all read-only and cross-database capable via optional `database_name` parameter
-   - Four tools (all accept `database_name` — 1-part validated; default = connection's bound DB):
+   - Five tools (all accept `database_name` — 1-part validated; default = connection's bound DB):
      - `list_stored_procedures`: schema, name, param count, create/modify dates (filters out `is_ms_shipped` by default; `include_system` to opt in)
      - `list_views`: schema, name, create/modify dates
      - `list_functions`: covers SQL_SCALAR_FUNCTION (`FN`), inline/multi-statement TVFs (`IF`/`TF`), CLR aggregate/scalar/table-valued (`AF`/`FS`/`FT`)
      - `list_triggers`: DML triggers (`parent_class = 1`) with parent table, INSTEAD OF flag, enabled state, and aggregated event types (INSERT/UPDATE/DELETE) via `STUFF + FOR XML PATH`
+     - `get_object_definition`: full SQL body of a stored procedure / view / function / trigger via `sys.sql_modules.definition` (cross-DB safe through `{db}.sys.sql_modules`). NULL-safe: distinguishes "not found", non-module objects (tables), missing `VIEW DEFINITION` permission (via `HAS_PERMS_BY_NAME`, same-DB only), and `WITH ENCRYPTION`. 3-part `object_name` is rejected (use `database_name`). Line-paginated via `paginateLines`. Caches only the successful full body.
    - **Cross-DB metadata function trap**: `OBJECT_NAME`/`OBJECT_SCHEMA_NAME` resolve in *current* DB context unless given `DB_ID('dbname')` as second arg; the implementation always passes the explicit DB id when `database_name` is set
    - All caches use lazy TTL cleanup + true LRU eviction (same pattern as MssqlTools); see "Environment Variables" for tunables
-   - **NOTE — definition retrieval intentionally not provided**: Tools like `get_procedure_definition` / `get_object_dependencies` were prototyped (see git history) but removed because they require `VIEW DEFINITION` (or `VIEW ANY DEFINITION`) which read-only users typically lack. The MCP would return only "🔒 permission denied" messages, polluting AI context with no signal. If a future deployment grants those permissions, restore from commit history and re-register in `MssqlMcpServer.ts`
+   - **NOTE — definition retrieval is provided by `get_object_definition`** (a single generic tool for all module types). It requires `VIEW DEFINITION` (object/schema-level grant is enough — server-wide `VIEW ANY DEFINITION` is not needed). When the permission is missing, the tool returns a clear NULL-safe diagnostic rather than a raw error. Per-type definition tools (`get_procedure_definition`, `get_object_dependencies`) remain intentionally absent — the one generic tool covers procedures, views, functions, and triggers.
 
 3. **Resources Layer** ([src/MssqlResources.ts](src/MssqlResources.ts))
    - Exposes database tables as MCP resources
@@ -549,7 +550,7 @@ Database schema rarely changes, so longer TTLs provide better performance:
 Note: get_version uses static cache (never expires during runtime) as SQL Server version never changes.
 
 Definition Pagination (`MSSQL_DEFINITION_DEFAULT_LINES` / `MSSQL_DEFINITION_MAX_LINES`):
-- The pagination utility in [src/utils/pagination.ts](src/utils/pagination.ts) reads these env vars but is currently **unused** — definition retrieval tools were removed (see Object Tools Layer note above). The utility is retained for future re-introduction if `VIEW DEFINITION` permission becomes available
+- The pagination utility in [src/utils/pagination.ts](src/utils/pagination.ts) is used by `get_object_definition` to paginate large SQL bodies. `MSSQL_DEFINITION_DEFAULT_LINES` (default 200) and `MSSQL_DEFINITION_MAX_LINES` (hard cap 1000) tune the line window.
 
 Profiling Tools Caching (data profiling):
 - `MSSQL_PROFILE_CACHE_TTL` / `MSSQL_PROFILE_CACHE_SIZE`: profile_column (defaults: 30 min / 100)
@@ -568,6 +569,7 @@ Object Tools Caching (programmable-object metadata):
 - `MSSQL_VIEWS_CACHE_TTL` / `MSSQL_VIEWS_CACHE_SIZE`: list_views (defaults: 2h / 100)
 - `MSSQL_FUNCTIONS_CACHE_TTL` / `MSSQL_FUNCTIONS_CACHE_SIZE`: list_functions (defaults: 2h / 100)
 - `MSSQL_TRIGGERS_CACHE_TTL` / `MSSQL_TRIGGERS_CACHE_SIZE`: list_triggers (defaults: 2h / 100)
+- `MSSQL_DEFINITIONS_CACHE_TTL` / `MSSQL_DEFINITIONS_CACHE_SIZE`: get_object_definition (defaults: 2h / 100) — caches only successfully-retrieved full definitions; diagnostics are never cached
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 

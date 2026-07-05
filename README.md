@@ -295,6 +295,16 @@ When connected, Claude can use these capabilities:
   - Returns: Relationship type, related table, constraint name, column mappings
   - Ideal for understanding table dependencies before queries
 
+### 🧩 Programmable Object Tools
+
+- **`list_stored_procedures`** / **`list_views`** / **`list_functions`** / **`list_triggers`**: List programmable objects with metadata (schema, name, dates, parameter/event info). All support cross-database queries via the optional `database_name` parameter.
+
+- **`get_object_definition`**: Get the full SQL definition (source code) of a stored procedure, view, function, or trigger
+  - Input: `object_name` as `"schema.name"` or just `"name"` (schema defaults to `dbo`)
+  - Line-based pagination via `offset_lines` / `max_lines` (default 200 lines, hard cap 1000)
+  - Cross-database via `database_name`
+  - NULL-safe diagnostics: reports clearly when the object is not a code module, when the login lacks `VIEW DEFINITION` permission, or when the object is encrypted (`WITH ENCRYPTION`)
+
 ### 📂 Database Resources
 
 - **Table Discovery**: Automatically lists all available tables
