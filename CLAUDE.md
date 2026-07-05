@@ -368,10 +368,9 @@ These optimizations provide:
 
 2d. **Performance Tools Layer** ([src/MssqlPerformanceTools.ts](src/MssqlPerformanceTools.ts))
    - Performance-diagnostic tools, all read-only
-   - Three tools:
-     - `get_missing_indexes`: missing-index suggestions from `sys.dm_db_missing_index_*` DMVs (TOP 25 by improvement measure). Optional `database_name`/`table_name` filters — table filtering matches the DMV `statement` column with an escaped LIKE suffix (never `OBJECT_ID`, which silently NULLs on dotted DB names). Requires `VIEW SERVER STATE`; degrades to a friendly GRANT hint. Cached 5 min (`MSSQL_MISSING_INDEXES_CACHE_TTL`/`_SIZE`)
+   - One tool:
      - `get_query_plan`: ESTIMATED execution plan (`SET SHOWPLAN_XML ON`) — the query is validated by `isReadOnlyQuery()` first and NEVER executed. Runs on a dedicated ephemeral connection (`createEphemeralConnection` on `ResilientConnectionPool`, pool max 1, closed in `finally`) so SHOWPLAN state can never poison the shared pool. `database_name` opens the ephemeral connection directly in that DB. Requires `SHOWPLAN` permission; friendly diagnostic when missing. Plans capped at 100,000 chars. Not cached
-     - `get_top_queries`: heaviest queries from the plan cache (`sys.dm_exec_query_stats` + `dm_exec_sql_text`): execution count, total/avg elapsed ms, CPU ms, logical reads. `sort_by` enum → SQL expression via a lookup map (never raw interpolation); `top` 1-50. Requires `VIEW SERVER STATE`. Not cached (live diagnostic)
+   - `get_missing_indexes` and `get_top_queries` were removed in 2026-07 (both required `VIEW SERVER STATE`, unavailable on the target connections). The layer keeps a `clearCaches()` that returns 0 — nothing in this layer is cached
 
 2b. **Server Tools Layer** ([src/MssqlServerTools.ts](src/MssqlServerTools.ts))
    - Server- and database-level metadata tools, all read-only
@@ -591,8 +590,7 @@ Object Tools Caching (programmable-object metadata):
 - `MSSQL_DEPS_CACHE_TTL` / `MSSQL_DEPS_CACHE_SIZE`: get_object_dependencies (defaults: 2h / 100)
 
 Performance Tools Caching (query-diagnostic metadata):
-- `MSSQL_MISSING_INDEXES_CACHE_TTL` / `MSSQL_MISSING_INDEXES_CACHE_SIZE`: get_missing_indexes (defaults: 300,000 = 5 min / 50)
-- `get_query_plan` and `get_top_queries` are intentionally not cached (live diagnostic data)
+- `get_query_plan` is intentionally not cached (live diagnostic data) — the performance layer has no cache env vars
 
 **Note**: `MSSQL_ACCESS_MODE` environment variable has been removed. This server is **always READ-ONLY** by design.
 

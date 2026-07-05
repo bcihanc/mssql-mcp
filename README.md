@@ -229,10 +229,6 @@ MSSQL_RESOURCE_LIMIT=100         # Rows for resource browsing (default: 100)
 MSSQL_REQUEST_TIMEOUT=30000      # Default query timeout in ms (default: 30,000 = 30s); override per-call with exec_sql_csv's timeout_seconds (1-300s)
 MSSQL_MAX_CELL_CHARS=1000        # Max chars per CSV cell before truncation (default: 1000, 0=off); applies to exec_sql_csv and get_table_sample
 
-# Performance Tools Caching
-MSSQL_MISSING_INDEXES_CACHE_TTL=300000  # get_missing_indexes cache TTL (default: 300,000 = 5 min)
-MSSQL_MISSING_INDEXES_CACHE_SIZE=50     # Max cached queries (default: 50)
-
 # Query Result Caching (exec_sql_csv)
 MSSQL_CACHE_TTL=60000            # Query cache duration in ms (default: 60,000 = 60s)
 MSSQL_CACHE_SIZE=100             # Max cached queries (default: 100)
@@ -334,9 +330,7 @@ When connected, Claude can use these capabilities:
 
 ### ⚡ Performance & Operations Tools
 
-- **`get_missing_indexes`**: Get missing-index suggestions from SQL Server's own DMVs (table, columns, estimated impact, TOP 25 by improvement measure). Optional `database_name`/`table_name` filters. Requires `VIEW SERVER STATE`
 - **`get_query_plan`**: Get the ESTIMATED execution plan (SHOWPLAN XML) for a SELECT query WITHOUT executing it, on a dedicated one-off connection. Requires `SHOWPLAN` permission
-- **`get_top_queries`**: List the heaviest queries from the server's plan cache — execution count, total/avg elapsed ms, CPU ms, logical reads. Sortable via `sort_by`. Requires `VIEW SERVER STATE`
 - **`clear_cache`**: Clear all server-side metadata/result caches across every tool layer (useful after a schema change). Optional `connection_name` to scope to one connection. Executes no SQL
 
 ### 📂 Database Resources

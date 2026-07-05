@@ -80423,102 +80423,25 @@ function parseConnectionConfigs(env2 = process.env) {
 __name(parseConnectionConfigs, "parseConnectionConfigs");
 
 // src/MssqlPerformanceTools.ts
-var logger4 = consola.withTag("mssql-performance-tools"), MISSING_INDEXES_CACHE_TTL_MS = parseInt(process.env.MSSQL_MISSING_INDEXES_CACHE_TTL || "300000", 10), MISSING_INDEXES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_MISSING_INDEXES_CACHE_SIZE || "50", 10), missingIndexesCache = /* @__PURE__ */ new Map();
-function cleanExpired2(cache, key, ttlMs) {
-  let entry = cache.get(key);
-  return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
-}
-__name(cleanExpired2, "cleanExpired");
-function enforceSizeLimit2(cache, maxSize, name) {
-  if (cache.size > maxSize) {
-    let entries = Array.from(cache.entries()).sort((a2, b2) => a2[1].lastAccessed - b2[1].lastAccessed), toDelete = cache.size - maxSize;
-    for (let i2 = 0; i2 < toDelete; i2++) cache.delete(entries[i2][0]);
-    consola.level >= 0 && logger4.debug(`${name} LRU eviction: removed ${toDelete} entries`);
-  }
-}
-__name(enforceSizeLimit2, "enforceSizeLimit");
-function getFromCache2(cache, key, ttlMs) {
-  if (!cleanExpired2(cache, key, ttlMs)) {
-    let entry = cache.get(key);
-    if (entry)
-      return entry.lastAccessed = Date.now(), entry.result;
-  }
-  return null;
-}
-__name(getFromCache2, "getFromCache");
-function setInCache2(cache, key, result, maxSize, name) {
-  let now = Date.now();
-  cache.set(key, { result, timestamp: now, lastAccessed: now }), enforceSizeLimit2(cache, maxSize, name);
-}
-__name(setInCache2, "setInCache");
-function escapeLiteral2(s2) {
-  return s2.replace(/'/g, "''");
-}
-__name(escapeLiteral2, "escapeLiteral");
-function escapeLikePattern2(s2) {
-  return s2.replace(/\\/g, "\\\\").replace(/[%_\[]/g, (c3) => `\\${c3}`);
-}
-__name(escapeLikePattern2, "escapeLikePattern");
+var logger4 = consola.withTag("mssql-performance-tools");
 function plainResponse2(text) {
   return { content: [{ type: "text", text }] };
 }
 __name(plainResponse2, "plainResponse");
-function cachedResponse2(text) {
-  return { content: [{ type: "text", text: `${text}
-
-📋 (Cached result)` }] };
-}
-__name(cachedResponse2, "cachedResponse");
 function errorResponse2(prefix, error46) {
   let msg = error46 instanceof Error ? error46.message : "Unknown error";
   return { content: [{ type: "text", text: `${prefix}: ${msg}` }] };
 }
 __name(errorResponse2, "errorResponse");
-function isPermissionError(error46) {
-  let msg = error46 instanceof Error ? error46.message.toLowerCase() : "";
-  return msg.includes("permission") || msg.includes("denied");
-}
-__name(isPermissionError, "isPermissionError");
-function viewServerStateHint(toolName) {
-  return `🔒 ${toolName} requires the VIEW SERVER STATE permission, which this connection's user lacks. Ask a DBA to run: GRANT VIEW SERVER STATE TO [your_login];`;
-}
-__name(viewServerStateHint, "viewServerStateHint");
-var MISSING_INDEXES_NOTES = `
-
-ℹ️ Suggestions reset when SQL Server restarts and are hints only — they are not deduplicated against existing indexes, and column order within a suggested index is not encoded here.`, TOP_QUERIES_NOTES = `
-
-ℹ️ Stats accumulate since each plan entered the cache and reset on server restart or plan eviction. Pair with get_query_plan to inspect a specific query.`, PLAN_MAX_CHARS = 1e5, GetMissingIndexesInputSchema = external_exports2.object({
-  database_name: external_exports2.string().optional().describe("Optional cross-database scope. If omitted, uses the connection's current database. Only alphanumeric and underscore characters allowed."),
-  table_name: external_exports2.string().optional().describe('Optional table filter as "table" or "schema.table" (schema defaults to dbo). For another database, pass database_name separately.')
-}), SORT_EXPRESSIONS = {
-  avg_elapsed: "qs.total_elapsed_time / qs.execution_count",
-  total_elapsed: "qs.total_elapsed_time",
-  cpu: "qs.total_worker_time",
-  reads: "qs.total_logical_reads",
-  executions: "qs.execution_count"
-}, GetTopQueriesInputSchema = external_exports2.object({
-  sort_by: external_exports2.enum(["avg_elapsed", "total_elapsed", "cpu", "reads", "executions"]).optional().describe("Sort metric (default: avg_elapsed)."),
-  top: external_exports2.number().int().min(1).max(50).optional().describe("Number of queries to return (default 20, max 50)."),
-  database_name: external_exports2.string().optional().describe("Optional database filter. Note: excludes ad-hoc queries whose dbid is NULL.")
-}), GetQueryPlanInputSchema = external_exports2.object({
+var PLAN_MAX_CHARS = 1e5, GetQueryPlanInputSchema = external_exports2.object({
   query: external_exports2.string().min(1).describe("The SELECT query to plan. It is NEVER executed — only compiled."),
   database_name: external_exports2.string().optional().describe("Optional database to plan against (the one-off connection opens directly in it). If omitted, uses the connection's current database.")
-}), TOOL_NAMES2 = /* @__PURE__ */ new Set(["get_missing_indexes", "get_top_queries", "get_query_plan"]), MssqlPerformanceTools = {
+}), TOOL_NAMES2 = /* @__PURE__ */ new Set(["get_query_plan"]), MssqlPerformanceTools = {
   canHandle(name) {
     return TOOL_NAMES2.has(name);
   },
   getToolDefinitions() {
     return [
-      {
-        name: "get_missing_indexes",
-        description: "Get missing-index suggestions recorded by SQL Server for real workloads: table, equality/inequality/included columns, estimated impact %, seek/scan counts, and an improvement measure (TOP 25 by impact). Requires VIEW SERVER STATE (friendly diagnostic when missing). Suggestions reset on server restart and are hints — not deduplicated against existing indexes.",
-        inputSchema: external_exports2.toJSONSchema(GetMissingIndexesInputSchema.extend(ConnectionScopeSchema.shape))
-      },
-      {
-        name: "get_top_queries",
-        description: "List the heaviest queries from the server plan cache with execution count, total/avg elapsed ms, CPU ms, logical reads, and last execution time. sort_by: avg_elapsed (default) | total_elapsed | cpu | reads | executions; top 1-50 (default 20). Requires VIEW SERVER STATE. Stats reset on restart or plan eviction.",
-        inputSchema: external_exports2.toJSONSchema(GetTopQueriesInputSchema.extend(ConnectionScopeSchema.shape))
-      },
       {
         name: "get_query_plan",
         description: "Get the ESTIMATED execution plan (SHOWPLAN XML) for a SELECT query WITHOUT executing it, on a dedicated one-off connection. The query must pass the same read-only validation as exec_sql_csv — blocked keywords (UNION, EXEC, INTO, ...) are rejected here too. Requires SHOWPLAN permission (friendly diagnostic when missing).",
@@ -80528,65 +80451,10 @@ var MISSING_INDEXES_NOTES = `
   },
   async handleTool(name, args, pool) {
     switch (name) {
-      case "get_missing_indexes":
-        return this.handleGetMissingIndexes(args, pool);
-      case "get_top_queries":
-        return this.handleGetTopQueries(args, pool);
       case "get_query_plan":
         return this.handleGetQueryPlan(args, pool);
     }
     throw new Error(`Unknown tool: ${name}`);
-  },
-  async handleGetMissingIndexes(args, pool) {
-    try {
-      let v2 = GetMissingIndexesInputSchema.parse(args), dbFilter = "DB_ID()", dbCacheKey = buildCacheKeyPrefix();
-      v2.database_name && (validateDatabaseName(v2.database_name), dbFilter = `DB_ID(N'${escapeLiteral2(v2.database_name)}')`, dbCacheKey = buildCacheKeyPrefix(v2.database_name));
-      let tableClause = "", tableCacheKey = "_all_";
-      if (v2.table_name) {
-        let parts = parseObjectName(v2.table_name);
-        if (parts.database)
-          return plainResponse2("3-part table names are not supported here — pass the database via the separate database_name parameter.");
-        let schemaPart = parts.schema ?? "dbo";
-        tableClause = ` AND mid.statement LIKE N'%${escapeLikePattern2(`.[${schemaPart}].[${parts.object}]`)}' ESCAPE '\\'`, tableCacheKey = `${schemaPart}.${parts.object}`;
-      }
-      let cacheKey2 = namespaceCacheKey(pool.name, `${dbCacheKey}${tableCacheKey}`), cached2 = getFromCache2(missingIndexesCache, cacheKey2, MISSING_INDEXES_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse2(cached2);
-      let query = `SELECT TOP 25 mid.statement AS [table], mid.equality_columns, mid.inequality_columns, mid.included_columns, CAST(migs.avg_user_impact AS DECIMAL(5,1)) AS avg_user_impact_pct, migs.user_seeks, migs.user_scans, CAST(migs.avg_total_user_cost AS DECIMAL(12,2)) AS avg_total_user_cost, CONVERT(VARCHAR(19), migs.last_user_seek, 120) AS last_user_seek, CAST(migs.avg_user_impact * (migs.user_seeks + migs.user_scans) * migs.avg_total_user_cost AS DECIMAL(18,2)) AS improvement_measure FROM sys.dm_db_missing_index_details mid INNER JOIN sys.dm_db_missing_index_groups mig ON mig.index_handle = mid.index_handle INNER JOIN sys.dm_db_missing_index_group_stats migs ON migs.group_handle = mig.index_group_handle WHERE mid.database_id = ${dbFilter}${tableClause} ORDER BY improvement_measure DESC`;
-      consola.level >= 0 && logger4.info(`Getting missing indexes (${v2.database_name || "current DB"}${v2.table_name ? `, table ${v2.table_name}` : ""})`);
-      let results;
-      try {
-        results = await pool.query(query);
-      } catch (e2) {
-        if (isPermissionError(e2)) return plainResponse2(viewServerStateHint("get_missing_indexes"));
-        throw e2;
-      }
-      if (!results || results.length === 0)
-        return plainResponse2(`No missing-index suggestions recorded${v2.table_name ? ` for ${v2.table_name}` : ""}. Either the workload is well-indexed or the counters were reset by a restart.${MISSING_INDEXES_NOTES}`);
-      let csv = formatCSV(results) + MISSING_INDEXES_NOTES;
-      return setInCache2(missingIndexesCache, cacheKey2, csv, MISSING_INDEXES_CACHE_MAX_SIZE, "get_missing_indexes"), plainResponse2(csv);
-    } catch (error46) {
-      return consola.level >= 0 && logger4.error("get_missing_indexes error:", error46), errorResponse2("Error getting missing indexes", error46);
-    }
-  },
-  async handleGetTopQueries(args, pool) {
-    try {
-      let v2 = GetTopQueriesInputSchema.parse(args), sortExpr = SORT_EXPRESSIONS[v2.sort_by ?? "avg_elapsed"], top = v2.top ?? 20, dbClause = "", dbNote = "";
-      v2.database_name && (validateDatabaseName(v2.database_name), dbClause = ` WHERE st.dbid = DB_ID(N'${escapeLiteral2(v2.database_name)}')`, dbNote = `
-
-ℹ️ The database_name filter excludes ad-hoc queries whose dbid is NULL.`);
-      let query = `SELECT TOP ${top} REPLACE(REPLACE(REPLACE(SUBSTRING(st.text, 1, 200), CHAR(13), ' '), CHAR(10), ' '), CHAR(9), ' ') AS query_text, DB_NAME(st.dbid) AS database_name, qs.execution_count, CAST(qs.total_elapsed_time / 1000.0 AS DECIMAL(18,1)) AS total_elapsed_ms, CAST(qs.total_elapsed_time / qs.execution_count / 1000.0 AS DECIMAL(18,1)) AS avg_elapsed_ms, CAST(qs.total_worker_time / 1000.0 AS DECIMAL(18,1)) AS total_cpu_ms, qs.total_logical_reads, qs.total_logical_reads / qs.execution_count AS avg_logical_reads, CONVERT(VARCHAR(19), qs.last_execution_time, 120) AS last_execution FROM sys.dm_exec_query_stats qs CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) st${dbClause} ORDER BY ${sortExpr} DESC`;
-      consola.level >= 0 && logger4.info(`Getting top ${top} queries by ${v2.sort_by ?? "avg_elapsed"}`);
-      let results;
-      try {
-        results = await pool.query(query);
-      } catch (e2) {
-        if (isPermissionError(e2)) return plainResponse2(viewServerStateHint("get_top_queries"));
-        throw e2;
-      }
-      return !results || results.length === 0 ? plainResponse2(`No queries found in the plan cache${v2.database_name ? ` for database ${v2.database_name}` : ""}.${TOP_QUERIES_NOTES}`) : plainResponse2(formatCSV(results) + TOP_QUERIES_NOTES + dbNote);
-    } catch (error46) {
-      return consola.level >= 0 && logger4.error("get_top_queries error:", error46), errorResponse2("Error getting top queries", error46);
-    }
   },
   async handleGetQueryPlan(args, pool) {
     try {
@@ -80618,44 +80486,45 @@ ${planXml}${note}`);
       return consola.level >= 0 && logger4.error("get_query_plan error:", error46), errorResponse2("Error getting query plan", error46);
     }
   },
-  clearCaches(connectionName) {
-    return clearMapByPrefix(missingIndexesCache, connectionName);
+  // get_query_plan is never cached, so this layer holds no cache entries.
+  clearCaches(_connectionName) {
+    return 0;
   }
 };
 
 // src/MssqlProfilingTools.ts
 var logger5 = consola.withTag("mssql-profiling-tools"), PROFILE_CACHE_TTL_MS = parseInt(process.env.MSSQL_PROFILE_CACHE_TTL || "1800000", 10), PROFILE_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_PROFILE_CACHE_SIZE || "100", 10), ROW_COUNT_CACHE_TTL_MS = parseInt(process.env.MSSQL_ROW_COUNT_CACHE_TTL || "900000", 10), ROW_COUNT_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_ROW_COUNT_CACHE_SIZE || "200", 10), MAX_CELL_CHARS = parseInt(process.env.MSSQL_MAX_CELL_CHARS || "1000", 10), profileCache = /* @__PURE__ */ new Map(), rowCountCache = /* @__PURE__ */ new Map();
-function cleanExpired3(cache, key, ttlMs) {
+function cleanExpired2(cache, key, ttlMs) {
   let entry = cache.get(key);
   return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
 }
-__name(cleanExpired3, "cleanExpired");
-function enforceSizeLimit3(cache, maxSize, name) {
+__name(cleanExpired2, "cleanExpired");
+function enforceSizeLimit2(cache, maxSize, name) {
   if (cache.size > maxSize) {
     let entries = Array.from(cache.entries()).sort((a2, b2) => a2[1].lastAccessed - b2[1].lastAccessed), toDelete = cache.size - maxSize;
     for (let i2 = 0; i2 < toDelete; i2++) cache.delete(entries[i2][0]);
     consola.level >= 0 && logger5.debug(`${name} LRU eviction: removed ${toDelete} entries`);
   }
 }
-__name(enforceSizeLimit3, "enforceSizeLimit");
-function getFromCache3(cache, key, ttlMs) {
-  if (!cleanExpired3(cache, key, ttlMs)) {
+__name(enforceSizeLimit2, "enforceSizeLimit");
+function getFromCache2(cache, key, ttlMs) {
+  if (!cleanExpired2(cache, key, ttlMs)) {
     let entry = cache.get(key);
     if (entry)
       return entry.lastAccessed = Date.now(), entry.result;
   }
   return null;
 }
-__name(getFromCache3, "getFromCache");
-function setInCache3(cache, key, result, maxSize, name) {
+__name(getFromCache2, "getFromCache");
+function setInCache2(cache, key, result, maxSize, name) {
   let now = Date.now();
-  cache.set(key, { result, timestamp: now, lastAccessed: now }), enforceSizeLimit3(cache, maxSize, name);
+  cache.set(key, { result, timestamp: now, lastAccessed: now }), enforceSizeLimit2(cache, maxSize, name);
 }
-__name(setInCache3, "setInCache");
-function escapeLiteral3(s2) {
+__name(setInCache2, "setInCache");
+function escapeLiteral2(s2) {
   return s2.replace(/'/g, "''");
 }
-__name(escapeLiteral3, "escapeLiteral");
+__name(escapeLiteral2, "escapeLiteral");
 var ProfileColumnInputSchema = external_exports2.object({
   table_name: external_exports2.string().min(1).describe('Table name. 1-part ("MyTable") or 2-part ("dbo.MyTable").'),
   column_name: external_exports2.string().min(1).describe("Column to profile. Single-part name only."),
@@ -80693,22 +80562,22 @@ function plainResponse3(text) {
   return { content: [{ type: "text", text }] };
 }
 __name(plainResponse3, "plainResponse");
-function cachedResponse3(text) {
+function cachedResponse2(text) {
   return { content: [{ type: "text", text: `${text}
 
 📋 (Cached result)` }] };
 }
-__name(cachedResponse3, "cachedResponse");
+__name(cachedResponse2, "cachedResponse");
 function errorResponse3(prefix, error46) {
   let msg = error46 instanceof Error ? error46.message : "Unknown error";
   return { content: [{ type: "text", text: `${prefix}: ${msg}` }] };
 }
 __name(errorResponse3, "errorResponse");
-function isPermissionError2(error46) {
+function isPermissionError(error46) {
   let msg = error46 instanceof Error ? error46.message.toLowerCase() : "";
   return msg.includes("permission") || msg.includes("denied");
 }
-__name(isPermissionError2, "isPermissionError");
+__name(isPermissionError, "isPermissionError");
 var MssqlProfilingTools = {
   canHandle(name) {
     return TOOL_NAMES3.has(name);
@@ -80748,8 +80617,8 @@ var MssqlProfilingTools = {
       let v2 = ProfileColumnInputSchema.parse(args), table = resolveTable(v2.table_name, v2.database_name);
       if (!/^[a-zA-Z0-9_]+$/.test(v2.column_name))
         throw new Error(`Invalid column_name "${v2.column_name}". Only alphanumeric characters and underscores allowed.`);
-      let colBracketed = `[${v2.column_name}]`, sampleKey = v2.sample_size ? `s${v2.sample_size}` : "full", cacheKey2 = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.column_name}:${sampleKey}`), cached2 = getFromCache3(profileCache, cacheKey2, PROFILE_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse3(cached2);
+      let colBracketed = `[${v2.column_name}]`, sampleKey = v2.sample_size ? `s${v2.sample_size}` : "full", cacheKey2 = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.column_name}:${sampleKey}`), cached2 = getFromCache2(profileCache, cacheKey2, PROFILE_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse2(cached2);
       let sourceExpr = v2.sample_size ? `(SELECT TOP ${v2.sample_size} ${colBracketed} FROM ${table.bracketedFqn} ORDER BY NEWID()) AS sampled` : `${table.bracketedFqn}`, aggregateQuery = `SELECT COUNT_BIG(*) AS row_count, COUNT_BIG(*) - COUNT_BIG(${colBracketed}) AS null_count, CAST((COUNT_BIG(*) - COUNT_BIG(${colBracketed})) * 100.0 / NULLIF(COUNT_BIG(*), 0) AS DECIMAL(5,2)) AS null_pct, COUNT(DISTINCT ${colBracketed}) AS distinct_count, MIN(${colBracketed}) AS min_value, MAX(${colBracketed}) AS max_value FROM ${sourceExpr}`, topQuery = `SELECT TOP 10 ${colBracketed} AS value, COUNT_BIG(*) AS occurrences FROM ${sourceExpr} WHERE ${colBracketed} IS NOT NULL GROUP BY ${colBracketed} ORDER BY occurrences DESC`;
       consola.level >= 0 && logger5.info(`Profiling ${table.displayName}.${v2.column_name}${v2.sample_size ? ` (sample ${v2.sample_size})` : ""}`);
       let aggResults;
@@ -80775,7 +80644,7 @@ ${formatCSV(aggResults)}`;
 Top 10 most frequent values:
 ${formatCSV(topResults)}` : body += `
 
-(No top values — column may be all NULL or top-values query failed.)`, body += sampledNote, setInCache3(profileCache, cacheKey2, body, PROFILE_CACHE_MAX_SIZE, "profile_column"), plainResponse3(body);
+(No top values — column may be all NULL or top-values query failed.)`, body += sampledNote, setInCache2(profileCache, cacheKey2, body, PROFILE_CACHE_MAX_SIZE, "profile_column"), plainResponse3(body);
     } catch (error46) {
       return consola.level >= 0 && logger5.error("profile_column error:", error46), errorResponse3("Error profiling column", error46);
     }
@@ -80800,9 +80669,9 @@ ${csv}${note}`);
   },
   async handleRowCount(args, pool) {
     try {
-      let v2 = RowCountInputSchema.parse(args), table = resolveTable(v2.table_name, v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.exact ? "exact" : "fast"}`), cached2 = getFromCache3(rowCountCache, cacheKey2, ROW_COUNT_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse3(cached2);
-      let fqnLiteral = `'${escapeLiteral3(`${table.schemaName}.${table.tableName}`)}'`, objectIdExpr = v2.database_name ? `OBJECT_ID('${escapeLiteral3(`${v2.database_name}.${table.schemaName}.${table.tableName}`)}')` : `OBJECT_ID(${fqnLiteral})`, rowCount = null, source = "unknown";
+      let v2 = RowCountInputSchema.parse(args), table = resolveTable(v2.table_name, v2.database_name), cacheKey2 = namespaceCacheKey(pool.name, `${table.dbCacheKey}${table.schemaName}:${table.tableName}:${v2.exact ? "exact" : "fast"}`), cached2 = getFromCache2(rowCountCache, cacheKey2, ROW_COUNT_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse2(cached2);
+      let fqnLiteral = `'${escapeLiteral2(`${table.schemaName}.${table.tableName}`)}'`, objectIdExpr = v2.database_name ? `OBJECT_ID('${escapeLiteral2(`${v2.database_name}.${table.schemaName}.${table.tableName}`)}')` : `OBJECT_ID(${fqnLiteral})`, rowCount = null, source = "unknown";
       if (!v2.exact) {
         try {
           let r3 = await pool.query(
@@ -80831,7 +80700,7 @@ ${csv}${note}`);
           let r3 = await pool.query(`SELECT COUNT_BIG(*) AS cnt FROM ${table.bracketedFqn}`);
           rowCount = Number(r3[0]?.cnt ?? 0), source = v2.exact ? "COUNT_BIG(*) (exact)" : "COUNT_BIG(*) (fallback after metadata returned 0)";
         } catch (e2) {
-          if (isPermissionError2(e2))
+          if (isPermissionError(e2))
             return plainResponse3(
               `🔒 ${table.displayName} — cannot count rows. Connection user lacks SELECT permission on this table.`
             );
@@ -80839,7 +80708,7 @@ ${csv}${note}`);
         }
       let text = `Row count for ${table.displayName}: ${rowCount}
 Source: ${source}`;
-      return setInCache3(rowCountCache, cacheKey2, text, ROW_COUNT_CACHE_MAX_SIZE, "get_table_row_count"), plainResponse3(text);
+      return setInCache2(rowCountCache, cacheKey2, text, ROW_COUNT_CACHE_MAX_SIZE, "get_table_row_count"), plainResponse3(text);
     } catch (error46) {
       return consola.level >= 0 && logger5.error("get_table_row_count error:", error46), errorResponse3("Error getting row count", error46);
     }
@@ -81569,33 +81438,33 @@ var ExecuteSqlInputSchema = external_exports2.object({
 
 // src/MssqlServerTools.ts
 var logger8 = consola.withTag("mssql-server-tools"), DATABASES_CACHE_TTL_MS = parseInt(process.env.MSSQL_DATABASES_CACHE_TTL || "1800000", 10), DATABASES_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DATABASES_CACHE_SIZE || "16", 10), SCHEMAS_CACHE_TTL_MS = parseInt(process.env.MSSQL_SCHEMAS_CACHE_TTL || "7200000", 10), SCHEMAS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SCHEMAS_CACHE_SIZE || "50", 10), LINKED_SERVERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_TTL || "3600000", 10), LINKED_SERVERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_LINKED_SERVERS_CACHE_SIZE || "16", 10), SERVER_INFO_CACHE_TTL_MS = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_TTL || "300000", 10), SERVER_INFO_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SERVER_INFO_CACHE_SIZE || "16", 10), databasesCache = /* @__PURE__ */ new Map(), schemasCache = /* @__PURE__ */ new Map(), linkedServersCache = /* @__PURE__ */ new Map(), serverInfoCache = /* @__PURE__ */ new Map();
-function cleanExpired4(cache, key, ttlMs) {
+function cleanExpired3(cache, key, ttlMs) {
   let entry = cache.get(key);
   return entry && Date.now() - entry.timestamp > ttlMs ? (cache.delete(key), !0) : !1;
 }
-__name(cleanExpired4, "cleanExpired");
-function enforceSizeLimit4(cache, maxSize, name) {
+__name(cleanExpired3, "cleanExpired");
+function enforceSizeLimit3(cache, maxSize, name) {
   if (cache.size > maxSize) {
     let entries = Array.from(cache.entries()).sort((a2, b2) => a2[1].lastAccessed - b2[1].lastAccessed), toDelete = cache.size - maxSize;
     for (let i2 = 0; i2 < toDelete; i2++) cache.delete(entries[i2][0]);
     consola.level >= 0 && logger8.debug(`${name} LRU eviction: removed ${toDelete} entries`);
   }
 }
-__name(enforceSizeLimit4, "enforceSizeLimit");
-function getFromCache4(cache, key, ttlMs) {
-  if (!cleanExpired4(cache, key, ttlMs)) {
+__name(enforceSizeLimit3, "enforceSizeLimit");
+function getFromCache3(cache, key, ttlMs) {
+  if (!cleanExpired3(cache, key, ttlMs)) {
     let entry = cache.get(key);
     if (entry)
       return entry.lastAccessed = Date.now(), entry.result;
   }
   return null;
 }
-__name(getFromCache4, "getFromCache");
-function setInCache4(cache, key, result, maxSize, name) {
+__name(getFromCache3, "getFromCache");
+function setInCache3(cache, key, result, maxSize, name) {
   let now = Date.now();
-  cache.set(key, { result, timestamp: now, lastAccessed: now }), enforceSizeLimit4(cache, maxSize, name);
+  cache.set(key, { result, timestamp: now, lastAccessed: now }), enforceSizeLimit3(cache, maxSize, name);
 }
-__name(setInCache4, "setInCache");
+__name(setInCache3, "setInCache");
 var ListDatabasesInputSchema = external_exports2.object({
   include_system: external_exports2.boolean().optional().describe("Include system databases (master, tempdb, model, msdb). Default: false.")
 }), ListSchemasInputSchema = external_exports2.object({
@@ -81613,22 +81482,22 @@ function plainResponse4(text) {
   return { content: [{ type: "text", text }] };
 }
 __name(plainResponse4, "plainResponse");
-function cachedResponse4(text) {
+function cachedResponse3(text) {
   return { content: [{ type: "text", text: `${text}
 
 📋 (Cached result)` }] };
 }
-__name(cachedResponse4, "cachedResponse");
+__name(cachedResponse3, "cachedResponse");
 function errorResponse4(prefix, error46) {
   let msg = error46 instanceof Error ? error46.message : "Unknown error";
   return { content: [{ type: "text", text: `${prefix}: ${msg}` }] };
 }
 __name(errorResponse4, "errorResponse");
-function isPermissionError3(error46) {
+function isPermissionError2(error46) {
   let msg = error46 instanceof Error ? error46.message.toLowerCase() : "";
   return msg.includes("permission") || msg.includes("denied") || msg.includes("not have permission");
 }
-__name(isPermissionError3, "isPermissionError");
+__name(isPermissionError2, "isPermissionError");
 var MssqlServerTools = {
   canHandle(name) {
     return TOOL_NAMES4.has(name);
@@ -81684,15 +81553,15 @@ var MssqlServerTools = {
   },
   async handleListDatabases(args, pool) {
     try {
-      let v2 = ListDatabasesInputSchema.parse(args), cacheKey2 = v2.include_system ? "all" : "user", nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cached2 = getFromCache4(databasesCache, nsCacheKey, DATABASES_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse4(cached2);
+      let v2 = ListDatabasesInputSchema.parse(args), cacheKey2 = v2.include_system ? "all" : "user", nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cached2 = getFromCache3(databasesCache, nsCacheKey, DATABASES_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse3(cached2);
       let query = `SELECT d.database_id, d.name AS database_name, d.state_desc, d.recovery_model_desc, d.collation_name, d.create_date, d.compatibility_level FROM sys.databases d ${v2.include_system ? "" : "WHERE d.database_id > 4"} ORDER BY d.name`;
       consola.level >= 0 && logger8.info(`Listing databases (include_system=${!!v2.include_system})`);
       let results = await pool.query(query);
       if (!results || results.length === 0)
         return plainResponse4("No databases found.");
       let csv = formatCSV(results);
-      return setInCache4(databasesCache, nsCacheKey, csv, DATABASES_CACHE_MAX_SIZE, "list_databases"), plainResponse4(csv);
+      return setInCache3(databasesCache, nsCacheKey, csv, DATABASES_CACHE_MAX_SIZE, "list_databases"), plainResponse4(csv);
     } catch (error46) {
       return consola.level >= 0 && logger8.error("list_databases error:", error46), errorResponse4("Error listing databases", error46);
     }
@@ -81701,30 +81570,30 @@ var MssqlServerTools = {
     try {
       let v2 = ListSchemasInputSchema.parse(args), dbPrefix = "", cacheKey2 = buildCacheKeyPrefix();
       v2.database_name && (dbPrefix = `${validateDatabaseName(v2.database_name)}.`, cacheKey2 = buildCacheKeyPrefix(v2.database_name));
-      let nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cached2 = getFromCache4(schemasCache, nsCacheKey, SCHEMAS_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse4(cached2);
+      let nsCacheKey = namespaceCacheKey(pool.name, cacheKey2), cached2 = getFromCache3(schemasCache, nsCacheKey, SCHEMAS_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse3(cached2);
       let query = `SELECT s.schema_id, s.name AS schema_name, COALESCE(p.name, '<unknown>') AS owner_name FROM ${dbPrefix}sys.schemas s LEFT JOIN ${dbPrefix}sys.database_principals p ON s.principal_id = p.principal_id ORDER BY s.name`;
       consola.level >= 0 && logger8.info(`Listing schemas in ${v2.database_name || "current DB"}`);
       let results = await pool.query(query);
       if (!results || results.length === 0)
         return plainResponse4(`No schemas found in ${v2.database_name || "current database"}.`);
       let csv = formatCSV(results);
-      return setInCache4(schemasCache, nsCacheKey, csv, SCHEMAS_CACHE_MAX_SIZE, "list_schemas"), plainResponse4(csv);
+      return setInCache3(schemasCache, nsCacheKey, csv, SCHEMAS_CACHE_MAX_SIZE, "list_schemas"), plainResponse4(csv);
     } catch (error46) {
       return consola.level >= 0 && logger8.error("list_schemas error:", error46), errorResponse4("Error listing schemas", error46);
     }
   },
   async handleListLinkedServers(pool) {
     try {
-      let cacheKey2 = namespaceCacheKey(pool.name, "_singleton_"), cached2 = getFromCache4(linkedServersCache, cacheKey2, LINKED_SERVERS_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse4(cached2);
+      let cacheKey2 = namespaceCacheKey(pool.name, "_singleton_"), cached2 = getFromCache3(linkedServersCache, cacheKey2, LINKED_SERVERS_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse3(cached2);
       let query = "SELECT s.server_id, s.name, s.product, s.provider, s.data_source, s.location, s.is_linked, s.is_remote_login_enabled, s.is_data_access_enabled, s.is_rpc_out_enabled, s.modify_date FROM master.sys.servers s WHERE s.server_id != 0 ORDER BY s.name";
       consola.level >= 0 && logger8.info("Listing linked servers");
       let results;
       try {
         results = await pool.query(query);
       } catch (e2) {
-        if (isPermissionError3(e2))
+        if (isPermissionError2(e2))
           return plainResponse4(
             "🔒 Cannot list linked servers — connection user lacks SELECT permission on master.sys.servers. Run: GRANT SELECT ON master.sys.servers TO [user]"
           );
@@ -81733,15 +81602,15 @@ var MssqlServerTools = {
       if (!results || results.length === 0)
         return plainResponse4("No linked servers configured on this SQL Server instance.");
       let csv = formatCSV(results);
-      return setInCache4(linkedServersCache, cacheKey2, csv, LINKED_SERVERS_CACHE_MAX_SIZE, "list_linked_servers"), plainResponse4(csv);
+      return setInCache3(linkedServersCache, cacheKey2, csv, LINKED_SERVERS_CACHE_MAX_SIZE, "list_linked_servers"), plainResponse4(csv);
     } catch (error46) {
       return consola.level >= 0 && logger8.error("list_linked_servers error:", error46), errorResponse4("Error listing linked servers", error46);
     }
   },
   async handleGetServerInfo(pool) {
     try {
-      let cacheKey2 = namespaceCacheKey(pool.name, "_singleton_"), cached2 = getFromCache4(serverInfoCache, cacheKey2, SERVER_INFO_CACHE_TTL_MS);
-      if (cached2 !== null) return cachedResponse4(cached2);
+      let cacheKey2 = namespaceCacheKey(pool.name, "_singleton_"), cached2 = getFromCache3(serverInfoCache, cacheKey2, SERVER_INFO_CACHE_TTL_MS);
+      if (cached2 !== null) return cachedResponse3(cached2);
       let propsQuery = `SELECT
 				CAST(SERVERPROPERTY('ProductVersion') AS VARCHAR(128)) AS product_version,
 				CAST(SERVERPROPERTY('Edition') AS VARCHAR(256)) AS edition,
@@ -81761,14 +81630,14 @@ var MssqlServerTools = {
       try {
         osInfo = (await pool.query("SELECT cpu_count, hyperthread_ratio, physical_memory_kb / 1024 / 1024 AS physical_memory_gb, virtual_memory_kb / 1024 / 1024 AS virtual_memory_gb, sqlserver_start_time FROM sys.dm_os_sys_info"))[0] || null;
       } catch (e2) {
-        isPermissionError3(e2) ? osInfoError = "VIEW SERVER STATE permission required for cpu/memory/uptime — omitting." : osInfoError = `dm_os_sys_info error: ${e2 instanceof Error ? e2.message : "unknown"}`;
+        isPermissionError2(e2) ? osInfoError = "VIEW SERVER STATE permission required for cpu/memory/uptime — omitting." : osInfoError = `dm_os_sys_info error: ${e2 instanceof Error ? e2.message : "unknown"}`;
       }
       let merged = { ...props };
       osInfo && Object.assign(merged, osInfo);
       let csv = formatCSV([merged]), finalText = osInfoError ? `${csv}
 
 ℹ️ ${osInfoError}` : csv;
-      return setInCache4(serverInfoCache, cacheKey2, finalText, SERVER_INFO_CACHE_MAX_SIZE, "get_server_info"), plainResponse4(finalText);
+      return setInCache3(serverInfoCache, cacheKey2, finalText, SERVER_INFO_CACHE_MAX_SIZE, "get_server_info"), plainResponse4(finalText);
     } catch (error46) {
       return consola.level >= 0 && logger8.error("get_server_info error:", error46), errorResponse4("Error fetching server info", error46);
     }
