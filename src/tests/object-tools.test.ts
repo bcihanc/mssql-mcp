@@ -39,6 +39,7 @@ const expectedTools = [
 	'list_views',
 	'list_functions',
 	'list_triggers',
+	'get_object_definition',
 ];
 for (const t of expectedTools) check(`canHandle: ${t}`, MssqlObjectTools.canHandle(t), true);
 check('canHandle: unknown_tool returns false', MssqlObjectTools.canHandle('unknown_tool'), false);
@@ -57,7 +58,7 @@ for (const t of removedTools) check(`canHandle: removed ${t} returns false`, Mss
 
 console.log('\n--- getToolDefinitions ---');
 const defs = MssqlObjectTools.getToolDefinitions();
-check('exposes 4 tool definitions (definition + dependency tools removed)', defs.length, 4);
+check('exposes 5 tool definitions (4 list tools + get_object_definition)', defs.length, 5);
 
 const names = new Set(defs.map((d) => d.name));
 for (const t of expectedTools) check(`definition exists: ${t}`, names.has(t), true);
@@ -71,6 +72,10 @@ check('procedures inputSchema has include_system property', !!(procDef.inputSche
 
 const triggersDef = defs.find((d) => d.name === 'list_triggers')!;
 check('triggers has table_name property (not schema_name)', !!(triggersDef.inputSchema as any).properties?.table_name, true);
+
+const defDef = defs.find((d) => d.name === 'get_object_definition')!;
+check('get_object_definition has object_name property', !!(defDef.inputSchema as any).properties?.object_name, true);
+check('get_object_definition has connection_name property', !!(defDef.inputSchema as any).properties?.connection_name, true);
 
 console.log('\n--- handler dispatch routes correctly (catches via simulated invalid pool) ---');
 const stubPool: any = {
@@ -132,6 +137,80 @@ try {
 		fail++;
 		console.error(`❌ unknown tool threw wrong error: ${msg}`);
 	}
+}
+
+console.log('\n--- get_object_definition branches (controlled stub) ---');
+
+// Stub whose query() returns different rows for the main query vs the
+// HAS_PERMS_BY_NAME follow-up query, keyed by SQL content.
+function defStub(mainRows: any[], permRows: any[] = []): any {
+	return {
+		name: 'test',
+		query: async (sql: string) => (sql.includes('HAS_PERMS_BY_NAME') ? permRows : mainRows),
+	};
+}
+
+async function callDef(args: any, stub: any): Promise<string> {
+	MssqlObjectTools.clearCachesForTesting();
+	const r = await MssqlObjectTools.handleTool('get_object_definition', args, stub);
+	return r.content[0]?.type === 'text' ? r.content[0].text : '';
+}
+
+// Happy path: definition present -> paginated header + body
+{
+	const body = 'CREATE PROCEDURE [dbo].[GetUsers]\nAS\nBEGIN\nSELECT 1\nEND';
+	const text = await callDef({ object_name: 'dbo.GetUsers' }, defStub([{ type_desc: 'SQL_STORED_PROCEDURE', is_module: 1, definition: body }]));
+	checkContains('happy path: paginated header', text, '📄 dbo.GetUsers — lines 1-5 of 5');
+	checkContains('happy path: body returned', text, 'CREATE PROCEDURE [dbo].[GetUsers]');
+}
+
+// Schema defaults to dbo when object_name has no schema part
+{
+	const text = await callDef({ object_name: 'GetUsers' }, defStub([{ type_desc: 'SQL_STORED_PROCEDURE', is_module: 1, definition: 'CREATE PROC x AS SELECT 1' }]));
+	checkContains('no-schema input defaults to dbo in header', text, '📄 dbo.GetUsers');
+}
+
+// Object not found (no rows)
+{
+	const text = await callDef({ object_name: 'dbo.Missing' }, defStub([]));
+	checkContains('not found message', text, 'Object not found: dbo.Missing');
+}
+
+// is_module = 0 (a table) -> no SQL definition
+{
+	const text = await callDef({ object_name: 'dbo.Orders' }, defStub([{ type_desc: 'USER_TABLE', is_module: 0, definition: null }]));
+	checkContains('non-module: type in message', text, 'is a USER_TABLE');
+	checkContains('non-module: no SQL definition', text, 'no SQL definition');
+}
+
+// definition NULL + has_perm = 0 -> permission message
+{
+	const text = await callDef({ object_name: 'dbo.Hidden' }, defStub([{ type_desc: 'SQL_STORED_PROCEDURE', is_module: 1, definition: null }], [{ has_perm: 0 }]));
+	checkContains('null+no-perm: lacks VIEW DEFINITION', text, 'lacks VIEW DEFINITION permission');
+}
+
+// definition NULL + has_perm = 1 -> encrypted message
+{
+	const text = await callDef({ object_name: 'dbo.Encrypted' }, defStub([{ type_desc: 'SQL_STORED_PROCEDURE', is_module: 1, definition: null }], [{ has_perm: 1 }]));
+	checkContains('null+has-perm: encrypted', text, 'encrypted (WITH ENCRYPTION)');
+}
+
+// Cross-DB (database_name given) + definition NULL -> combined message, HAS_PERMS skipped
+{
+	const text = await callDef({ object_name: 'dbo.X', database_name: 'OtherDB' }, defStub([{ type_desc: 'SQL_STORED_PROCEDURE', is_module: 1, definition: null }]));
+	checkContains('cross-db null: combined message', text, 'lacks VIEW DEFINITION permission, or the object is encrypted');
+}
+
+// 3-part object_name rejected with a clear message (parses OK but our policy rejects)
+{
+	const text = await callDef({ object_name: 'MyDB.dbo.proc' }, defStub([]));
+	checkContains('3-part object_name rejected', text, 'has 3 parts');
+}
+
+// Invalid object_name (parseObjectName throws) -> clean error
+{
+	const text = await callDef({ object_name: 'a;drop' }, defStub([]));
+	checkContains('invalid object_name: parse error surfaced', text, 'Invalid object name');
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

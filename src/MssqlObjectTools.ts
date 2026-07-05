@@ -3,7 +3,8 @@ import consola from 'consola';
 import { z } from 'zod/v4';
 import type { ConnectionPool } from './server/connection.js';
 import { formatCSV } from './utils/csv.js';
-import { buildCacheKeyPrefix, namespaceCacheKey, validateDatabaseName } from './utils/identifier.js';
+import { buildCacheKeyPrefix, namespaceCacheKey, parseObjectName, validateDatabaseName } from './utils/identifier.js';
+import { paginateLines, formatPaginatedResponse } from './utils/pagination.js';
 import { ConnectionScopeSchema } from './utils/connectionScope.js';
 
 const logger = consola.withTag('mssql-object-tools');
@@ -22,11 +23,14 @@ const FUNCTIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_TTL ||
 const FUNCTIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_FUNCTIONS_CACHE_SIZE || '100', 10);
 const TRIGGERS_CACHE_TTL_MS = parseInt(process.env.MSSQL_TRIGGERS_CACHE_TTL || '7200000', 10);
 const TRIGGERS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_TRIGGERS_CACHE_SIZE || '100', 10);
+const DEFINITIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_TTL || '7200000', 10);
+const DEFINITIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_SIZE || '100', 10);
 
 const procsCache = new Map<string, ToolCacheEntry>();
 const viewsCache = new Map<string, ToolCacheEntry>();
 const functionsCache = new Map<string, ToolCacheEntry>();
 const triggersCache = new Map<string, ToolCacheEntry>();
+const definitionsCache = new Map<string, ToolCacheEntry>();
 
 function cleanExpired(cache: Map<string, ToolCacheEntry>, key: string, ttlMs: number): boolean {
 	const entry = cache.get(key);
@@ -79,11 +83,18 @@ const ListTriggersInputSchema = DatabaseScopeSchema.extend({
 	include_system: z.boolean().optional().describe('Include system-shipped triggers (default: false)'),
 });
 
+const GetObjectDefinitionInputSchema = DatabaseScopeSchema.extend({
+	object_name: z.string().describe('Object name as "schema.name" or just "name" (schema defaults to dbo). e.g. "dbo.GetUsers"'),
+	offset_lines: z.number().int().optional().describe('Line offset for pagination (default 0)'),
+	max_lines: z.number().int().optional().describe('Max lines to return (default 200, hard cap 1000)'),
+});
+
 const TOOL_NAMES = new Set([
 	'list_stored_procedures',
 	'list_views',
 	'list_functions',
 	'list_triggers',
+	'get_object_definition',
 ]);
 
 interface ResolvedScope {
@@ -153,6 +164,11 @@ export const MssqlObjectTools = {
 				description: 'List DML triggers with parent table, name, type (INSTEAD OF / AFTER), enabled state, and the events they fire on (INSERT/UPDATE/DELETE). Optionally filter by parent table_name.',
 				inputSchema: z.toJSONSchema(ListTriggersInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
+			{
+				name: 'get_object_definition',
+				description: 'Get the full SQL definition (source code) of a stored procedure, view, function, or trigger. Returns NULL-safe diagnostics when the definition is inaccessible (missing VIEW DEFINITION permission), encrypted (WITH ENCRYPTION), or the object is not a code module. Supports cross-database via database_name and line-based pagination.',
+				inputSchema: z.toJSONSchema(GetObjectDefinitionInputSchema.extend(ConnectionScopeSchema.shape)) as any,
+			},
 		];
 	},
 
@@ -166,6 +182,8 @@ export const MssqlObjectTools = {
 				return this.handleListFunctions(args, pool);
 			case 'list_triggers':
 				return this.handleListTriggers(args, pool);
+			case 'get_object_definition':
+				return this.handleGetObjectDefinition(args, pool);
 		}
 		throw new Error(`Unknown tool: ${name}`);
 	},
@@ -295,10 +313,67 @@ export const MssqlObjectTools = {
 		}
 	},
 
+	async handleGetObjectDefinition(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const v = GetObjectDefinitionInputSchema.parse(args);
+			const parts = parseObjectName(v.object_name);
+			if (parts.database) {
+				return plainResponse(`Invalid object_name: "${v.object_name}" has 3 parts (database.schema.object). Use the database_name parameter for cross-database access and pass object_name as "schema.name" or "name".`);
+			}
+			const schema = parts.schema || 'dbo';
+			const object = parts.object;
+			const scope = resolveDbScope(v.database_name);
+			const dbSuffix = v.database_name ? ` in database ${v.database_name}` : '';
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${schema}.${object}`);
+
+			const cached = getFromCache(definitionsCache, cacheKey, DEFINITIONS_CACHE_TTL_MS);
+			if (cached !== null) {
+				const paginated = paginateLines(cached, { offset_lines: v.offset_lines, max_lines: v.max_lines });
+				return cachedResponse(formatPaginatedResponse(paginated, `${schema}.${object}`));
+			}
+
+			const query = `SELECT o.type_desc, CASE WHEN m.object_id IS NULL THEN 0 ELSE 1 END AS is_module, m.definition AS definition FROM ${scope.dbPrefix}sys.objects o INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id LEFT JOIN ${scope.dbPrefix}sys.sql_modules m ON o.object_id = m.object_id WHERE s.name = '${escapeLiteral(schema)}' AND o.name = '${escapeLiteral(object)}'`;
+
+			if (consola.level >= 0) logger.info(`Getting object definition for ${schema}.${object} in ${v.database_name || 'current DB'}`);
+			const results = await pool.query(query);
+
+			if (!results || results.length === 0) {
+				return plainResponse(`Object not found: ${schema}.${object}${dbSuffix}.`);
+			}
+
+			const row: any = results[0];
+			if (!row.is_module) {
+				return plainResponse(`Object '${schema}.${object}' is a ${row.type_desc}; it has no SQL definition (only stored procedures, views, functions, and triggers do).`);
+			}
+
+			if (row.definition == null) {
+				if (v.database_name) {
+					return plainResponse(`Definition unavailable for '${schema}.${object}'${dbSuffix}: either the connection's login lacks VIEW DEFINITION permission, or the object is encrypted (WITH ENCRYPTION). The cross-database permission check is unreliable, so the exact cause can't be determined here.`);
+				}
+				const permQuery = `SELECT HAS_PERMS_BY_NAME('${escapeLiteral(schema)}.${escapeLiteral(object)}','OBJECT','VIEW DEFINITION') AS has_perm`;
+				const permResults = await pool.query(permQuery);
+				const hasPerm = permResults && permResults.length > 0 ? permResults[0].has_perm : 0;
+				if (!hasPerm) {
+					return plainResponse(`Definition hidden: the connection's login lacks VIEW DEFINITION permission on '${schema}.${object}'. Ask a DBA to GRANT VIEW DEFINITION.`);
+				}
+				return plainResponse(`Definition is encrypted (WITH ENCRYPTION) and cannot be read.`);
+			}
+
+			const definition: string = row.definition;
+			setInCache(definitionsCache, cacheKey, definition, DEFINITIONS_CACHE_MAX_SIZE, 'get_object_definition');
+			const paginated = paginateLines(definition, { offset_lines: v.offset_lines, max_lines: v.max_lines });
+			return plainResponse(formatPaginatedResponse(paginated, `${schema}.${object}`));
+		} catch (error) {
+			if (consola.level >= 0) logger.error('get_object_definition error:', error);
+			return errorResponse('Error getting object definition', error);
+		}
+	},
+
 	clearCachesForTesting(): void {
 		procsCache.clear();
 		viewsCache.clear();
 		functionsCache.clear();
 		triggersCache.clear();
+		definitionsCache.clear();
 	},
 };
