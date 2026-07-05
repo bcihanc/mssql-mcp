@@ -41,6 +41,7 @@ const expectedTools = [
 	'list_triggers',
 	'get_object_definition',
 	'search_object_definitions',
+	'get_object_dependencies',
 ];
 for (const t of expectedTools) check(`canHandle: ${t}`, MssqlObjectTools.canHandle(t), true);
 check('canHandle: unknown_tool returns false', MssqlObjectTools.canHandle('unknown_tool'), false);
@@ -52,14 +53,13 @@ const removedTools = [
 	'get_view_definition',
 	'get_function_definition',
 	'get_trigger_definition',
-	'get_object_dependencies',
 	'get_referenced_objects',
 ];
 for (const t of removedTools) check(`canHandle: removed ${t} returns false`, MssqlObjectTools.canHandle(t), false);
 
 console.log('\n--- getToolDefinitions ---');
 const defs = MssqlObjectTools.getToolDefinitions();
-check('exposes 6 tool definitions (4 list tools + get_object_definition + search)', defs.length, 6);
+check('exposes 7 tool definitions (4 list + definition + search + dependencies)', defs.length, 7);
 
 const names = new Set(defs.map((d) => d.name));
 for (const t of expectedTools) check(`definition exists: ${t}`, names.has(t), true);
@@ -300,6 +300,88 @@ async function callSearch(args: any, stub: any): Promise<string> {
 	const text2 = r2.content[0]?.type === 'text' ? r2.content[0].text : '';
 	checkContains('search cache hit marker', text2, '📋 (Cached result)');
 	check('search cache: only one SQL executed', stub.queries.length, 1);
+}
+
+console.log('\n--- get_object_dependencies (controlled stub) ---');
+
+// Routes by SQL content: exists-check vs uses vs used_by (see Interfaces contract).
+function depsStub(existsRows: any[], usesRows: any[] = [], usedByRows: any[] = []): any {
+	const queries: string[] = [];
+	return {
+		name: 'test',
+		queries,
+		query: async (sql: string) => {
+			queries.push(sql);
+			if (sql.includes("'uses' AS direction")) return usesRows;
+			if (sql.includes("'used_by' AS direction")) return usedByRows;
+			return existsRows;
+		},
+	};
+}
+
+async function callDeps(args: any, stub: any): Promise<string> {
+	MssqlObjectTools.clearCachesForTesting();
+	const r = await MssqlObjectTools.handleTool('get_object_dependencies', args, stub);
+	return r.content[0]?.type === 'text' ? r.content[0].text : '';
+}
+
+const usesRow = { direction: 'uses', schema_name: 'dbo', object_name: 'Orders', object_type: 'USER_TABLE', referenced_database: null, is_unresolved: 0 };
+const usedByRow = { direction: 'used_by', schema_name: 'dbo', object_name: 'vw_Sales', object_type: 'VIEW', referenced_database: null, is_unresolved: 0 };
+
+// both (default): rows from both queries, three SQL calls (exists + uses + used_by)
+{
+	const stub = depsStub([{ object_id: 1 }], [usesRow], [usedByRow]);
+	const text = await callDeps({ object_name: 'dbo.GetUsers' }, stub);
+	checkContains('deps both: uses row present', text, 'Orders');
+	checkContains('deps both: used_by row present', text, 'vw_Sales');
+	checkContains('deps both: limits note', text, 'Dynamic SQL');
+	check('deps both: 3 queries executed', stub.queries.length, 3);
+}
+
+// direction=uses: used_by query never executed
+{
+	const stub = depsStub([{ object_id: 1 }], [usesRow], [usedByRow]);
+	const text = await callDeps({ object_name: 'dbo.GetUsers', direction: 'uses' }, stub);
+	checkContains('deps uses: uses row present', text, 'Orders');
+	check('deps uses: only 2 queries (exists + uses)', stub.queries.length, 2);
+	check('deps uses: no used_by SQL', stub.queries.some((q: string) => q.includes("'used_by' AS direction")), false);
+}
+
+// Object not found
+{
+	const text = await callDeps({ object_name: 'dbo.Missing' }, depsStub([]));
+	checkContains('deps not found', text, 'Object not found: dbo.Missing');
+}
+
+// No recorded dependencies
+{
+	const text = await callDeps({ object_name: 'dbo.Lonely' }, depsStub([{ object_id: 1 }], [], []));
+	checkContains('deps empty message', text, 'No recorded dependencies for dbo.Lonely');
+}
+
+// 3-part object_name rejected
+{
+	const text = await callDeps({ object_name: 'MyDB.dbo.proc' }, depsStub([{ object_id: 1 }]));
+	checkContains('deps 3-part rejected', text, 'has 3 parts');
+}
+
+// used_by SQL contains name-based unresolved fallback
+{
+	const stub = depsStub([{ object_id: 1 }], [], []);
+	await callDeps({ object_name: 'dbo.Orders', direction: 'used_by' }, stub);
+	const usedBySql = stub.queries.find((q: string) => q.includes("'used_by' AS direction"))!;
+	checkContains('used_by SQL: id match', usedBySql, "d.referenced_id = OBJECT_ID('dbo.Orders')");
+	checkContains('used_by SQL: name fallback', usedBySql, "d.referenced_entity_name = 'Orders'");
+	checkContains('used_by SQL: is_unresolved flag computed', usedBySql, 'CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved');
+}
+
+// Cross-DB: OBJECT_ID gets the 3-part literal
+{
+	const stub = depsStub([{ object_id: 1 }], [], []);
+	await callDeps({ object_name: 'dbo.X', database_name: 'OtherDB', direction: 'uses' }, stub);
+	const usesSql = stub.queries.find((q: string) => q.includes("'uses' AS direction"))!;
+	checkContains('cross-db OBJECT_ID literal', usesSql, "OBJECT_ID('OtherDB.dbo.X')");
+	checkContains('cross-db catalog prefix', usesSql, '[OtherDB].sys.sql_expression_dependencies');
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

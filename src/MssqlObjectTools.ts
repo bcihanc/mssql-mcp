@@ -27,6 +27,8 @@ const DEFINITIONS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_TT
 const DEFINITIONS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEFINITIONS_CACHE_SIZE || '100', 10);
 const SEARCH_CACHE_TTL_MS = parseInt(process.env.MSSQL_SEARCH_CACHE_TTL || '1800000', 10);
 const SEARCH_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_SEARCH_CACHE_SIZE || '100', 10);
+const DEPS_CACHE_TTL_MS = parseInt(process.env.MSSQL_DEPS_CACHE_TTL || '7200000', 10);
+const DEPS_CACHE_MAX_SIZE = parseInt(process.env.MSSQL_DEPS_CACHE_SIZE || '100', 10);
 
 const procsCache = new Map<string, ToolCacheEntry>();
 const viewsCache = new Map<string, ToolCacheEntry>();
@@ -34,6 +36,7 @@ const functionsCache = new Map<string, ToolCacheEntry>();
 const triggersCache = new Map<string, ToolCacheEntry>();
 const definitionsCache = new Map<string, ToolCacheEntry>();
 const searchCache = new Map<string, ToolCacheEntry>();
+const depsCache = new Map<string, ToolCacheEntry>();
 
 function cleanExpired(cache: Map<string, ToolCacheEntry>, key: string, ttlMs: number): boolean {
 	const entry = cache.get(key);
@@ -98,6 +101,11 @@ const SearchObjectDefinitionsInputSchema = DatabaseScopeSchema.extend({
 	schema_name: z.string().optional().describe('Optional schema name filter (e.g. "dbo")'),
 });
 
+const GetObjectDependenciesInputSchema = DatabaseScopeSchema.extend({
+	object_name: z.string().describe('Object name as "schema.name" or just "name" (schema defaults to dbo). e.g. "dbo.GetUsers"'),
+	direction: z.enum(['uses', 'used_by', 'both']).optional().describe('Dependency direction: what this object uses, what uses this object, or both (default: both)'),
+});
+
 const TOOL_NAMES = new Set([
 	'list_stored_procedures',
 	'list_views',
@@ -105,6 +113,7 @@ const TOOL_NAMES = new Set([
 	'list_triggers',
 	'get_object_definition',
 	'search_object_definitions',
+	'get_object_dependencies',
 ]);
 
 interface ResolvedScope {
@@ -146,6 +155,7 @@ const OBJECT_TYPE_FILTERS: Record<string, string> = {
 };
 
 const SEARCH_SCOPE_NOTE = 'ℹ️ Objects whose definition is hidden (missing VIEW DEFINITION permission) or encrypted (WITH ENCRYPTION) cannot be searched.';
+const DEPS_LIMITS_NOTE = "ℹ️ Direct (1-level) dependencies only. Dynamic SQL references (EXEC('...')) are not recorded in the catalog — use search_object_definitions to find those. Encrypted (WITH ENCRYPTION) objects have no recorded dependencies.";
 
 function plainResponse(text: string): { content: TextContent[] } {
 	return { content: [{ type: 'text', text }] };
@@ -197,6 +207,11 @@ export const MssqlObjectTools = {
 				description: 'Search for a literal text string inside all stored procedure, view, function, and trigger definitions (case-insensitive). Returns matching objects with match counts — use get_object_definition to read a matching object\'s body. Supports cross-database via database_name.',
 				inputSchema: z.toJSONSchema(SearchObjectDefinitionsInputSchema.extend(ConnectionScopeSchema.shape)) as any,
 			},
+			{
+				name: 'get_object_dependencies',
+				description: 'List the direct dependencies of a stored procedure, view, function, or trigger: what it uses and/or what uses it (direction: uses | used_by | both). Based on sys.sql_expression_dependencies; dynamic SQL references are not captured. Supports cross-database via database_name.',
+				inputSchema: z.toJSONSchema(GetObjectDependenciesInputSchema.extend(ConnectionScopeSchema.shape)) as any,
+			},
 		];
 	},
 
@@ -214,6 +229,8 @@ export const MssqlObjectTools = {
 				return this.handleGetObjectDefinition(args, pool);
 			case 'search_object_definitions':
 				return this.handleSearchObjectDefinitions(args, pool);
+			case 'get_object_dependencies':
+				return this.handleGetObjectDependencies(args, pool);
 		}
 		throw new Error(`Unknown tool: ${name}`);
 	},
@@ -439,6 +456,53 @@ export const MssqlObjectTools = {
 		}
 	},
 
+	async handleGetObjectDependencies(args: any, pool: ConnectionPool): Promise<{ content: TextContent[] }> {
+		try {
+			const v = GetObjectDependenciesInputSchema.parse(args);
+			const parts = parseObjectName(v.object_name);
+			if (parts.database) {
+				return plainResponse(`Invalid object_name: "${v.object_name}" has 3 parts (database.schema.object). Use the database_name parameter for cross-database access and pass object_name as "schema.name" or "name".`);
+			}
+			const schema = parts.schema || 'dbo';
+			const object = parts.object;
+			const direction = v.direction || 'both';
+			const scope = resolveDbScope(v.database_name);
+			const dbSuffix = v.database_name ? ` in database ${v.database_name}` : '';
+			const cacheKey = namespaceCacheKey(pool.name, `${scope.dbCacheKey}${schema}.${object}:${direction}`);
+
+			const cached = getFromCache(depsCache, cacheKey, DEPS_CACHE_TTL_MS);
+			if (cached !== null) return cachedResponse(cached);
+
+			const existsQuery = `SELECT o.object_id FROM ${scope.dbPrefix}sys.objects o INNER JOIN ${scope.dbPrefix}sys.schemas s ON o.schema_id = s.schema_id WHERE s.name = '${escapeLiteral(schema)}' AND o.name = '${escapeLiteral(object)}'`;
+			if (consola.level >= 0) logger.info(`Getting dependencies for ${schema}.${object} in ${v.database_name || 'current DB'}`);
+			const existsRows = await pool.query(existsQuery);
+			if (!existsRows || existsRows.length === 0) {
+				return plainResponse(`Object not found: ${schema}.${object}${dbSuffix}.`);
+			}
+
+			const fullName = escapeLiteral(`${v.database_name ? `${v.database_name}.` : ''}${schema}.${object}`);
+			const rows: any[] = [];
+			if (direction === 'uses' || direction === 'both') {
+				const usesQuery = `SELECT DISTINCT 'uses' AS direction, d.referenced_schema_name AS schema_name, d.referenced_entity_name AS object_name, ro.type_desc AS object_type, d.referenced_database_name AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d LEFT JOIN ${scope.dbPrefix}sys.objects ro ON d.referenced_id = ro.object_id WHERE d.referencing_id = OBJECT_ID('${fullName}')`;
+				rows.push(...((await pool.query(usesQuery)) || []));
+			}
+			if (direction === 'used_by' || direction === 'both') {
+				const usedByQuery = `SELECT DISTINCT 'used_by' AS direction, rs.name AS schema_name, ro.name AS object_name, ro.type_desc AS object_type, CAST(NULL AS NVARCHAR(128)) AS referenced_database, CASE WHEN d.referenced_id IS NULL THEN 1 ELSE 0 END AS is_unresolved FROM ${scope.dbPrefix}sys.sql_expression_dependencies d INNER JOIN ${scope.dbPrefix}sys.objects ro ON d.referencing_id = ro.object_id INNER JOIN ${scope.dbPrefix}sys.schemas rs ON ro.schema_id = rs.schema_id WHERE d.referenced_id = OBJECT_ID('${fullName}') OR (d.referenced_id IS NULL AND d.referenced_entity_name = '${escapeLiteral(object)}' AND (d.referenced_schema_name = '${escapeLiteral(schema)}' OR d.referenced_schema_name IS NULL))`;
+				rows.push(...((await pool.query(usedByQuery)) || []));
+			}
+
+			if (rows.length === 0) {
+				return plainResponse(`No recorded dependencies for ${schema}.${object}${dbSuffix} (direction: ${direction}).\n\n${DEPS_LIMITS_NOTE}`);
+			}
+			const text = `${formatCSV(rows)}\n\n${DEPS_LIMITS_NOTE}`;
+			setInCache(depsCache, cacheKey, text, DEPS_CACHE_MAX_SIZE, 'get_object_dependencies');
+			return plainResponse(text);
+		} catch (error) {
+			if (consola.level >= 0) logger.error('get_object_dependencies error:', error);
+			return errorResponse('Error getting object dependencies', error);
+		}
+	},
+
 	clearCachesForTesting(): void {
 		procsCache.clear();
 		viewsCache.clear();
@@ -446,5 +510,6 @@ export const MssqlObjectTools = {
 		triggersCache.clear();
 		definitionsCache.clear();
 		searchCache.clear();
+		depsCache.clear();
 	},
 };
